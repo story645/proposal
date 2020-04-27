@@ -1,0 +1,63 @@
+# thesis notes 9/24
+
+# To Do
+    * write up discussion
+    * next steps:
+    
+# First Pass
+Do two overlayed images:
+    * cat
+    * quant
+# Notes
+* Array of multitypes
+A, B are types 
+A eg. numerical
+B eg. categorical
+
+C := A|B
+    -> composing happens at colormap/normalization level 
+    -> lets type system protect you 
+
+Currently assumption is that data is inside the same units 
+    * tradeoffs between letting the user do stupid things & constraint statisfaction
+    * sanity checks on input (warnings)
+    * bulk of domain specificity in 3rd party packages
+
+Do the functional/theoretical bit in Haskell (reimplement to python):
+    implement to these: https://matplotlib.org/3.1.1/api/backend_bases_api.html?highlight=backend#matplotlib.backend_bases.RendererBase
+    (talk to Anthony about how to write a backend)
+
+concerns
+* find if matplotlib talks to backends outside of backend base/ special case 
+* capture a plot to see if it can be recreated (undo/redo stack)
+* signals will do different things depending on the backend (replayed code doesn't jive back)
+* recording sequence of calls -> log + pickle arguments on the backend the sequence of steps
+
+Objectives:
+* types get passed in with units/structures, produce plot in clean/functional way 
+* backends: what is output independent of a particular backend 
+
+# path:
+ data gets passed in -> scatter plot -> backend: `ax.scatter() + ax.legend() + ax.colorbar()`
+
+# Concrete next steps:
+    * write down current/proposed interface/api, 2 for each plot type:
+
+    ```python
+    fig, ax = plt.subplots()
+    ax.scatter([2, 3, 4,1], [1,2,3,4], c=['cat', 'dog', 'cat', 'dog'])
+    ax.legend()
+    ```
+
+    prototypical:
+    * bar chart
+    * scatter chart
+    * heatmap
+    * line chart
+
+Next meeting: share notebook/github 
+also share plots as they're done, ( online)
+send out doodle poll for next two weeks 
+
+
+
