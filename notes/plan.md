@@ -22,6 +22,8 @@ What is the problem I'm trying to solve?
 2. functional representation
     i. objects in data space w/ morphisms -> maps of that as source into retinal categories/visual categories 
     ii. mapping is category of artists: codds -> CW simplex space (kind of function of little simplexes into color/transparency layers, don't have to worry about resolution)
+3. meta rules - we're trying to formalize the rules for writing something like altair - how do you write a thing you can build a robust domain specific altair/ggplot 
+
 
 Scipy
 ------
@@ -55,9 +57,16 @@ Tasks
 To Do:
 ------
 1. get at least one plot working for dataframe
+2. then do unitized dataframe:
+    * one column categorical, one column dates, one floats
+    * scikit-image convertors should live on datasource
+    * pass axes object into request for data 
+        * convertors are a method on axis
+        * x/y coupled to spatial aesthetics - all x data needs to be transformed to same units
+            * axis locking PR
+
 2. summarize key points from FC in DB systems + slide
 2. Spivak Codd/databases paper + slide
-
 
 Updates:
 
