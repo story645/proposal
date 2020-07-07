@@ -57,7 +57,10 @@ Tasks
 To Do:
 ------
 1. get at least one plot working for dataframe
-2. then do unitized dataframe:
+    2. which visualzation, what variable do you want to map, .....
+    3. want to map from raw data to array of numbers (x position, y position)
+    4. other side - fill in aesthetic
+3. then do unitized dataframe:
     * one column categorical, one column dates, one floats
     * scikit-image convertors should live on datasource
     * pass axes object into request for data 
@@ -65,10 +68,12 @@ To Do:
         * x/y coupled to spatial aesthetics - all x data needs to be transformed to same units
             * axis locking PR
 
-2. summarize key points from FC in DB systems + slide
-2. Spivak Codd/databases paper + slide
+5. make it clear which piece: data, binding, visual
+    6. what is the minimal basis of visualization/binding - what are the minimum sets of projections we need?
+7. summarize key points from FC in DB systems + slide
+8. Spivak Codd/databases paper + slide
 
-Updates:
+# (ax.text should take formatters)
 
 # Must be in talk
 * we're gonna propose this sort of structure to API:
