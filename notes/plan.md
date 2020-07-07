@@ -70,3 +70,23 @@ To Do:
 
 Updates:
 
+# Must be in talk
+* we're gonna propose this sort of structure to API:
+    * working code that demonstrates what this should look like:
+        - projection/query or functos 
+        - arrays, dataframes, lists of lists
+        - multiple artists
+        - one crazy example - scatter plot w/ parasite histograms
+            - two aggregation projections
+                - one datasource w/ x/y data
+                - one view is scatter
+                - parasite axis which are histograms in x/y
+                - update datasource (everything updates all the way through)
+   * relate that concrete code to the theory
+   * probably explaination of theory 
+
+* parasite axis: update all 3 
+* fancy hist that updates the patches at draw time 
+* array of distributions, spreadsheet of distributions
+* dataset is a sampler that at draw time draws 10,000 datasets 
+https://gist.github.com/tacaswell/95177903175dbc28be5353b4a0e5118f
