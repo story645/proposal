@@ -25,6 +25,8 @@ class DataSourceDataFrame(DataSource):
     @independent.setter
     def independent(self, name):
         self._independent = name
+
+
         
     def queryXY(self, ax, *args, xdim=1):
         xp = Projection([self.data[self.dependent]], 1, len(self.data[self.dependent]))
@@ -32,12 +34,15 @@ class DataSourceDataFrame(DataSource):
                        len(self.data[self.independent]))
         return SimpleNamespace(x=xp, y=yp)
  
-    def queryHist1D(self, ax, *args, column = None, **kwargs):
-        if column is None:
-            count, bins = np.histogram(self.data.ravel())
+    def queryHist1D(self, ax, *args, **kwargs):
+        variable = kwargs.pop('variable', None)
+        if variable == 'dependent':
+            count, bins = np.histogram(self.data[self.dependent])
+        elif variable == 'independent':
+            count, bins = np.histogram(self.data[self.independent])
         else:
-            count, bins = np.histogram(self.data[column])
-       
+             count, bins = np.histogram(self.data.data.ravel())
+                
         bp = Projection(bins, len(bins), bins.shape)
         cp = Projection(count, len(count), count.shape)
         return SimpleNamespace(bins=bp, count=cp)

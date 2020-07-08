@@ -103,15 +103,15 @@ class Scatter(mcollections.Collection):
 class Hist1D(mcollections.Collection):
     def __init__(self, datasource, *args, **kwargs):
         self.DataSource = datasource
-        self._column = kwargs.pop('column', None)
         self._orientation = kwargs.pop('orientation', 'vertical')
+        # must sort through better keyword passing
+        self._variable = kwargs.pop('variable', None)
         super().__init__(*args, **kwargs)
         
     def draw(self, renderer, *args, **kwargs):
-        projection = self.DataSource.queryHist1D(self.axes, flatten=True, column = self._column)
+        projection = self.DataSource.queryHist1D(self.axes, flatten=True, variable=self._variable, **kwargs)
         if projection.bins.shape[0] != (projection.count.shape[0]+1):
             raise ValueError("should have 1 more bin than count")
-        
         verts = []
         if self._orientation == 'vertical':
             xshape, = projection.bins.shape
