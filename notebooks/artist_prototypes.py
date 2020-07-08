@@ -4,74 +4,14 @@ import numpy as np
 import matplotlib.image as mimage
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
+import matplotlib.markers as mmarkers
+import matplotlib.transforms as mtransforms
 
 # datasource maps D->Projection for artist (query)
 # aesthetic maps P-> retinal variables (red, sqaure)
 # artist maps retinal variables -> pixels (CW-complex)
 
-# axis, axes, legend...
-
-# axis should own view limits, 
-# artist should own bounds
-# scatter-parasite histograms 
-
-# for Dashboards, they need to pass in a datasource object
-
-def user_plotting_method(data):
-    # user a .describe instead of is instance...
-    if not isinstance(data, DataSource):
-        datasource= DataSource(data) # goes through registry
-    
-class DataSource: #set of classes replaces _preprocess_data
-    # documents interface 
-    pass 
-    
-class DataSourceDict(DataSource):
-    pass # assume this is like a dataframe, labels = columns
-class DataSourceDictView(DataSource):
-    pass
-class Enums(DataSource):
-    # name, value pair where value can contain multiples
-    pass
-
-class Projection: 
-    #this gets duck typed, push all logic into DataSourceArray
-    def __init__(self, payload, nitems, shape):
-        self.payload = payload
-        self.nitems = nitems
-        self.shape = shape
-    
-        
-class DataSourceArray(DataSource):
-    def __init__(self, arr):
-        self.data = arr
-
-    def queryArray(self, ax, *args):
-        data = Projection(self.data, 1, self.data.shape)
-        #.5 so 0,0 is at center of pixel
-        extent = Projection([-.5, data.payload.shape[1]-.5, 
-                             -.5, data.payload.shape[0]-.5],
-                            1, (4))
-        return SimpleNamespace(data=data, extent=extent)
-    
-    def queryXY(self, ax, *args, xdim=1):
-        
-        y, shape = zip(*[(yi, yi.shape) for yi in self.data.T])
-        yp = Projection(y, len(y), shape) 
-        
-        # data source should provide the x 
-        # data source knows the sampling rate
-        if xdim == 1:
-            x = [np.arange(len(self.data))]
-        elif xdim =='y':
-            x = [np.arange(len(yi)) for yi in y]
-        else:
-            raise ValueError("I need to know my dimensions")     
-        xp = Projection(x, len(x), [xi.shape for xi in x])
-        
-        return SimpleNamespace(x=xp, y=yp)
-
-class ArrayImage(mimage.AxesImage):
+class Image(mimage.AxesImage):
     def __init__(self, ax, datasource, *args, **kwargs):
         super().__init__(ax, *args, **kwargs)
         self.DataSource = datasource
@@ -89,7 +29,7 @@ class ArrayImage(mimage.AxesImage):
         # query for the right projecton
         super().draw(renderer, *args, **kwargs)
         
-class ArrayLine(mcollections.LineCollection):
+class Line(mcollections.LineCollection):
     def __init__(self, datasource, *args, **kwargs):
         super().__init__(None, *args, **kwargs)
         self.DataSource = datasource
@@ -101,7 +41,7 @@ class ArrayLine(mcollections.LineCollection):
                                           projection.y.payload)])
         super().draw(renderer, *args, **kwargs)
                 
-class ArrayBar(mcollections.Collection):
+class Bar(mcollections.Collection):
     def __init__(self, datasource, stacked=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.DataSource = datasource
@@ -138,8 +78,69 @@ class ArrayBar(mcollections.Collection):
         self.set_edgecolors('k')
         super().draw(renderer, *args, **kwargs)
         return
+
+class Scatter(mcollections.Collection):
+    def __init__(self, datasource, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.DataSource = datasource
+    
+    def draw(self, renderer, *args, **kwargs):
+        projection = self.DataSource.queryXY(self.axes, xdim='y')
+        radius = kwargs.get('radius', .02)
+        if radius is None:
+            if projection.x.payload>1:
+                radius*=10
+        paths = []
+        for (X, Y) in zip(projection.x.payload,projection.y.payload):
+             paths.extend([mpath.Path.circle(center=(x,y), radius=radius)                           for (x,y) in zip(X,Y)])
+        self._paths = paths
+        self.set_edgecolors('k')
+        super().draw(renderer, *args, **kwargs)
+            
+        
     
     
-class Array1Dhist:
-    def __init(self):
-        pass
+class Hist1D(mcollections.Collection):
+    def __init__(self, datasource, *args, **kwargs):
+        self.DataSource = datasource
+        self._column = kwargs.pop('column', None)
+        self._orientation = kwargs.pop('orientation', 'vertical')
+        super().__init__(*args, **kwargs)
+        
+    def draw(self, renderer, *args, **kwargs):
+        projection = self.DataSource.queryHist1D(self.axes, flatten=True, column = self._column)
+        if projection.bins.shape[0] != (projection.count.shape[0]+1):
+            raise ValueError("should have 1 more bin than count")
+        
+        verts = []
+        if self._orientation == 'vertical':
+            xshape, = projection.bins.shape
+            xpayload = projection.bins.payload
+            bottom = 0
+            for i, height in enumerate(projection.count.payload):
+                xl, xr = xpayload[i], xpayload[i+1]
+                rectangle = [(xl, bottom), 
+                             (xl, bottom+height), 
+                             (xr, bottom+height), 
+                             (xr, bottom), 
+                             (xl, bottom)]
+                verts.append(rectangle)
+        else:
+            yshape, = projection.bins.shape
+            ypayload = projection.bins.payload
+            bottom = 0
+            for i, height in enumerate(projection.count.payload):
+                ybot, ytop = ypayload[i], ypayload[i+1]
+                rectangle = [(bottom, ybot), 
+                             (bottom, ytop), 
+                             (height, ytop),
+                             (height, ybot), 
+                             (bottom, ybot)]
+                verts.append(rectangle)
+        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
+
+
+            
+        self.set_edgecolors('k')
+        super().draw(renderer, *args, **kwargs)
+        return

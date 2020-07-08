@@ -79,7 +79,7 @@ To Do:
 * we're gonna propose this sort of structure to API:
     * working code that demonstrates what this should look like:
         - projection/query or functos 
-        - arrays, dataframes, lists of lists
+        - arrays, dataframes, functions
         - multiple artists
         - one crazy example - scatter plot w/ parasite histograms
             - two aggregation projections
@@ -95,3 +95,9 @@ To Do:
 * array of distributions, spreadsheet of distributions
 * dataset is a sampler that at draw time draws 10,000 datasets 
 https://gist.github.com/tacaswell/95177903175dbc28be5353b4a0e5118f
+
+
+#### 
+
+- data space - transformations of data to data - tables/ data cubes
+- what 

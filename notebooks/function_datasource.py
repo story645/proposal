@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 import numpy as np
 
-from darray import DataSource, Projection
-
+from array_datasource import DataSource, Projection
 
 class DataSource2DFunction(DataSource):
     def __init__(self, func):
@@ -21,16 +20,18 @@ class DataSource2DFunction(DataSource):
         self._func = func
 
     def queryArray(self, ax, *args):
-        xmin, xmax = ax.get_xlim()
-        ymin, ymax = ax.get_ylim()
+        xmin, xmax = ax.get_xlim() # domain
+        ymin, ymax = ax.get_ylim() # domain
 
         # TODO handle cases were we don't know this or it has changed
+        # count pixels
         ax_size = ax.get_window_extent()
-        xcount = int(np.round(ax_size.width))
+        xcount = int(np.round(ax_size.width)) 
         ycount = int(np.round(ax_size.height))
         x_half_pix_size = np.abs(xmax - xmin) / xcount / 2
         y_half_pix_size = np.abs(ymax - ymin) / ycount / 2
 
+        # compute over every pixel
         payload = self._func(
             np.linspace(xmin, xmax, xcount).reshape(1, -1),
             np.linspace(ymin, ymax, ycount).reshape(-1, 1),
