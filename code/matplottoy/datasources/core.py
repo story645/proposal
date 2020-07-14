@@ -8,6 +8,17 @@ def user_plotting_method(data):
 class Projection: 
     #this gets duck typed, push all logic into DataSourceArray
     def __init__(self, payload, nitems, shape):
+        """
+        Parameters
+        ----------
+        payload: 
+            data to be plotted
+        nitems: 
+            number of unique variables/attributes to be plotted
+            eg. line plot of an array where every column is a line
+        shape:
+            total shape of the data
+        """
         self.payload = payload
         self.nitems = nitems
         self.shape = shape

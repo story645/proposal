@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     packages=setuptools.find_packages(
-        include = ["lib.*"], exclude=['notebooks']),
+        include = ["matplottoy.*"], exclude=['notebooks']),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
