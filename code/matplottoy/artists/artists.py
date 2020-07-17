@@ -11,6 +11,16 @@ import matplotlib.transforms as mtransforms
 # aesthetic maps P-> retinal variables (red, sqaure)
 # artist maps retinal variables -> pixels (CW-complex)
 
+# What artists end up:
+#1. get plotting data (pull set of rows) - 
+    # comes in as dict of bertin variables 
+#2. dict of maps of floats to visual propeties
+#    'size array' -> actual marker sizes
+#    'data units' -> pixels
+#3. push to vector model
+
+def constraint_check(*args):
+    pass
 class Image(mimage.AxesImage):
     def __init__(self, ax, datasource, *args, **kwargs):
         """
@@ -24,10 +34,19 @@ class Image(mimage.AxesImage):
            kwargs passed through 
         """
         super().__init__(ax, *args, **kwargs)
+        # self.constraints = constraint_check (self.DataSource.mappings, req, optional)
+        # for attr in required_list:
+        # assert(getattr(DataSource))
+        
+        #self.mappings = datasource.mappings()
         self.DataSource = datasource
         
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
+        
+        #projection = self.DataSource.query(ax, self.mappings)
+    
         projection = self.DataSource.queryArray(self.axes)
+        #update states we need to update
         self.set_data(projection.data.payload)
         # look for repeating colormap setting
         # worry about colormaps when we think through how aesthetics 
@@ -37,8 +56,9 @@ class Image(mimage.AxesImage):
         self.set_extent(projection.extent.payload)
         
         # query for the right projecton
-        super().draw(renderer, *args, **kwargs)
-        
+        super().draw(renderer)
+
+
 class Line(mcollections.LineCollection):
     def __init__(self, datasource, *args, **kwargs):
         """
@@ -61,7 +81,7 @@ class Line(mcollections.LineCollection):
 
 class Scatter(mcollections.Collection):
     def __init__(self, datasource, *args, **kwargs):
-                """
+        """
         Parameters
         ----------
         datasource: matplottoy.datasources.DataSource like
@@ -138,7 +158,7 @@ class Bar(mcollections.Collection):
     
 class Hist1D(mcollections.Collection):
     def __init__(self, datasource, *args, **kwargs):
-                """
+        """
         Parameters
         ----------
         datasource: matplottoy.datasources.DataSource like

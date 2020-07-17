@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from lib.datasources.core import DataSource, Projection
+from matplottoy.datasources.core import DataSource, Projection
 
 class DataSource2DFunction(DataSource):
     def __init__(self, func):

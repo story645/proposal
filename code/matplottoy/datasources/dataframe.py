@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from lib.datasources.core import  DataSource, Projection
+from matplottoy.datasources.core import  DataSource, Projection
 
 class DataSourceDataFrame(DataSource):
     """"
@@ -39,8 +39,6 @@ class DataSourceDataFrame(DataSource):
     def independent(self, name):
         self._independent = name
 
-
-        
     def queryXY(self, ax=None, *args):
         """
         Parameters

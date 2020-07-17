@@ -2,16 +2,30 @@ from types import SimpleNamespace
 
 import numpy as np 
 
-from lib.datasources.core import  DataSource, Projection
+from matplottoy.datasources.core import  DataSource, Projection
         
 class DataSourceArray(DataSource):
-    def __init__(self, arr):
+    def __init__(self, arr, transpose = False):
         """
+        DataSource array makes the assumption that data is
+        oriented (N,M) where N is number of observations and 
+        M is the number of measurement types 
+        
         Parameters
         ----------
         arr : ArrayLike, size=(M,N)
+        transpose: False, optional
+            True: transpose the input data
         """
-        self.data = arr
+        if transpose:
+            self.data = arr.T
+        else:
+            self.data = arr
+        self.mappings = {}
+
+    def query(self, ax=None, mappings=None):
+        for mas in mappings:
+            pass
 
     def queryArray(self, ax=None, *args):
         """
@@ -30,8 +44,8 @@ class DataSourceArray(DataSource):
         """
         data = Projection(self.data, 1, self.data.shape)
         #.5 so 0,0 is at center of pixel
-        extent = Projection([-.5, data.payload.shape[1]-.5, 
-                             -.5, data.payload.shape[0]-.5],
+        extent = Projection((-.5, data.payload.shape[1]-.5, 
+                             -.5, data.payload.shape[0]-.5),
                             1, (4))
         return SimpleNamespace(data=data, extent=extent)
     
@@ -62,9 +76,9 @@ class DataSourceArray(DataSource):
         
         # data source should provide the x 
         # data source knows the sampling rate
-        if xdim == 'x':
+        if xdim == 'same':
             x = [np.arange(len(self.data))]
-        elif xdim =='y':
+        elif xdim =='unique':
             x = [np.arange(len(yi)) for yi in y]
         else:
             raise ValueError("I need to know my dimensions")     
