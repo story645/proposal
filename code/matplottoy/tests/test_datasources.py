@@ -7,44 +7,64 @@ from matplotlib.testing.decorators import check_figures_equal
 import matplottoy.artists.artists as ap
 import matplottoy.datasources.array as da
 
+def axes_property_check(ax_test, ax_ref):
+
+    assert ax_test.get_xlim() == ax_ref.get_xlim()
+    assert ax_test.get_ylim() == ax_ref.get_ylim()
+    assert ax_test.get_aspect() == ax_ref.get_aspect()
+
+    assert (ax_test.get_position().bounds == 
+            ax_ref.get_position().bounds)
+    assert (ax_test.get_window_extent().bounds ==
+            ax_ref.get_window_extent().bounds)
+
 class TestArray: 
     @pytest.fixture(autouse=True)
     def data(self):
-        self.array =  np.tile(np.arange(13),10).reshape(10,13)
-        self.datasource = da.DataSourceArray(self.array)
+        array =  np.tile(np.arange(13),10).reshape(10,13)
+        self.datasource = da.DataSourceArray(array)
 
     @check_figures_equal(extensions=['png'])
     def test_image(self, fig_test, fig_ref):
-        axt = fig_test.subplots()
-        imd = ap.Image(axt, self.datasource, origin="lower")
-        axt.add_image(imd)
-        axt.set_aspect(1.0)
-        fig_test.colorbar(imd, ax=axt)
+        ax_test = fig_test.subplots()
+        ar_test = ap.Image(ax_test, self.datasource, origin="lower")
+        ax_test.add_image(ar_test)
+        ax_test.set_aspect(1.0)
+        fig_test.colorbar(ar_test, ax=ax_test)
         fig_test.canvas.draw()
 
-        axr = fig_ref.subplots()
-        im = axr.imshow(self.datasource.data, origin="lower")
-        axt.set_aspect(1.0)
-        fig_ref.colorbar(im, ax=axr)
+        ax_ref = fig_ref.subplots()
+        ar_ref = ax_ref.imshow(self.datasource.data, origin="lower")
+        fig_ref.colorbar(ar_ref, ax=ax_ref)
         fig_ref.canvas.draw()
 
-        assert axt.get_xlim() == axr.get_xlim()
-        assert axt.get_ylim() == axr.get_ylim()
-        assert axt.get_aspect() == axr.get_aspect()
-        assert imd.get_extent() == im.get_extent()
-        assert imd.zorder == im.zorder
-        assert (axt.get_position().bounds == 
-                axr.get_position().bounds)
-        assert (axt.get_window_extent().bounds ==
-                axr.get_window_extent().bounds)
-        assert (imd.get_window_extent().bounds ==
-                im.get_window_extent().bounds)
+        axes_property_check(ax_test, ax_ref)
+        assert ar_test.zorder == ar_ref.zorder
+        assert (ar_test.get_window_extent().bounds ==
+                ar_ref.get_window_extent().bounds)
 
 
-    @pytest.mark.skip()
+
     @check_figures_equal(extensions=['png'])
     def test_line(self, fig_test, fig_ref):
-        pass
+        xhigh, yhigh = self.datasource.data.shape
+
+        ax_test= fig_test.subplots()
+        artist_test = ap.Line(self.datasource)
+        ax_test.add_artist(artist_test)
+
+        ax_test.set_xlim(0, xhigh-1)
+        ax_test.set_ylim(0, yhigh-1)
+        fig_ref.canvas.draw()
+
+        ax_ref = fig_ref.subplots()
+        artist_ref = ax_ref.plot(self.datasource.data, color='C0')
+        ax_ref.set_xlim(0, xhigh-1)
+        ax_ref.set_ylim(0, yhigh-1)
+        fig_test.canvas.draw()
+
+        axes_property_check(ax_test, ax_ref)
+    
     
     @pytest.mark.skip()
     @check_figures_equal(extensions=['png'])
