@@ -63,10 +63,11 @@ class TestArray:
         fig_test.canvas.draw()
         axes_property_check(ax_test, ax_ref)
     
+    @pytest.mark.skip
     @check_figures_equal(extensions=['png'])
     def test_bar_grouped(self, fig_test, fig_ref):
         ax_test = fig_test.subplots()
-        artist_test = ap.Bar(self.datasource)
+        artist_test = ap.Bar(self.datasource, width=1)
         ax_test.add_artist(artist_test)
         ax_test.set(xlim=(0, self.rows-1), 
                     ylim=(0, self.cols-1))
@@ -75,18 +76,31 @@ class TestArray:
         for i, row in enumerate(self.datasource.data.T):
             x = np.arange(row.shape[0]) + (i/self.rows)
             width = 1/self.rows
-            _ = ax_ref.bar(x, row, width)
+            _ = ax_ref.bar(x, row, width, facecolor='C0', edgecolor='k')
+        ax_ref.set(xlim=(0, self.rows-1), 
+                   ylim=(0, self.cols-1))
+
+        axes_property_check(ax_test, ax_ref)
+    @pytest.mark.skip
+    @check_figures_equal(extensions='png')
+    def test_bar_stacked(self, fig_test, fig_ref):
+        ax_test = fig_test.subplots()
+        artist_test = ap.Bar(self.datasource, stacked=True)
+        ax_test.add_artist(artist_test)
+        ax_test.set(xlim=(0, self.rows-1), 
+                    ylim=(0, self.cols-1))
+
+        ax_ref = fig_ref.subplots()
+        bottom = np.zeros(self.cols)
+        for i, row in enumerate(self.datasource.data.T):
+            x = np.arange(row.shape[0]) + (i/self.rows)
+            _ = ax_ref.bar(x, row, bottom=bottom, facecolor='C0')
+            bottom+=row
+
         ax_ref.set(xlim=(0, self.rows-1), 
                    ylim=(0, self.cols-1))
 
         axes_property_check(ax_test, ax_ref)
     
-        
-    
-    
-    @pytest.mark.skip()
-    @check_figures_equal(extensions='png')
-    def test_bar_stacked(self, fig_test, fig_ref):
-        pass
     
     

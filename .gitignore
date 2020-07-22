@@ -1,3 +1,8 @@
 __pycache__/
+*.py[cod]
 .ipynb_checkpoints/
 .vscode/
+*.egg-info/
+result_images/
+*.png
+Untitled*.ipynb
