@@ -1,8 +1,7 @@
-# constraints aren't checked, they're built into the assumptions
+c# constraints aren't checked, they're built into the assumptions
 class DataSourceBase:
     def __init__(self, data, bertin_variables):
         pass
-    
     def schema(self, ):
         # must be CONST over controllable 
         # contract between data source and artist
@@ -15,7 +14,6 @@ class DataSourceBase:
         # query returns subset of columns
     def mapping(self, ):
         pass
-
     def update(new_data):
         #check the schema 
         pass

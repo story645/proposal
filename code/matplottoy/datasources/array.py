@@ -1,9 +1,57 @@
 from types import SimpleNamespace
+from typing import Protocol
 
 import numpy as np 
-
 from matplottoy.datasources.core import  DataSource, Projection
-        
+
+
+# set of visual variables that each geometry 
+# supports
+# versus set of each visual literals each bertin 
+
+class View:
+    # rows are selected, data is all the same number of rows
+    def __init__(self, data, m, encodings, ax=None):
+        self.ax = ax # everything has the same axes
+        subset = data[m] 
+        for key, loc in encodings.items():
+            setattr(self, key, data[:, loc])
+
+    def get(self, visual_var): # axis seperation of concern
+        return getattr(self, visual_var)
+
+class Point:
+    def __init__(self, data, m=Ellipsis, encodings=None):
+        """ 
+        data: arraylike
+            data that will be plotted, must have >= 2 columns
+        m: indexer, default is all values
+            list of rows to take
+        encodings: dict, default None
+            {retinal variable : data selecter}
+            for full list of options, see:
+            matplottoy.artist.point.Point.required
+            matplottoy.artist.point.Point.optional
+            x defaults to 0, y defaults to 1
+        """
+        self.data = data
+        self.m = m
+        self.encodings = encodings if encodings else {}
+        if 'x' not in self.encodings:
+            self.encodings['x'] = 0
+        if 'y' not in self.encodings:
+            self.encodings['y'] = 1
+
+    def view(self, ax=None):
+       return View(self.data, self.m,  self.encodings, ax=ax)
+
+class VeryNaive:
+    def __init__(self, **kwargs):
+        self._data = kwargs
+
+    def view(self, *args):
+        return SimpleNamespace(**self._data)
+
 class DataSourceArray(DataSource):
     def __init__(self, arr, transpose = False):
         """
