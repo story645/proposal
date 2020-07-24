@@ -14,13 +14,20 @@ class View:
     def __init__(self, data, m, encodings, ax=None):
         self.ax = ax # everything has the same axes
         subset = data[m] 
-        for key, loc in encodings.items():
-            setattr(self, key, data[:, loc])
+        #how to share this out publically?
+        self.info = {'shape': subset.shape, 
+                     'encodings': len(encodings)} 
+        for key, col in encodings.items():
+            var = subset[:, col]
+            self.info[key] = {'type':var.dtype, 'shape':var.shape,
+                              'min': var.min(), 'max':var.max(), 
+                              'name':col}
+            setattr(self, key, var)
 
     def get(self, visual_var): # axis seperation of concern
         return getattr(self, visual_var)
 
-class Point:
+class ArrayPoint:
     def __init__(self, data, m=Ellipsis, encodings=None):
         """ 
         data: arraylike
@@ -34,6 +41,9 @@ class Point:
             matplottoy.artist.point.Point.optional
             x defaults to 0, y defaults to 1
         """
+        # should axes go here - 
+        # (since there's a top level controller anyway)
+        # can only draw on the axes it's drawing on?
         self.data = data
         self.m = m
         self.encodings = encodings if encodings else {}
@@ -43,14 +53,7 @@ class Point:
             self.encodings['y'] = 1
 
     def view(self, ax=None):
-       return View(self.data, self.m,  self.encodings, ax=ax)
-
-class VeryNaive:
-    def __init__(self, **kwargs):
-        self._data = kwargs
-
-    def view(self, *args):
-        return SimpleNamespace(**self._data)
+        return View(self.data, self.m, self.encodings, ax=ax)
 
 class DataSourceArray(DataSource):
     def __init__(self, arr, transpose = False):

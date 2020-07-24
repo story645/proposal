@@ -4,6 +4,66 @@ import numpy as np
 
 from matplottoy.datasources.core import  DataSource, Projection
 
+from types import SimpleNamespace
+from typing import Protocol
+
+import numpy as np 
+from matplottoy.datasources.core import  DataSource, Projection
+
+
+# set of visual variables that each geometry 
+# supports
+# versus set of each visual literals each bertin 
+
+class View:
+    # rows are selected, data is all the same number of rows
+    def __init__(self, data, m, encodings, ax=None):
+        self.ax = ax # everything has the same axes
+        subset = data.loc[m] 
+        #how to share this out publically?
+        self.info = {'shape': subset.shape, 
+                     'encodings': len(encodings)} 
+        for key, col in encodings.items():
+            var = subset[col]
+            self.info[key] = {'type':var.dtype, 'shape':var.shape,
+                              'min': var.min(), 'max':var.max(), 
+                              'name':col}
+            setattr(self, key, var)
+
+    def get(self, visual_var): # axis seperation of concern
+        return getattr(self, visual_var)
+
+class DataFramePoint:
+    def __init__(self, data, m=None, encodings=None):
+        """ 
+        data: arraylike
+            data that will be plotted, must have >= 2 columns
+        m: indexer, default is all values
+            list of rows to take
+        encodings: dict, default None
+            {retinal variable : data selecter}
+            for full list of options, see:
+            matplottoy.artist.point.Point.required
+            matplottoy.artist.point.Point.optional
+            x defaults to 0, y defaults to 1
+        """
+        # should axes go here - 
+        # (since there's a top level controller anyway)
+        # can only draw on the axes it's drawing on?
+        self.data = data
+        if m is None:
+            m = self.data.index
+        self.m = m
+        self.encodings = encodings if encodings else {}
+        if 'x' not in self.encodings:
+            self.encodings['x'] = self.data.columns[0]
+        if 'y' not in self.encodings:
+            self.encodings['y'] = self.data.columns[1]
+
+    def view(self, ax=None):
+        return View(self.data, self.m, self.encodings, ax=ax)
+
+
 class DataSourceDataFrame(DataSource):
     """"
     Provides a an interface to dataframes, assumes the semenatics of 
