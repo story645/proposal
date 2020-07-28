@@ -15,13 +15,8 @@ class View:
         self.ax = ax # everything has the same axes
         subset = data[m] 
         #how to share this out publically?
-        self.info = {'shape': subset.shape, 
-                     'encodings': len(encodings)} 
         for key, col in encodings.items():
             var = subset[:, col]
-            self.info[key] = {'type':var.dtype, 'shape':var.shape,
-                              'min': var.min(), 'max':var.max(), 
-                              'name':col}
             setattr(self, key, var)
 
     def get(self, visual_var): # axis seperation of concern
@@ -51,6 +46,17 @@ class ArrayPoint:
             self.encodings['x'] = 0
         if 'y' not in self.encodings:
             self.encodings['y'] = 1
+
+    def info(self):
+        subset = self.data[self.m] 
+        #how to share this out publically?
+        self.info = {'shape': subset.shape, 
+                     'encodings': len(self.encodings)} 
+        for key, col in self.encodings.items():
+            var = subset[:, col]
+            self.info[key] = {'type':var.dtype, 'shape':var.shape,
+                              'min': var.min(), 'max':var.max(), 
+                              'name':col}
 
     def view(self, ax=None):
         return View(self.data, self.m, self.encodings, ax=ax)
