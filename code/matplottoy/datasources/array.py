@@ -13,15 +13,56 @@ class View:
     # rows are selected, data is all the same number of rows
     def __init__(self, data, m, encodings, ax=None):
         self.ax = ax # everything has the same axes
-        subset = data[m] 
-        #how to share this out publically?
         for key, col in encodings.items():
-            var = subset[:, col]
+            var = data[m, col]
             setattr(self, key, var)
 
     def get(self, visual_var): # axis seperation of concern
         return getattr(self, visual_var)
 
+class ArrayLine:
+    def __init__(self, data, m=Ellipsis, encodings=None):
+        """ 
+        data: arraylike
+            data that will be plotted, must have >= 2 columns
+        m: indexer, default is all values
+            list of rows to take
+        encodings: dict, default None
+            {retinal variable : data selecter}
+            for full list of options, see:
+            matplottoy.artist.line.Line.required
+            matplottoy.artist.line.Line.optional
+            y defaults to 0
+        """
+        # encodings = {'x':0, 'y':1, 'color': 'color'}
+        # should axes go here - 
+        # (since there's a top level controller anyway)
+        # can only draw on the axes it's drawing on?
+        self.data = data
+        self.m = m
+        self.encodings = encodings if encodings else {}
+        self.encodings['y'] = self.encodings.get('y', 0)
+
+    @property
+    def info(self):
+        """Read only attribute providing information about the data 
+        that can be used for labeling and axes formatting
+        """
+        if (not hasattr(self, '_info') or 
+            (self.m != self._info['observation_indexer'])):  
+            self._info = {'encodings': len(self.encodings), 
+                          'observation_indexer': self.m} 
+            for key, col in self.encodings.items():
+                var = self.data[self.m, col]
+                self._info[key] = {'type': var.dtype, 
+                                  'shape': var.shape,
+                                    'min': var.min(), 
+                                    'max': var.max(), 
+                                   'name': col}
+        return self._info
+        
+    def view(self, ax=None):
+        return View(self.data, self.m, self.encodings, ax=ax)
 class ArrayPoint:
     def __init__(self, data, m=Ellipsis, encodings=None):
         """ 
@@ -47,16 +88,21 @@ class ArrayPoint:
         if 'y' not in self.encodings:
             self.encodings['y'] = 1
 
+    @property
     def info(self):
-        subset = self.data[self.m] 
-        #how to share this out publically?
-        self.info = {'shape': subset.shape, 
-                     'encodings': len(self.encodings)} 
-        for key, col in self.encodings.items():
-            var = subset[:, col]
-            self.info[key] = {'type':var.dtype, 'shape':var.shape,
-                              'min': var.min(), 'max':var.max(), 
-                              'name':col}
+        """Read only attribute providing information about the data 
+        that can be used for labeling and axes formatting
+        """
+        if not hasattr(self, '_info'):  
+            self._info = {'encodings': len(self.encodings)} 
+            for key, col in self.encodings.items():
+                var = self.data[self.m, col]
+                self._info[key] = {'type': var.dtype, 
+                                  'shape': var.shape,
+                                    'min': var.min(), 
+                                    'max': var.max(), 
+                                   'name': col}
+        return self._info
 
     def view(self, ax=None):
         return View(self.data, self.m, self.encodings, ax=ax)

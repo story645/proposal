@@ -10,25 +10,14 @@ from typing import Protocol
 import numpy as np 
 from matplottoy.datasources.core import  DataSource, Projection
 
-
-# set of visual variables that each geometry 
-# supports
-# versus set of each visual literals each bertin 
-
 class View:
     # rows are selected, data is all the same number of rows
     def __init__(self, data, m, encodings, ax=None):
+        """contract w/ draw method, just the things the draw needs
+        """
         self.ax = ax # everything has the same axes
-        subset = data.loc[m] 
-        #how to share this out publically?
-        self.info = {'shape': subset.shape, 
-                     'encodings': len(encodings)} 
         for key, col in encodings.items():
-            var = subset[col]
-            self.info[key] = {'type':var.dtype, 'shape':var.shape,
-                              'min': var.min(), 'max':var.max(), 
-                              'name':col}
-            setattr(self, key, var)
+            setattr(self, key, data[col][m])
 
     def get(self, visual_var): # axis seperation of concern
         return getattr(self, visual_var)
@@ -59,6 +48,22 @@ class DataFramePoint:
             self.encodings['x'] = self.data.columns[0]
         if 'y' not in self.encodings:
             self.encodings['y'] = self.data.columns[1]
+
+    @property
+    def info(self):
+        """Read only attribute providing information about the data 
+        that can be used for labeling and axes formatting
+        """
+        if not hasattr(self, '_info'):  
+            self._info = {'encodings': len(self.encodings)} 
+            for key, col in self.encodings.items():
+                var = self.data[col][self.m]
+                self._info[key] = {'type': var.dtype, 
+                                  'shape': var.shape,
+                                    'min': var.min(), 
+                                    'max': var.max(), 
+                                   'name': col}
+        return self._info
 
     def view(self, ax=None):
         return View(self.data, self.m, self.encodings, ax=ax)

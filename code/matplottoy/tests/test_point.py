@@ -35,7 +35,7 @@ class TestArray:
     @check_figures_equal(extensions=['png'])
     def test_point_no_params(self, fig_test, fig_ref):
         ds = da.ArrayPoint(self.arr)
-        info = ds.view().info
+        info = ds.info
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])
 
@@ -56,7 +56,7 @@ class TestArray:
     def test_point_required(self, fig_test, fig_ref):
         ds = da.ArrayPoint(self.arr, 
                     encodings={'x':1, 'y':0})
-        info = ds.view().info
+        info = ds.info
 
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])
@@ -78,7 +78,7 @@ class TestArray:
     def test_point_optional(self, fig_test, fig_ref):
         ds = da.ArrayPoint(self.arr, 
                     encodings={'x':1, 'y':0, 's':3})
-        info = ds.view().info
+        info = ds.info
 
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])
@@ -105,7 +105,7 @@ class TestDataFrame:
     @check_figures_equal(extensions=['png'])
     def test_point_no_params(self, fig_test, fig_ref):
         ds = dsf.DataFramePoint(self.df)
-        info = ds.view().info
+        info = ds.info
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])
 
@@ -126,7 +126,7 @@ class TestDataFrame:
     def test_point_required(self, fig_test, fig_ref):
         ds = dsf.DataFramePoint(self.df, 
                encodings={'x':'odds', 'y':'fives'})
-        info = ds.view().info
+        info = ds.info
 
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])
@@ -148,7 +148,7 @@ class TestDataFrame:
     def test_point_optional(self, fig_test, fig_ref):
         ds = dsf.DataFramePoint(self.df, 
                            encodings={'x':'fives', 'y':'evens', 's':'threes'})
-        info = ds.view().info
+        info = ds.info
 
         xlim = (info['x']['min'], info['x']['max'])
         ylim = (info['y']['min'], info['y']['max'])

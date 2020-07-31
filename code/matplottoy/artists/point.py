@@ -5,6 +5,7 @@ from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 
+from matplottoy.artists.core import check_constraints
 class Point(mcollections.Collection):
     required = {'x', 'y'}
     optional = {'s'} 
@@ -22,20 +23,12 @@ class Point(mcollections.Collection):
         self._s = kwargs.pop('s') if 's' in kwargs else rcParams['lines.markersize']/10
         super().__init__(*args, **kwargs)
         
-        self.check_constraints(datasource)
+        check_constraints(self.required, self.optional, 
+                         datasource.encodings.keys())
         self.opt_encodings = (datasource.encodings.keys() - 
                                 Point.required)
         self.data = datasource
-   
-    #goes in matplotlib cbook
-    def check_constraints(self, artist_data):
-        # check required encodings are there
-        if not (Point.required <= artist_data.encodings.keys()):
-            raise ValueError(f"Required encodings {Point.required}")
-       # check optional encodings 
-        if not ((artist_data.encodings.keys() - Point.required) 
-                <= Point.optional):
-            raise ValueError(f"Valid optional encodings: {Point.optional}")
+
         
     def draw(self, renderer, *args, **kwargs):
         # loop to do aesthetic encoding stuff w/ pitching
