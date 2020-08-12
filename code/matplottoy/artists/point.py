@@ -34,15 +34,21 @@ class Point(mcollections.Collection):
         # loop to do aesthetic encoding stuff w/ pitching
         data_view = self.data.view(self.axes)
         #grab i
+        ## moved to a MarkerSize()
         if 's' in self.opt_encodings:
             radius = data_view.get('s')  
         else:
             radius = itertools.repeat(self._s)
+
         paths = []
+
+        x = aes.x(data_view_get(''))
+        y = aes.y(data.view_get(''))
+
         for (x, y, r) in zip(data_view.get('x'), 
                              data_view.get('y'), 
                              radius):
             paths.append(mpath.Path.circle(center=(x,y), radius=r))                         
-        self._paths = paths
+        self._paths = aes.geo.get_paths('???')
         self.set_edgecolors('k')
         super().draw(renderer, *args, **kwargs)

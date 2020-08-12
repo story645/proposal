@@ -22,6 +22,15 @@ class View:
     def get(self, visual_var): # axis seperation of concern
         return getattr(self, visual_var)
 
+def make_info(data, m, encodings):
+    info = {'encodings': len(encodings)} 
+    for key, col in encodings.items():
+        var = data[col][m]
+        info[key] = {'length': len(max),
+                    'min': var.min(), 
+                    'max': var.max(), 
+                    'name': col}
+    return info
 class DataFramePoint:
     def __init__(self, data, m=None, encodings=None):
         """ 
@@ -55,14 +64,8 @@ class DataFramePoint:
         that can be used for labeling and axes formatting
         """
         if not hasattr(self, '_info'):  
-            self._info = {'encodings': len(self.encodings)} 
-            for key, col in self.encodings.items():
-                var = self.data[col][self.m]
-                self._info[key] = {'type': var.dtype, 
-                                  'shape': var.shape,
-                                    'min': var.min(), 
-                                    'max': var.max(), 
-                                   'name': col}
+            self._info['m'] = self.m
+            self._update(make_info(self.data, self.m, self.encodings))
         return self._info
 
     def view(self, ax=None):
@@ -71,7 +74,7 @@ class DataFramePoint:
 
 class DataSourceDataFrame(DataSource):
     """"
-    Provides a an interface to dataframes, assumes the semenatics of 
+    Provides a an interface to dataframes, assumes the sementics of 
     dependent and independent variables
     """
     def __init__(self, df, **kwargs):

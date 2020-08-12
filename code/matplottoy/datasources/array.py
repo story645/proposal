@@ -9,12 +9,27 @@ from matplottoy.datasources.core import  DataSource, Projection
 # supports
 # versus set of each visual literals each bertin 
 
+class Info:
+    vector_info = {'dtype': np.dtype, 
+                  'shape': np.shape, 'length':len,
+                  'min': np.min, 'max': np.min}
+    metadata = {'x': vector_info, 'y': vector_info, 
+                's': vector_info}
+    
+    def get(data, encodings):
+        info = {'encodings': len(encodings)} 
+        for key, col in encodings.items():
+            info[key] = {'name': col }
+            info[key].update({attr: Info.metadata[attr](data[:,col])
+                              for attr in Info.metadata[key]})
+
+        return info
+
 class View:
     # rows are selected, data is all the same number of rows
     def __init__(self, data, m, encodings, ax=None):
         self.ax = ax # everything has the same axes
         for key, col in encodings.items():
-            var = data[m, col]
             setattr(self, key, var)
 
     def get(self, visual_var): # axis seperation of concern
@@ -50,15 +65,9 @@ class ArrayLine:
         """
         if (not hasattr(self, '_info') or 
             (self.m != self._info['observation_indexer'])):  
-            self._info = {'encodings': len(self.encodings), 
-                          'observation_indexer': self.m} 
-            for key, col in self.encodings.items():
-                var = self.data[self.m, col]
-                self._info[key] = {'type': var.dtype, 
-                                  'shape': var.shape,
-                                    'min': var.min(), 
-                                    'max': var.max(), 
-                                   'name': col}
+            self._info = {'observation_indexer': self.m} 
+            self._info.update(Info.get(self.data, self.encodings))
+
         return self._info
         
     def view(self, ax=None):
@@ -94,14 +103,7 @@ class ArrayPoint:
         that can be used for labeling and axes formatting
         """
         if not hasattr(self, '_info'):  
-            self._info = {'encodings': len(self.encodings)} 
-            for key, col in self.encodings.items():
-                var = self.data[self.m, col]
-                self._info[key] = {'type': var.dtype, 
-                                  'shape': var.shape,
-                                    'min': var.min(), 
-                                    'max': var.max(), 
-                                   'name': col}
+            self._info = Info.get(data[self.m], encodings)
         return self._info
 
     def view(self, ax=None):

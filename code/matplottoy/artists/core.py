@@ -27,3 +27,21 @@ def check_constraints(required, optional, encodings):
     if not ((encodings - required) 
             <= optional):
         raise ValueError(f"Valid optional encodings: {optional}")
+
+
+def draw_alt(...):
+    # do the external monad
+    data_view = self.data.view(self.axes)
+
+    # do functional AES / transforms / ..
+    # required + optional (matplotlib def)
+    transfromed = {k: self.transform [k](data_view.get(k))
+                    for k in data_view}
+    # do renderer monad
+    super()._sekret_draw(transfromed, renderer)
+
+def _sekret_draw(self, transformed, renderer):
+    # what ever terrible thing we have to do to get MPL to draw
+    gc = rendere.get_new_gc()
+    gc.set_foreground_color(transform['color'])
+    renderer.draw_path(transformed['x'], transformed['y'], )

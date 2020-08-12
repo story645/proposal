@@ -1,13 +1,16 @@
+from functools import partial
 from types import SimpleNamespace
+
 import numpy as np 
 
 import matplotlib.collections as mcollections
 
+from matplottoy.artists.core import check_constraints
 class Line(mcollections.LineCollection):
     required = {'y'}
-    optional = {'x'}
+    optional = {'x', 'edges'}
 
-    def __init__(self, datasource, *args, **kwargs):
+    def __init__(self, datasource, transfrom_functions=None, *args, **kwargs):
         """
         Parameters
         ----------
@@ -20,7 +23,8 @@ class Line(mcollections.LineCollection):
         
         check_constraints(self.required, self.optional, 
                           datasource.encodings.keys())
-        
+             
+        #how to refactor this into all the thing
         self.opt_encodings = (datasource.encodings.keys() - 
                                 Line.required)
         self.data = datasource
@@ -28,15 +32,12 @@ class Line(mcollections.LineCollection):
 
     def draw(self, renderer, *args, **kwargs):
         data_view = self.data.view(self.axes) 
-
-        y = data_view.get('y')
-        
+        #curried out
         if 'x' in self.opt_encodings:
-            x = data_view.get('x')   
+            x = partial(data_view.get, 'x')   
         else:
-            x = np.arange(len(y))
-
-        self.set_segments([np.vstack([x,y]).T 
-                           for x,y in zip(projection.x.payload, 
-                                          projection.y.payload)])
+            x = partial(np.arange, self.data.info['y']['length'])
+            
+        self.set_segments([np.vstack([x(), data_view.get('y')]).T])
+                           
         super().draw(renderer, *args, **kwargs)
