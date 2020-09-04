@@ -8,7 +8,7 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{graphicx}
-\graphicspath{{sections/figs/}{.figs/}}
+\graphicspath{{figures}{.figures}}
 \usepackage[backend=bibtex, style=numeric-comp]{biblatex}
 \bibliography{glasslab_viz}
 
@@ -18,14 +18,22 @@
 \author{Hannah Aizenman}
 \committee{Dr. Michael Grossberg (Advisor), Dr. Robert Haralick, Dr. Lev Manovich, Dr. Huy Vo}
 \submitted{}
-\abstract{Often the question in data exploration is not if a pattern occurs, but why. The search for the why is often the search for a conditionally dependent relationship in the dataset. While there are visualization methods that can be used to uncover a potential causal link between variables in the dataset, many of these techniques only work when the causal variables are categorical or can only be applied between two variables at a time or discard the complex, often spatiotemporal, structure of the dataset. Instead structure preserving methods for visualizing the distribution of observations provide a way of understanding some of the probabilistic relationships within and between the observations in these complex datasets. Using the type and structure of the variables in a dataset as a guide, this survey presents methods for visualizing conditional dependencies for multivariate datasets with discrete observations and visualizing probability distributions for datasets where observations are drawn from a continuous (functional) space. Because there is limited literature on explicit ways to visualize conditional dependency, we include techniques that suggest or can be adapted to show these dependencies.}
-
+\abstract{}
 \begin{document}
 \makefrontmatter
 
 \section{Introduction}
 \label{sec:introduction}
 
+\cite{bertinSemiologyGraphicsDiagrams2011}
+
+\begin{figure}
+    \includegraphics{figures/intro/munzner_datatypes}
+    \label{fig:munzner_datatypes}
+    \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's website\cite{munznerChDataAbstraction}}
+\end{figure}
+
+\cite{munznerWhatDataAbstraction2014}
 
 \printbibliography
 \end{document}

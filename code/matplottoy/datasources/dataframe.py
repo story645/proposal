@@ -9,6 +9,24 @@ from typing import Protocol
 
 import numpy as np 
 from matplottoy.datasources.core import  DataSource, Projection
+"""
+plot(x,y, ....transfroms)
+sataSource
+scatter(x,y,c, s...)
+artist:
+....s, markerstyle/edgestyle, ...
+"""
+class ArrayContainer:
+    """does the unpacking
+    {'x':0}...
+    """
+    DataSourcePoint(bundleofdata, [....])
+
+{'x':dataframe[0], 'y'= array[2], 
+'z': graph[j]}
+
+C1, C2, C3 -> {(DataSource , Transfroms) -> Artist}
+              {Line2D(**)}
 
 class View:
     # rows are selected, data is all the same number of rows
@@ -21,7 +39,7 @@ class View:
 
     def get(self, visual_var): # axis seperation of concern
         return getattr(self, visual_var)
-
+        
 def make_info(data, m, encodings):
     info = {'encodings': len(encodings)} 
     for key, col in encodings.items():
@@ -31,6 +49,27 @@ def make_info(data, m, encodings):
                     'max': var.max(), 
                     'name': col}
     return info
+
+{'x':0}, {('x', 'y'): LineEncoder}
+{'x':(0, LineEncoder)}
+{0:LineEncoder} <- signature checking
+{'x':LineEcoder} <-Datasource
+{'x': 0} <-DataContainer Level
+
+# passing in a literal means using 
+# default mpl transforms
+# identity transform
+# pass in two tuple w/ validate, transform
+
+Artist: {'marker': markertransformer...}
+{'markerfacecolor':colortransformer...}
+{'markeredgecolor':colortransformer,
+'color': 'orange', 'cmap': 'RdBu', 
+'fec': TransformTuple(lambda *args, **kwargs: 'red', lambda *arg, **kwargs: pass)}
+
+# encodings dict gets baked into data
+# encodings_meta = {'x':{name:}}
+
 class DataFramePoint:
     def __init__(self, data, m=None, encodings=None):
         """ 

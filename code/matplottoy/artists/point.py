@@ -45,10 +45,28 @@ class Point(mcollections.Collection):
         x = aes.x(data_view_get(''))
         y = aes.y(data.view_get(''))
 
+        """
+        #curry/partialized the mpath.Path.circle
+        c = {}
+        c['marker'] = mpath.Path.circle
+        c['size'] = 5
+        c['color'] = 'red'
+        """
         for (x, y, r) in zip(data_view.get('x'), 
                              data_view.get('y'), 
                              radius):
+            paths.append(c)
+
+      
+        self.__draw(renderer, *args, **kwargs)
+    """
+    def __draw(self):
+            ## to __draw   
+        for p in paths:
+            func = p.pop('marker')
+            p2.append(func(**p))
             paths.append(mpath.Path.circle(center=(x,y), radius=r))                         
         self._paths = aes.geo.get_paths('???')
         self.set_edgecolors('k')
-        super().draw(renderer, *args, **kwargs)
+        pass
+    """

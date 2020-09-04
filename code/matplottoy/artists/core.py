@@ -28,7 +28,7 @@ def check_constraints(required, optional, encodings):
             <= optional):
         raise ValueError(f"Valid optional encodings: {optional}")
 
-
+"""
 def draw_alt(...):
     # do the external monad
     data_view = self.data.view(self.axes)
@@ -45,3 +45,4 @@ def _sekret_draw(self, transformed, renderer):
     gc = rendere.get_new_gc()
     gc.set_foreground_color(transform['color'])
     renderer.draw_path(transformed['x'], transformed['y'], )
+"""

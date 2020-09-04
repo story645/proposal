@@ -8,7 +8,7 @@ import matplotlib.collections as mcollections
 from matplottoy.artists.core import check_constraints
 class Line(mcollections.LineCollection):
     required = {'y'}
-    optional = {'x', 'edges'}
+    optional = {'x'}
 
     def __init__(self, datasource, transfrom_functions=None, *args, **kwargs):
         """
@@ -24,11 +24,20 @@ class Line(mcollections.LineCollection):
         check_constraints(self.required, self.optional, 
                           datasource.encodings.keys())
              
+
+
         #how to refactor this into all the thing
         self.opt_encodings = (datasource.encodings.keys() - 
                                 Line.required)
         self.data = datasource
 
+        assert (self.keys.encodings==self.transforms.keys())
+
+        for key in encodings:
+            assert self.transforms[key].validate(data.info[key])
+
+        # check transforms via signature matching
+        # check transforms via validation
 
     def draw(self, renderer, *args, **kwargs):
         data_view = self.data.view(self.axes) 
@@ -36,8 +45,22 @@ class Line(mcollections.LineCollection):
         if 'x' in self.opt_encodings:
             x = partial(data_view.get, 'x')   
         else:
-            x = partial(np.arange, self.data.info['y']['length'])
-            
-        self.set_segments([np.vstack([x(), data_view.get('y')]).T])
+            x = partial(np.arange, self.data.view.m['observations'])
+
+        'xy' =  np.vstack([x(), data_view.get('y')]).T
+
+        for key in opt_encodings:
+            c[key] = append(self.transfroms.key.transform(...))
+    
+        # maps from idealised to insanity
+        # down the line don't want the 
+        # __draw(**c) 
+        
+    def __draw(components):
+        # make_composites(c) <- 
+        """collect all the like parameters
+        markerstyle, markerface, etc
+        """"
+        self.set_segments(components('xy'))
                            
         super().draw(renderer, *args, **kwargs)
