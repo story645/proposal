@@ -27,12 +27,46 @@
 \begin{figure}
     \includegraphics[width=.5\textwidth]{figures/intro/dubois_bookplate}
     \caption{This collection of visualizations is the inside cover art of W. E. B. Du Bois's Data Portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}}
+    \label{fig:dubois_bookplate}
 \end{figure}
 
+Why am I starting with DuBois? 
+
+ Some of DuBois visualizations are common chart types most modern visualization tools (cite excel, tableu, matplotlib, ggplot, maybe high chart) support, while others are far more custom and likely need tools with drawing capabilities (cite: matplotlib, base r, d3) \cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}. This intentionality in what charts the tool supports and the flexibility it gives the user underpins why we care about this problem. Drawing programs don't really have to care about the data structure because everything is explicit - the user chooses the shape, line, color, they are by hand manually doing all the encoding. Visualization libraries on the other hand allow users to specify which bits of the data they want encoded and how, but there's a lot of implicit mapping of the raw variables in the data to the encodings. We want some confidence that the visualization tool is making the mapping we intended. We often do this by implictely encoding the data structure in the grammar of the visualiztion tool (grammaer of graphics, vega, ggplot, altair), but a goal of Matplotlib \cite{huntermatplotlib2007} is to be fairly data structure agnostic. We are proposing an architecture that converts these implicit assumptions into explicit contracts between the data and the chart types based on the assumptions visualization types make about the topology of the data. 
+
+ Why topology?
+
+ The difference between a line plot and a scatter plot is the former assumes that the data is continous, the latter that it is discrete (cite line and scatter - friendly?) In concrete implementation terms, matplotlib's imshow assumes that the data is continous and therefore does implementation, the matshow assumes it is discrete so it does not. And there are visualization types like area charts that allow even more information to be encoded bewteen the lines. When redesigning the architecture, we needed a way to articulate the differences between the different plot types and found that a topological approach allowed us to encode connectivity (discrete versus continous), dimensionality (point, line, area), and how much information the visualization encodes. 
+
+ What even is encoding?
+ \begin{figure}
+    \includegraphics{figures/intro/retinal_variables}
+    \label{fig:retinal_variable}
+    \caption{This codification of Bertin's retinal variables \cite{bertinSemiologyGraphicsDiagrams2011} that lays out the geometry (columns) versus the aesthetics (rows) with a recommendation based on data type (qualitative versus quantative) comes from Krygier and Wood's Making Maps \cite{krygierMakingMapsVisual2005}}
+\end{figure}
+
+When talking about encodings, we are referering to Bertin's codification of the properties of the graphic system \cite{bertinSemiologyGraphicsDiagrams2011}. 
+
+\cite{bertinSemiologyGraphicsDiagrams2011}
 
 
-\cite{huntermatplotlib2007}
-\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}
+ By encoding, we mean 
+
+
+\begin{figure}
+    \includegraphics{figures/intro/munzner_datatypes}
+    \label{fig:munzner_datatypes}
+    \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's website\cite{munznerChDataAbstraction}}
+\end{figure}
+Munzner's key/value semantics\cite{munznerWhatDataAbstraction2014}
+provide a way to identify variables that in effect act as metadata for other variables, such as how when we are interested in the temperature at a time the temperature is the lookup value. But 
+
+
+
+ 
+ that did not generalize well for complex heterogenous datasets. In this proposal, we refine those ideas by using topology to formally describe the connectivity between the measurements. 
+
+
 
 \begin{verbatim}
 make any stupid plot you want in robust & rigourous way
@@ -55,20 +89,7 @@ make any stupid plot you want in robust & rigourous way
 \end{verbatim}
 
 
-\begin{figure}
-    \includegraphics{figures/intro/retinal_variables}
-    \label{fig:retinal_variable}
-    \caption{\cite{krygierMakingMapsVisual2005}}
-\end{figure}
-\cite{bertinSemiologyGraphicsDiagrams2011}
 
-
-\begin{figure}
-    \includegraphics{figures/intro/munzner_datatypes}
-    \label{fig:munzner_datatypes}
-    \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's website\cite{munznerChDataAbstraction}}
-\end{figure}
-\cite{munznerWhatDataAbstraction2014}
 
 \printbibliography
 \end{document}
