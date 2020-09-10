@@ -56,6 +56,10 @@ In the current grant cycle we have been developing a new architecture that is he
  \end{figure}
 
  What even is encoding?
+
+ \begin{figure}
+    %% Bertin's decomposition of an image
+ \end{figure}
  \begin{figure}
     \includegraphics{figures/intro/retinal_variables}
     \label{fig:retinal_variable}
@@ -104,12 +108,34 @@ make any stupid plot you want in robust & rigourous way
 
 \section{Library Review}
 \subsection{Grammar of Graphics \& ggplot}
+\begin{figure}
+    \includegraphics{figures/intro/grammar_chart_composition.png}
+    \caption{page 10 (introduction)}
+\end{figure}
+\begin{figure}
+    \includegraphics{figures/intro/grammar_example.png}
+    \caption{Wilkenson decomposed a graphic into ...} 
+\end{figure}
 \cite{wilkinsonGrammarGraphicsStatistics2005}
 charts - words 
     - instances of much more general objects (geometric primatives)
     - histogram =/= bar chart
 graphics - statements 
-expliceltly OO 
+expliceltly OO
+    1. specification
+        data - operations/computations
+        trans - variable transforms (rank)
+        scale - scale transforms
+        coord - coordinate system
+        element - marks and channels
+        guide - meta elements - (axes, legends, etc)
+    2. assembly - kinda what happens in artist (spec->something that can go to renderer) 
+    3. display - rendering
+
+How is our proposal different? seperation in spec between what's data, aesthetics, and render specific, and what part of the architecture owns those operations
+
+
+
 
 
 \cite{wickhamGgplot2ElegantGraphics2016}
