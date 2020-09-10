@@ -24,6 +24,8 @@ syntax: glob
 *.bib.bak
 *.blg
 *.dvi
+*.fdb_latexmk
+*.fls
 *.glg
 *.gls
 *.ilg
