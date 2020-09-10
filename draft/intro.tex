@@ -31,7 +31,18 @@
 
 Why am I starting with DuBois? 
 
- Some of DuBois visualizations are common chart types most modern visualization tools (cite excel, tableu, matplotlib, ggplot, maybe high chart) support, while others are far more custom and likely need tools with drawing capabilities (cite: matplotlib, base r, d3) \cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}. This intentionality in what charts the tool supports and the flexibility it gives the user underpins why we care about this problem. Drawing programs don't really have to care about the data structure because everything is explicit - the user chooses the shape, line, color, they are by hand manually doing all the encoding. Visualization libraries on the other hand allow users to specify which bits of the data they want encoded and how, but there's a lot of implicit mapping of the raw variables in the data to the encodings. We want some confidence that the visualization tool is making the mapping we intended. We often do this by implictely encoding the data structure in the grammar of the visualiztion tool (grammaer of graphics, vega, ggplot, altair), but a goal of Matplotlib \cite{huntermatplotlib2007} is to be fairly data structure agnostic. We are proposing an architecture that converts these implicit assumptions into explicit contracts between the data and the chart types based on the assumptions visualization types make about the topology of the data. 
+ Some of DuBois visualizations are common chart types most modern visualization tools (cite excel, tableu, matplotlib, ggplot, maybe high chart) support, while others are far more custom and likely need tools with drawing capabilities (cite: matplotlib, base r, d3) \cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}. This intentionality in what charts the tool supports and the flexibility it gives the user underpins why we care about this problem. Drawing programs don't really have to care about the data structure because everything is explicit - the user chooses the shape, line, color, they are by hand manually doing all the encoding. Visualization libraries on the other hand allow users to specify which bits of the data they want encoded and how, but there's a lot of implicit mapping of the raw variables in the data to the encodings. We want some confidence that the visualization tool is making the mapping we intended. We often do this by implictely encoding the data structure in the grammar of the visualiztion tool (grammaer of graphics, vega, ggplot, altair), but a goal of Matplotlib \cite{huntermatplotlib2007} is to be fairly data structure agnostic. We are proposing an architecture that converts these implicit assumptions into explicit contracts between the data and the visualization. 
+
+ Why functional?
+ because what we care about is the interface, the contract between the data and the visualization. We need the minimal amount of information that fulfills our contract that we can then put on the screen. (insert react notes here). Our theoretical framework is that that visualization is a transformation from one topological space to another to a CW complex (this probably needs to be explained more), and a functional programming paradigm allows us to directly express that in code. 
+
+ \subsection{What will be the work}
+ %%this comes from the grant
+ Matplotlib needs to support use cases across a vast range of science domains, enabling complex visualizations [1]. At the same time, common visualizations in a domain need to be fluid for the end-practitioners, tuned to the domain's standard data structures, and with domain-specific customization options exposed. To achieve both of these goals, we need to continue to foster a two-layer ecosystem with a shared core (Matplotlib) and many domain-specific libraries (seaborn, nipy, ...).
+
+In the current grant cycle we have been developing a new architecture that is heavily invested in cleanly separating the three steps in a visualization pipeline: data representation, encoding the data as visual elements, and rendering those elements to screen. We believe that a better delineation of these steps will allow domain practitioners to more easily implement extensions. Following on the work done this year to design consistent data and artist abstractions, we will develop simpler and more expressive user-level APIs in core Matplotlib and in collaboration with domain-specific libraries. 
+
+
 
  Why topology?
 
@@ -94,6 +105,13 @@ make any stupid plot you want in robust & rigourous way
 \section{Library Review}
 \subsection{Grammar of Graphics \& ggplot}
 \cite{wilkinsonGrammarGraphicsStatistics2005}
+charts - words 
+    - instances of much more general objects (geometric primatives)
+    - histogram =/= bar chart
+graphics - statements 
+expliceltly OO 
+
+
 \cite{wickhamGgplot2ElegantGraphics2016}
 
 
