@@ -30,6 +30,11 @@
 \end{figure}
 
 Why am I starting with DuBois? 
+Visualization library - spells out/regularizes the ways you can aesthetically encode data, preserving structure of data, scatter - magnitude between values preserved - some ways an accurate representation of the data, concerned w/ as data is changed, graph has to change accordingly, graph needs to change accordingly - owns responsibility for preserving measurement integrity when specified by encodings
+    - specify what you want to preserve
+        - (choose which) preserve relations in a strict math/set theory sense
+    - functional is a good fit b/c it spells out these constraints 
+Drawing program - user is responsible for preserving these measurements 
 
  Some of DuBois visualizations are common chart types most modern visualization tools (cite excel, tableu, matplotlib, ggplot, maybe high chart) support, while others are far more custom and likely need tools with drawing capabilities (cite: matplotlib, base r, d3) \cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018}. This intentionality in what charts the tool supports and the flexibility it gives the user underpins why we care about this problem. Drawing programs don't really have to care about the data structure because everything is explicit - the user chooses the shape, line, color, they are by hand manually doing all the encoding. Visualization libraries on the other hand allow users to specify which bits of the data they want encoded and how, but there's a lot of implicit mapping of the raw variables in the data to the encodings. We want some confidence that the visualization tool is making the mapping we intended. We often do this by implictely encoding the data structure in the grammar of the visualiztion tool (grammaer of graphics, vega, ggplot, altair), but a goal of Matplotlib \cite{huntermatplotlib2007} is to be fairly data structure agnostic. We are proposing an architecture that converts these implicit assumptions into explicit contracts between the data and the visualization. 
 
@@ -75,7 +80,19 @@ When talking about encodings, we are referring to Bertin's codification of the p
 \end{description}
 
 The visual channels in fig~\ref{fig:retinal_variable} are recommended based on the measurement type, quantative versus qualitativem  and Munzner generalizes the quantative channels as magnitude channels for ordered attributes (measurements drawn from an ordered set of possible values) and the qualitative channels as identity channels for categorical attributes (random set of possible values). 
+topology in measurement types, and that topology informs the channels appropriate for those types:
+    quantative continouse, quantative discrete, qualitative catorical ordinal, qualitative categorical
+    marks - topology of measurements (people wearing dresses)
+    channels - topology of space from which measurements are drawn (possible dress sizes)
+    categorical - discrete points w/o anything to do 
+    categorical - poset topology?
 
+    base space - topology of observations (people wearing dresses)
+    fiber topology - topology of measurements (possible dress sizes) 
+
+functional 'cause focus on transforms - if transforms preserve linearity than whole pipeline does. Dev gets guarantee on calling composite. 
+
+Add table of which sorts of invariance a channel will preserve
 
 \begin{figure}
     \includegraphics{figures/intro/munzner_datatypes}
