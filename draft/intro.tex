@@ -158,10 +158,26 @@ How is our proposal different? seperation in spec between what's data, aesthetic
 ggplot - strictly hierarchal components (layers), matplotlib - transforms that mostly happen indepently 
 "designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type
 
-
-
-
 \cite{wickhamGgplot2ElegantGraphics2016}
+
+history of viz - collins, friendly
+
+
+Wilkenson suggests that the graphics pipeline could be implemented functionally but does not push it in any direction. 
+
+ordering: processed before plotted, 
+scales before stats, marks before channels
+
+
+
+Notation:
+
+varset: $$x= \[V, \widetilde{O}, f\]$$
+\begin{enumerate}
+    \item V : domain (values)
+    \item \widetilde{O} : codomain, (all possible bags of objects)
+    \item f:   for each $x \in V$, assigns $x \in  \widetilde{O}$
+\end{enumerate}
 
 
 \printbibliography
