@@ -167,16 +167,25 @@ Wilkenson suggests that the graphics pipeline could be implemented functionally 
 
 ordering: processed before plotted, 
 scales before stats, marks before channels
+\begin{figure}
+\includegraphics[]{figures/intro/gog_pathway.png}
+\caption{Diagram of Grammar of Graphics stages of visualization. Fig 2.2 from chapter 2 of The Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}}
+\label{fig:gog_pathway}
+\end{figure}
+In grammar of graphics, as shown in figure~\ref{fig:gog_pathway} data is extracted from the database one variable at a time with an associated index (primary key). The algebra stage joins the variables to become the varset, which is a flat table where the columns are the variables/attributes, each row is an observation/item, and each cell contains a measurement \cite{munznerChDataAbstraction}. Wilkenson then describes the constraints of the measurement space for each variable through scales \cite{wilkinsonGrammarGraphics2005} with implicit assumptions of the data constraints. After this step, data is transformed computationally in service of the visualization. Some of the variables are then mapped into geometric marks (symbols). Position based visual mappings such as x, y, or height are applied at this stage. These mappings are then transformed into the coordinate system of the target graph. 
+
+Wilkenson's thoughts on coherancy are equivalent to invariance but less? formally stated \dots
+
+"To call these charts meainingul, defenders must falsify specific assumptions of GoG" \cite{wilkinsonMathematicalFoundationAnalytic2010}
 
 
-
-Notation:
-
-varset: $$x= \[V, \widetilde{O}, f\]$$
+gog implementationss:
 \begin{enumerate}
-    \item V : domain (values)
-    \item \widetilde{O} : codomain, (all possible bags of objects)
-    \item f:   for each $x \in V$, assigns $x \in  \widetilde{O}$
+    \item SPSS nViZn
+    \item tableu
+    \item ggplot
+    \item protoviz\d3
+    \item vega (interactive GoG)
 \end{enumerate}
 
 
