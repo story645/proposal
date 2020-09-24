@@ -91,9 +91,23 @@ A: x \mapsto x_{position}, f(x) \mapsto y_{position}
 G_{A} = A(F \cap G) 
 \end{equation}
 
-\subsection{What is the artist}
+Wilkenson formulates plotting in terms of varsets, which are sets of variables where variables are:
 \begin{equation}
-A: D \mapsto CW\\
+V:O\mapsto V    
+\end{equation}
+Wilkenson's data algebra is equivalent to data reshapes and join and therefore \cite{wickhamLayeredGrammarGraphics2010,wilkinsonGrammarGraphics2005}
+
+
+\subsection{What is the artist}
+Visualization is a two step process where the artists $A$ transforms the data into visual encodings $V$ and then the renderer $R$ transfroms the encodings $V$ to the set of pixels in $P$.
+\begin{equation}
+    \label{eq:artist}
+    A: D \mapsto V
+\end{equation}
+
+\begin{equation}
+    \label{eg:renderer}
+    R: V \mapsto P
 \end{equation}
 
 An artist is a function F from X to Y
@@ -138,9 +152,7 @@ How is our proposal different? seperation in spec between what's data, aesthetic
 
 
 ggplot - strictly hierarchal components (layers), matplotlib - transforms that mostly happen indepently 
-"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type
-
-\cite{wickhamGgplot2ElegantGraphics2016}
+"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type \cite{wickhamGgplot2ElegantGraphics2016}
 
 history of viz - collins, friendly
 
