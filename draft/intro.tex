@@ -34,10 +34,73 @@ We define a visualization as a transform from data to graphic that preserves the
 
 
 \section{Notation \& Definitions}
+System of transforms:
+input: data w/ structure on fiber bundle + measurement type
+artist: data -> visualization
+(what structure of input is preserved in output)
+we can provide list of
+artist : topology it preserves
+point/line/face parameters: measurement type properties 
+
+ex: 
+Line2D preserves continuity
+Linestyle: categorical 
+
+%%define basic properties of measurement of types in a theoretical way or C&P from a paper
+
+Miniumum assumption a transform will make - is this a valid transform for the slot? 
+
+Set of questions/rules to apply such that see a new artist can be defined which lets us maybe simplify optimizations.  
+
+M, Fiber Bundle, Section, operatons on \{data, visual\}, transform data space \& visual space,  
+
+topology gives us that m is preserved
+spivak gives us that v is preserved
 
 
+temperature on globe:
+\begin{equation}
+data = [[t1], [t2_{la1, lo2}]
+fiber = {lat, lon, temp}
+m = the data is 2d continous
+\end{equation}
+artist has implict m
+aesthetic paremeters transform in fiber that preserves type operations \& relations in the fiber
+lat - relative distance + ordering 
 
+\subsubsection{Graphical Elements}
+There is a set of transform functions $T$ that maps from the data space $D$ to the visual space composed of geometric marks and aesthetic channels $V$ \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels}.  We propose that a visualization is 
+\begin{equation}
+    T: D \rightarrow V
+\end{equation}
 
+Wilkenson proposes  that visualization is  \cite{wilkinsonGrammarGraphics2005, wilkinsonMathematicalFoundationAnalytic2010}
+
+\begin{align}
+\label{eq:gog_data_range}
+G &= {(x, f(x)): x \in R and f(x)=e^{-x^2}}\\
+F &= [-3,3] x [0,1]
+\end{align}
+
+\begin{equation}
+\label{eq:gog_aesthetic_mapping}
+A: x \mapsto x_{position}, f(x) \mapsto y_{position}
+\end{equation}
+
+\begin{equation}
+G_{A} = A(F \cap G) 
+\end{equation}
+
+\subsection{What is the artist}
+\begin{equation}
+A: D \mapsto CW\\
+\end{equation}
+
+An artist is a function F from X to Y
+that satisfyies properties P1, ... PN
+Step 1: Define X
+step 2: Define Y
+Spefiy Pi in terms of equations.
 
 \subsection{visual variables}
 Bertin's proposed an organization of visual variables \cite{bertinIIPropertiesGraphic2011} 
@@ -50,11 +113,12 @@ we want to specify the transformations ....
     \includegraphics{figures/intro/grammar_chart_composition.png}
     \caption{page 10 (introduction)}
 \end{figure}
+
 \begin{figure}
     \includegraphics{figures/intro/grammar_example.png}
     \caption{Wilkenson decomposed a graphic into ...} 
 \end{figure}
-\cite{wilkinsonGrammarGraphicsStatistics2005}
+
 charts - words 
     - instances of much more general objects (geometric primatives)
     - histogram =/= bar chart
