@@ -126,18 +126,21 @@ section: keys -> values
 
 Scatter Plot:
 K - 0D disconnected points
-
-A: (C1, C2, C3...)\mapsto (M....)
+\begin{multline}
+A: (C1, C2, C3...)\mapsto (M....)\\
 t \in A
+\end{multline}
+
 -> preserve type operation and relation
 
-M is the disjoint collection of the output of all these transformers where the transformers preserve the relation and order. M is a bunch of disconnected Marks
+M is the disjoint collection of the output of all these transformers where the transformers preserve the relation and order. 
 
 Line Plot:
 L - 1D, can be a function on an interval [a,b]
 functions in the column...f(key) -> values
 
-invariance: \mapto -> preserves operations/relations types
+invariance: The symmetry group $A$ preserves invariance when the transforms $a \in A$ are symmetric such that $operation(column) = operation(channel)$ and $operation on data -> operation (mark)$
+
 K might have symmetry -> move back and forth in time, preserved in K
 symmatry in fibers -> scaled up/down, categorical,
 preserved in the visual variables
@@ -162,27 +165,50 @@ groups:
 symmteries of K
 symmetries of cartesian product of columns
 each visual channel has symmtery group associated w/
-orbit- space of possible visualiztions by changing the constants of each aesthetic (or f_{red}->f_{green})  
+orbit- space of possible visualiztions by changing the constants of each aesthetic (or $f_{red} \rightarrow f_{green}$)  
 visual type might be orbit of that (orbit of function in space)->single function that can be transformed in that way
-each visualization type is an orbit & then try to set up equivalence on these...
+each visualization type is an orbit \& then try to set up equivalence on these...
 
 artist will respect that w/ equivariance, knob on one side will tweak knob on another
 
+Steven's defines the group
+
+Wiki: Symmetry group is the group of all transformations under which the object is invariant. 
+The aesthetic transfroms $a \in A$ are a symmetry group that preserves transforms:
+
 \begin{table}
+    \label{tab:sym_mark}
     \begin{tabular}{|r|r|}
-        
     \end{tabular}
 \caption{Symmetrys one the data preserved with each type of mark\cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
-\label{tab:symmetry_mark}
 \end{table}
 
 \begin{table}
-\begin{tabular}{|r|r|}
-
-\end{tabular}
-\caption{Symmetries on variable columns C \caption{Symmetrys one the data preserved with each type of channel \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
-\label{tab:symmetry_channel}
+    \label{tab:sym_mark}
+    \begin{tabular}{|r|r|}
+    \end{tabular}
+\caption{Symmetrys one the data preserved with each type of mark\cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
 \end{table}
+
+
+Scatter Plot:
+K - 0D disconnected points
+\begin{multline}
+A: (C1, C2, C3...)\mapsto (M....)\\
+ t \in A 
+\end{multline}
+
+-> preserve type operation and relation
+
+M is the disjoint collection of the output of all these transformers where the transformers preserve the relation and order. M is a bunch of disconnected Marks
+
+Line Plot:
+L - 1D, can be a function on an interval [a,b]
+functions in the column...f(key) -> values
+
+Box chart: area + scatter 
+
+
 Combining 
 \begin{equation}
     \label{eg:renderer}
@@ -196,6 +222,7 @@ that satisfyies properties P1, ... PN
 Step 1: Define X
 step 2: Define Y
 Spefiy Pi in terms of equations.
+
 
 \subsection{visual variables}
 Bertin's proposed an organization of visual variables \cite{bertinIIPropertiesGraphic2011} 
