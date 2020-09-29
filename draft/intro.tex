@@ -6,6 +6,7 @@
 \usepackage{subfiles}
 \usepackage{url}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage[backend=bibtex, style=numeric-comp]{biblatex}
@@ -48,7 +49,7 @@ Linestyle: categorical
 
 %%define basic properties of measurement of types in a theoretical way or C&P from a paper
 
-Miniumum assumption a transform will make - is this a valid transform for the slot? 
+Minimum assumption a transform will make - is this a valid transform for the slot? 
 
 Set of questions/rules to apply such that see a new artist can be defined which lets us maybe simplify optimizations.  
 
@@ -171,34 +172,33 @@ each visualization type is an orbit \& then try to set up equivalence on these..
 
 artist will respect that w/ equivariance, knob on one side will tweak knob on another
 
-Steven's identifies the group symmetries for the measurement scales\cite{stevensTheoryScalesMeasurement1946} as follows:
-
+Steven's measurement scales have the following structure \cite{stevensTheoryScalesMeasurement1946}:
+%the big point of disagreement on the scales seems to be the stats column that we don't care about
 \begin{table}
     \begin{tabular}{l l l l}
         nominal & permutation group & one to one substitutions & $=, \neq $\\
-        ordinal & isotonic group & monotonic increasing functions & $\leq, \geq$\\
-        interval & general linear group & & $+, -$, matrix multiplication\\
-        ratio & similarity group & & \\
+        ordinal & isotonic group & monotonic increasing functions &  $=, \neq $, $\leq, \geq$\\
+        interval & general linear group & matrix operations &  $=, \neq, \leq, \geq, +, -, $\\
+        ratio & similarity group & $ \mathbb{Z}^+ $ & 
     \end{tabular}
 \end{table}
 
-Wiki: Symmetry group is the group of all transformations under which the object is invariant. 
-The aesthetic transfroms $a \in A$ are a symmetry group that preserves transforms:
+The aesthetic transfroms $a \in A$ are a symmetry group that preserves the group structure of the measurment scales as follows: 
+
 
 \begin{table}
     \label{tab:sym_mark}
-    \begin{tabular}{|r|r|}
+    \begin{tabular}{|r|r|r|r|r|}
+             & nominal & ordinal & interval & ratio \\
+    position &         &         &          &       \\
+    size     & &         &          &       \\
+    shape    &&         &          &       \\
+    texture  &&         &          &       \\
+    color hue &&         &          &       \\
+    color value &&         &          &       \\
     \end{tabular}
 \caption{Symmetrys one the data preserved with each type of mark\cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
 \end{table}
-
-\begin{table}
-    \label{tab:sym_mark}
-    \begin{tabular}{|r|r|}
-    \end{tabular}
-\caption{Symmetrys one the data preserved with each type of mark\cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
-\end{table}
-
 
 Scatter Plot:
 K - 0D disconnected points
@@ -269,8 +269,7 @@ How is our proposal different? seperation in spec between what's data, aesthetic
 
 
 ggplot - strictly hierarchal components (layers), matplotlib - transforms that mostly happen indepently 
-"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type \cite{wickhamGgplot2ElegantGraphics2016}
-
+"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type \cite{wickhamGgplot2ElegantGraphics2016a}
 history of viz - collins, friendly
 
 
