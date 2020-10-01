@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{float}
+\usepackage{diagbox}
 \usepackage{graphicx}
 \usepackage[backend=bibtex, style=numeric-comp]{biblatex}
 \bibliography{glasslab_viz}
@@ -35,6 +36,7 @@ We define a visualization as a transform from data to graphic that preserves the
 
 
 \section{Notation \& Definitions}
+\label{sec:hunterMatplotlib2DGraphics2007}
 System of transforms:
 input: data w/ structure on fiber bundle + measurement type
 artist: data -> visualization
@@ -143,7 +145,7 @@ functions in the column...f(key) -> values
 invariance: The symmetry group $A$ preserves invariance when the transforms $a \in A$ are symmetric such that $operation(column) = operation(channel)$ and $operation on data -> operation (mark)$
 
 K might have symmetry -> move back and forth in time, preserved in K
-symmatry in fibers -> scaled up/down, categorical,
+symmatery in fibers -> scaled up/down, categorical,
 preserved in the visual variables
 
 groups on K and fibers and subgroups w/ different types and temperatures (Steven's fundemental data types-measurment scales and types)
@@ -167,7 +169,8 @@ symmteries of K
 symmetries of cartesian product of columns
 each visual channel has symmtery group associated w/
 orbit- space of possible visualiztions by changing the constants of each aesthetic (or $f_{red} \rightarrow f_{green}$)  
-visual type might be orbit of that (orbit of function in space)->single function that can be transformed in that way
+visual type might be orbit of that (orbit of function in space)->single function that can be transformed in that way 
+
 each visualization type is an orbit \& then try to set up equivalence on these...
 
 artist will respect that w/ equivariance, knob on one side will tweak knob on another
@@ -185,36 +188,65 @@ Steven's measurement scales have the following structure \cite{stevensTheoryScal
 
 The aesthetic transfroms $a \in A$ are a symmetry group that preserves the group structure of the measurment scales as follows: 
 
-categorical & shapres have the group structure and so can do 
-a $a: c \mapsto \s$
+categorical \& shapres have the group structure and so can do a $a: c \mapsto s$
 Optimal transform $a_{i}$ is one from a measurment space to a visual channel where both sides have the same group transforms-
 because equivaraince requires having the same transforms on the same side. 
 
 artists take in class of visuals + 
 
 A - matplotlib artists 
-$A: FB \mapsto CW$
+$A: D \mapsto CW$
+
 $\tau: fb \mapsto vv $visual variable transformers
-$\{\tau_{1}, \tau_{2}...\tau_{n}}(K)\mapsto {CW_{1}, CW_{2}, ...CW_{n}}$ 
+$\{\tau_{1}, \tau_{2}...\tau_{n}\}(K)\mapsto \{CW_{1}, CW_{2}, ...CW_{n}\}$ 
 $\mapsto$ is what embeds the topology k 
 functions that know how to embed the k (mark)
 functions that work on the fibers $\tau$
 
+%% distance along edge to transformed physical space, s function 
+%% colormap_nrom - t: d \mapsto RGBA, continouts t: d(s) \mapsto 
+%% 1d has to be parameterized  t: d(s), really want t: d\ mapsto RGBA
+%%  d(s) \mapsto {d....} on interval [s_{0}..s_{n}]
 %% flip this to the otherside so it's an adjacency matrix
+%% how do we represent invariance/equivariance  A: D \mapsto \I
+%% D - columns + topology (section + topology)
+%% artist is the visual idiom 
+%% {D cartesian product Tau} \mapsto I
+%% Artist already has everything in VV space and composing into idiom
+%% functions on simplex crossed wuth transformers - everything in visual space w/ same topology
+%% A: visual \mapsto idiom
+%% Artist (raw data + transforms )
+%% carry topology over from VV space to I space -> singular CW complex 
+%% (has no inherent structure) 
+%% invaraince - shuffle_sq on tick labels = shuffle_sq on data 
+%% how do you preserve invariance on topology->Idiom?
+%% \tau_{2} is a new \tau function taht's really tau + 2
+%% taus is a group of transform functions under composition 
+%% tau gos data to visual variable
+%% group of functions + 
+%% measurement space groups is what class of functions don't destroy your data
+%% \tau: d \mapsto vv - group of mapto functions
+%% set of allowable \tau is where symmtery d/v are preserved 
+%% d\v isomorphisms where tau takes you from one to another
+%% d\v is  isomorphisms under group of taus where tau is the permutation group
+%%
+%% math: structure is same as type
 
 \begin{table}
-    \label{tab:sym_mark}
-    \begin{tabular}{|r|r|r|r|r|}
-             & nominal & ordinal & interval & ratio \\
-    position &         &         &          &       \\
-    size     & &         &          &       \\
-    shape    &&         &          &       \\
-    texture  &&         &          &       \\
-    color hue &&         &          &       \\
-    color value &&         &          &       \\
+    \label{tab:taus}
+    \begin{tabular}{l*{6}{c}} 
+                              & position &  size  & shape & texture & color hue & color value  \\
+    nominal                   & $\tau$   & $\tau$ & $\tau$& $\tau$  & $\tau$    & $\tau$       \\
+    ordinal                   & $\tau$   & $\tau$ &       &         &           & $\tau$  \\
+    interval                  & $\tau$   & $\tau$ &       &         &           & $\tau$  \\
+    ratio                     & $\tau$   & $\tau$ &       &         &           & $\tau$ \\  
     \end{tabular}
-\caption{Symmetrys one the data preserved with each type of mark\cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
+\caption{Group of $\{t_{1}....t_{n}\}$ where $tau: d \mapsto v$ preserving equivariance such that $d$ and $v$ are isomorphic. $d$ is data of type \{nominal, ordinal, interval, ratio\} and $v$ are the visual channels. \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
 \end{table}
+ 
+
+Table~\ref{tab:taus} shows under which $\tau: d maps to v$, $d$ and $v$ can be isomorphisms.
+
 
 Scatter Plot:
 K - 0D disconnected points
@@ -247,72 +279,6 @@ that satisfyies properties P1, ... PN
 Step 1: Define X
 step 2: Define Y
 Spefiy Pi in terms of equations.
-
-
-\subsection{visual variables}
-Bertin's proposed an organization of visual variables \cite{bertinIIPropertiesGraphic2011} 
-
-
-\subsection{Grammar of Graphics \& ggplot}
-Specifies the end chart (graphic)
-we want to specify the transformations ....
-\begin{figure}
-    \includegraphics{figures/intro/grammar_chart_composition.png}
-    \caption{page 10 (introduction)}
-\end{figure}
-
-\begin{figure}
-    \includegraphics{figures/intro/grammar_example.png}
-    \caption{Wilkenson decomposed a graphic into ...} 
-\end{figure}
-
-charts - words 
-    - instances of much more general objects (geometric primatives)
-    - histogram =/= bar chart
-graphics - statements 
-expliceltly OO
-    1. specification
-        data - operations/computations
-        trans - variable transforms (rank)
-        scale - scale transforms
-        coord - coordinate system
-        element - marks and channels
-        guide - meta elements - (axes, legends, etc)
-    2. assembly - kinda what happens in artist (spec->something that can go to renderer) 
-    3. display - rendering
-
-How is our proposal different? seperation in spec between what's data, aesthetics, and render specific, and what part of the architecture owns those operations
-
-
-ggplot - strictly hierarchal components (layers), matplotlib - transforms that mostly happen indepently 
-"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type \cite{wickhamGgplot2ElegantGraphics2016a}
-history of viz - collins, friendly
-
-
-Wilkenson suggests that the graphics pipeline could be implemented functionally but does not push it in any direction. 
-
-ordering: processed before plotted, 
-scales before stats, marks before channels
-\begin{figure}
-\includegraphics[]{figures/intro/gog_pathway.png}
-\caption{Diagram of Grammar of Graphics stages of visualization. Fig 2.2 from chapter 2 of The Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}}
-\label{fig:gog_pathway}
-\end{figure}
-In grammar of graphics, as shown in figure~\ref{fig:gog_pathway} data is extracted from the database one variable at a time with an associated index (primary key). The algebra stage joins the variables to become the varset, which is a flat table where the columns are the variables/attributes, each row is an observation/item, and each cell contains a measurement \cite{munznerChDataAbstraction}. Wilkenson then describes the constraints of the measurement space for each variable through scales \cite{wilkinsonGrammarGraphics2005} with implicit assumptions of the data constraints. After this step, data is transformed computationally in service of the visualization. Some of the variables are then mapped into geometric marks (symbols) and are scaled (height, width) as appropriate. These mappings are then transformed into the coordinate system of the target graph. Then the aesthethic attributes (Bertin's retinal variables, also called channels) such as color or  texture) are applied. Finally
-
-Wilkenson's thoughts on coherancy are equivalent to invariance but less? formally stated \dots
-
-"To call these charts meainingul, defenders must falsify specific assumptions of GoG" \cite{wilkinsonMathematicalFoundationAnalytic2010}
-
-
-gog implementationss:
-\begin{enumerate}
-    \item SPSS nViZn
-    \item tableu
-    \item ggplot
-    \item protoviz\d3
-    \item vega (interactive GoG)
-\end{enumerate}
 
 
 \printbibliography
