@@ -1,3 +1,4 @@
+* cartesian product - ordered pairs of all elements in A x B
 * group
     * set + operation 
     * group has identity + inverse
@@ -12,12 +13,24 @@
         * injective - one to one, range <= codomain
         * surjective - many to one, range == codomain
         * bijective - one to one, range == domain
-* fiber bundle 
+* open set - set on space where boundary not in set, approx equiv to open interval on line
+* topology
+    * topological space - set of points + neighborhoods for each point
+        * neighborhood - set of points containing the point p where can move away from point in any direction w/o  leaving the set (wiki)
+            * ex: A set V in the plane is a neighbourhood of a point p if a small disc around p is contained in V.
+        * product space - cartesian product of topological spaces
+* fiber bundle $(E, B, \pi, F)$
+    * E - total space
+    * B - base space
+    * $\pi: E \mapsto B$  - projection map (continuos surjection) 
+    * F - fiber
 
+    
 * homology
-* morphisms
-    * homomorphism
-    * isomorphism
+* homomorphism
+    * monomorphism - injective
+    * epimorphism - surjective
+    * isomorphism - bijective 
 * {equi,in}variance
     * equivariance
 *
