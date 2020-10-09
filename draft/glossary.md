@@ -1,12 +1,19 @@
 * cartesian product - ordered pairs of all elements in A x B
 ### groups
 * group $\subset$ monoid $\subset$ semigroups $\subset$ magma
+* weak groups -
 * general definition of group
-    * set + binary operation
-    * has identity element (under operation)
-    * has inverse elements (under operaion)
-    * operation is associative 
-    * group closed under operation
+    * set + binary operation *
+    * closure:
+        * $\forall a,b \in A,  (a*b) \in A$
+    * associativity
+        * $\forall a,b,c \in A, (a*b)*c = a *(b*c)$
+    * has identity element 
+        * $\exists e \in A \text{ s.t. } \forall a \in A: e * a = a * e = a$
+    * has inverse elements
+        * $\exists b\ in A \text{ s.t. } \forall a \in A: a*b=b*a=e$ 
+    * commutativity:
+         $\forall a,b \in A,  (a*b) = (b*a)$
 * magma
     * set + closed operation
 * semigroup
@@ -15,17 +22,23 @@
     * semigroup + identity
 * group
     * monoid + inverse
+* abelian group
+    * group + commutativity
 
 ### functions
-* domain - input set
-* codomain - set of possible outputs 
-* range - set of actual outputs of input set
+ $f: X \mapsto Y, f(x)=y$
+* domain - input set X
+* codomain - set of possible outputs Y
+* range - set of outputs $y \in Y$ that $f(x), x \in X$ maps to
 * types:
     * general - many to one, range <= codomain
     * injective - one to one, range <= codomain
     * surjective - many to one, range == codomain
-    * bijective - one to one, range == domain
-
+    * bijective - one to one, range == codomain
+* functor goes between categories, satisfies properties 
+    * monad is functor w/ extra structure
+    * data structures are functors
+    * not allowed to open up the structure, acts on containers
 
 ### topology
 * open set - set on space where boundary not in set, approx equiv to open inte*rval on line
@@ -34,14 +47,43 @@
         * ex: A set V in the plane is a neighbourhood of a point p if a small disc around p is contained in V.
     * product space - cartesian product of topological spaces
 * fiber bundle $(E, B, \pi, F)$
-    * E - total space
-    * B - base space
-    * $\pi: E \mapsto B$  - projection map (continuos surjection) 
-    * F - fiber
 
-###
-* homology
-* homomorphism
+    * E - total space
+        * 
+    * B - base space
+        * 
+    * $\pi: E \mapsto B$  - projection map (continuos surjection) 
+        *
+    * F - fiber
+        *
+### homology?
+* general way of associating a sequence of algebraic objects (groups) to other mathematical objects such as topological spaces
+    * topological space out of simplacial complex
+    * sequence of groups
+    * homology groups is 1 per dimension for each dimension of the topological
+    * more general function (topological space) =sequence of groups <- 
+    * map from one topological space to another is a map from one topoloical space is same as homology group to another homology group 
+* computing the homology - get the homology groups of the space
+    * homology - not a mapping from one space to other 
+        * function from set of topological spaces to set of groups that preserve structure 
+        * homology (whole torus, not points) -> groups
+            * functions withen space preserved across to other space 
+                * functions on elements should work on containers of those elements
+                * functors are containarization  
+* homology is 
+    * define a group on the vertices, edges, faces
+    * define a boundary map
+    * B is little circle in big circle A
+        * C is a collection of triangles between B and A
+        * C_{i} boundary is A-B
+        * since higher demension boundaries are considered 0, A=B
+            * optimizing for something that doesn't depend on the topological space
+            * set to 0 to remove dependency
+            * cross sections of shape & is there a boundary between? hole boundary + inner circle of donut
+    * singular homology - mathematical
+        * any crazy space I can cover w/ triangle
+    * simplacial homology - computational
+* homomorphism - continous mapping from one space to another, preserves topology
     * monomorphism - injective
     * epimorphism - surjective
     * isomorphism - bijective 
@@ -54,5 +96,17 @@ CW
     * simplacial complex
     * simplacial set
 
-   
 * Spivac
+
+### Bertin
+* invariant
+* componenents
+* marks
+* channels
+### Munzner
+* keys
+* values
+### Notes
+Artists are maybe functors/acting kind of like them in a homology space 
+$A: Data \mapsto RGBA...$
+
