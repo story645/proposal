@@ -83,6 +83,9 @@
     * singular homology - mathematical
         * any crazy space I can cover w/ triangle
     * simplacial homology - computational
+
+### morphisms
+structure preserving map from one mathematical structure to another of the same type
 * homomorphism - continous mapping from one space to another, preserves topology
     * monomorphism - injective
     * epimorphism - surjective
@@ -99,10 +102,13 @@ CW
 * Spivac
 
 ### Bertin
-* invariant
-* componenents
-* marks
-* channels
+* invariant - what the viz shows that doesn't change (what is encoded in the composition of channels/components rather than an individual channel)-> basically one artist shows 1 invariant
+artist: data $\mapsto$ invariant
+* componenents - variables / what changes in the data (1 channel marks to one channel)
+* marks/symbols
+* impositions
+* channels/visual variables - aesthetic attributes that are set relative to the data values in a component
+transforms: component $\mapsto$ visual variable 
 ### Munzner
 * keys
 * values
