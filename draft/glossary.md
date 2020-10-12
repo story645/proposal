@@ -40,8 +40,14 @@
     * data structures are functors
     * not allowed to open up the structure, acts on containers
 
+
 ### topology
-* open set - set on space where boundary not in set, approx equiv to open inte*rval on line
+* simplex (simplices) - generalization of the notion of a 
+triangle to arbitrary dimensions
+* CW (cell) complex - set homeomorphic to a simplex 
+* simplicial complex - set of simplices 
+* simplicial set - 
+* open set - set on space where boundary not in set, approx equiv to open interval on line
 * topological space - set of points + neighborhoods for each point
     * neighborhood - set of points containing the point p where can move away from point in any direction w/o  leaving the set (wiki)
         * ex: A set V in the plane is a neighbourhood of a point p if a small disc around p is contained in V.
@@ -55,7 +61,11 @@
     * $\pi: E \mapsto B$  - projection map (continuos surjection) 
         *
     * F - fiber
-        *
+
+### Spivak (categories)
+* limits
+* colimits
+
 ### homology?
 * general way of associating a sequence of algebraic objects (groups) to other mathematical objects such as topological spaces
     * topological space out of simplacial complex
@@ -93,23 +103,26 @@ structure preserving map from one mathematical structure to another of the same 
 * {equi,in}variance
     * equivariance
     * invariance 
-CW 
-    * simplex
-    * CW complex
-    * simplacial complex
-    * simplacial set
 
-* Spivac
-
-### Bertin
-* invariant - what the viz shows that doesn't change (what is encoded in the composition of channels/components rather than an individual channel)-> basically one artist shows 1 invariant
-artist: data $\mapsto$ invariant
+### visualization
+#### Bertin
+* invariant - what the viz shows that doesn't change (what is encoded in the composition of artists) 
+    * multiple lines/scatters - what is the common thread? 
+artist: data $\mapsto$ visual idom
 * componenents - variables / what changes in the data (1 channel marks to one channel)
-* marks/symbols
-* impositions
+* marks/symbols - 
+* impositions - 
 * channels/visual variables - aesthetic attributes that are set relative to the data values in a component
 transforms: component $\mapsto$ visual variable 
-### Munzner
+#### measurement type
+* selective
+* ordered 
+* associative
+* quantitative
+
+
+#### Munzner
+* visual idiom
 * keys
 * values
 ### Notes
