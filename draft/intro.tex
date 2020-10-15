@@ -175,16 +175,7 @@ each visualization type is an orbit \& then try to set up equivalence on these..
 
 artist will respect that w/ equivariance, knob on one side will tweak knob on another
 
-Steven's measurement scales have the following structure \cite{stevensTheoryScalesMeasurement1946}:
-%the big point of disagreement on the scales seems to be the stats column that we don't care about
-\begin{table}
-    \begin{tabular}{l l l l}
-        nominal & permutation group & one to one substitutions & $=, \neq $\\
-        ordinal & isotonic group & monotonic increasing functions &  $=, \neq $, $\leq, \geq$\\
-        interval & general linear group & matrix operations &  $=, \neq, \leq, \geq, +, -, $\\
-        ratio & similarity group & $ \mathbb{Z}^+ $ & 
-    \end{tabular}
-\end{table}
+
 
 The aesthetic transfroms $a \in A$ are a symmetry group that preserves the group structure of the measurment scales as follows: 
 
@@ -231,15 +222,37 @@ functions that work on the fibers $\tau$
 %% d\v is  isomorphisms under group of taus where tau is the permutation group
 %%
 %% math: structure is same as type
+Steven's measurement scales have the following structure \cite{stevensTheoryScalesMeasurement1946}:
+%the big point of disagreement on the scales seems to be the stats column that we don't care about
+\begin{table}
+    \lable{tab:measument_type}
+    \begin{tabular}{l l l l}
+        nominal & permutation group & one to one substitutions & $=, \neq $\\
+        ordinal & isotonic group & monotonic increasing functions &  $=, \neq $, $\leq, \geq$\\
+        interval & general linear group & matrix operations &  $=, \neq, \leq, \geq, +, -, $\\
+        ratio & similarity group & $ \mathbb{Z}^+ $ & 
+    \end{tabular}
+\end{table}
+
+%%% make a second table later of what MPL currently supports
+%%% redraw as graph
+%%% set of all possible taus (operations can possibly be defined on both sides)
+
+Split is discrete/ vs continous measurment types 
+It is possible to write taus to ....
+
+A: (v...v) -> I
+%% tau is when we have data/visual lineups for labeling colorbar \ legend
+%% colorbar vs. legend - continous vs discrete
 
 \begin{table}
     \label{tab:taus}
     \begin{tabular}{l*{6}{c}} 
-                              & position &  size  & shape & texture & color hue & color value  \\
-    nominal                   & $\tau$   & $\tau$ & $\tau$& $\tau$  & $\tau$    & $\tau$       \\
-    ordinal                   & $\tau$   & $\tau$ &       &         &           & $\tau$  \\
-    interval                  & $\tau$   & $\tau$ &       &         &           & $\tau$  \\
-    ratio                     & $\tau$   & $\tau$ &       &         &           & $\tau$ \\  
+                              & position      &  size        & shape        & texture     & color \\
+    nominal                   &  1            &  1           & 1            & 1           & 1     \\ 
+    ordinal                   &  1            &  1           & 1            & 1           & 1     \\
+    interval                  &  1            &  1           &              &             & 1     \\   
+    ratio                     &  1            &  1           &              &             & 1     \\  
     \end{tabular}
 \caption{Group of $\{t_{1}....t_{n}\}$ where $tau: d \mapsto v$ preserving equivariance such that $d$ and $v$ are isomorphic. $d$ is data of type \{nominal, ordinal, interval, ratio\} and $v$ are the visual channels. \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
 \end{table}
@@ -248,6 +261,7 @@ functions that work on the fibers $\tau$
 Table~\ref{tab:taus} shows under which $\tau: d maps to v$, $d$ and $v$ can be isomorphisms.
 
 
+%%% draw what the function graph looks like for scatter versus linesg
 Scatter Plot:
 K - 0D disconnected points
 \begin{multline}

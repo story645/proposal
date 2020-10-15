@@ -45,6 +45,10 @@
 * simplex (simplices) - generalization of the notion of a 
 triangle to arbitrary dimensions
 * CW (cell) complex - set homeomorphic to a simplex 
+    * C: "closure-finite"
+    * W: "weak" topology.
+    * kinda categorical simplices
+
 * simplicial complex - set of simplices 
 * simplicial set - 
 * open set - set on space where boundary not in set, approx equiv to open interval on line
@@ -61,12 +65,60 @@ triangle to arbitrary dimensions
     * $\pi: E \mapsto B$  - projection map (continuos surjection) 
         *
     * F - fiber
+        * fiber as unit being plotted as a one thing 
+            * box, line, dot, image
+    * $\sigma$ - function that goes from K (index) to F
+        * function like sine, cosine
+        * data structure is also collection of functions:
+            * data in table = functions that populate data into table
+        * is instance of the data 
+        * $\sigma$(k) equiv $\sigma[k]$
+            * F is the Return signature of the indexing operation
+#### Movie Frames
+* 100, 64x64 Frames
+* K = 0-100 (frame count), $k \in K$ 
+* F - space of all possible pixel values 
+    * [0-255] X 4096 cartesian product = 2^{8^4096}
+* sigma - particular movie or set of functions that generate that movie
+* $\sigma(k)$ applying the function $\sigma$ on F to get back the frame at k
 
-### Spivak (categories)
-* limits
-* colimits
+### Category theory
+* category - objects & arrows that go between them
+    * with associativity + identity
+    * limited to small category
+    * trying to replace set theory
+    * private vs. public - 
+    * objects may not be openable
+        * class w/o instances
+    * directed graphs w/ some extra info
+    
+* arrows - morphisms, orderings, functions, maps
+* functor - maps between categories that preserve all arrows
+    * has to preserve within category arrows
+    * usually are containers
+    * given {a,b}:
+        * a->b, g(a) = b
+        * F(a) = a, F(b) = b, F(g(F(a))) = F(b)
+    * can implement map
+    * can lift from single element function (transform) up to the section
+        * arrows from one FB -> FB
+    * homology is a functor, show that there's a natural transform and therefore all the same. 
+* natural transfroms: arrows of functors 
+    * preserve arrows between categories of functors
+* limits - 
+    * product - 
+* colimits -
+    * coproduct (sum) 
+* initial object: {} (empty set)
+    * arrow from it to every other set
+* terminal object: () (one element set)
+    * arrow from every other set to it
+    * kind of like return None 
+    * example: Error/Exception  
+* Yoneda's Lemma:
+    *
 
-### homology?
+### homology
 * general way of associating a sequence of algebraic objects (groups) to other mathematical objects such as topological spaces
     * topological space out of simplacial complex
     * sequence of groups
