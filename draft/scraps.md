@@ -1,3 +1,10 @@
+Spivak - 
+* simplacial sets for schemas, 
+    * entity - relation for the schema
+* sheaves for the data itself 
+    * 
+- 
+
 Visualization library - spells out/regularizes the ways you can aesthetically encode data, preserving structure of data, scatter - magnitude between values preserved - some ways an accurate representation of the data, concerned w/ as data is changed, graph has to change accordingly, graph needs to change accordingly - owns responsibility for preserving measurement integrity when specified by encodings
     - specify what you want to preserve
         - (choose which) preserve relations in a strict math/set theory sense
@@ -91,3 +98,69 @@ make any stupid plot you want in robust & rigourous way
         * utility library <- formalize this piece (SciPy Diagram)
     * viz - Munzner + Bertin
     * functional programming makes sense 
+
+\subsection{visual variables}
+Bertin's proposed an organization of visual variables \cite{bertinIIPropertiesGraphic2011} 
+
+
+\subsection{Grammar of Graphics \& ggplot}
+Specifies the end chart (graphic)
+we want to specify the transformations ....
+\begin{figure}
+    \includegraphics{figures/intro/grammar_chart_composition.png}
+    \caption{page 10 (introduction)}
+\end{figure}
+
+\begin{figure}
+    \includegraphics{figures/intro/grammar_example.png}
+    \caption{Wilkenson decomposed a graphic into ...} 
+\end{figure}
+
+charts - words 
+    - instances of much more general objects (geometric primatives)
+    - histogram =/= bar chart
+graphics - statements 
+expliceltly OO
+    1. specification
+        data - operations/computations
+        trans - variable transforms (rank)
+        scale - scale transforms
+        coord - coordinate system
+        element - marks and channels
+        guide - meta elements - (axes, legends, etc)
+    2. assembly - kinda what happens in artist (spec->something that can go to renderer) 
+    3. display - rendering
+
+How is our proposal different? seperation in spec between what's data, aesthetics, and render specific, and what part of the architecture owns those operations
+
+
+### lit review
+ggplot - strictly hierarchal components (layers), matplotlib - transforms that mostly happen indepently 
+"designing and producing statistical graphics is not an art" - ties in w/ difference between drawing program and visualization library, preservation of properties of measurement type and observation type \cite{wickhamGgplot2ElegantGraphics2016a}
+history of viz - collins, friendly
+
+
+Wilkenson suggests that the graphics pipeline could be implemented functionally but does not push it in any direction. 
+
+ordering: processed before plotted, 
+scales before stats, marks before channels
+\begin{figure}
+\includegraphics[]{figures/intro/gog_pathway.png}
+\caption{Diagram of Grammar of Graphics stages of visualization. Fig 2.2 from chapter 2 of The Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}}
+\label{fig:gog_pathway}
+\end{figure}
+In grammar of graphics, as shown in figure~\ref{fig:gog_pathway} data is extracted from the database one variable at a time with an associated index (primary key). The algebra stage joins the variables to become the varset, which is a flat table where the columns are the variables/attributes, each row is an observation/item, and each cell contains a measurement \cite{munznerChDataAbstraction}. Wilkenson then describes the constraints of the measurement space for each variable through scales \cite{wilkinsonGrammarGraphics2005} with implicit assumptions of the data constraints. After this step, data is transformed computationally in service of the visualization. Some of the variables are then mapped into geometric marks (symbols) and are scaled (height, width) as appropriate. These mappings are then transformed into the coordinate system of the target graph. Then the aesthethic attributes (Bertin's retinal variables, also called channels) such as color or  texture) are applied. Finally
+
+Wilkenson's thoughts on coherancy are equivalent to invariance but less? formally stated \dots
+
+"To call these charts meainingul, defenders must falsify specific assumptions of GoG" \cite{wilkinsonMathematicalFoundationAnalytic2010}
+
+
+gog implementationss:
+\begin{enumerate}
+    \item SPSS nViZn
+    \item tableu
+    \item ggplot
+    \item protoviz\d3
+    \item vega (interactive GoG)
+\end{enumerate}
