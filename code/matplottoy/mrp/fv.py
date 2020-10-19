@@ -1,9 +1,33 @@
+import random
 import numpy as np
 
+
 class DiscreteToyTable:
-    def __init__(self, N=1000, max_key=10**15):
-        self.K = np.random.randint(0, max_key, num_keys)
-        self.schema = {'x': {'type':'continuous', 'interval':[0, 100]} 
-                       'y': {'type':'continuous', 'interval':[200, 300]}
-                       'color': {'type':'discrete', 'values':['happy','sad']}}
-        self.data = 
+    rng = np.random.default_rng()
+    def __init__(self, N=1000, max_key=10**5):
+        assert max_key>N
+        self.K = self.rng.choice(max_key, size=N, replace=False)
+        # F is the space of all possible values
+        # the schema defines F
+        self.F = ({'type':'discrete-ordinal', 'values':range(1,6)}, 
+                  {'type':'continuous', 'interval':[0,10]}, 
+                  {'type':'discrete', 'values':['true', 'false']})    
+
+    def sigma(self, k):
+        # set of functions for choosing values from F at a given k
+        # is usually the data structure
+        return (k, (random.sample(self.F[0]['values'], k=1)[0],
+                    self.rng.uniform(self.F[1]['interval'][0], 
+                                     self.F[1]['interval'][1]), 
+                    random.sample(self.F[2]['values'], k=1)[0]))
+
+class Transform:
+    @staticmethod
+    def x(value):
+        return 1
+    @staticmethod
+    def y(value):
+        return 1
+    @staticmethod
+    def color(value):
+        return "RED"

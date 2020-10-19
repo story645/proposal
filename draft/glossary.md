@@ -29,7 +29,9 @@
  $f: X \mapsto Y, f(x)=y$
 * domain - input set X
 * codomain - set of possible outputs Y
-* range - set of outputs $y \in Y$ that $f(x), x \in X$ maps to
+* range - set of elements $y \in Y$ that $f(x), x \in X$ maps to
+* preimage/inverse: $f^{-1}$- set of elements $x \in X$ that are mapped into a given subset of $y in Y$,
+
 * types:
     * general - many to one, range <= codomain
     * injective - one to one, range <= codomain
@@ -56,14 +58,17 @@ triangle to arbitrary dimensions
     * neighborhood - set of points containing the point p where can move away from point in any direction w/o  leaving the set (wiki)
         * ex: A set V in the plane is a neighbourhood of a point p if a small disc around p is contained in V.
     * product space - cartesian product of topological spaces
-* fiber bundle $(E, B, \pi, F)$
 
+* sheave - difference between fiber bundle?
+
+* fiber bundle $(E, B, \pi, F)$
+    * vector bundles are special case where fibers are vectors 
     * E - total space
         * 
     * B - base space
         * 
     * $\pi: E \mapsto B$  - projection map (continuos surjection) 
-        *
+        * 
     * F - fiber
         * fiber as unit being plotted as a one thing 
             * box, line, dot, image
@@ -78,7 +83,7 @@ triangle to arbitrary dimensions
 * 100, 64x64 Frames
 * K = 0-100 (frame count), $k \in K$ 
 * F - space of all possible pixel values 
-    * [0-255] X 4096 cartesian product = 2^{8^4096}
+    * [0-255] X 4096 cartesian product = $2^{8^{4096}}$
 * sigma - particular movie or set of functions that generate that movie
 * $\sigma(k)$ applying the function $\sigma$ on F to get back the frame at k
 
@@ -92,7 +97,9 @@ triangle to arbitrary dimensions
         * class w/o instances
     * directed graphs w/ some extra info
     
-* arrows - morphisms, orderings, functions, maps
+* arrows - morphisms, orderings, functions, maps, relations, operators
+* morphisms - map from one set to another set
+    * homomorphism - structure preserving morphism 
 * functor - maps between categories that preserve all arrows
     * has to preserve within category arrows
     * usually are containers
