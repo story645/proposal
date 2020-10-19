@@ -14,6 +14,7 @@ class DiscreteToyTable:
                   {'type':'discrete', 'values':['true', 'false']})    
 
     def sigma(self, k):
+        """Returns the section at K"""
         # set of functions for choosing values from F at a given k
         # is usually the data structure
         return (k, (random.sample(self.F[0]['values'], k=1)[0],
@@ -24,10 +25,10 @@ class DiscreteToyTable:
 class Transform:
     @staticmethod
     def x(value):
-        return 1
+        return value
     @staticmethod
     def y(value):
-        return 1
+        return value
     @staticmethod
     def color(value):
-        return "RED"
+        return "red"
