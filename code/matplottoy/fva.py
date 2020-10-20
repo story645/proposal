@@ -27,8 +27,9 @@ class Point(mcollections.Collection):
 
          color = visual_transform(self.transforms, 'color', self.data)
          
-         for (x, y, r) in zips):
-            paths.append(c)
+         paths = [mpath.Path.circle(center=(x,y), radius=10, color =c)  
+                 for (xi, yi, c) in zip(x,y,color)] 
+         
+             
 
-      
         self.__draw(renderer, *args, **kwargs)
