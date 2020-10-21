@@ -1,3 +1,6 @@
+"""Formally defining measurement types (from Stevens)
+to check against visual channels
+"""
 class Nominal: 
     mtype = 'nominal'
     def __init__(self, categories):
@@ -18,7 +21,7 @@ class Ordinal:
         return value in self.categories
 
 class Interval:
-    mtype = 'Interval'
+    mtype = 'interval'
     def __init__(self, interval):
         assert len(interval)==2
         self.min = min(interval)

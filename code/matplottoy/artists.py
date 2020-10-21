@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
@@ -8,8 +10,8 @@ def visual_transform(transform, key, data):
 
 class Point(mcollections.Collection):
     required = {'x', 'y'}
-    optional = {'color'} 
-    def __init__(self, data, transforms):
+    optional = {'facecolors'} 
+    def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
         ----------
@@ -18,19 +20,24 @@ class Point(mcollections.Collection):
         """
         super().__init__(*args, **kwargs)
         assert Point.required <= transforms.keys()
-        self.optional_encodings = (transforms.keys()-Point.required)
+        assert ((transforms.keys()-Point.required) 
+                            <= Point.optional) 
+        assert all(tau.validate(data.F[column]) 
+                    for (column, tau) in transforms.values())
+        assert data.K['ndims'] == 0
         self.data = data
         self.transforms = transforms
 
-     def draw(self, renderer, *args, **kwargs):
-         x = visual_transform(self.transforms, 'x', self.data)
-         y = visual_transform(self.transforms, 'y', self.data)
+    def draw(self, renderer, *args, **kwargs):
+        view = self.data.view()
 
-         color = visual_transform(self.transforms, 'color', self.data)
+        visual = dict([(t, tau.convert(view[var]))
+            for (t, (var, tau)) in self.transforms.items()])
+           
          
-         paths = [mpath.Path.circle(center=(x,y), radius=10, color =c)  
-                 for (xi, yi, c) in zip(x,y,color)] 
-         
-             
-
-        self.__draw(renderer, *args, **kwargs)
+        self._paths = [mpath.Path.circle(center=(x,y), radius=10)  
+                        for (x, y) in zip(visual['x'],visual['y'])] 
+       
+        self.set_facecolors(visual['facecolors'])
+        
+        super().draw(renderer, *args, **kwargs)
