@@ -8,8 +8,19 @@ class Position:
     @staticmethod
     def validate(mtype):
         return mtype.mtype in ['nominal', 'ordinal', 'interval']
+
+
+class FunctionalPosition:
+    @staticmethod
+    def convert(value):
+        x = np.linspace(value['vert'][0], value['vert'][1])
+        y = [value['f'](xi) for xi in x] 
+        return np.vstack([x,y]).T
+
+    @staticmethod
+    def validate(mtype):
+        return mtype.mtype in ['interval', 'ratio']
 class NominalColor:
-    
     def __init__(self, mapping):
         """goal of init is to store parameters that would otherwise be
         curried higher level function"""
