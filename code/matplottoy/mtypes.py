@@ -11,11 +11,9 @@ class Nominal:
 class Ordinal:
     mtype = 'ordinal'
     def __init__(self, categories):
-        self.categories = self._has_ordering(categories)
-    
-    def _has_ordering(self, categories):
-        # should really be explicit if it has ordering
-        return categories
+        self.categories = categories
+        self.min = min(categories)
+        self.max = max(categories)
 
     def validate(self, value):
         return value in self.categories

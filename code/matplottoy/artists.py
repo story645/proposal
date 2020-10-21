@@ -1,4 +1,5 @@
 from collections import defaultdict
+import itertools
 
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
@@ -34,10 +35,13 @@ class Point(mcollections.Collection):
         visual = dict([(t, tau.convert(view[var]))
             for (t, (var, tau)) in self.transforms.items()])
            
-         
-        self._paths = [mpath.Path.circle(center=(x,y), radius=10)  
-                        for (x, y) in zip(visual['x'],visual['y'])] 
+        if 's' not in visual:
+            visual['s'] = itertools.repeat(0.05)
+
+        self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
+                        for (x, y, s) 
+                        in zip(visual['x'],visual['y'], visual['s'])] 
        
         self.set_facecolors(visual['facecolors'])
-        
+
         super().draw(renderer, *args, **kwargs)
