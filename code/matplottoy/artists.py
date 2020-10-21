@@ -16,6 +16,7 @@ class Point(mcollections.Collection):
         data: sections of the fiber bundle
         transforms
         """
+        super().__init__(*args, **kwargs)
         assert Point.required <= transforms.keys()
         self.optional_encodings = (transforms.keys()-Point.required)
         self.data = data
