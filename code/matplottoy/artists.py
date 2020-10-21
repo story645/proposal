@@ -1,6 +1,8 @@
 from collections import defaultdict
 import itertools
 
+import numpy as np 
+
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
@@ -17,12 +19,12 @@ class Point(mcollections.Collection):
         transforms
         """
         super().__init__(*args, **kwargs)
+        assert data.K['ndims'] == 0
         assert Point.required <= transforms.keys()
         assert ((transforms.keys()-Point.required) 
                             <= Point.optional) 
         assert all(tau.validate(data.F[column]) 
                     for (column, tau) in transforms.values())
-        assert data.K['ndims'] == 0
         self.data = data
         self.transforms = transforms
 
@@ -48,7 +50,7 @@ class Point(mcollections.Collection):
 
 class Line(mcollections.LineCollection):
     required = {'y'}
-    optional = {'color'} 
+    optional = {'x', 'color'} 
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -56,13 +58,15 @@ class Line(mcollections.LineCollection):
         data: sections of the fiber bundle
         transforms
         """
-        super().__init__(*args, **kwargs)
-        assert Point.required <= transforms.keys()
-        assert ((transforms.keys()-Point.required) 
-                            <= Point.optional) 
+        super().__init__(None, *args, **kwargs)
+        assert data.K['ndims'] == 1
+
+        assert Line.required <= transforms.keys()
+        assert ((transforms.keys()-Line.required) 
+                            <= Line.optional) 
         assert all(tau.validate(data.F[column]) 
                     for (column, tau) in transforms.values())
-        assert data.K['ndims'] == 1
+     
         self.data = data
         self.transforms = transforms
 
@@ -73,13 +77,15 @@ class Line(mcollections.LineCollection):
             for (t, (var, tau)) in self.transforms.items()])
            
         # dictionary here in place of visual(parameter) function
-        if 'facecolors' not in visual:
-            visual['color'] = itertools.repeat("black")
+        if 'color' not in visual:
+            visual['color'] = "C0"
 
-        if 'x' in transforms:
-            self.set_segments = np.vstack([visual['x'], visual['y']).T
+        if 'x' in visual:
+            segments = [np.vstack((visual['x'], visual['y'])).T]
         else:
             # if an x is not given, than the y transform needs to also yield an x
-            self.set_segments = visual['y']
+            segments = []
+        self.set_segments(segments)
+        self.set_color(visual['color'])
 
         super().draw(renderer, *args, **kwargs)

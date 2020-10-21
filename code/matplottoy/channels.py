@@ -13,9 +13,13 @@ class Position:
 class FunctionalPosition:
     @staticmethod
     def convert(value):
-        x = np.linspace(value['vert'][0], value['vert'][1])
-        y = [value['f'](xi) for xi in x] 
-        return np.vstack([x,y]).T
+        values = np.atleast_1d(np.array(value, dtype=object))
+        segments = []
+        for value in values:
+            x = np.linspace(value['vert'][0], value['vert'][1])
+            y = [value['f'](xi) for xi in x] 
+            segments.append(np.vstack[x,y].T)
+        return segments
 
     @staticmethod
     def validate(mtype):
