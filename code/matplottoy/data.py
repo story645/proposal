@@ -5,62 +5,70 @@ import numpy as np
 import mtypes
  
 class FiberBundle:
-    """Sets up the definition of the fiber bundle
-    """
-    #k values are constant for a fixed fiber bundle
-    rng = np.random.default_rng(12345)
-    def __init__(self):
-        self.K = {'ndims': 0, 
-                  'keys': self.rng.choice(10**5, size=1000, replace=False)}
-        self.F = {'v1': mtypes.Ordinal(range(1,6)), 
-                  'v2': mtypes.Interval([0,10]),
-                  'v3': mtypes.Nominal(['true', 'false'])}
-        
+    def __init__(self, K, F, K_in_F):
+        """
+        Parameters
+        ----------
+        K: dict
+            attributes of the base space of the fiber bundle, 
+            describes domain of base space + the type of simplexs
+            on the base space
+            {'simplexes':{}, domain: type }
+        F: dict
+            the fiber, which is the space of all possible observations 
+            type is used here to describe the space 
+            {variable name: type}
+        K_in_F: dict
+            mapping of which variables lie on which type of simplex:
+            {simplex: [variable names]}
+        """
+        self.K = K 
+        self.F = F
+        self.K_in_F = K_in_F
+        ###check if is consistent
 
-class Section(FiberBundle):
+    def is_section(section):
+        """checks if a section is from a given fiber bundle:
+        are values in F, are keys in K"""
+        raise NotImplementedError()
+
+class Section:
     """Inherits the schema and topology from F because it by definition 
        doesn't have a different one if it's a fiber on F
     """
-    def __init__(self):
-        super().__init__()
+    FB = FiberBundle({'simplexes':{'vertices'},  'domain': int},  
+                     {'v1': mtypes.Ordinal(range(1,6)), 
+                      'v2': mtypes.IntervalClosed([0,10]),
+                      'v3': mtypes.Nominal(['true', 'false'])},
+                     {'vertices': {'v1', 'v2', 'v3'}})
+
+    def __init__(self, sid = 45, size=1000, max_key=10**10):
+        self.section_id = sid
+        # keys should be in the domain of keys defined on K
+        # in this case that's integers, also keys are fixed on 
+        # a section
+        rng = np.random.default_rng(sid)
+        self.keys = rng.integers(0,max_key, size)
 
     def sigma(self, k):
-        """Returns the piece of the section at k"""
+        """Returns the piece of the se, section at k"""
         # set of functions for choosing values from F at a given k
         # is usually the data structure
-        rng = np.random.default_rng(k*1000)
-        return (k, (rng.choice(self.F['v1'].categories), 
-                    rng.uniform(self.F['v2'].min, self.F['v2'].max),
-                    rng.choice(self.F['v3'].categories)))
-    def table(self):
-        """helper method to create a Table b/c a 
-        datastructure object is what the artist should work on
-        """
-        data = {}
-        for k in self.K['keys']:
-            data[k] = dict(zip(self.F.keys(), self.sigma(k)[-1])) 
-        return Table(self.K, self.F, data)
-class Table:
-    def __init__(self, topology, schema, data):
-        """
-        data is passed in as a nested dict {k: {column name:value}}
-        what gets passed into the artist is a data container object
-        """
-        super().__init__()
-        for (index, row) in data.items():
-            assert index in topology['keys']
-            for (col, val) in row.items():
-                assert schema[col].validate(val)
-        self.K = topology
-        self.F = schema
-        self.data = data
+        rng = np.random.default_rng(k*self.section_id)
+        return (k, (rng.choice(self.FB.F['v1'].categories), 
+                    rng.uniform(self.FB.F['v2'].min, 
+                                self.FB.F['v2'].max),
+                    rng.choice(self.FB.F['v3'].categories)))
 
     def view(self):
-        """"converts data into atomic column order 
-        for get method"""
+        """"converts data into atomic column order for get method
+        """
         table = defaultdict(list)
-        for (index, row) in self.data.items():
-            table['index'].append(index)
-            for (col, val) in row.items():
-                table[col].append(val)
+        for k in self.keys:
+            table['index'] = k
+            for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
+                table[name].append(value)
         return table
+
+
+            
