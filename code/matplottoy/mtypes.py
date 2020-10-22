@@ -3,6 +3,7 @@ to check against visual channels
 """
 class Nominal: 
     mtype = 'nominal'
+    shape = 'scaler'
     def __init__(self, categories):
         self.categories = categories
     def validate(self, value):
@@ -18,7 +19,7 @@ class Ordinal:
     def validate(self, value):
         return value in self.categories
 
-class Interval:
+class IntervalClosed:
     mtype = 'interval'
     def __init__(self, interval):
         assert len(interval)==2

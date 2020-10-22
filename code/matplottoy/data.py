@@ -24,6 +24,7 @@ class FiberBundle:
         """
         self.K = K 
         self.F = F
+        # should maybe be folded into K
         self.K_in_F = K_in_F
         ###check if is consistent
 
@@ -36,7 +37,7 @@ class Section:
     """Inherits the schema and topology from F because it by definition 
        doesn't have a different one if it's a fiber on F
     """
-    FB = FiberBundle({'simplexes':{'vertices'},  'domain': int},  
+    FB = FiberBundle({'domain': int},  
                      {'v1': mtypes.Ordinal(range(1,6)), 
                       'v2': mtypes.IntervalClosed([0,10]),
                       'v3': mtypes.Nominal(['true', 'false'])},
@@ -60,14 +61,17 @@ class Section:
                                 self.FB.F['v2'].max),
                     rng.choice(self.FB.F['v3'].categories)))
 
-    def view(self):
+    def view(self, simplex):
         """"converts data into atomic column order for get method
         """
+        if simplex not in self.FB.K_in_F:
+            return {}
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
             for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
-                table[name].append(value)
+                if name in self.FB.K_in_F[simplex]:
+                    table[name].append(value)
         return table
 
 
