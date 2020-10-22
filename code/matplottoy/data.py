@@ -33,9 +33,8 @@ class FiberBundle:
         are values in F, are keys in K"""
         raise NotImplementedError()
 
-class Section:
-    """Inherits the schema and topology from F because it by definition 
-       doesn't have a different one if it's a fiber on F
+class Section: #maybe change name to something else
+    """Fiberbundle is consistent across all sections
     """
     FB = FiberBundle({'domain': int},  
                      {'v1': mtypes.Ordinal(range(1,6)), 
@@ -75,4 +74,34 @@ class Section:
         return table
 
 
-            
+class Edge:
+    FB = FiberBundle({'domain': int}, 
+                     {'start' : mtypes.IntervalClosed([-np.inf, np.inf]),
+                      'end':  mtypes.IntervalClosed([-np.inf, np.inf]),
+                      'edge' : mtypes.IntervalClosed([-np.inf, np.inf]),
+                      'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])},
+                     {'vertices': ['start', 'end'], 
+                     'edges':['edge', 'color']})
+
+    def __init__(self, num_verts=4):
+        self.keys = range(num_verts)
+        self.num_verts = num_verts
+
+    def sigma(self, k):
+        angle_samps = np.linspace(0, 2*np.pi, self.num_verts+1)
+        start = (angle_samps[k], angle_samps[k])
+        end = (angle_samps[k+1], angle_samps[k+1])
+        edge = lambda x,y : (cos(x), sin(y))
+        color = ['red', 'green', 'orange', 'blue'][k] 
+        return (k, (start, end, edge, color))
+
+    def view(self, simplex):
+        if simplex not in self.FB.K_in_F:
+            return {}
+        table = defaultdict(list)
+        for k in self.keys:
+            table['index'] = k
+            for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
+                if name in self.FB.K_in_F[simplex]:
+                    table[name].append(value)
+        return table
