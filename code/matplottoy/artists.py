@@ -78,9 +78,7 @@ class Line(mcollections.LineCollection):
         self.transforms = transforms
 
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view("edges")
-        view = self.data.view("vertices")
-        # view = {verts: , edges:}
+
 
         visual = dict([(t, tau.convert(view[var]))
             for (t, (var, tau)) in self.transforms.items()])
