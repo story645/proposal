@@ -5,7 +5,7 @@ import numpy as np
 import mtypes
  
 class FiberBundle:
-    def __init__(self, K, F, K_in_F):
+    def __init__(self, K, F):
         """
         Parameters
         ----------
@@ -21,9 +21,6 @@ class FiberBundle:
             the fiber, which is the space of all possible observations 
             type is used here to describe the space 
             {variable name: type}
-        K_in_F: dict
-            mapping of which variables lie on which type of simplex:
-            {simplex: [variable names]}
         """
         self.K = K 
         self.F = F
@@ -40,7 +37,7 @@ class VertexSimplex: #maybe change name to something else
     Section = set of points in the base space restricted to  
     some k's in K
     """
-    FB = FiberBundle({'domain': int},  
+    FB = FiberBundle({'tables': ['vertex']},  
                      {'v1': mtypes.Ordinal(range(1,6)), 
                       'v2': mtypes.IntervalClosed([0,10]),
                       'v3': mtypes.Nominal(['true', 'false'])})
@@ -63,18 +60,17 @@ class VertexSimplex: #maybe change name to something else
                                 self.FB.F['v2'].max),
                     rng.choice(self.FB.F['v3'].categories)))
 
-    def view(self, simplex):
+    def view(self):
         """"converts data into atomic column order for get method
+        # maybe also pass in the columns?
         """
-        if simplex not in self.FB.K_in_F:
-            return {}
+        
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
             for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
-                if name in self.FB.K_in_F[simplex]:
-                    table[name].append(value)
-        return table
+                table[name].append(value)
+        return {'vertex': table}
 
 
 class Simplex:
@@ -85,7 +81,7 @@ class Simplex:
     line is telling me how I'm connected
     """
 
-    FB = FiberBundle({'domain': int}, 
+    FB = FiberBundle({'tables': ['edge']},
                      {'x' : mtypes.IntervalClosed([-np.inf, np.inf]),
                       'y':  mtypes.IntervalClosed([-np.inf, np.inf]),
                       'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])})
