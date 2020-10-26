@@ -1,6 +1,9 @@
 """Formally defining measurement types (from Stevens)
 to check against visual channels
 """
+# if validate overwrites is instance, then we can 
+# use float/int/etc...
+
 class Nominal: 
     mtype = 'nominal'
     shape = 'scaler'

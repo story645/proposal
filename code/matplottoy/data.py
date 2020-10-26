@@ -73,7 +73,7 @@ class VertexSimplex: #maybe change name to something else
         return {'vertex': table}
 
 
-class Simplex:
+class EdgeSimplex:
     """ Functions are part of the definition of the data, 
     Schema describes the types of the output value (basically 
     a continousish vertex table)
@@ -86,18 +86,25 @@ class Simplex:
                       'y':  mtypes.IntervalClosed([-np.inf, np.inf]),
                       'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])})
 
-    def __init__(self, num_verts=4):
+    def __init__(self, num_verts=4, num_samples=1000):
         """which simplex am I on and distance""" 
         # define the k and distance 
         self.keys = range(num_verts)
+        self.distances = np.linspace(0,1, num_samples)
 
-    def _color(edge):
+    def _color(self, edge):
         return  ['red', 'green', 'orange', 'blue'][edge]
     
-    def _xy(edge):
-        """function that generates arc on x"""
+    def _xy(self, edge):
+        """function that generates arc on x
+        passes in edge (first part of k tuple)
+        """
         #modify this so that the function 
-        return np.sin_k, np.cos_k
+        angle_samps = np.linspace(0, 2*np.pi, len(self.keys)+1)
+        start, end = angle_samps[edge], angle_samps[edge+1]
+      # proxy for distance along edge
+        angles = (self.distances *(end-start)) + start
+        return np.cos(angles), np.sin(angles)
         
     def sigma(self, k):
         """arbitrary k, even between vertices, will give back
@@ -110,7 +117,7 @@ class Simplex:
         # split out sigma_vertex, sigma_edge
         # each edge needs to know which vertex it's between
         # sigma functions by definition evaluated on 0-1
-        
+      
         sinx, cosy = _xy(edge)
         sinx(distance)
         cosx(distance)

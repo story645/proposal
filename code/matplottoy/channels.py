@@ -1,6 +1,10 @@
+import functools
+
 import numpy as np 
 
 import matplotlib.colors as mcolors
+
+#TODO: write atleast_1d wrapper
 class Position:
     @staticmethod
     def convert(value):
@@ -9,21 +13,18 @@ class Position:
     def validate(mtype):
         return mtype.mtype in ['nominal', 'ordinal', 'interval']
 
-
-class FunctionalPosition:
+###write at least1d wrapper
+class IdentityColor:
     @staticmethod
     def convert(value):
         values = np.atleast_1d(np.array(value, dtype=object))
-        segments = []
-        for value in values:
-            x = np.linspace(value['vert'][0], value['vert'][1])
-            y = [value['f'](xi) for xi in x] 
-            segments.append(np.vstack[x,y].T)
-        return segments
+        return [mcolors.to_rgba(v) for v in values]
 
     @staticmethod
-    def validate(mtype):
-        return mtype.mtype in ['interval', 'ratio']
+    def validate(value):
+        values = np.atleast_1d(np.array(value, dtype=object))
+        return all(mcolors.is_color_like(v) for v in values)
+
 class NominalColor:
     def __init__(self, mapping):
         """goal of init is to store parameters that would otherwise be
@@ -37,3 +38,4 @@ class NominalColor:
     def validate(self, mtype):
         return (set(mtype.categories) == self._mapping.keys() and
         all(mcolors.is_color_like(color) for color in self._mapping.values()))
+
