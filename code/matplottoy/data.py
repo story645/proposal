@@ -60,7 +60,7 @@ class VertexSimplex: #maybe change name to something else
                                 self.FB.F['v2'].max),
                     rng.choice(self.FB.F['v3'].categories)))
 
-    def view(self):
+    def view(self, **kwargs):
         """"converts data into atomic column order for get method
         # maybe also pass in the columns?
         """
@@ -70,7 +70,7 @@ class VertexSimplex: #maybe change name to something else
             table['index'] = k
             for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
                 table[name].append(value)
-        return {'vertex': table}
+        return table
 
 
 class EdgeSimplex:
@@ -79,11 +79,14 @@ class EdgeSimplex:
     a continousish vertex table)
 
     line is telling me how I'm connected
+
+    the static methods are sigmas on the section, 
+    not dependent on the exact instance of the section
     """
 
     FB = FiberBundle({'tables': ['edge']},
-                     {'x' : mtypes.IntervalClosed([-np.inf, np.inf]),
-                      'y':  mtypes.IntervalClosed([-np.inf, np.inf]),
+                     {'x' : mtypes.IntervalClosed([-1,1]),
+                      'y':  mtypes.IntervalClosed([-1,1]),
                       'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])})
 
     def __init__(self, num_verts=4, num_samples=1000):
@@ -91,19 +94,15 @@ class EdgeSimplex:
         # define the k and distance 
         self.keys = range(num_verts)
         self.distances = np.linspace(0,1, num_samples)
-
-    def _color(self, edge):
-        return  ['red', 'green', 'orange', 'blue'][edge]
-    
-    def _xy(self, edge):
+    @staticmethod
+    def _color(edge):
+        return  ['red','orange', 'green','blue'][edge]
+    @staticmethod
+    def _xy(edge, distances, start=0, end = 2*np.pi):
         """function that generates arc on x
         passes in edge (first part of k tuple)
         """
-        #modify this so that the function 
-        angle_samps = np.linspace(0, 2*np.pi, len(self.keys)+1)
-        start, end = angle_samps[edge], angle_samps[edge+1]
-      # proxy for distance along edge
-        angles = (self.distances *(end-start)) + start
+        angles = (distances *(end-start)) + start
         return np.cos(angles), np.sin(angles)
         
     def sigma(self, k):
@@ -111,25 +110,19 @@ class EdgeSimplex:
         an observation, so all functions must target back to vertice 
         table
         Parameters:
-        k: (edge, distance)
-        k, distance
+        k: vertex or edge id
         """
-        # split out sigma_vertex, sigma_edge
-        # each edge needs to know which vertex it's between
-        # sigma functions by definition evaluated on 0-1
-      
-        sinx, cosy = _xy(edge)
-        sinx(distance)
-        cosx(distance)
-        return (x, y , _color(k))
+        #distances along edge are stored as self.distances
+        angle_samps = np.linspace(0, 2*np.pi, len(self.keys)+1)
+        start, end = angle_samps[k], angle_samps[k+1]
+        return (k,(*self._xy(k, self.distances, start, end) , self._color(k)))
 
     def view(self, simplex):
-        if simplex not in self.FB.K_in_F:
+        if simplex not in self.FB.K['tables']:
             return {}
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
             for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
-                if name in self.FB.K_in_F[simplex]:
-                    table[name].append(value)
+                table[name].append(value)
         return table

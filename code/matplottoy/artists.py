@@ -38,7 +38,7 @@ class Point(mcollections.Collection):
         self.transforms = transforms
 
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view()['vertex'] #resolve to size
+        view = self.data.view('vertex') #resolve to size
 
         # call tau step
         visual = dict([(t, tau.convert(view[var]))
@@ -62,7 +62,7 @@ class Point(mcollections.Collection):
 
 class Line(mcollections.LineCollection):
     required = {'y'}
-    optional = {'x', 'color'} 
+    optional = {'x', 'facecolor'} 
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -82,20 +82,24 @@ class Line(mcollections.LineCollection):
         self.transforms = transforms
 
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view()['vertex']
+        if 'edge' in self.data.FB.K['tables']:
+            view = self.data.view('edge')
+        elif 'vertex' in self.data.FB.K['tables']:
+            view = self.data.view("vertex")
+        
         visual = dict([(t, tau.convert(view[var]))
             for (t, (var, tau)) in self.transforms.items()])
            
         # dictionary here in place of visual(parameter) function
-        if 'color' not in visual:
-            visual['color'] = "C0"
+        if 'facecolor' not in visual:
+            visual['facecolor'] = "C0"
 
-        if 'x' in visual:
-            segments = [np.vstack((visual['x'], visual['y'])).T]
-        else:
-            # if an x is not given, than the y transform needs to also yield an x
-            segments = []
+        
+        segments = [np.vstack((vx, vy)).T for vx, vy 
+                        in zip(visual['x'], visual['y'])]
+  
+
         self.set_segments(segments)
-        self.set_color(visual['color'])
+        self.set_color(visual['facecolor'])
 
         super().draw(renderer, *args, **kwargs)

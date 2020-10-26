@@ -21,9 +21,8 @@ class IdentityColor:
         return [mcolors.to_rgba(v) for v in values]
 
     @staticmethod
-    def validate(value):
-        values = np.atleast_1d(np.array(value, dtype=object))
-        return all(mcolors.is_color_like(v) for v in values)
+    def validate(mtype):
+        return all(mcolors.is_color_like(v) for v in mtype.categories)
 
 class NominalColor:
     def __init__(self, mapping):
