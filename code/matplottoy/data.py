@@ -60,7 +60,7 @@ class VertexSimplex: #maybe change name to something else
                                 self.FB.F['v2'].max),
                     rng.choice(self.FB.F['v3'].categories)))
 
-    def view(self, **kwargs):
+    def view(self, simplex="vertex"):
         """"converts data into atomic column order for get method
         # maybe also pass in the columns?
         """

@@ -49,7 +49,7 @@ class Point(mcollections.Collection):
         if 's' not in visual:
             visual['s'] = itertools.repeat(0.05)
         if 'facecolors' not in visual:
-            visual['facecolors'] = itertools.repeat("black")
+            visual['facecolors'] = "C0"
 
        
         self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
@@ -84,9 +84,10 @@ class Line(mcollections.LineCollection):
     def draw(self, renderer, *args, **kwargs):
         if 'edge' in self.data.FB.K['tables']:
             view = self.data.view('edge')
+
         elif 'vertex' in self.data.FB.K['tables']:
             view = self.data.view("vertex")
-        
+          
         visual = dict([(t, tau.convert(view[var]))
             for (t, (var, tau)) in self.transforms.items()])
            
@@ -94,10 +95,12 @@ class Line(mcollections.LineCollection):
         if 'facecolor' not in visual:
             visual['facecolor'] = "C0"
 
-        
-        segments = [np.vstack((vx, vy)).T for vx, vy 
+        if 'edge' in self.data.FB.K['tables']:
+            segments = [np.vstack((vx, vy)).T for vx, vy 
                         in zip(visual['x'], visual['y'])]
-  
+        else:
+            segments = [np.vstack((visual['x'], visual['y'])).T]
+        
 
         self.set_segments(segments)
         self.set_color(visual['facecolor'])
