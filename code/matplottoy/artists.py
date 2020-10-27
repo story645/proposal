@@ -61,8 +61,8 @@ class Point(mcollections.Collection):
 
 
 class Line(mcollections.LineCollection):
-    required = {'y'}
-    optional = {'x', 'facecolor'} 
+    required = {'x', 'y'}
+    optional = {'facecolor'} 
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -71,7 +71,7 @@ class Line(mcollections.LineCollection):
         transforms
         """
         super().__init__(None, *args, **kwargs)
-        assert not {'vertex', 'edge'}.isdisjoint(data.FB.K['tables'])
+        assert 'edge' in data.FB.K['tables']
         assert Line.required <= transforms.keys()
         assert ((transforms.keys()-Line.required) 
                             <= Line.optional) 
@@ -82,12 +82,8 @@ class Line(mcollections.LineCollection):
         self.transforms = transforms
 
     def draw(self, renderer, *args, **kwargs):
-        if 'edge' in self.data.FB.K['tables']:
-            view = self.data.view('edge')
-
-        elif 'vertex' in self.data.FB.K['tables']:
-            view = self.data.view("vertex")
-          
+      
+        view = self.data.view('edge')
         visual = dict([(t, tau.convert(view[var]))
             for (t, (var, tau)) in self.transforms.items()])
            
@@ -95,12 +91,8 @@ class Line(mcollections.LineCollection):
         if 'facecolor' not in visual:
             visual['facecolor'] = "C0"
 
-        if 'edge' in self.data.FB.K['tables']:
-            segments = [np.vstack((vx, vy)).T for vx, vy 
-                        in zip(visual['x'], visual['y'])]
-        else:
-            segments = [np.vstack((visual['x'], visual['y'])).T]
-        
+        segments = [np.vstack((vx, vy)).T for vx, vy 
+                    in zip(visual['x'], visual['y'])]
 
         self.set_segments(segments)
         self.set_color(visual['facecolor'])

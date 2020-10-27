@@ -1,4 +1,5 @@
 from collections import defaultdict
+import itertools
 
 import numpy as np
 
@@ -64,7 +65,6 @@ class VertexSimplex: #maybe change name to something else
         """"converts data into atomic column order for get method
         # maybe also pass in the columns?
         """
-        
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
@@ -73,7 +73,8 @@ class VertexSimplex: #maybe change name to something else
         return table
 
 
-class EdgeSimplex:
+
+class EdgeSimplex: # ToDo: generalize to take list of functions as input
     """ Functions are part of the definition of the data, 
     Schema describes the types of the output value (basically 
     a continousish vertex table)
@@ -84,45 +85,68 @@ class EdgeSimplex:
     not dependent on the exact instance of the section
     """
 
-    FB = FiberBundle({'tables': ['edge']},
+    FB = FiberBundle({'tables': ['vertex','edge']},
                      {'x' : mtypes.IntervalClosed([-1,1]),
                       'y':  mtypes.IntervalClosed([-1,1]),
-                      'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])})
+                      'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])
+                      })
 
     def __init__(self, num_verts=4, num_samples=1000):
         """which simplex am I on and distance""" 
         # define the k and distance 
         self.keys = range(num_verts)
+        self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
+        # concession to this is a half generlized representation of 
+        # arcs on a circle
+        self.angle_samples = np.linspace(0, 2*np.pi, len(self.keys)+1)
+    
+
     @staticmethod
     def _color(edge):
-        return  ['red','orange', 'green','blue'][edge]
+        colors = ['red','orange', 'green','blue']
+        return colors[edge%len(colors)]
+
     @staticmethod
-    def _xy(edge, distances, start=0, end = 2*np.pi):
+    def _xy(edge, distances, start=0, end=2*np.pi):
         """function that generates arc on x
         passes in edge (first part of k tuple)
         """
+        # start and end are parameterizations b/c really there is 
+        # one _xy function  per edge 
+
         angles = (distances *(end-start)) + start
         return np.cos(angles), np.sin(angles)
+
         
-    def sigma(self, k):
+    def sigma(self, k, simplex='edge'):
         """arbitrary k, even between vertices, will give back
         an observation, so all functions must target back to vertice 
         table
         Parameters:
         k: vertex or edge id
+        technically simplex should be embedded in the k
         """
         #distances along edge are stored as self.distances
-        angle_samps = np.linspace(0, 2*np.pi, len(self.keys)+1)
-        start, end = angle_samps[k], angle_samps[k+1]
-        return (k,(*self._xy(k, self.distances, start, end) , self._color(k)))
+        #self.angle_samples
+        x, y = self._xy(k, self.distances, self.angle_samples[k], self.angle_samples[k+1]) 
+        color = self._color(k) if simplex=='edge' else np.repeat(self._color(k), self.num_samples) 
+        return (k, (x, y, color))
 
     def view(self, simplex):
-        if simplex not in self.FB.K['tables']:
-            return {}
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
-            for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.sigma(k, simplex)[1]):
                 table[name].append(value)
+        
+        if simplex =='vertex':
+            table['index'] = [(e,d) for d in self.distances for e in self.keys]
+            for name in self.FB.F.keys():
+                table[name] = list(itertools.chain.from_iterable(table[name]))
+            
         return table
+
+class ContinuousLine:
+    def __init__(self):
+        pass
