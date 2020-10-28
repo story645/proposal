@@ -3,6 +3,7 @@ import functools
 import numpy as np 
 
 import matplotlib.colors as mcolors
+#taus
 
 #TODO: write atleast_1d wrapper
 class Position:
@@ -12,6 +13,19 @@ class Position:
     @staticmethod
     def validate(mtype):
         return mtype.mtype in ['nominal', 'ordinal', 'interval']
+
+class NominalPosition:
+
+    def __init__(self, mapping):
+        self._mapping = mapping
+        
+    def convert(self, value):
+        values = np.atleast_1d(np.array(value, dtype=object))
+        return [self._mapping[v] for v in values]
+
+    def validate(self, value):
+        values = np.atleast_1d(np.array(value, dtype=object))
+        return True
 
 ###write at least1d wrapper
 class IdentityColor:

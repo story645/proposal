@@ -21,6 +21,16 @@ class Ordinal:
 
     def validate(self, value):
         return value in self.categories
+class PositiveInteger:
+    mtype = 'ordinal'
+    def validate(self, value):
+        return value>=0
+class IntervalRatio:
+    mtype = 'interval'
+    def __init__(self, floor=0):
+        self.floor = floor
+    def validate(self, value):
+        return value>=self.floor
 
 class IntervalClosed:
     mtype = 'interval'

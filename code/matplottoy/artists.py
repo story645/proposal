@@ -51,7 +51,7 @@ class Point(mcollections.Collection):
         if 'facecolors' not in visual:
             visual['facecolors'] = "C0"
 
-       
+        print(visual)
         self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
                         for (x, y, s) 
                         in zip(visual['x'],visual['y'], visual['s'])] 
