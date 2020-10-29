@@ -209,4 +209,3 @@ class ContinuousLine:
             for name in self.FB.F.keys():
                 table[name] = list(itertools.chain.from_iterable(table[name]))
         return table
-
