@@ -146,15 +146,14 @@ class Bar(mcollections.Collection):
             for (t, (var, tau)) in self.transforms.items()])
 
 
+        
         if 'width' not in visual:
             visual['width'] = itertools.repeat(0.8)
         
-        if 'floor' not in visual:
+      
             visual['floor'] = itertools.repeat(0)
      
         if self.orientation in {'vertical', 'v'}:
-            dims = {'x': 'position', 'xoffset': 'width', 
-                    'y': 'floor',    'yoffset': 'length'}
             verts = _make_bars(visual['position'], visual['width'], 
                               visual['floor'], visual['length'])
         elif self.orientation in {'horizontal', 'h'}:
@@ -166,11 +165,14 @@ class Bar(mcollections.Collection):
         super().draw(renderer, *args, **kwargs)
         return      
 
+
 def stacked_bar(ax, data, transforms, orientation):
     floor = np.zeros(len(data.view()[transforms['position'][0]]))
 
-    # going to back this into bar above 'cause shouldn't import channel
-    transforms['floor'] = (floor, channels.Position())
+    # this needs to be a class, can pull stuff from bar....
+    # should not be putting stuff on data!
+    data._view['floor'] = floor
+    transforms['floor'] = ("floor", channels.Position())
     artists = []
     for group in transforms['groups']:
         transforms['length'] = group
