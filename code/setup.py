@@ -1,6 +1,7 @@
 import setuptools
 
 setuptools.setup(
+    name = "matplottoy",
     packages=setuptools.find_packages(
         include = ["matplottoy.*"], exclude=['notebooks']),
     classifiers=[
