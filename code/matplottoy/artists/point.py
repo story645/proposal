@@ -7,8 +7,6 @@ from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 
-import channels
-
 class Point(mcollections.Collection):
     required = {'x', 'y'}
     optional = {'facecolors'} 

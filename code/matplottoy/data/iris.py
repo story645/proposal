@@ -1,8 +1,8 @@
-import data
-import mtypes
+from matplottoy.data.simplex import FiberBundle
+from matplottoy.encoders import mtypes
 
 class Iris:
-    FB = data.FiberBundle({'tables': ['vertex']},
+    FB = FiberBundle({'tables': ['vertex']},
                      {'species': mtypes.Nominal({'setosa', 'versicolor', 'virginica'}),
                       'sepal_length':  mtypes.IntervalRatio(),
                       'sepal_width': mtypes.IntervalRatio(),
@@ -32,7 +32,7 @@ class FrequencyBar:
         F = {'category': mtypes.Nominal(set(categories)), 
              'count': mtypes.PositiveInteger()}
         
-        self.FB = data.FiberBundle(self.K, F)
+        self.FB = FiberBundle(self.K, F)
 
         self.categories = categories
         self.counts = counts        

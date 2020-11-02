@@ -7,7 +7,7 @@ from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 
-import channels
+from matplottoy.artists import utils
 
 def _make_bars(xvalues, xoffsets, yvalues, yoffsets):
     return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] for 
@@ -15,7 +15,7 @@ def _make_bars(xvalues, xoffsets, yvalues, yoffsets):
 
 class Bar(mcollections.Collection):
     required = {'position', 'length'}
-    optional = {'width', 'floor', 'groups'}
+    optional = {'width', 'floor'}
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -33,13 +33,9 @@ class Bar(mcollections.Collection):
         """
   
         assert 'vertex' in data.FB.K['tables']
-        assert Bar.required <= transforms.keys()
-        assert ((transforms.keys()-Bar.required) 
-                            <= Bar.optional) 
-        groups = transforms.pop("groups", [])
-        print(transforms)
-        assert all(tau.validate(data.FB.F[column]) 
-                    for (column, tau) in transforms.values())
+        utils.check_constraints(Bar, transforms)
+        assert utils.validate_transforms(data, transforms)
+
         self.orientation = kwargs.pop('orientation', 'v')
      
         super().__init__(*args, **kwargs)
@@ -73,6 +69,10 @@ class Bar(mcollections.Collection):
         self.set_edgecolors('k')
         super().draw(renderer, *args, **kwargs)
         return      
+
+class MultiBar:
+    pass
+
 
 
 def stacked_bar(ax, data, transforms, orientation):

@@ -3,7 +3,7 @@ import itertools
 
 import numpy as np
 
-import mtypes
+from matplottoy.encoders import mtypes
  
 class FiberBundle:
     def __init__(self, K, F):

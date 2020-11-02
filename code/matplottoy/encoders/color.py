@@ -1,4 +1,8 @@
-class IdentityColor:
+import numpy as np
+
+import matplotlib.colors as mcolors
+
+class Identity:
     @staticmethod
     def convert(value):
         values = np.atleast_1d(np.array(value, dtype=object))
@@ -7,8 +11,8 @@ class IdentityColor:
     @staticmethod
     def validate(mtype):
         return all(mcolors.is_color_like(v) for v in mtype.categories)
-
-class NominalColor:
+        
+class Nominal:
     def __init__(self, mapping):
         """goal of init is to store parameters that would otherwise be
         curried higher level function"""
