@@ -21,6 +21,7 @@ class Line(mcollections.LineCollection):
         """
         super().__init__(None, *args, **kwargs)
         assert 'edge' in data.FB.K['tables']
+        utils.check_
         assert Line.required <= transforms.keys()
         assert ((transforms.keys()-Line.required) 
                             <= Line.optional) 

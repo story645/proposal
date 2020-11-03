@@ -167,7 +167,7 @@ structure preserving map from one mathematical structure to another of the same 
 #### Bertin
 * invariant - what the viz shows that doesn't change (what is encoded in the composition of artists) 
     * multiple lines/scatters - what is the common thread? 
-artist: data $\mapsto$ visual idom
+artist: data $\mapsto$ visual idiom
 * componenents - variables / what changes in the data (1 channel marks to one channel)
 * marks/symbols - 
 * impositions - 

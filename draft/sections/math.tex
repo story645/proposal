@@ -1,270 +1,31 @@
+\documentclass[../intro.tex]{subfiles}
+\begin{document}
 \section{Notation \& Definitions}
 \begin{figure}
     \includegraphics{figures/sections/dar.png}
-    \caption{Data with semantic structure (such as tables and images) is mapped to visual encodings (color, position) that are composited into visual idioms (scatter, line) that are rendered into graphics (rasters, vectors). 
+    \caption{Data with semantic structure (such as tables and images) is mapped to visual encodings (color, position) that are composited into visual idioms (scatter, line) that are rendered into graphics (rasters, vectors).}
+    \label{fig:artists}
 \end{figure}
+We propose that the mapping of a precise subset of data to a visual idiom ($I$) can be encapsulated in a class of functors called artists.
+\begin{equation}
+    A: \Gamma(V) \mapsto \{x \in \mathbb{R}^{7}\}
+\end{equation}
+%% cw versus list of pixels for the connectivity?
+
+Figure~\ref{fig:artists} shows transformation from data into rendered graphical object, wherein there is an intermediate artist stage where the data gets transformed into a visual form. We argue that a faithful representation of the data is one where:
+invariance:
+functor
+* types: variables measurement groups are  with visual encoding groups
+* topology: visual idioms preserve the topology/connectivity of the data
 
 \subsection{Data}
-
-\subsection{Artist}
-
-\subsection{Render}
-
-\label{sec:hunterMatplotlib2DGraphics2007}
-System of transforms:
-input: data w/ structure on fiber bundle + measurement type
-artist: data -> visualization
-(what structure of input is preserved in output)
-we can provide list of
-artist : topology it preserves
-point/line/face parameters: measurement type properties 
-
-ex: 
-Line2D preserves continuity
-Linestyle: categorical 
-
-%%define basic properties of measurement of types in a theoretical way or C&P from a paper
-
-Minimum assumption a transform will make - is this a valid transform for the slot? 
-
-Set of questions/rules to apply such that see a new artist can be defined which lets us maybe simplify optimizations.  
-
-M, Fiber Bundle, Section, operatons on \{data, visual\}, transform data space \& visual space,  
-
-topology gives us that m is preserved
-spivak gives us that v is preserved
-
-
-temperature on globe:
-\begin{equation}
-data = [[t1], [t2_{la1, lo2}]
-fiber = {lat, lon, temp}
-m = the data is 2d continous
-\end{equation}
-artist has implict m
-aesthetic paremeters transform in fiber that preserves type operations \& relations in the fiber
-lat - relative distance + ordering 
-
-\subsubsection{Graphical Elements}
-There is a set of transform functions $T$ that maps from the data space $D$ to the visual space composed of geometric marks and aesthetic channels $V$ \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels}.  We propose that a visualization is 
-\begin{equation}
-    T: D \rightarrow V
-\end{equation}
-
-Wilkenson proposes  that visualization is  \cite{wilkinsonGrammarGraphics2005, wilkinsonMathematicalFoundationAnalytic2010}
-
-\begin{align}
-\label{eq:gog_data_range}
-G &= {(x, f(x)): x \in R and f(x)=e^{-x^2}}\\
-F &= [-3,3] x [0,1]
-\end{align}
-
-\begin{equation}
-\label{eq:gog_aesthetic_mapping}
-A: x \mapsto x_{position}, f(x) \mapsto y_{position}
-\end{equation}
-
-\begin{equation}
-G_{A} = A(F \cap G) 
-\end{equation}
-
-Wilkenson formulates plotting in terms of varsets, which are sets of variables where variables are:
-\begin{equation}
-V:O\mapsto V    
-\end{equation}
-Wilkenson's data algebra is equivalent to data reshapes and join and therefore \cite{wickhamLayeredGrammarGraphics2010,wilkinsonGrammarGraphics2005}
-
-
-\subsection{What is the artist}
-Visualization is a two step process where the artists $A$ transforms the data into visual encodings $V$ and then the renderer $R$ transfroms the encodings $V$ to the set of pixels in $P$.
-\begin{equation}
-    \label{eq:artist}
-    A: D \mapsto M
-\end{equation}
-TYPES: A(D) = M
-Spivak A is analogous DT
-
-D is the type  which means it's indexexer K(M/indexer) + V (fiber bundle)
-d is a section of a bundle is the data is the values given keys on m + vars on V (c in C)
-a(d) = M
-
-$M$ is a composition of the visual channels applied as ....
-Is also a CW/simplicial complex/simplacial set 
-
-Channels are ducktyping the variable types
-Marks are encoding seperability 
-
-Marks are mapping of simplacial complex into RGB space
-
-(find paper on complex marks)
-
-for every key value in M, have coordinates in the fiber (space)
-section: keys -> values 
-
-Scatter Plot:
-K - 0D disconnected points
-\begin{multline}
-A: (C1, C2, C3...)\mapsto (M....)\\
-t \in A
-\end{multline}
-
--> preserve type operation and relation
-
-M is the disjoint collection of the output of all these transformers where the transformers preserve the relation and order. 
-
-Line Plot:
-L - 1D, can be a function on an interval [a,b]
-functions in the column...f(key) -> values
-
-invariance: The symmetry group $A$ preserves invariance when the transforms $a \in A$ are symmetric such that $operation(column) = operation(channel)$ and $operation on data -> operation (mark)$
-
-K might have symmetry -> move back and forth in time, preserved in K
-symmatery in fibers -> scaled up/down, categorical,
-preserved in the visual variables
-
-groups on K and fibers and subgroups w/ different types and temperatures (Steven's fundemental data types-measurment scales and types)
-
-intervals can transalte, ratio can only scale
-group of fibers has to do w/ measurment types
-channels themselves independent of data have their own symmatery
-
-(make table of what symmateries are preserved)
-visual transformation groups
-
-instead of inputting parameter into input, get to all the other parameters - base thing is a square, 
-preserved: operation(D) <-> operation (M)
-if A(g*d) = A(d)*g
-
-normalizations of scales in mpl - devision usually leaves same picture but axis is affected - visually length got uniformally smaller but we changed ticks to compensate
-Axes has rules about how transform affects it - inside graph invariance is preserved
-
-groups:
-symmteries of K
-symmetries of cartesian product of columns
-each visual channel has symmtery group associated w/
-orbit- space of possible visualiztions by changing the constants of each aesthetic (or $f_{red} \rightarrow f_{green}$)  
-visual type might be orbit of that (orbit of function in space)->single function that can be transformed in that way 
-
-each visualization type is an orbit \& then try to set up equivalence on these...
-
-artist will respect that w/ equivariance, knob on one side will tweak knob on another
+We use fiberbundles as our underlying data representation because it concisely encodes topology\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and type \cite{spivakSIMPLICIALDATABASES}. Butler has 
 
 
 
-The aesthetic transfroms $a \in A$ are a symmetry group that preserves the group structure of the measurment scales as follows: 
+For example, the iris dataset \cite{UCIMachineLearning} has a topology of disconnected points (k=0) and variables of type nominal (species type), and ratio (sepal and petal length and width). To encode this in a formal way, we rely on Butler's 
 
-categorical \& shapres have the group structure and so can do a $a: c \mapsto s$
-Optimal transform $a_{i}$ is one from a measurment space to a visual channel where both sides have the same group transforms-
-because equivaraince requires having the same transforms on the same side. 
-
-artists take in class of visuals + 
-
-A - matplotlib artists 
-$A: D \mapsto CW$
-
-$\tau: fb \mapsto vv $visual variable transformers
-$\{\tau_{1}, \tau_{2}...\tau_{n}\}(K)\mapsto \{CW_{1}, CW_{2}, ...CW_{n}\}$ 
-$\mapsto$ is what embeds the topology k 
-functions that know how to embed the k (mark)
-functions that work on the fibers $\tau$
-
-%% distance along edge to transformed physical space, s function 
-%% colormap_nrom - t: d \mapsto RGBA, continouts t: d(s) \mapsto 
-%% 1d has to be parameterized  t: d(s), really want t: d\ mapsto RGBA
-%%  d(s) \mapsto {d....} on interval [s_{0}..s_{n}]
-%% flip this to the otherside so it's an adjacency matrix
-%% how do we represent invariance/equivariance  A: D \mapsto \I
-%% D - columns + topology (section + topology)
-%% artist is the visual idiom 
-%% {D cartesian product Tau} \mapsto I
-%% Artist already has everything in VV space and composing into idiom
-%% functions on simplex crossed wuth transformers - everything in visual space w/ same topology
-%% A: visual \mapsto idiom
-%% Artist (raw data + transforms )
-%% carry topology over from VV space to I space -> singular CW complex 
-%% (has no inherent structure) 
-%% invaraince - shuffle_sq on tick labels = shuffle_sq on data 
-%% how do you preserve invariance on topology->Idiom?
-%% \tau_{2} is a new \tau function taht's really tau + 2
-%% taus is a group of transform functions under composition 
-%% tau gos data to visual variable
-%% group of functions + 
-%% measurement space groups is what class of functions don't destroy your data
-%% \tau: d \mapsto vv - group of mapto functions
-%% set of allowable \tau is where symmtery d/v are preserved 
-%% d\v isomorphisms where tau takes you from one to another
-%% d\v is  isomorphisms under group of taus where tau is the permutation group
-%%
-%% math: structure is same as type
-Steven's measurement scales have the following structure \cite{stevensTheoryScalesMeasurement1946}:
-%the big point of disagreement on the scales seems to be the stats column that we don't care about
-\begin{table}
-    \lable{tab:measument_type}
-    \begin{tabular}{l l l l}
-        nominal & permutation group & one to one substitutions & $=, \neq $\\
-        ordinal & isotonic group & monotonic increasing functions &  $=, \neq $, $\leq, \geq$\\
-        interval & general linear group & matrix operations &  $=, \neq, \leq, \geq, +, -, $\\
-        ratio & similarity group & $ \mathbb{Z}^+ $ & 
-    \end{tabular}
-\end{table}
-
-%%% make a second table later of what MPL currently supports
-%%% redraw as graph
-%%% set of all possible taus (operations can possibly be defined on both sides)
-
-Split is discrete/ vs continous measurment types 
-It is possible to write taus to ....
-
-A: (v...v) -> I
-%% tau is when we have data/visual lineups for labeling colorbar \ legend
-%% colorbar vs. legend - continous vs discrete
-
-\begin{table}
-    \label{tab:taus}
-    \begin{tabular}{l*{6}{c}} 
-                              & position      &  size        & shape        & texture     & color \\
-    nominal                   &  1            &  1           & 1            & 1           & 1     \\ 
-    ordinal                   &  1            &  1           & 1            & 1           & 1     \\
-    interval                  &  1            &  1           &              &             & 1     \\   
-    ratio                     &  1            &  1           &              &             & 1     \\  
-    \end{tabular}
-\caption{Group of $\{t_{1}....t_{n}\}$ where $tau: d \mapsto v$ preserving equivariance such that $d$ and $v$ are isomorphic. $d$ is data of type \{nominal, ordinal, interval, ratio\} and $v$ are the visual channels. \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}}
-\end{table}
- 
-
-Table~\ref{tab:taus} shows under which $\tau: d maps to v$, $d$ and $v$ can be isomorphisms.
+Types and topology are (statement is line of equation)
 
 
-%%% draw what the function graph looks like for scatter versus linesg
-Scatter Plot:
-K - 0D disconnected points
-\begin{multline}
-A: (C1, C2, C3...)\mapsto (M....)\\
-t \in A 
-\end{multline}
-
--> preserve type operation and relation
-
-M is the disjoint collection of the output of all these transformers where the transformers preserve the relation and order. M is a bunch of disconnected Marks
-
-Line Plot:
-L - 1D, can be a function on an interval [a,b]
-functions in the column...f(key) -> values
-
-Box chart: area + scatter 
-
-
-Combining 
-\begin{equation}
-    \label{eg:renderer}
-    R: M \mapsto P
-\end{equation}
-Where $P$ is the set of pixels rendered to screen ${p_{i,j} \in P}$
-
-
-An artist is a function F from X to Y
-that satisfyies properties P1, ... PN
-Step 1: Define X
-step 2: Define Y
-Spefiy Pi in terms of equations.
-
+\end{document}
