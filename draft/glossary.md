@@ -46,12 +46,15 @@
 ### topology
 * simplex (simplices) - generalization of the notion of a 
 triangle to arbitrary dimensions
+* simplicial complex - set of simplices 
+    * recipe to build a space from vertices, edges, triangles
 * CW (cell) complex - set homeomorphic to a simplex 
     * C: "closure-finite"
     * W: "weak" topology.
     * kinda categorical simplices
+    * glue a disk onto hole in a graph
+    * can have quads b/c sqaure is disk glued into line segments in funny way
 
-* simplicial complex - set of simplices 
 * simplicial set - 
 * open set - set on space where boundary not in set, approx equiv to open interval on line
 * topological space - set of points + neighborhoods for each point
