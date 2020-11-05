@@ -8,10 +8,15 @@ class Iris:
                       'sepal_width': mtypes.IntervalRatio(),
                       'petal_length': mtypes.IntervalRatio(),
                       'petal_width': mtypes.IntervalRatio(),
+                      'sepal_length_color': mtypes.Color(),
+                      'sepal_width_color': mtypes.Color(),
+                      'petal_length_color': mtypes.Color(),
+                      'petal_width_color': mtypes.Color()
                       })
     def __init__(self, dataframe):
         for column in dataframe:
-            assert all(self.FB.F[column].validate(v) for v in dataframe[column])
+            if not all(self.FB.F[column].validate(v) for v in dataframe[column]):
+                raise ValueError(f'{column} has values that are invalid {self.FB.F[column]}')
         
         self.sigma = dataframe.iloc
         self._view = dataframe

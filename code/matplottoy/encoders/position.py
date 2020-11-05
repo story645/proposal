@@ -7,18 +7,27 @@ import numpy as np
 class Identity:
     @staticmethod
     def convert(value):
-        return value
+        return np.array(value)
     @staticmethod
     def validate(mtype):
         return mtype.mtype in ['nominal', 'ordinal', 'interval']
+
+class Log:
+    def __init__(self, base=10):
+        self.base = base
+
+    def convert(self, value):
+        return np.log(value)/np.log(self.base)
+
+    def validate(self, mtype):
+        return True
 class Nominal:
     def __init__(self, mapping):
         self._mapping = mapping
         
     def convert(self, value):
         values = np.atleast_1d(np.array(value, dtype=object))
-        return [self._mapping[v] for v in values]
+        return np.array([self._mapping[v] for v in values])
 
-    def validate(self, value):
-        values = np.atleast_1d(np.array(value, dtype=object))
+    def validate(self, mtype):
         return True

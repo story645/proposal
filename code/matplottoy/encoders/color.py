@@ -2,6 +2,8 @@ import numpy as np
 
 import matplotlib.colors as mcolors
 
+from matplottoy.encoders import mtypes
+
 class Identity:
     @staticmethod
     def convert(value):
@@ -10,7 +12,7 @@ class Identity:
 
     @staticmethod
     def validate(mtype):
-        return all(mcolors.is_color_like(v) for v in mtype.categories)
+        return isinstance(mtype, mtypes.Color)
         
 class Nominal:
     def __init__(self, mapping):

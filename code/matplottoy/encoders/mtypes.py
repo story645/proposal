@@ -4,6 +4,7 @@ to check against visual channels
 # if validate overwrites is instance, then we can 
 # use float/int/etc...
 
+import matplotlib.colors as mcolors
 class Nominal: 
     mtype = 'nominal'
     shape = 'scaler'
@@ -11,6 +12,13 @@ class Nominal:
         self.categories = categories
     def validate(self, value):
         return value in self.categories
+
+class Color:
+    mtype = 'nominal'
+    @staticmethod
+    def validate(value):
+        return mcolors.is_color_like(value)
+
 
 class Ordinal:
     mtype = 'ordinal'

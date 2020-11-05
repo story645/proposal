@@ -8,7 +8,6 @@ def check_constraints(artist, transforms):
     encodings:
         Set of encodings the datasource is providing
     """
-    print(transforms.keys)
     # check required encodings are there
     if not (artist.required <= transforms.keys()):
         raise ValueError(f"Required encodings {artist.required}")
@@ -18,11 +17,19 @@ def check_constraints(artist, transforms):
         raise ValueError(f"Valid optional encodings: {artist.optional}")
 
 def validate_transforms(data, transforms):
-     return all(tau.validate(data.FB.F[column]) 
-                for (column, tau) in transforms.values())
+    for column, tau in transforms.values():
+        for col in np.atleast_1d(column):
+            if not tau.validate(data.FB.F[col]):
+                raise ValueError(f"Invalid transform {tau} for {col}")
 
-def validate_columns(data, columns, tau):
-    return all(tau.validate(data.FB.F[column])
-                  for column in np.atleast_1d(columns))
-
-
+def convert_transforms(view, transforms, exclude=None):
+    exclude = [] if exclude is None else exclude
+    visual = {}
+    for (t, (var, tau)) in transforms.items():
+        if t in exclude:
+            continue
+        if isinstance(var, (str, bytes )):
+            visual[t] = tau.convert(view[var])
+        else:
+            visual[t] = [tau.convert(view[v]) for v in var]
+    return visual

@@ -3,6 +3,8 @@ import itertools
 
 import numpy as np 
 
+from cycler import cycler
+
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
@@ -19,7 +21,7 @@ def _make_bars(orientation, position, width, floor, length):
 
 class Bar(mcollections.Collection):
     required = {'position', 'length'}
-    optional = {'width', 'floor'}
+    optional = {'width', 'floor', 'color'}
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -38,7 +40,7 @@ class Bar(mcollections.Collection):
   
         assert 'vertex' in data.FB.K['tables']
         utils.check_constraints(Bar, transforms)
-        assert utils.validate_transforms(data, transforms)
+        utils.validate_transforms(data, transforms)
 
         self.orientation = kwargs.pop('orientation', 'v')
      
@@ -51,8 +53,7 @@ class Bar(mcollections.Collection):
     def draw(self, renderer, *args, **kwargs):
        
         view = self.data.view('vertex')
-        visual = dict([(t, tau.convert(view[var]))
-            for (t, (var, tau)) in self.transforms.items()])
+        visual = utils.convert_transforms(view, self.transforms)  
         
         if 'width' not in visual:
             visual['width'] = itertools.repeat(0.8)
@@ -70,7 +71,7 @@ class Bar(mcollections.Collection):
 
 class MultiBar(mcollections.Collection):
     required = {'position', 'length'}
-    optional = {'width', 'floor'}
+    optional = {'width', 'floor', 'color'}
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -87,49 +88,60 @@ class MultiBar(mcollections.Collection):
             kwargs passed through         """
   
         assert 'vertex' in data.FB.K['tables']
-        self.transforms = transforms.copy()
-        utils.check_constraints(MultiBar, self.transforms)
-        length = self.transforms.pop('length') # allowed to be >1
-        assert utils.validate_transforms(data, self.transforms)
-        assert utils.validate_columns(data, length[0], length[-1])
+        utils.check_constraints(MultiBar, transforms)
+        utils.validate_transforms(data, transforms)
+       
 
         self.orientation = kwargs.pop('orientation', 'v')
         self.stacked = kwargs.pop('stacked', False)     
         self.width = kwargs.pop('width', .8)
+       
         super().__init__(*args, **kwargs)
         self.data = data
-        self.groups = length
+        self.transforms = transforms.copy()
 
     def draw(self, renderer, *args, **kwargs):
        
         view = self.data.view('vertex')
-        visual = dict([(t, tau.convert(view[var]))
-            for (t, (var, tau)) in self.transforms.items()])
+        (groups, gtau) = self.transforms['length']
+        ngroups = len(np.atleast_1d(groups))
 
-        nitems = len(view[self.groups[0]])
-        ngroups = len(np.atleast_1d(length[0]))
+        visual = utils.convert_transforms(view, self.transforms, ['length'])   
 
         if 'floor' not in visual: 
-            visual['floor'] = np.empty(nitems)
-     
+            visual['floor'] = np.empty(len(view[groups[0]]))
+
         if 'width' not in visual and self.stacked:
             visual['width'] = itertools.repeat(self.width)
-        elif 'width' not in visual and not self.stacked:
-            visual['width'] = self.width/ngroups
-            offset = np.arange(nitems)/nitems
-       
-        verts = []
-        for group in self.groups:
-            visual['length'] = view[group]
-            verts = _make_bars(self.orientation, visual['position'], 
-                     visual['width'], visual['floor'], visual['length'])
-            if stacked:
-                visual['floor'] += visual['length']
 
-            verts.extend(_make_bars(self.orientation, visual['position'], 
-                         visual['width'], visual['floor'], visual['length']))
-        #convert paths after all calculations are made
-        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
+        if not self.stacked:
+            visual['width'] = itertools.repeat(self.width/ngroups)
+            offset = (np.arange(ngroups) /ngroups) * self.width
+        else:
+            offset = itertools.repeat(0)
+
+        if 'color' not in visual:
+            visual['color'] = 'C0'
+
+        verts = []
+        for group, off in zip(groups, offset):
+            verts.extend(_make_bars(self.orientation, visual['position'] + off, 
+                          visual['width'], visual['floor'], view[group]))
+            if self.stacked:
+                visual['floor'] += view[group]
+          
+
+        # convert lengths after all calculations are made
+        # here or in transform machinery?
+        if self.orientation in {'v', 'vertical'}:
+            tverts = [[(x, gtau.convert(y)) for (x, y) in vert] 
+                            for vert in verts]
+        elif self.orientation in {'h', 'horizontal'}:
+            tverts = [[(gtau.convert(x), y) for (x, y) in vert] 
+                            for vert in verts]
+        self._paths = [mpath.Path(xy, closed=True) for xy in tverts]
+
+        self.set_facecolor(list(itertools.chain.from_iterable(visual['color'])))
         self.set_edgecolors('k')
         super().draw(renderer, *args, **kwargs)
         return      
