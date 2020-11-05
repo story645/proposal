@@ -12,7 +12,8 @@ class Identity:
 
     @staticmethod
     def validate(mtype):
-        return isinstance(mtype, mtypes.Color)
+        return (isinstance(mtype, mtypes.Color) or 
+               all(mcolors.is_color_like(v) for v in mtype.categories))
         
 class Nominal:
     def __init__(self, mapping):

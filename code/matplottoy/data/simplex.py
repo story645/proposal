@@ -157,7 +157,6 @@ def is_continuous(vertices):
     # intervals along the 1D number line
     return (adj_mat == np.diag(np.diagonal(adj_mat))).all()
 
-
 class ContinuousLine:
     FB = FiberBundle({'tables': ['vertex','edge']},
                      {'x' : mtypes.IntervalClosed([ 0,4]),
@@ -186,10 +185,53 @@ class ContinuousLine:
         color = self.edges['color'][k](self.distances) 
         if simplex=='vertex':
             color = np.repeat(color, self.num_samples) 
-        return (k, (x, y, color))
-
+            return (k, (x, y, color))
 
         return (k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
+
+    def view(self, simplex='edge'):
+        """walk the edge_vertex table to return the edge value
+        """
+        # contuinity test asserted one source, one sink 
+        # sort here on sources (can also sort on sink)
+        table = defaultdict(list)
+        #since intervals lie along number line and are ordered pair neighbors
+        #sort on start or end should yield ordering
+        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
+            table['index'].append(i)
+            for (name, value) in zip(self.FB.F.keys(), self.sigma(i, simplex)[1]):
+                table[name].append(value)
+        
+        if simplex =='vertex':
+            table['index'] = [(k,d) for d in self.distances for k in table['index']]
+            for name in self.FB.F.keys():
+                table[name] = list(itertools.chain.from_iterable(table[name]))
+        return table
+
+
+class DiscontinousLine:
+    FB = FiberBundle({'tables': ['vertex','edge']},
+                     {'x' : mtypes.IntervalClosed([ -1, 13]),
+                      'y':  mtypes.IntervalClosed([-1,3]),
+                      })
+    def __init__(self, edge_table, vertex_table, num_samples=2):
+        self.num_samples = num_samples
+        self.distances = np.linspace(0,1, num_samples)
+        for  (column, functions) in edge_table.items():
+            for f in functions:
+                #check using random point along [0,1]
+                self.FB.F[column].validate(f(np.random.random()))
+
+        self.ids = range(len(vertex_table))
+        self.vertices = vertex_table        
+        self.edges = edge_table
+
+
+    def sigma(self, k, simplex='edge'):
+        """this function knows that there are functions on the fibers defined in F"""
+        x = self.edges['x'][k](self.distances)
+        y = self.edges['y'][k](self.distances)
+        return (k, (x, y))
 
     def view(self, simplex='edge'):
         """walk the edge_vertex table to return the edge value

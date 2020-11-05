@@ -7,7 +7,7 @@ from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 
-import channels
+from matplottoy.artists import utils
 
 class Line(mcollections.LineCollection):
     required = {'x', 'y'}
@@ -21,12 +21,8 @@ class Line(mcollections.LineCollection):
         """
         super().__init__(None, *args, **kwargs)
         assert 'edge' in data.FB.K['tables']
-        utils.check_
-        assert Line.required <= transforms.keys()
-        assert ((transforms.keys()-Line.required) 
-                            <= Line.optional) 
-        assert all(tau.validate(data.FB.F[column]) 
-                    for (column, tau) in transforms.values())
+        utils.check_constraints(Line, transforms)
+        utils.validate_transforms(data, transforms)
      
         self.data = data
         self.transforms = transforms
@@ -34,9 +30,7 @@ class Line(mcollections.LineCollection):
     def draw(self, renderer, *args, **kwargs):
       
         view = self.data.view('edge')
-        visual = dict([(t, tau.convert(view[var]))
-            for (t, (var, tau)) in self.transforms.items()])
-           
+        visual = utils.convert_transforms(view, self.transforms)
         # dictionary here in place of visual(parameter) function
         if 'facecolor' not in visual:
             visual['facecolor'] = "C0"
