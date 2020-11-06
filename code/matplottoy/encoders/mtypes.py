@@ -19,7 +19,6 @@ class Color:
     def validate(value):
         return mcolors.is_color_like(value)
 
-
 class Ordinal:
     mtype = 'ordinal'
     def __init__(self, categories):

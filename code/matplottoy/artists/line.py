@@ -42,3 +42,4 @@ class Line(mcollections.LineCollection):
         self.set_color(visual['facecolor'])
 
         super().draw(renderer, *args, **kwargs)
+

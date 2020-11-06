@@ -214,7 +214,7 @@ class DiscontinousLine:
                      {'x' : mtypes.IntervalClosed([ -1, 13]),
                       'y':  mtypes.IntervalClosed([-1,3]),
                       })
-    def __init__(self, edge_table, vertex_table, num_samples=2):
+    def __init__(self, edge_table, vertex_table, num_samples=2, connect=False):
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
         for  (column, functions) in edge_table.items():
@@ -225,7 +225,7 @@ class DiscontinousLine:
         self.ids = range(len(vertex_table))
         self.vertices = vertex_table        
         self.edges = edge_table
-
+        self.connect = connect
 
     def sigma(self, k, simplex='edge'):
         """this function knows that there are functions on the fibers defined in F"""
@@ -236,7 +236,7 @@ class DiscontinousLine:
     def view(self, simplex='edge'):
         """walk the edge_vertex table to return the edge value
         """
-        # contuinity test asserted one source, one sink 
+        # continuity test asserted one source, one sink 
         # sort here on sources (can also sort on sink)
         table = defaultdict(list)
         #since intervals lie along number line and are ordered pair neighbors
@@ -245,9 +245,10 @@ class DiscontinousLine:
             table['index'].append(i)
             for (name, value) in zip(self.FB.F.keys(), self.sigma(i, simplex)[1]):
                 table[name].append(value)
-        
+
         if simplex =='vertex':
             table['index'] = [(k,d) for d in self.distances for k in table['index']]
             for name in self.FB.F.keys():
                 table[name] = list(itertools.chain.from_iterable(table[name]))
+        
         return table
