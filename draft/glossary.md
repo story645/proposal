@@ -41,7 +41,7 @@
     * monad is functor w/ extra structure
     * data structures are functors
     * not allowed to open up the structure, acts on containers
-
+* Hom: set of maps
 
 ### topology
 * simplex (simplices) - generalization of the notion of a 

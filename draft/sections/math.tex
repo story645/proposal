@@ -14,32 +14,55 @@ functor
 
 
 We propose that the mapping of a precise subset of data to a visual idiom ($I$) can be encapsulated in a class of functors called artists.
+Gluing keys along a base space
+
+| Fiber Bundle | Spivak |
+|--------------|--------|
+| B | K |
+| F | U |
+| embedded in F  | (C, \sigma), \pi |
+| E/V |  |
+|   | \tau:  K-\Gamma(sigma) |
+|   |
 
 \begin{equation}
-    A: \Gamma(V) \mapsto f:\T \mapsto R^{7}
+    A: {\sigma \in \Gamma(V)}\mapsto f:\T \mapsto R^{7}
 \end{equation}
 diagram here: gamma is a dataframe, t is like xkcd line (clear abstract), R7 is nice pixelated version 
 \begin{definition}
     \item[$F$] fiber, which is the space of all possible values encoded in the fiber bundle
-    \item[$K$] base space, tells how the values in the fibers are connected, is analogous to the indexer in data containers.
+    \item[$K$] base space, tells how the values in the fibers are connected, is analogous to the indexer in data containers
     \item[$V$] $F$ = $K \X F$ total space of the fiber bundle, which is space of all possible values on the index 
-    \item[$\sigma$]
-    \item[$\Gamma$]
+    \item[$\sigma(k)$] section of the fiber at a single k, (record on the  r) (dataframe)
+    \item[$\Gamma(V)$] set of all possible sections (Spivak - $\Gamma(\sigma))$ - is space of all dataframes (we use this in artists to generalize- class of functions/sigmas that the artist can work on)
     \item[$f$] analogous to spec (such as svg or raster) that render will rely on to translate image to screen
     \item[$\T \in CW$] cw simplex representing topology of visual elements on screen (embedded in code rather than explicit) 
     \item[$R^{7}$]  {R,G,B,A, x, y, z} pixel in display space
 \end{definition}
 
-
-\subsection{data}
-We use fiberbundles as our underlying data representation because it concisely encodes topology\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and type \cite{spivakSIMPLICIALDATABASES}. 
-For example, the iris dataset \cite{UCIMachineLearning} has a topology of disconnected points (k=0) and variables of type nominal (species type), and ratio (sepal and petal length and width). To encode this in a formal way, we rely on Butler's 
-
-Types and topology are (statement is line of equation)
+\begin{equation}
+    A: {\sigma \in \Gamma(V)}\mapsto f:\T \mapsto R^{7}
+\end{equation}
 
 \subsubsection{Data}
+We use Butler's visualization model built on the mathematics of fiber bundles \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and Spivak's schema like description of fibers \cite{spivakSIMPLICIALDATABASES} as the basis of our data model.  The components of the fiber bundle are:
+\begin{definition}
+    \item[$K$] base space that describes the topology of the data, is the indexer in data contain
+\end{definition}
+
+\begin{center}
+    \begin{tabular}{ c c c }
+     term & mathematical definition & data container analogue\\
+      $K$ & base space along which the data lies & indexer \\
+      $F$ & fiber space from which possible values are pulled & schema \\
+      $E$ & trivial: $F= K \times F$, non-trivial \dots & 
+      
+    \end{tabular}
+\end{center}
+
+
 \begin{equation}
-\Gamma(V) = 
+
 \end{equation}
 
 \subsection{artist}
