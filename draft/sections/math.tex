@@ -36,10 +36,12 @@ diagram here: gamma is a dataframe, t is like xkcd line (clear abstract), R7 is 
 \end{equation}
 
 \subsubsection{Data}
-We use Butler's visualization model built on the mathematics of fiber bundles \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and Spivak's schema like description of fibers \cite{spivakSIMPLICIALDATABASES} as the basis of our data model.  The components of the fiber bundle are:
+We are using Butler's visualization model built on the mathematics of fiber bundles \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and Spivak's schema like description of fibers \cite{spivakSIMPLICIALDATABASES} as the basis of our data model. Fiber bundles give us a way to disentangle the connectivity of the data (is it a timeseries, a map?) from the variables in the dataset (temperature). Building on Munzner's formulation of the former as keys and the latter as values \cite{munznerWhatDataAbstraction2014}, the data has implicit keys that lie in the $K$ basespace of the fiberbundle, while the labels for the keys (such as latitude and longitude) are variables of the dataset that lie in the fiber $F$. 
 
 
+%%%maybe this comes in a later API section....
 \begin{center}
+    \table{tab:fiberbundle}
     \begin{tabular}{ c c c }
      term & mathematical definition & data container analog\\
       $K$ & base space along which the data lies & indexer \\
@@ -47,6 +49,19 @@ We use Butler's visualization model built on the mathematics of fiber bundles \c
       $E$ & trivial: $F= K \times F$, non-trivial \dots & 
     \end{tabular}
 \end{center}
+
+
+
+
+\begin{figure}
+    \lable{fig:simplex}
+    \includegraphics{figures/sections/math/simplex.png}
+    \caption{Examples of simplexes that can be connected to make up a trivial total space $E = K\times F$.
+    EX: data that both has a vertex & edge - find & visualize}
+\end{figure}
+
+
+In our data model, we encode the indexer as its simplex representation so that we can keep all variables of the fiber encoded on a simplex together \cite{butlerVisualizationModelBased1989}
 
 trivial: 
 locally trivial: take small enough regions, it becomes trivial, cutting it up into simplixes is one way to do so...
