@@ -32,8 +32,24 @@ diagram here: gamma is a dataframe, t is like xkcd line (clear abstract), R7 is 
 \end{definition}
 
 \begin{equation}
-    A: {\sigma \in \Gamma(V)}\mapsto f:\T \mapsto R^{7}
+    \mathbb{A}: \Gamma(\K\timesF) \to \Gamma(\mathbb{T\times R^{7}})
 \end{equation}
+
+%% $A is an artist - fully parameterized line plot (including transformations)
+%% \Gamma(E) is the class of all sigmas possible on the data (so can take type IRIS data)
+%% Gamma(T) R&7 is the signatuire of f, which is 
+%% \to is the type signature, mapsto is for example \sigma \mapsto f - so goes in case study section?
+%% for each pixel we need to render, we have a bounding box in (x,y), oversampled T,
+%% output is function from T to R{7}, lookup from points in T to point in r7 (f is the lookup, spec)
+%% sampled T so finely it doesn't matter about the pixels, get a bunch of rows, colors/pictures locations
+%% samples in image location
+%% color image: $\mathbb{T} is the domain, 
+%% \mathbb{T}? 
+%% 2 simplex = point in scatter plot (each edge is x,y, value) <- all points that happen 
+%%% raster/vectore is an implementation detail inside f, not f itself 
+%%% \Gamma means function of (input, output)
+%%% \Gamma(E, )
+
 
 \subsubsection{Data}
 We are using Butler's visualization model built on the mathematics of fiber bundles \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} and Spivak's schema like description of fibers \cite{spivakSIMPLICIALDATABASES} as the basis of our data model. Fiber bundles give us a way to disentangle the connectivity of the data (is it a timeseries, a map?) from the variables in the dataset (temperature). Building on Munzner's formulation of the former as keys and the latter as values \cite{munznerWhatDataAbstraction2014}, the data has implicit keys that lie in the $K$ basespace of the fiberbundle, while the labels for the keys (such as latitude and longitude) are variables of the dataset that lie in the fiber $F$. 
