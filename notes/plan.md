@@ -1,8 +1,7 @@
 ### in progress (trash version done):
  * thesis statement)
  * lit review 
-    * is in bullet points
-    * only ggplot/bokeh/d3/vtk
+    * ggplot is in bullet points
  * math/theory
     * math is in bullet points/glossery
     * simplex & render figures, 
