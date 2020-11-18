@@ -19,8 +19,8 @@
 # schedule
  
 - [] Nov 20: math in paragraph write up + figures
-    - [] Nov 17: pin down equation pipeline
-    - [] Nov 18: write through end to end equations w/ explaination and stand in figures
+    - [] Nov 18: pin down equation pipeline
+    - [] Nov 19: write through end to end equations w/ explaination and stand in figures
     - [] Nov 20: full draft of section (w/ actual figures)
 - [] Nov 25: implementation write up (figures are made, probably needs process/software diagram)
     - [] Nov 23: scatter
