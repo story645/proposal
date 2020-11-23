@@ -51,8 +51,12 @@ One way to represent the topological space K is as a set composed of simplices, 
 In a locally trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. A fiber bundle can be made locally trivial by approximating the total space E as a simplacial complex.
 
 \subsubsection{Fiber Space $F$}
-The fibers encode the set of all possible values each observation can take. 
-Spivak's \cite{spivakSIMPLICIALDATABASES} formulation of the fibers as a union of named types gives a way to separate the values in the fiber by type:
+The fibers encode the set of all possible values each observation can take.  Spivak's formulation is that the fibers encode the union of the types of measurements\cite{spivakSIMPLICIALDATABASES}. For example, given the section $\Gamma(mobuis strip) =
+\{\sigma_1=\sin, \sigma_2=\cos\}$:
+%%fill in more spivak
+the fiber $F = \{float, float\}$.  
+
+%%% mapping from measurement back to type is the basis for gaurateening invariance 
 
 \subsubsection{Subset \& Streaming}
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U$ embedded in $K$ with the same fiber $\iota^*E$ and $\iota^*\sigma$.   
@@ -134,10 +138,12 @@ Tau can preserves the measurement type properties (group scales)
 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
-Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$ 
-\begin{tikzcd}
-    A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) &                                                \\
-    A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) 
-\end{tikzcd}
+Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
+\begin{equation}
+    \begin{tikzcd}
+        A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) &                                                \\
+        A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) 
+    \end{tikzcd}
+\end{equation}
 
 \end{document}
