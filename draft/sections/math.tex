@@ -65,15 +65,16 @@ $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore th
 
 
 \subsection{Display Space}
-\begin{figure}
-    \includegraphics{figures/sections/math/render.png}
+\label{sec:display}
+\begin{figure}[h]
+    \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
     \caption{}
     \label{fig:render}
 \end{figure}
 
 A physical display space can be thought of sets of $\mathbb{R}^{7}$ tuples, where 
 \begin{equation}
-    \mathbb{R}^{7} = {X, Y, Z, R, G, B, A}
+    \mathbb{R}^{7} = \{X, Y, Z, R, G, B, A\}
 \end{equation}
 
 and the sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of $\mathbb{R}^7$ and a base space of $\S$:
@@ -84,13 +85,13 @@ and the sets correspond to the sections on $\S$, which is the topology of the ou
 \end{tikzcd}
 
 
-In the case of 2D screens, the predisplay space is a trivial fiber bundle $$H=\mathbb{R}^{7}\times S$$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $$(x_1, y_1)$$ and $$(x_2, y_2)$$ maps into a region on a 2-simplex in $S$ defined by $$(\alpha_1, \beta_1)$$ and $$(\alpha_2, \beta_2)$$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
+In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $(x_1, y_1)$ and $(x_2, y_2)$ maps into a region on a 2-simplex in $S$ defined by $(\alpha_1, \beta_1)$ and $(\alpha_2, \beta_2)$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
 
 \begin{equation*}
 \rho(S) = \int_{\alpha_1}^{\alpha_2}\int_{\beta_1}^{\beta_2}\int_{z_1}^{z_2}{R, G, B, A}  
 \end{equation*}
 
-where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $$\mathbb{R}^7$$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
+where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $\mathbb{R}^7$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
 
 
 \subsection{Artist}
@@ -109,19 +110,22 @@ where the R,G,B,A values are derived from the how the data values are mapped to 
 The pullback $\xi$ on $S \rightarrow K$ means that the values in $E$ can be directly mapped to a simplex in $S$, which means there's a mapping from screen space back to the values. 
 
 \begin{tikzcd}
-    \xi E \arrow[rr, "\Tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
+    \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
     & S \arrow[lu, bend right] &             
-    \end{tikzcd}
+\end{tikzcd}
 
 
 \subsubsection{Marks}
-%% diagram of connected components/line thing
-Bertin defines the physical symbols that on screen represent the data as marks 
-\cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. For each point on the screen $s$, the mark it belongs to is 
+%% diagram of connected components/line thing 11-19-20 notes
+Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
+\begin{equation}
+\begin{tikzcd}
+    H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K| \exists \Gamma \text{ s.t. } \Gamma(0)=k \text{ and }\Gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
+\end{tikzcd}
+\label{eq:mark}
+\end{equation}
 
-%%
-The others fit perfectly. So it sounds like for each point s on the screen we can define the "mark it belongs" by mapping it back to K via lookup to S to get s, then \xi(s) back to K, and then take the connected component $J \subset containing k\in J \sub K $ and then taking the inverse image of $J \in S, \xi^(-1)(J)$ and then map into $R^7  \rho(\xi^(-1)(J))$ and project into the x-y plane. So thats the mark and the thing the mark "signifies" is J.
-
+Each point $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on S described in section~\ref{sec:display} then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected component $J \subset K$. To got back to the display space $H$  from the simplacial complex $J$ of the signifier implanted in the mark, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then  $\rho(\xi^{-1}(J))$ maps it into $R^{7}$. 
 
 
 
@@ -133,7 +137,7 @@ Tau can preserves the measurement type properties (group scales)
 Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$ 
 \begin{tikzcd}
     A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) &                                                \\
-    A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) & {} \arrow[loop, distance=2em, in=305, out=235]
+    A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) 
 \end{tikzcd}
 
 \end{document}
