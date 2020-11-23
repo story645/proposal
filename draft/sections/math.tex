@@ -14,6 +14,7 @@
     \includegraphics[width=0.5\linewidth]{figures/sections/math/mobius.png}
     \caption{write up some words here}
     \label{fig:mobius}
+    %%possibly replace w/ simpler deconstructed band image notes-11-19-20
 \end{figure}
 
 We use a fiber bundle model to represent the data, as proposed by Butler 
@@ -86,7 +87,7 @@ and the sets correspond to the sections on $\S$, which is the topology of the ou
 In the case of 2D screens, the predisplay space is a trivial fiber bundle $$H=\mathbb{R}^{7}\times S$$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $$(x_1, y_1)$$ and $$(x_2, y_2)$$ maps into a region on a 2-simplex in $S$ defined by $$(\alpha_1, \beta_1)$$ and $$(\alpha_2, \beta_2)$$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
 
 \begin{equation*}
-\rho(\Gamma(S)) = \int_{\alpha_1}^{\alpha_2}\int_{\beta_1}^{\beta_2}\int_{z_1}^{z_2}{R, G, B, A}  
+\rho(S) = \int_{\alpha_1}^{\alpha_2}\int_{\beta_1}^{\beta_2}\int_{z_1}^{z_2}{R, G, B, A}  
 \end{equation*}
 
 where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $$\mathbb{R}^7$$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
@@ -101,25 +102,38 @@ where the R,G,B,A values are derived from the how the data values are mapped to 
 %%diagram: [data] -Tau->[RGVXYZ]
 %%%            \ /\ / 
 \begin{tikzcd}
-    E \arrow[d, "\pi" description]                & H \arrow[d, "\pi" description]                                                 \\
+    E \arrow[d, "\pi" description] & H \arrow[d, "\pi" description]                                                 \\
     K \arrow[u, "\sigma" description, bend right] & S \arrow[l, "\xi" description] \arrow[u, "\rho" description, bend right]
 \end{tikzcd}
 
 The pullback $\xi$ on $S \rightarrow K$ means that the values in $E$ can be directly mapped to a simplex in $S$, which means there's a mapping from screen space back to the values. 
 
 \begin{tikzcd}
-    \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
+    \xi E \arrow[rr, "\Tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
     & S \arrow[lu, bend right] &             
     \end{tikzcd}
 
 
 \subsubsection{Marks}
+%% diagram of connected components/line thing
+Bertin defines the physical symbols that on screen represent the data as marks 
+\cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. For each point on the screen $s$, the mark it belongs to is 
+
+%%
+The others fit perfectly. So it sounds like for each point s on the screen we can define the "mark it belongs" by mapping it back to K via lookup to S to get s, then \xi(s) back to K, and then take the connected component $J \subset containing k\in J \sub K $ and then taking the inverse image of $J \in S, \xi^(-1)(J)$ and then map into $R^7  \rho(\xi^(-1)(J))$ and project into the x-y plane. So thats the mark and the thing the mark "signifies" is J.
+
+
+
 
 \subsubsection{Visual Characteristics}
 Tau can preserves the measurement type properties (group scales)
 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
-Visual Idioms
+Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$ 
+\begin{tikzcd}
+    A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) &                                                \\
+    A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) & {} \arrow[loop, distance=2em, in=305, out=235]
+\end{tikzcd}
 
 \end{document}
