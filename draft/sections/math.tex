@@ -11,24 +11,24 @@
  
 \subsection{Data Space}
 \begin{figure}[ht]
-    \label{fig:mobius}
     \includegraphics[width=0.5\linewidth]{figures/sections/math/mobius.png}
     \caption{write up some words here}
+    \label{fig:mobius}
 \end{figure}
 
 We use a fiber bundle model to represent the data, as proposed by Butler 
 \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. 
 
 
-One example of a fiber bundle is the mobius band shown in figure~\ref{fig:mobius}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$.  
+One example of a fiber bundle is the mobius band shown in figure~\ref{fig:mobius}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. The space of all $\sigma$ is $\Gamma$ 
 
 \begin{tikzcd}
     F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
                       & K \arrow[u, "\sigma" description, bend right]
 \end{tikzcd}
 
-As illustrated by the mobius band example in figure~\ref{fig:mobius}, the vertical lines $F$ are the range of possible values embedded in $E$ and the circle $K$ is a representation of the connectivity of the points in $E$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$, and the section $\sigma$ is the mapping from a location $k$ on $K$ to a point on $F_{k}$ in $E$. The line $\Gamma$ is a space of sections
-
+As illustrated by the mobius band example in figure~\ref{fig:mobius}, the vertical lines $F$ are the range of possible values embedded in $E$. The circle $K$ is a representation of the connectivity of the points in $E$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$.?  
+The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$.  (Pull this back into more specific about fig, the general is making this more confusing.)
 
 \subsubsection{Base Space $K$}
 
@@ -57,53 +57,69 @@ Spivak's \cite{spivakSIMPLICIALDATABASES} formulation of the fibers as a union o
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U$ embedded in $K$ with the same fiber $\iota^*E$ and $\iota^*\sigma$.   
 
 \begin{tikzcd}
-    \iota^\ast E \arrow[r, hook] \arrow[d] & E \arrow[d]\\
-    U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right,] & K \arrow[u, "\sigma" description, bend right]
+    \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
+    U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right, shift right=2] & K \arrow[u, "\sigma" description, bend right]
 \end{tikzcd}
 %%% sheaves & presheaves 
 
 
-\subsection{Visual Space}
-%%render image
+\subsection{Display Space}
+\begin{figure}
+    \includegraphics{figures/sections/math/render.png}
+    \caption{}
+    \label{fig:render}
+\end{figure}
+
+A physical display space can be thought of sets of $\mathbb{R}^{7}$ tuples, where 
+\begin{equation}
+    \mathbb{R}^{7} = {X, Y, Z, R, G, B, A}
+\end{equation}
+
+and the sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of $\mathbb{R}^7$ and a base space of $\S$:
+
 \begin{tikzcd}
-    \mathbb{R}^{7} \arrow[r, hook] & H \arrow[d, "\zeta" description, bend right] \\
+    \mathbb{R}^{7} \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
                                    & S \arrow[u, "\rho" description, bend right] 
 \end{tikzcd}
 
-%%% R7 in H, S base space, mostly will be trivial case H = S\times R^{7}
 
-%% region on screen that corresponds to selection on H that corresponds to selection on S
-The arrow in figure~\ref{fig:pullback} is an illustration of the lookup function $$f:\tau \rightarrow \mathbb{R}^7$$ returned by $$\mathbb{A}$$. The screen (represented by ~\ref{fig:pullback}(d)) queries the topological space $\mathbb{T}$ that underlies the ideal (realworld coordinate free) visual idiom (~\ref{fig:pullback}(c)) of the image. This idealized representations toplogy can be encoded as a 3 simplex since screens are ultimaltely 3 dimensional   
+In the case of 2D screens, the predisplay space is a trivial fiber bundle $$H=\mathbb{R}^{7}\times S$$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $$(x_1, y_1)$$ and $$(x_2, y_2)$$ maps into a region on a 2-simplex in $S$ defined by $$(\alpha_1, \beta_1)$$ and $$(\alpha_2, \beta_2)$$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
 
-%%A: \Gamma(V) \rightarrow \Gamma(S)
+\begin{equation*}
+\rho(\Gamma(S)) = \int_{\alpha_1}^{\alpha_2}\int_{\beta_1}^{\beta_2}\int_{z_1}^{z_2}{R, G, B, A}  
+\end{equation*}
 
-%%f: \S \rightarrow R^{7} 
+where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $$\mathbb{R}^7$$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
 
-%%make bounding box bigger, pull in more rows (for averaging), bounding box on triangle, table is integral on bounding box - R,G,B, A = $$ \integral f(a,b)$$  (R, G, B, A functions )
 
-draw functions return the renderer - T simplex 
-set segments etc are currying f
-(sampled, would be a table, visualizer can create different triangles/triangles based on renderer, invariances would hold - curremtly it's a png/r7 lookup table)
-
-f to rnedring is lossy process
-S - (face/collection of faces) <- simplicial complex, details encoded many ways dependent on renderer, connectivity is in line or edge (can also show multiple triangles...)
-
-in practice w/ a renderer we have one triangle
-
-(change f to rho)
-
+\subsection{Artist}
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
-%%\psi map from S to topological K...
-\subsubsection{Visual Idioms: Equivalance class of artists}
-Visual Idioms
+\subsubsection{Screen to Data}
+%%diagram: [data] -Tau->[RGVXYZ]
+%%%            \ /\ / 
+\begin{tikzcd}
+    E \arrow[d, "\pi" description]                & H \arrow[d, "\pi" description]                                                 \\
+    K \arrow[u, "\sigma" description, bend right] & S \arrow[l, "\xi" description] \arrow[u, "\rho" description, bend right]
+\end{tikzcd}
 
-\subsubsection{Visual Variable Invariance}
+The pullback $\xi$ on $S \rightarrow K$ means that the values in $E$ can be directly mapped to a simplex in $S$, which means there's a mapping from screen space back to the values. 
+
+\begin{tikzcd}
+    \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
+    & S \arrow[lu, bend right] &             
+    \end{tikzcd}
+
+
+\subsubsection{Marks}
+
+\subsubsection{Visual Characteristics}
 Tau can preserves the measurement type properties (group scales)
 
-Will implement in code such that this happens. 
 
+\subsubsection{Visual Idioms: Equivalance class of artists}
+Visual Idioms
 
 \end{document}
