@@ -2,36 +2,44 @@
 \begin{document}
 
 \section{Notation \& Definitions}
+%%% add some words around 
 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
+%% E is a locally trivial fiber bundle over K where K is triangulizable space representing data space & H is a fiber bundle over S which is a simplacial complex of triangles representing visual space and artists in matplotlib will go between the two. E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. 
 
- 
-\subsection{Data Space}
+\subsection{Data Model}
 \begin{figure}[ht]
-    \includegraphics[width=0.5\linewidth]{figures/sections/math/mobius.png}
     \caption{write up some words here}
-    \label{fig:mobius}
+    \label{fig:fiberbundle}
     %%possibly replace w/ simpler deconstructed band image notes-11-19-20
+    %% or replace w/ box w/ thing that's kind of convoluted 
+    %% simpler still replace w/ timeseries of temp, 1D fiber
 \end{figure}
 
+%%% preface w/ we care about topology & types. 
 We use a fiber bundle model to represent the data, as proposed by Butler 
 \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. 
 
 
-One example of a fiber bundle is the mobius band shown in figure~\ref{fig:mobius}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. The space of all $\sigma$ is $\Gamma$ 
+One example of a fiber bundle is shown in figure~\ref{fig:mobius}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. 
 
 \begin{tikzcd}
     F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
-                      & K \arrow[u, "\sigma" description, bend right]
+                      & K \arrow[u, description, bend right]
 \end{tikzcd}
 
-As illustrated by the mobius band example in figure~\ref{fig:mobius}, the vertical lines $F$ are the range of possible values embedded in $E$. The circle $K$ is a representation of the connectivity of the points in $E$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$.?  
-The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$.  (Pull this back into more specific about fig, the general is making this more confusing.)
+As illustrated by figure~\ref{fig:mobius}, the vertical lines $F$ are the range of possible values embedded in the total space $E$. The topol $K$ is a representation of the connectivity of the points in $E$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. 
+The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$.
+%%% include diagram here of formal definition of sigma
+
+The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about fig, the general is making this more confusing.)
+%% locally trivial - for every point in K there exists an open set neighborhood $U$ such that if you restrict E to that point, then  \iota*E = F\times U [maybe do mobius strip diagram here? U is subsection of the ring, part where it's not twisted. there exists a triangulation & a way to do so is simplicies
 
 \subsubsection{Base Space $K$}
+%% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
 
 \begin{figure}[ht]
     \label{fig:simplex}
@@ -39,8 +47,10 @@ The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k
     \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
 \end{figure}
 
-One way to represent the topological space K is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. Simplices are a way of encoding the connectivity of each observation ($\sigma(k)$) to another:
+%% k is a triangularizable topological space 
+One way to represent the topological space K is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. Simplices are a way of encoding the connectivity of each observation ($\sigma(k)$) to another: %%formula for simplacial complexes/simplacial sets
 
+% replace this table w/ a diagram that shows this 
 \begin{description}
     \item[0-simplex] discrete observations (inventory records)
     \item[1-simplex] 1D continuos data (timeseries)
@@ -48,17 +58,21 @@ One way to represent the topological space K is as a set composed of simplices, 
     \item[3-simplex] 3D continuos data (video)
 \end{description}
 
-In a locally trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. A fiber bundle can be made locally trivial by approximating the total space E as a simplacial complex.
+I
 
 \subsubsection{Fiber Space $F$}
-The fibers encode the set of all possible values each observation can take.  Spivak's formulation is that the fibers encode the union of the types of measurements\cite{spivakSIMPLICIALDATABASES}. For example, given the section $\Gamma(mobuis strip) =
-\{\sigma_1=\sin, \sigma_2=\cos\}$:
-%%fill in more spivak
-the fiber $F = \{float, float\}$.  
+\begin{figure}
+    \includegraphics{}
+    \label{fig:movie}
+\end{figure}
+%%% might 
+The fibers encode the set of all possible values each observation can take. For example, the fiber bundle in figure~\ref{fig:movie} is the set of all possible movies, where each $k \in K$ is a frame in the movie. Each \sigma 
 
-%%% mapping from measurement back to type is the basis for gaurateening invariance 
 
-\subsubsection{Subset \& Streaming}
+which in Spivak's formulation means the fibers encode the union of the types of measurements\cite{spivakSIMPLICIALDATABASES}. Spivak also provides a way to map from 
+
+
+\subsubsection{Subset}
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U$ embedded in $K$ with the same fiber $\iota^*E$ and $\iota^*\sigma$.   
 
 \begin{tikzcd}
@@ -68,8 +82,10 @@ $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore th
 %%% sheaves & presheaves 
 
 
-\subsection{Display Space}
+\subsection{Prerender Space}
 \label{sec:display}
+
+% preamble type intro to displays, examples - displays can include screen, 3D printer, sphereical display, H is the total space of the screen. 11
 \begin{figure}[h]
     \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
     \caption{}
@@ -97,8 +113,10 @@ In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\ma
 
 where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $\mathbb{R}^7$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
 
+%%%pho is paramterized over alpha, beta, which is obtained via pullback lookup from (Hx,Hy)-?(alpha, beta)
 
 \subsection{Artist}
+%% include some words about motivation 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
