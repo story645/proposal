@@ -8,8 +8,8 @@ notes, API sketches, drafts, etc. leading towards dissertation proposal:
 	4. ggplot
 	4. vega, vegalite, altair
 	5. Bokeh, Holoviews <- data oriented
-2. relational algebra of visualization:
-	* Codd's Data -> artists (functions of mappings to aesthics) -> cw simplex (RGBA+Zorder)
+2. math of visualization:
+	*  artists : data -> cw simplex (RGBA+Zorder)
 
 3. prototype implementation for mpl v4 
 	* https://github.com/matplotlib/CZI_2019-07_mpl
