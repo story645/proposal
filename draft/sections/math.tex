@@ -1,4 +1,4 @@
-\documentclass[../intro.tex]{subfiles}
+\documentclass[../main.tex]{subfiles}
 \begin{document}
 
 \section{Notation \& Definitions}
@@ -10,13 +10,15 @@
 
 %% E is a locally trivial fiber bundle over K where K is triangulizable space representing data space & H is a fiber bundle over S which is a simplacial complex of triangles representing visual space and artists in matplotlib will go between the two. E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. 
 
+%% locally trival bundle is map from one topoligical space E to another K such that around any point in K there exists an open set containing that point such that if we restrict E to that part, it's quivalent to (homoemorphic to) open set cross fiber. 
+%%  
 \subsection{Data Model}
 \begin{figure}[ht]
     \caption{write up some words here}
     \label{fig:fiberbundle}
     %%possibly replace w/ simpler deconstructed band image notes-11-19-20
     %% or replace w/ box w/ thing that's kind of convoluted 
-    %% simpler still replace w/ timeseries of temp, 1D fiber
+    %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
 %%% preface w/ we care about topology & types. 
@@ -31,7 +33,7 @@ One example of a fiber bundle is shown in figure~\ref{fig:mobius}. A fiber bundl
                       & K \arrow[u, description, bend right]
 \end{tikzcd}
 
-As illustrated by figure~\ref{fig:mobius}, the vertical lines $F$ are the range of possible values embedded in the total space $E$. The topol $K$ is a representation of the connectivity of the points in $E$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. 
+As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. 
 The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$.
 %%% include diagram here of formal definition of sigma
 
@@ -39,26 +41,12 @@ The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about 
 %% locally trivial - for every point in K there exists an open set neighborhood $U$ such that if you restrict E to that point, then  \iota*E = F\times U [maybe do mobius strip diagram here? U is subsection of the ring, part where it's not twisted. there exists a triangulation & a way to do so is simplicies
 
 \subsubsection{Base Space $K$}
+
 %% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
+%% k is a topological space ....equation soup 
 
-\begin{figure}[ht]
-    \label{fig:simplex}
-    \includegraphics{figures/sections/math/simplex.png}
-    \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
-\end{figure}
 
-%% k is a triangularizable topological space 
-One way to represent the topological space K is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. Simplices are a way of encoding the connectivity of each observation ($\sigma(k)$) to another: %%formula for simplacial complexes/simplacial sets
 
-% replace this table w/ a diagram that shows this 
-\begin{description}
-    \item[0-simplex] discrete observations (inventory records)
-    \item[1-simplex] 1D continuos data (timeseries)
-    \item[2-simplex] 2D continuos data (map)
-    \item[3-simplex] 3D continuos data (video)
-\end{description}
-
-I
 
 \subsubsection{Fiber Space $F$}
 \begin{figure}
@@ -66,7 +54,7 @@ I
     \label{fig:movie}
 \end{figure}
 %%% might 
-The fibers encode the set of all possible values each observation can take. For example, the fiber bundle in figure~\ref{fig:movie} is the set of all possible movies, where each $k \in K$ is a frame in the movie. Each \sigma 
+The fibers encode the set of all possible values each observation can take. For example, the fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end]. In figure~\ref{fig:temp_time}, time is encoded as a second dimension and since the data is from 2019 the value t
 
 
 which in Spivak's formulation means the fibers encode the union of the types of measurements\cite{spivakSIMPLICIALDATABASES}. Spivak also provides a way to map from 
@@ -155,6 +143,7 @@ Each point $s$ in the display space $H$, the mark it belongs to can be found by 
 Tau can preserves the measurement type properties (group scales)
 
 
+Tau is fully flexible and can do whatever; knows about fiber & neighborhood of fiber. Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
 \begin{equation}
