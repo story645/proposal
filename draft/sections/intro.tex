@@ -12,6 +12,9 @@
 We define a visualization as a transform from data to graphic that preserves the topology of the data and the properties of the measurement type. In fig~\ref{fig:viz_same}, we implicitly assume that the translation from table to heatmap has preserved the order of observations (the rows) and that the perceptually uniform sequential colormap has been applied such that the ordering relation on floats matches the ordering on the colormap (darker colors map to larger numbers). We also make this assumption about color in the scatter map, and that the translation to size and position on screen also respect the ordering on floats. In this work, we propose to mathematically describe the transform of data to visual space such that we can make explicit the implicit topology and types visualizations preserve. We then propose a new architecture for the Python visualization library Matplotlib \cite{hunterMatplotlib2DGraphics2007} based on these descriptions because the Matplolib artist layer is analogous to the transforms. 
 
 
+\subsection{ What is a viz}?
+Acquired codes of meaning
+
 \section{Not all data are tables}
 
 Tables, images (Lev), graphs (network X)

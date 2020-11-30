@@ -2,23 +2,23 @@
 \begin{document}
 
 \section{Notation \& Definitions}
-%%% add some words around 
+In this section we introduce a mathematical formulation of the visualization pipeline where artist $A$ functions transform data $\Gamma(E)$ to an intermediate representation in prerendered display space $Gamme(H)$:
 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
+    \lab{eq:artist}
 \end{equation}
 
-%% E is a locally trivial fiber bundle over K where K is triangulizable space representing data space & H is a fiber bundle over S which is a simplacial complex of triangles representing visual space and artists in matplotlib will go between the two. E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. 
+$E$ is a locally trivial fiber bundle over $K$ representing data space; $K$ is a triangulizable space encoding the connectivity of the observations in the data. $H$ is a fiber bundle over $S$ representing visual space;  $S$ is a simplacial complex of triangles encoding the connectivity of the visual output of each artist $A$. When E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. 
 
-%% locally trival bundle is map from one topoligical space E to another K such that around any point in K there exists an open set containing that point such that if we restrict E to that part, it's quivalent to (homoemorphic to) open set cross fiber. 
-%%  
+\begi
+
 \subsection{Data Model}
 \begin{figure}[ht]
     \label{fig:fiberbundle}
     \includegraphics{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
-    %%possibly replace w/ simpler deconstructed band image notes-11-19-20
-    %% or replace w/ box w/ thing that's kind of convoluted 
+
     %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
