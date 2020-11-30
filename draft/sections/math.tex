@@ -2,16 +2,23 @@
 \begin{document}
 
 \section{Notation \& Definitions}
-In this section we introduce a mathematical formulation of the visualization pipeline where artist $A$ functions transform data $\Gamma(E)$ to an intermediate representation in prerendered display space $Gamme(H)$:
+In this section we introduce a mathematical description of the visualization pipeline where artist $A$ functions transform data of type $\Gamma(E)$ to an intermediate representation in prerendered display space of type $\Gamma(H)$:
 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
     \lab{eq:artist}
 \end{equation}
 
-$E$ is a locally trivial fiber bundle over $K$ representing data space; $K$ is a triangulizable space encoding the connectivity of the observations in the data. $H$ is a fiber bundle over $S$ representing visual space;  $S$ is a simplacial complex of triangles encoding the connectivity of the visual output of each artist $A$. When E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. 
+\begin{enumerate}
+\item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
+\item $E$ is a locally trivial fiber bundle over $K$ representing data space.
+\item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
+\item $H$ is a fiber bundle over $S$ representing visual space
+\item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
+\end{enumerate}
 
-\begi
+When E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{some topology text book, really wikipedia}.
+
 
 \subsection{Data Model}
 \begin{figure}[ht]
@@ -62,10 +69,28 @@ The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about 
     \includegraphics{figures/sections/math/temp_3f.png}
 \end{figures}
 %%% might 
-The fibers encode the set of all possible values each observation can take. For example, the fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end]. In figure~\ref{fig:temp_time}, time is encoded as a second dimension and since the data is from 2019 the value t
+The fibers $F$ are a topological space embedded in $E$ on which lie the set of all possible values. For example, if $F$ is the interval $[0, 1]$, then $g(k)$ from equation~\ref{eq:sigma} returns a single measurement $x$ in the interval $F$:
+\begin{equation}
+    \label{eg:goff}
+    g(k) = x, \text(where} 0\leq x \leq 1
+\end{equation}
+
+The fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end], similar to the interval $F$ in equation~\ref{eg:goff}. F can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. Given:
+\begin{enumerate}
+\item interval of all possible temperarture values $\[T_{min}, T_{max}\]$ 
+\item interval of all possible  time values $\[t_{min}, t_{max}\]$
+\end{enumerate}
+
+then $F$ is the cross product $F= $\[T_{min}, T_{max}\]$  \times
 
 
-which in Spivak's formulation means the fibers encode the union of the types of measurements\cite{spivakSIMPLICIALDATABASES}. Spivak also provides a way to map from 
+$g(k) = (temp, time)$.  
+\begin{equation}
+\end{equation}
+
+
+As an alternative to listing the intervals or discrete values 
+
 
 
 \subsubsection{Subset}
