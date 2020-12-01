@@ -29,11 +29,8 @@ When E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F
     %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
-%%% preface w/ we care about topology & types. 
 We use a fiber bundle model to represent the data, as proposed by Butler 
-\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. 
-
-A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. 
+\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. 
 
 \begin{tikzcd}
     F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
@@ -81,15 +78,23 @@ The fiber in figure~\ref{fig:temp} is the space of possible temperature values i
 \item interval of all possible  time values $\[t_{min}, t_{max}\]$
 \end{enumerate}
 
-then $F$ is the cross product $F= $\[T_{min}, T_{max}\]$  \times
-
-
-$g(k) = (temp, time)$.  
+then $F$ is the cross product $F= \[T_{min}, T_{max}\] \times \[t_{min}, t_{max}\]$, and $g(k)$ listed in equation~\ref{eq:sigma} is:
 \begin{equation}
+g(k) = (x_0, x_1) \text{where} x_0 \in \[T_{min}, T_{max}\], x_1 \in \[t_{min}, t_{max}\]
 \end{equation}
 
+Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors).
+\begin{equation}
+g(k) = (x_0, x_1, \ldots x_n) \text{where} x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
+\end{equation}
 
-As an alternative to listing the intervals or discrete values 
+These measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}
+
+
+
+
+
+\cite{spivakSIMPLICIALDATABASES}. 
 
 
 
@@ -100,8 +105,6 @@ $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore th
     \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
     U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right, shift right=2] & K \arrow[u, "\sigma" description, bend right]
 \end{tikzcd}
-%%% sheaves & presheaves 
-
 
 \subsection{Prerender Space}
 \label{sec:display}
