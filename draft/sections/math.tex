@@ -6,26 +6,25 @@ In this section we introduce a mathematical description of the visualization pip
 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
-    \lab{eq:artist}
+    \label{eq:artist}
 \end{equation}
 
-\begin{enumerate}
+\begin{itemize}
 \item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
 \item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
 \item $H$ is a fiber bundle over $S$ representing visual space
 \item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
-\end{enumerate}
+\end{itemize}
 
-When E is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{some topology text book, really wikipedia}.
+When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{some topology text book, really wikipedia}. We will be discussing total spaces $E$ that are locally trivial, meaning that for every point in K there exists an open set neighborhood $U$ such that if you restrict $E$ to that point, then  $\iota*E = F\times U$. [there's a missing sentance here...]
 
 
 \subsection{Data Model}
 \begin{figure}[ht]
     \label{fig:fiberbundle}
-    \includegraphics{figures/sections/math/fiberbundle.png}
+    \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
-
     %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
@@ -42,14 +41,13 @@ The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k
 %%% include diagram here of formal definition of sigma
 
 The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about fig, the general is making this more confusing.)
-%% locally trivial - for every point in K there exists an open set neighborhood $U$ such that if you restrict E to that point, then  \iota*E = F\times U [maybe do mobius strip diagram here? U is subsection of the ring, part where it's not twisted. there exists a triangulation & a way to do so is simplicies
 
 \subsubsection{Base Space $K$}
-\begin{figure}
-    \includegraphics{figures/sections/math/temp_1k.png}
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
 \end{figure}
-\begin{figure}
-    \includegraphics{figures/sections/math/temp_2k.png}
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 %% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
 %% k is a topological space ....equation soup 
@@ -58,43 +56,43 @@ The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about 
 
 
 \subsubsection{Fiber Space $F$}
-\begin{figure}
-    \includegraphics{figures/sections/math/temp_2f.png}
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
     \label{fig:}
 \end{figure}
-\begin{figure}
-    \includegraphics{figures/sections/math/temp_3f.png}
-\end{figures}
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_3f.png}
+\end{figure}
 %%% might 
 The fibers $F$ are a topological space embedded in $E$ on which lie the set of all possible values. For example, if $F$ is the interval $[0, 1]$, then $g(k)$ from equation~\ref{eq:sigma} returns a single measurement $x$ in the interval $F$:
 \begin{equation}
     \label{eg:goff}
-    g(k) = x, \text(where} 0\leq x \leq 1
+    g(k) = x, \text{ where } 0\leq x \leq 1
 \end{equation}
 
 The fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end], similar to the interval $F$ in equation~\ref{eg:goff}. F can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. Given:
-\begin{enumerate}
-\item interval of all possible temperarture values $\[T_{min}, T_{max}\]$ 
-\item interval of all possible  time values $\[t_{min}, t_{max}\]$
-\end{enumerate}
+\begin{itemize}
+\item interval of all possible temperature values $[T_{min}, T_{max}]$ 
+\item interval of all possible  time values $[t_{min}, t_{max}]$
+\end{itemize}
 
-then $F$ is the cross product $F= \[T_{min}, T_{max}\] \times \[t_{min}, t_{max}\]$, and $g(k)$ listed in equation~\ref{eq:sigma} is:
+then $F$ is the cross product $F= [T_{min}, T_{max}] \times [t_{min}, t_{max}]$, and $g(k)$ listed in equation~\ref{eq:sigma} is:
+
 \begin{equation}
-g(k) = (x_0, x_1) \text{where} x_0 \in \[T_{min}, T_{max}\], x_1 \in \[t_{min}, t_{max}\]
+g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t_{max}]
 \end{equation}
 
-Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors).
+Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
 \begin{equation}
-g(k) = (x_0, x_1, \ldots x_n) \text{where} x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
+g(k) = (x_0, x_1, \ldots x_n) \text{ where } x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
 \end{equation}
 
-These measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}
+The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. 
+Spivak provides a formal way of attaching a name to each $X \in F$ and mapping from the value back to the variable type by formulating $E$ in terms of databases \cite{spivakSIMPLICIALDATABASES}. He defines a total space $U$, analogous to $E$, that is the disjoint union of all possible elements of all possible types 
 
 
 
-
-
-\cite{spivakSIMPLICIALDATABASES}. 
+For example, the interval $[T_{min}, T_{max}]$ is a restriction on $\mathbb{R}$ that is part of the definition of a type named $\mathrm{Temperature}$ and  $[t_{min}, t_{max}]$ is a restriction on $\mathbb{R}$ that is part of a definition of a type named $\mathrm{Time}$. As in the case of $E$ embedding the $F$ on which these values live, $U$ contains all pairs of all values of these types $U \coloneqq (\mathrm{Temperature}, \mathrm{Time})$. Spivak defines U as being over the space of $\mathrm{DT}$, which is the space of data types $\mathrm{DT} = \{\mathrm{Temperature}, \mathrm{Time}}$. 
 
 
 
@@ -179,7 +177,7 @@ Each point $s$ in the display space $H$, the mark it belongs to can be found by 
 Tau can preserves the measurement type properties (group scales)
 
 
-Tau is fully flexible and can do whatever; knows about fiber & neighborhood of fiber. Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
+Tau is fully flexible and can do whatever; knows about fiber \& neighborhood of fiber. Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
 \begin{equation}
