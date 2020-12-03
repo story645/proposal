@@ -21,47 +21,56 @@ In this section we introduce a mathematical description of the visualization pip
 \item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
 \end{itemize}
 
-When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all $F_{k}$ for $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{some topology text book, really wikipedia}. We will be discussing total spaces $E$ that are locally trivial, meaning that for every point in K there exists an open set neighborhood $U$ such that if you restrict $E$ to that point, then  $\iota*E = F\times U$. [there's a missing sentance here...]
-
+When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all fibers $F_{k}$ over $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}.
 
 \subsection{Data Model}
 
 We use a fiber bundle model to represent the data, as proposed by Butler 
-\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. A fiber bundle is a structure $(E, K, \pi, F)$  consisting of topological spaces $E, K, F$ and the map from total space to base space $\pi: E \rightarrow K$. 
+\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. A fiber bundle is a structure $(E, K, \pi, F)$  consisting of topological spaces $E, K, F$ and the map from total space to base space:
 
-\begin{tikzcd}
-    F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
-                      & K \arrow[u, description, bend right]
-\end{tikzcd}
-
-
-By definition, every point in the base space $k \in K$ has a local neighborhood $U$ such that \pi()
-\cite{rowlandFiberBundle,FiberBundle2020}
-
-\begin{tikzcd}
-    \pi^{-1}(U) \arrow[r, "\varphi" description] \arrow[d, "\pi" description] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
-    U                                                                         &                                         
-\end{tikzcd}
-
-
-There is a bijection from the fiber $F$ to the fiber $F_k$ over the point $k \in K$ such that 
 \begin{equation}
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
+                        & K \arrow[u, description, bend right]
+    \end{tikzcd}
 \end{equation}
+
+where there is a bijection from $F$ to every fiber $F_k$ over point $k \in K$ in $E$ and the function $\pi: E \rightarrow K$ is the map into the $K$ quotient space of $E$. 
+
+Every point in the base space $k \in K$ has a local neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
+
+\begin{equation}
+    \begin{tikzcd}
+        \pi^{-1}(U) \arrow[r, "\varphi" description] \arrow[d, "\pi" description] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
+        U                                                                         &                                         
+    \end{tikzcd}
+\end{equation}
+$\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism such that $\pi$ and $\mathrm{proj}_U$ both map to $U$, the fiber over $k$ $F_k = \pi^{-1}({k \in K}) $ is homomorphic to the fiber $F$.  The base space $K$ carries the quotient topology determined by $\pi$, meaning it is 
+
+meaning that for every point $k in K$ there exists an open set neighborhood $U$ such that if $E$ is restricted to $k$ , then  $\iota*E = F\times U$. 
+\begin{equation}
+abc
+\end{equation}
+
+
+
+
 
 
 The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$
-
-\begin{tikzcd}
-    F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
-                      & K \arrow[u, "\sigma", description, bend right]
-\end{tikzcd}
+\begin{equation}
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
+                        & K \arrow[u, "\sigma", description, bend right]
+    \end{tikzcd}
+\end{equation}
 
 such that it is the right inverse of $\pi$:
 \begin{equation}
-    \pi(\sigma(k)) = k \text{ for all } \k \in K 
+    \pi(\sigma(k)) = k \text{ for all } k \in K 
 \end{equation}
 
-In a locally trivial fiber bundle, $\sigma = K \times E$   \cite{weissteinFiberBundle}
+In a locally trivial fiber bundle, $\sigma = K \times E$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
 \sigma(k) = (k, g(k))
 \end{equation}
@@ -78,6 +87,11 @@ where the fiber at $k$, $F_k$,  is the domain of $g(k)$.  The space of global se
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. 
 
 \subsubsection{Base Space $K$}
+
+
+K is a triangulizable topological space.
+
+
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
 \end{figure}
@@ -86,8 +100,7 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
 \end{figure}
 %% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
 %% k is a topological space ....equation soup 
-
-K is a triangulizable topological space. 
+ 
 
 
 \subsubsection{Fiber Space $F$}
@@ -101,7 +114,7 @@ U = set of single elements of type in DT
 pi (U-DT)
 Also need to take column names (U cross C) 
 
-# C is more about naming types to reuse primatives 
+%% C is more about naming types to reuse primatives 
 
 
 Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
@@ -147,11 +160,12 @@ g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t
 
 \subsubsection{Subset}
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U$ embedded in $K$ with the same fiber $\iota^*E$ and $\iota^*\sigma$.   
-
-\begin{tikzcd}
-    \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
-    U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right, shift right=2] & K \arrow[u, "\sigma" description, bend right]
-\end{tikzcd}
+\begin{equation}
+    \begin{tikzcd}
+        \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
+        U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right, shift right=2] & K \arrow[u, "\sigma" description, bend right]
+    \end{tikzcd}    
+\end{equation}
 
 \subsection{Prerender Space}
 \label{sec:display}
@@ -169,11 +183,12 @@ A physical display space can be thought of sets of $\mathbb{R}^{7}$ tuples, wher
 \end{equation}
 
 and the sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of $\mathbb{R}^7$ and a base space of $\S$:
-
-\begin{tikzcd}
-    \mathbb{R}^{7} \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
-                                   & S \arrow[u, "\rho" description, bend right] 
-\end{tikzcd}
+\begin{equation}
+    \begin{tikzcd}
+        \mathbb{R}^{7} \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
+                                    & S \arrow[u, "\rho" description, bend right] 
+    \end{tikzcd}
+\end{equation}
 
 
 In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $(x_1, y_1)$ and $(x_2, y_2)$ maps into a region on a 2-simplex in $S$ defined by $(\alpha_1, \beta_1)$ and $(\alpha_2, \beta_2)$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
@@ -195,18 +210,19 @@ where the R,G,B,A values are derived from the how the data values are mapped to 
 \subsubsection{Screen to Data}
 %%diagram: [data] -Tau->[RGVXYZ]
 %%%            \ /\ / 
-\begin{tikzcd}
-    E \arrow[d, "\pi" description] & H \arrow[d, "\pi" description]                                                 \\
-    K \arrow[u, "\sigma" description, bend right] & S \arrow[l, "\xi" description] \arrow[u, "\rho" description, bend right]
-\end{tikzcd}
-
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[d, "\pi" description] & H \arrow[d, "\pi" description]                                                 \\
+        K \arrow[u, "\sigma" description, bend right] & S \arrow[l, "\xi" description] \arrow[u, "\rho" description, bend right]
+    \end{tikzcd}
+\end{equation}
 The pullback $\xi$ on $S \rightarrow K$ means that the values in $E$ can be directly mapped to a simplex in $S$, which means there's a mapping from screen space back to the values. 
-
-\begin{tikzcd}
-    \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
-    & S \arrow[lu, bend right] &             
-\end{tikzcd}
-
+\begin{equation}
+    \begin{tikzcd}
+        \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
+        & S \arrow[lu, bend right] &             
+    \end{tikzcd}
+\end{equation}
 
 \subsubsection{Marks}
 %% diagram of connected components/line thing 11-19-20 notes
