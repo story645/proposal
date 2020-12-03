@@ -19,6 +19,8 @@ In this section we introduce a mathematical description of the visualization pip
 \item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
 \item $H$ is a fiber bundle over $S$ representing visual space
 \item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
+\item $\sigma: K\rightarrow E$ is the data being visualized
+\item $\rho: S \rightarrow H$ is the render map
 \end{itemize}
 
 When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all fibers $F_{k}$ over $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}.
@@ -35,9 +37,7 @@ We use a fiber bundle model to represent the data, as proposed by Butler
     \end{tikzcd}
 \end{equation}
 
-where there is a bijection from $F$ to every fiber $F_k$ over point $k \in K$ in $E$ and the function $\pi: E \rightarrow K$ is the map into the $K$ quotient space of $E$. 
-
-Every point in the base space $k \in K$ has a local neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
+where there is a bijection from $F$ to every fiber $F_k$ over point $k \in K$ in $E$ and the function $\pi: E \rightarrow K$ is the map into the $K$ quotient space of $E$. Every point in the base space $k \in K$ has a local open set neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
 
 \begin{equation}
     \begin{tikzcd}
@@ -45,27 +45,17 @@ Every point in the base space $k \in K$ has a local neighborhood $U$ \cite{Fiber
         U                                                                         &                                         
     \end{tikzcd}
 \end{equation}
-$\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism such that $\pi$ and $\mathrm{proj}_U$ both map to $U$, the fiber over $k$ $F_k = \pi^{-1}({k \in K}) $ is homomorphic to the fiber $F$.  The base space $K$ carries the quotient topology determined by $\pi$, meaning it is 
+such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$ $F_k = \pi^{-1}({k \in K}) $ is homomorphic to the fiber $F$.
 
-meaning that for every point $k in K$ there exists an open set neighborhood $U$ such that if $E$ is restricted to $k$ , then  $\iota*E = F\times U$. 
-\begin{equation}
-abc
-\end{equation}
-
-
-
-
-
-
-The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$
+The section $\sigma$ is the mapping $\sigma: K\rightarrow E$ 
 \begin{equation}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
-                        & K \arrow[u, "\sigma", description, bend right]
-    \end{tikzcd}
+        F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right]    \\
+                          & K \arrow[u, "\sigma" description, bend right]
+        \end{tikzcd}
 \end{equation}
 
-such that it is the right inverse of $\pi$:
+such that it is the right inverse of $\pi$
 \begin{equation}
     \pi(\sigma(k)) = k \text{ for all } k \in K 
 \end{equation}
@@ -75,21 +65,19 @@ In a locally trivial fiber bundle, $\sigma = K \times E$ \cite{rowlandFiberBundl
 \sigma(k) = (k, g(k))
 \end{equation}
 
-where the fiber at $k$, $F_k$,  is the domain of $g(k)$.  The space of global sections $\sigma$ of $E$ is $\Gamma(E)$:
+where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ is called a sheaf and the space of all possible sections $\sigma$ of $E$ is $\Gamma(E)$. All datasets $\sigma \in \Gamma(E)$ have the same variables $F$ and connectivity $K$ but can have different values such that $\sigma_{i}\neq\sigma_{j}$.
 
 \begin{figure}[ht]
     \label{fig:fiberbundle}
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
-    %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. 
 
 \subsubsection{Base Space $K$}
-
-
-K is a triangulizable topological space.
+K is a triangulizable quotient topological space.
+%%insert stuff about qotient spaces....
 
 
 \begin{figure}[ht]
@@ -98,24 +86,20 @@ K is a triangulizable topological space.
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
-%% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
-%% k is a topological space ....equation soup 
- 
+
 
 
 \subsubsection{Fiber Space $F$}
-The fiver ver is the set of elements $e \in F$ that lies over 
-$F_{k}$ is a fiber over $K$ that lo 
+Spivak models the fiber space $F$ as schema and the data as sheafs (localized $\sigma$ functions) on the schema \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
+\begin{equation}
+\pi: U \rightarrow DT
+\end{equation}
 
-Spivak provides a formalization for the values $x \in X$ whereby they can have specialized types. He defines the space of datatypes $\mathrm{DT}$ 
-
-DT = set of strings names of types
-U = set of single elements of type in DT
-pi (U-DT)
-Also need to take column names (U cross C) 
-
-%% C is more about naming types to reuse primatives 
-
+where $DT$ is the set of data types (as identified by their names) and $U$ is the set of all possible objects $x$ of all types in $DT$. This means that for each type $T\in DT$, the preimage $\pi^{1}(T)\subset U $ is the domain of $T$, and a value $x \in \pi^{1}(T)\subset U$ is an object of type $T$. Spivak then defines a schema $(C, \sigma)$ of type $\pi$, where $\pi$ is the universe of all types, such that 
+\begin{equation}
+\sigma: C \rightarrow DT
+\end{equation}
+where $C$ is a finite ordered set of columns in a database. We extend C to refer to the names of all distinct 
 
 Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
 \begin{equation}
@@ -159,13 +143,15 @@ g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t
 
 
 \subsubsection{Subset}
-$\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U$ embedded in $K$ with the same fiber $\iota^*E$ and $\iota^*\sigma$.   
+$\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U \subset K$ with the same fiber $F$
 \begin{equation}
     \begin{tikzcd}
         \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
         U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \sigma" description, bend right, shift right=2] & K \arrow[u, "\sigma" description, bend right]
     \end{tikzcd}    
 \end{equation}
+where $\iota^*E$ and $\iota^*\sigma$ are $E$ and $\sigma$ restricted to points $k \in U \subset K$.   
+
 
 \subsection{Prerender Space}
 \label{sec:display}
