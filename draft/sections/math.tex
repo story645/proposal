@@ -9,6 +9,10 @@ In this section we introduce a mathematical description of the visualization pip
     \label{eq:artist}
 \end{equation}
 
+\begin{equation}
+    A: \sigma \rightarrow \rho
+\end{equation}
+
 \begin{itemize}
 \item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
@@ -21,6 +25,49 @@ When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all 
 
 
 \subsection{Data Model}
+
+We use a fiber bundle model to represent the data, as proposed by Butler 
+\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. A fiber bundle is a structure $(E, K, \pi, F)$  consisting of topological spaces $E, K, F$ and the map from total space to base space $\pi: E \rightarrow K$. 
+
+\begin{tikzcd}
+    F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
+                      & K \arrow[u, description, bend right]
+\end{tikzcd}
+
+
+By definition, every point in the base space $k \in K$ has a local neighborhood $U$ such that \pi()
+\cite{rowlandFiberBundle,FiberBundle2020}
+
+\begin{tikzcd}
+    \pi^{-1}(U) \arrow[r, "\varphi" description] \arrow[d, "\pi" description] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
+    U                                                                         &                                         
+\end{tikzcd}
+
+
+There is a bijection from the fiber $F$ to the fiber $F_k$ over the point $k \in K$ such that 
+\begin{equation}
+\end{equation}
+
+
+The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$
+
+\begin{tikzcd}
+    F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
+                      & K \arrow[u, "\sigma", description, bend right]
+\end{tikzcd}
+
+such that it is the right inverse of $\pi$:
+\begin{equation}
+    \pi(\sigma(k)) = k \text{ for all } \k \in K 
+\end{equation}
+
+In a locally trivial fiber bundle, $\sigma = K \times E$   \cite{weissteinFiberBundle}
+\begin{equation}
+\sigma(k) = (k, g(k))
+\end{equation}
+
+where the fiber at $k$, $F_k$,  is the domain of $g(k)$.  The space of global sections $\sigma$ of $E$ is $\Gamma(E)$:
+
 \begin{figure}[ht]
     \label{fig:fiberbundle}
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
@@ -28,19 +75,7 @@ When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all 
     %% simpler still replace w/ timeseries of temp, 1D fiber -> inspired by butler 1989 FIgG 1
 \end{figure}
 
-We use a fiber bundle model to represent the data, as proposed by Butler 
-\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}. A fiber bundle is a topological total space $E$ with an embedded fiber space $F$, a base space on which the fibers lie $K$ and the $\pi$ and $\sigma$ mappings between $E$ and $K$. 
-
-\begin{tikzcd}
-    F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right ] \\
-                      & K \arrow[u, description, bend right]
-\end{tikzcd}
-
-As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. The function $\pi$ is the mapping from a point on a specific fiber $F_{k}|k\in K$ in $E$ to a location $k \in K$. 
-The section $\sigma$ is the mapping from locations $k$ on $K$ to points on $F_{k}$ in $E$.
-%%% include diagram here of formal definition of sigma
-
-The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about fig, the general is making this more confusing.)
+As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. 
 
 \subsubsection{Base Space $K$}
 \begin{figure}[ht]
@@ -52,10 +87,30 @@ The space of all $\sigma$ is $\Gamma$  (Pull this back into more specific about 
 %% general statement about topology, examples of 0, 1, ....Ks [none triangular things, square/torus, ....], condition on K is that it can be represent as a triangulation of K (can be realized as triangle on K - extra structure that may be arbitrary
 %% k is a topological space ....equation soup 
 
-
+K is a triangulizable topological space. 
 
 
 \subsubsection{Fiber Space $F$}
+The fiver ver is the set of elements $e \in F$ that lies over 
+$F_{k}$ is a fiber over $K$ that lo 
+
+Spivak provides a formalization for the values $x \in X$ whereby they can have specialized types. He defines the space of datatypes $\mathrm{DT}$ 
+
+DT = set of strings names of types
+U = set of single elements of type in DT
+pi (U-DT)
+Also need to take column names (U cross C) 
+
+# C is more about naming types to reuse primatives 
+
+
+Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
+\begin{equation}
+g(k) = (x_0, x_1, \ldots x_n) \text{ where } x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
+\end{equation}
+
+
+
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
     \label{fig:}
@@ -73,7 +128,7 @@ The fibers $F$ are a topological space embedded in $E$ on which lie the set of a
 The fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end], similar to the interval $F$ in equation~\ref{eg:goff}. F can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. Given:
 \begin{itemize}
 \item interval of all possible temperature values $[T_{min}, T_{max}]$ 
-\item interval of all possible  time values $[t_{min}, t_{max}]$
+\item interval of all possible time values $[t_{min}, t_{max}]$
 \end{itemize}
 
 then $F$ is the cross product $F= [T_{min}, T_{max}] \times [t_{min}, t_{max}]$, and $g(k)$ listed in equation~\ref{eq:sigma} is:
@@ -82,17 +137,11 @@ then $F$ is the cross product $F= [T_{min}, T_{max}] \times [t_{min}, t_{max}]$,
 g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t_{max}]
 \end{equation}
 
-Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
-\begin{equation}
-g(k) = (x_0, x_1, \ldots x_n) \text{ where } x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
-\end{equation}
 
-The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. 
-Spivak provides a formal way of attaching a name to each $X \in F$ and mapping from the value back to the variable type by formulating $E$ in terms of databases \cite{spivakSIMPLICIALDATABASES}. He defines a total space $U$, analogous to $E$, that is the disjoint union of all possible elements of all possible types 
+% datetime type, columns = start, end 
 
-
-
-For example, the interval $[T_{min}, T_{max}]$ is a restriction on $\mathbb{R}$ that is part of the definition of a type named $\mathrm{Temperature}$ and  $[t_{min}, t_{max}]$ is a restriction on $\mathbb{R}$ that is part of a definition of a type named $\mathrm{Time}$. As in the case of $E$ embedding the $F$ on which these values live, $U$ contains all pairs of all values of these types $U \coloneqq (\mathrm{Temperature}, \mathrm{Time})$. Spivak defines U as being over the space of $\mathrm{DT}$, which is the space of data types $\mathrm{DT} = \{\mathrm{Temperature}, \mathrm{Time}}$. 
+% schema is ordered list of Column, type is approx F, U cross C over sigma, 
+% space of rows/records f:k -> r, sigma:k -> r, is the table function (dataframe as instance)
 
 
 
@@ -173,11 +222,15 @@ Each point $s$ in the display space $H$, the mark it belongs to can be found by 
 
 
 
-\subsubsection{Visual Characteristics}
+\subsubsection{Visual Encodings}
 Tau can preserves the measurement type properties (group scales)
 
+%%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
 
 Tau is fully flexible and can do whatever; knows about fiber \& neighborhood of fiber. Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
+
+%%hatches can either grow the R space or function 
+
 \subsubsection{Visual Idioms: Equivalance class of artists}
 Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
 \begin{equation}
