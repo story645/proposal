@@ -120,12 +120,14 @@ where $C$ is the finite set of names of data fields in $E$. The set of all value
             C \arrow[r, "\sigma" description]                          & DT                            
     \end{tikzcd}
 \end{equation}
-The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ defines a domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$.
+The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ specifies the domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$. This domain bundle backs the fiber $F$ in the data total space $E$
+\begin{equation}
+    F = \prod_{i \in I} U_{\sigma_i} = 
+    \label{eq:fiber}
+\end{equation}
 
+where $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
 
-
-
-In the fiber bundle, $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
 
 The record function is the sigma function
 
