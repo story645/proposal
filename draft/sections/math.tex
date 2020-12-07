@@ -112,7 +112,7 @@ where $DT$ is the set of data types (as identified by their names) and $U$ is th
 \begin{equation}
 \sigma: C \rightarrow DT
 \end{equation}
-where $C$ is the finite set of names of data fields in $E$. The set of all values restricted to the datatypes in $DT$ 
+where $C$ is the finite set of names of data fields in $E$. The set of all values restricted to the datatypes in $DT$ is $U_{\sigma}$
 
 \begin{equation}
     \begin{tikzcd}
@@ -120,6 +120,9 @@ where $C$ is the finite set of names of data fields in $E$. The set of all value
             C \arrow[r, "\sigma" description]                          & DT                            
     \end{tikzcd}
 \end{equation}
+The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ defines a domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$.
+
+
 
 
 In the fiber bundle, $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
