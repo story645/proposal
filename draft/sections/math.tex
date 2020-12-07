@@ -73,32 +73,34 @@ where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ i
     \caption{write up some words here}
 \end{figure}
 
-As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. 
+As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivity of the timeseries is encoded in the line representation of $K$. 
 
 \subsubsection{Base Space $K$}
 
-\begin{figure}
-    \includegraphics{figures/sections/math/k_qspace.png}
+\begin{figure}[ht]
+    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
     \label{fig:kquotient}
 \end{figure}
 
-$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquotient}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\Tau_k$
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquotient}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\tau_k$
 
 \begin{equation}
-\tau_K = {U\subseteqq K: {p \in E: [p] \in U}\in \Tau_E}
+\tau_K = \{U\subseteqq K: \{p \in E: [p] \in U\}\in \tau_E\}
 \end{equation}
 
 where $[p] \in U$ is the point $k \in K$ with an open set around it that has an open  preimage in $E$ under the surjective map $\pi: p \rightarrow [p]$. 
 
 
 \begin{figure}[ht]
+    \label{fig:k_data}
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
+    %% add box around neighboring P and Map
 \end{figure}
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 
-
+We use $K$ to encode the connectivity of the points $p$, such as the ones in figure~\ref{fig:k_data} that only store temperature data. In a timeseries, the temperature $p$ at timme $t$ is dependent on the value at $p_{t-1}$ and $\p_{t+1}$ is dependent on the value in $p_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every point $p$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point - those are metadata variables potentially encoded in $p$ because they are ways of describing the connectivity rather than the connectivity itself. The mapping $sigma: K \rightarrow E$ provides the binding between the key on $K$ and the value $p$ in $E$ \cite{munznerChDataAbstraction}
 
 \subsubsection{Fiber Space $F$}
 Spivak models the fiber space $F$ as schema and the data as sheafs (localized $\sigma$ functions) on the schema \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
@@ -234,7 +236,8 @@ Each point $s$ in the display space $H$, the mark it belongs to can be found by 
 
 
 \subsubsection{Channels}
-Acts on different parts of F, types means measurement groups , can be broken out so tau(E_{u} in E)
+Acts on different parts of F, types means measurement groups , can be broken out so 
+%%tau(E_{u} in E)
 Tau can preserves the measurement type properties (group scales)
 
 %%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
