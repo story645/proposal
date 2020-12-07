@@ -68,9 +68,9 @@ In a locally trivial fiber bundle, $\sigma = K \times E$ \cite{rowlandFiberBundl
 where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ is called a sheaf and the space of all possible sections $\sigma$ of $E$ is $\Gamma(E)$. All datasets $\sigma \in \Gamma(E)$ have the same variables $F$ and connectivity $K$ but can have different values such that $\sigma_{i}\neq\sigma_{j}$.
 
 \begin{figure}[ht]
-    \label{fig:fiberbundle}
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
+    \label{fig:fiberbundle}
 \end{figure}
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivity of the timeseries is encoded in the line representation of $K$. 
@@ -79,10 +79,10 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
 
 \begin{figure}[ht]
     \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
-    \label{fig:kquotient}
+    \label{fig:kquote}
 \end{figure}
 
-$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquotient}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\tau_k$
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\tau_k$
 
 \begin{equation}
 \tau_K = \{U\subseteqq K: \{p \in E: [p] \in U\}\in \tau_E\}
@@ -92,15 +92,15 @@ where $[p] \in U$ is the point $k \in K$ with an open set around it that has an 
 
 
 \begin{figure}[ht]
-    \label{fig:k_data}
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
     %% add box around neighboring P and Map
+    \label{fig:k_data}
 \end{figure}
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 
-We use $K$ to encode the connectivity of the points $p$, such as the ones in figure~\ref{fig:k_data} that only store temperature data. In a timeseries, the temperature $p$ at timme $t$ is dependent on the value at $p_{t-1}$ and $\p_{t+1}$ is dependent on the value in $p_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every point $p$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point - those are metadata variables potentially encoded in $p$ because they are ways of describing the connectivity rather than the connectivity itself. The mapping $sigma: K \rightarrow E$ provides the binding between the key on $K$ and the value $p$ in $E$ \cite{munznerChDataAbstraction}
+We use $K$ to encode the connectivity of the points $p$. In figure~\ref{fig:k_data}, there is only one data field in $p$, temperature, but the points $p$ are connected differently. In a timeseries, the temperature $p$ at time $t$ is dependent on the value at $p_{t-1}$ and $p_{t+1}$ is dependent on the value in $p_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every point $p$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point - those are metadata variables potentially encoded in $p$ because they are ways of describing the connectivity rather than the connectivity itself. The mapping $sigma: K \rightarrow E$ provides the binding between the key on $K$ and the value $p$ in $E$ \cite{munznerChDataAbstraction}.
 
 \subsubsection{Fiber Space $F$}
 Spivak models the fiber space $F$ as schema and the data as sheafs (localized $\sigma$ functions) on the schema \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
@@ -108,15 +108,24 @@ Spivak models the fiber space $F$ as schema and the data as sheafs (localized $\
 \pi: U \rightarrow DT
 \end{equation}
 
-where $DT$ is the set of data types (as identified by their names) and $U$ is the set of all possible objects $x$ of all types in $DT$. This means that for each type $T\in DT$, the preimage $\pi^{1}(T)\subset U $ is the domain of $T$, and a value $x \in \pi^{1}(T)\subset U$ is an object of type $T$. Spivak then defines a schema $(C, \sigma)$ of type $\pi$, where $\pi$ is the universe of all types, such that 
+where $DT$ is the set of data types (as identified by their names) and $U$ is the disjoint set of all possible objects $x$ of all types in $DT$. This means that for each type $T\in DT$, the preimage $\pi^{-1}(T)\subset U $ is the domain of $T$, and $x \in \pi^{1}(T)\subset U$ is an object of type $T$. Spivak then defines a schema $(C, \sigma)$ of type $\pi$, where $\pi$ is the universe of all types, such that 
 \begin{equation}
 \sigma: C \rightarrow DT
 \end{equation}
-where $C$ is a finite set of names of columns in a database or a list of attributes. 
+where $C$ is the finite set of names of data fields in $E$. The set of all values restricted to the datatypes in $DT$ 
 
+\begin{equation}
+    \begin{tikzcd}
+            U_{\sigma} \arrow[d, "\pi_{\sigma}" description] \arrow[r] & U \arrow[d, "\pi" description] \\
+            C \arrow[r, "\sigma" description]                          & DT                            
+    \end{tikzcd}
+\end{equation}
 
 
 In the fiber bundle, $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
+
+The record function is the sigma function
+
 
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
