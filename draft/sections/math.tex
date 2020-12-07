@@ -76,8 +76,19 @@ where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ i
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivty of the timeseries is encoded in the line representation of $K$. 
 
 \subsubsection{Base Space $K$}
-K is a triangulizable quotient topological space.
-%%insert stuff about qotient spaces....
+
+\begin{figure}
+    \includegraphics{figures/sections/math/k_qspace.png}
+    \label{fig:kquotient}
+\end{figure}
+
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquotient}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\Tau_k$
+
+\begin{equation}
+\tau_K = {U\subseteqq K: {p \in E: [p] \in U}\in \Tau_E}
+\end{equation}
+
+where $[p] \in U$ is the point $k \in K$ with an open set around it that has an open  preimage in $E$ under the surjective map $\pi: p \rightarrow [p]$. 
 
 
 \begin{figure}[ht]
@@ -99,14 +110,11 @@ where $DT$ is the set of data types (as identified by their names) and $U$ is th
 \begin{equation}
 \sigma: C \rightarrow DT
 \end{equation}
-where $C$ is a finite ordered set of columns in a database. We extend C to refer to the names of all distinct 
-
-Given $F = X_{0} \times X_{1} \times \ldots \times X_{n}$, where $X_{0}, X_{1}, \ldots X_{n}$ are measurement spaces (e.g. ints, floats, colors): 
-\begin{equation}
-g(k) = (x_0, x_1, \ldots x_n) \text{ where } x_0 \in X_0, x_1 \in X_1, \ldots x_n \in X_n
-\end{equation}
+where $C$ is a finite set of names of columns in a database or a list of attributes. 
 
 
+
+In the fiber bundle, $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
 
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
@@ -115,7 +123,8 @@ g(k) = (x_0, x_1, \ldots x_n) \text{ where } x_0 \in X_0, x_1 \in X_1, \ldots x_
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_3f.png}
 \end{figure}
-%%% might 
+
+
 The fibers $F$ are a topological space embedded in $E$ on which lie the set of all possible values. For example, if $F$ is the interval $[0, 1]$, then $g(k)$ from equation~\ref{eq:sigma} returns a single measurement $x$ in the interval $F$:
 \begin{equation}
     \label{eg:goff}
@@ -139,7 +148,7 @@ g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t
 
 % schema is ordered list of Column, type is approx F, U cross C over sigma, 
 % space of rows/records f:k -> r, sigma:k -> r, is the table function (dataframe as instance)
-
+When $E$ is trivial, then we can decompose $E$ so that each $E$ 
 
 
 \subsubsection{Subset}
@@ -224,7 +233,8 @@ Each point $s$ in the display space $H$, the mark it belongs to can be found by 
 
 
 
-\subsubsection{Visual Encodings}
+\subsubsection{Channels}
+Acts on different parts of F, types means measurement groups , can be broken out so tau(E_{u} in E)
 Tau can preserves the measurement type properties (group scales)
 
 %%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
