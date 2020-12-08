@@ -125,7 +125,7 @@ where $C$ is the finite set of names of columuns, which we generalize to data fi
 \end{equation}
 The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ specifies the domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$. The fiber $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$. 
 
-For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$ is $F$ over $E$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
+For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
  
 
 \begin{figure}[ht]
@@ -138,7 +138,7 @@ For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ retu
 
 
 %% pull out measurement
-The fiber in figure~\ref{fig:temp} is the space of possible temperature values in degrees celsius, such that $F=[temp_{min}, temp_{max}]$ and each $r$ is a record with a single element $temp$. $F$ can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. This means that the set of possible values $F$ is
+The fiber in figure~\ref{fig:temp} is the space of possible temperature values in degrees celsius, such that $F=[temp_{min}, temp_{max}]$ and is named \textrm{Temp}. In figure~\ref{fig:temp_time} \textrm{time} is encoded as a second dimension. This means that the set of possible values $F$ with $C=\{\textrm{Temp}, \textrm{Time}\}$:
 
 \begin{equation}
 F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
@@ -146,15 +146,14 @@ F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
 
 and the function $\tau$ that retrieves records from $F$ is
 
-\begin{gather}
-\tau(k) =(k, (temp, time))\\
+\begin{equation}
+\tau(k) =(k, (r: \textrm{Temp}\rightarrow temp, r: \textrm{Time}\rightarrow time))\\
 temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
-\end{gather}
+\end{equation}
 
-Since $\tau(k)=(k, r)$, $\sigma$ binds the $temp$ to a named temperature data field and a temperature data type and $time$ to a named time field and a time data type.
+Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
 \subsubsection{Sheaf: Subset}
-Something something this is how we get that subsets on E retain propertoes of transforms on E.
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U \subset K$ with the same fiber $F$
 \begin{equation}
     \begin{tikzcd}
@@ -170,14 +169,9 @@ where $\iota^*E$ and $\iota^*\sigma$ are $E$ and $\sigma$ restricted to points $
 \label{sec:display}
 
 % preamble type intro to displays, examples - displays can include screen, 3D printer, sphereical display, H is the total space of the screen. 11
-\begin{figure}[h]
-    \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
-    \caption{}
-    \label{fig:render}
-\end{figure}
 
 
-The sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of   which is dependent on the render space and a base space of $\S$:
+The sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $\S$:
 \begin{equation}
     \begin{tikzcd}
         D \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
@@ -185,26 +179,41 @@ The sets correspond to the sections on $\S$, which is the topology of the output
     \end{tikzcd}
 \end{equation}
 
+where $\rho: H \rightarrow S$ is mapping from a mathematical encoding of the image to pixels on the screen. 
 
-We are primarily concerned with physical display space. For the renderers currently defined in Matplotlib, we can define the fiber as the $\mathbb{R}^{7}$ tuple
+For a physical screen display, the fiber $D$ encodes position and color of the visual elements as $\mathbb{R}^{7}$:
+
 \begin{equation}
     \mathbb{R}^{7} = \{X, Y, Z, R, G, B, A\}
 \end{equation}
-where each tuple is representative of a pixel. 
+where the pixel $p \in H$ has the fields $\{x, y, z, r, g, b\}$. In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$.
 
-
-In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $(x_1, y_1)$ and $(x_2, y_2)$ maps into a region on a 2-simplex in $S$ defined by $(\alpha_1, \beta_1)$ and $(\alpha_2, \beta_2)$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
-
-
+To draw an image, a region $p \in H$ is inverse mapped into a region $s \in S$
 \begin{equation}
-ab=23
+s = (\rho_{x}^{-1}(X(p)), \rho_{y}^{-1}(Y(p)))
 \end{equation}
 
-where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $\mathbb{R}^7$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
+such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $S$ to yield the remaining fields in $p$
+\begin{align}
+    R(p) &= \oint_s \rho_R(s)ds^{2}\\
+    G(p) &= \oint_s \rho G(s)ds^{2}\\
+    B(p) &= \oint_s \rho B(s)ds^{2}
+\end{align}
+
+Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. 
+
+\begin{figure}[h]
+    \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
+    \caption{}
+    \label{fig:render}
+\end{figure}
+
+As illustrated in figure~\ref{fig:render}, ....
 
 
 \subsection{Artist}
-%% include some words about motivation 
+The artist is a mapping from the $\Gamma(E)$ space of all datasets with a shared $F$ and $K$ to a pre-render space $H$ with display target properties $D$ and visualization structure $S$. 
+
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
@@ -218,12 +227,12 @@ where the R,G,B,A values are derived from the how the data values are mapped to 
         K \arrow[u, "\sigma" description, bend right] & S \arrow[l, "\xi" description] \arrow[u, "\rho" description, bend right]
     \end{tikzcd}
 \end{equation}
-The pullback $\xi$ on $S \rightarrow K$ means that the values in $E$ can be directly mapped to a simplex in $S$, which means there's a mapping from screen space back to the values. 
+The pullback $\xi$ on $S \rightarrow K$ means that $ r \in E$ can be mapped to from a simplex in $S$
 \begin{equation}
     \begin{tikzcd}
-        \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &     & H \arrow[ld] \\
-        & S \arrow[lu, bend right] &             
-    \end{tikzcd}
+        \xi E \arrow[rr, "\tau" description] \arrow[rd, "\xi \sigma" description, bend right] &                          & H \arrow[ld, "\rho^{-1}"] \\
+                                                                                              & S \arrow[lu, bend right] &                          
+        \end{tikzcd}
 \end{equation}
 
 \subsubsection{Marks}
