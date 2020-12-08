@@ -10,7 +10,7 @@ In this section we introduce a mathematical description of the visualization pip
 \end{equation}
 
 \begin{equation}
-    A: \sigma \rightarrow \rho
+    A: \tau \rightarrow \rho
 \end{equation}
 
 \begin{itemize}
@@ -19,7 +19,7 @@ In this section we introduce a mathematical description of the visualization pip
 \item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
 \item $H$ is a fiber bundle over $S$ representing visual space
 \item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
-\item $\sigma: K\rightarrow E$ is the data being visualized
+\item $\tau: K\rightarrow E$ is the data being visualized
 \item $\rho: S \rightarrow H$ is the render map
 \end{itemize}
 
@@ -47,25 +47,25 @@ where there is a bijection from $F$ to every fiber $F_k$ over point $k \in K$ in
 \end{equation}
 such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$ $F_k = \pi^{-1}({k \in K}) $ is homomorphic to the fiber $F$.
 
-The section $\sigma$ is the mapping $\sigma: K\rightarrow E$ 
+The section $\tau$ is the mapping $\tau: K\rightarrow E$ 
 \begin{equation}
     \begin{tikzcd}
         F \arrow[r, hook] & E \arrow[d, "\pi" description, bend right]    \\
-                          & K \arrow[u, "\sigma" description, bend right]
+                          & K \arrow[u, "\tau" description, bend right]
         \end{tikzcd}
 \end{equation}
 
 such that it is the right inverse of $\pi$
 \begin{equation}
-    \pi(\sigma(k)) = k \text{ for all } k \in K 
+    \pi(\tau(k)) = k \text{ for all } k \in K 
 \end{equation}
 
-In a locally trivial fiber bundle, $\sigma = K \times E$ \cite{rowlandFiberBundle,FiberBundle2020}:
+In a locally trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
-\sigma(k) = (k, g(k))
+\tau(k) = (k, g(k))
 \end{equation}
 
-where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ is called a sheaf and the space of all possible sections $\sigma$ of $E$ is $\Gamma(E)$. All datasets $\sigma \in \Gamma(E)$ have the same variables $F$ and connectivity $K$ but can have different values such that $\sigma_{i}\neq\sigma_{j}$.
+where the domain of $g(k)$ is $F_k$ and returns a data point $r$. The space of all possible sections $\tau$ of $E$ is $\Gamma(E)$. All datasets $\tau \in \Gamma(E)$ have the same variables $F$ and connectivity $K$ but can have different values such that $\tau_{i}\neq\tau_{j}$.
 
 \begin{figure}[ht]
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
@@ -73,7 +73,7 @@ where the domain of $g(k)$ is $F_k$.  The space of sections over $U \subset K$ i
     \label{fig:fiberbundle}
 \end{figure}
 
-As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle describes the connectivity of the points in $E$; in figure~\ref{fig:fiberbundle} the connectivity of the timeseries is encoded in the line representation of $K$. 
+As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle is a line because the data points $r$ in $E$ are on a space that is  continous in one dimension. 
 
 \subsubsection{Base Space $K$}
 
@@ -82,13 +82,16 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
     \label{fig:kquote}
 \end{figure}
 
-$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in of $E$ defined via the map $\pi: E \rightarrow K$ that sends each point $p \in E$ to its equivalence class in $[p] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\tau_k$
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $r$ in $E$ defined via the map $\pi: E \rightarrow K$ that sends each $r \in E$ to its equivalence class in $[r] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
+
+As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
 
 \begin{equation}
-\tau_K = \{U\subseteqq K: \{p \in E: [p] \in U\}\in \tau_E\}
+\mathcal{T}_k = \{U\subseteqq K: \{r \in E: [r] \in U\}\in \mathcal{T}_E\}
 \end{equation}
 
-where $[p] \in U$ is the point $k \in K$ with an open set around it that has an open  preimage in $E$ under the surjective map $\pi: p \rightarrow [p]$. 
+where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: r \rightarrow [r]$. 
+
 
 
 \begin{figure}[ht]
@@ -100,10 +103,10 @@ where $[p] \in U$ is the point $k \in K$ with an open set around it that has an 
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 
-We use $K$ to encode the connectivity of the points $p$. In figure~\ref{fig:k_data}, there is only one data field in $p$, temperature, but the points $p$ are connected differently. In a timeseries, the temperature $p$ at time $t$ is dependent on the value at $p_{t-1}$ and $p_{t+1}$ is dependent on the value in $p_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every point $p$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point - those are metadata variables potentially encoded in $p$ because they are ways of describing the connectivity rather than the connectivity itself. The mapping $sigma: K \rightarrow E$ provides the binding between the key on $K$ and the value $p$ in $E$ \cite{munznerChDataAbstraction}.
+in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 \subsubsection{Fiber Space $F$}
-Spivak models the fiber space $F$ as schema and the data as sheafs (localized $\sigma$ functions) on the schema \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
+We use Spivak's formalization of data base schemas as the basis of our fiber space $F$ \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
 \begin{equation}
 \pi: U \rightarrow DT
 \end{equation}
@@ -112,7 +115,7 @@ where $DT$ is the set of data types (as identified by their names) and $U$ is th
 \begin{equation}
 \sigma: C \rightarrow DT
 \end{equation}
-where $C$ is the finite set of names of data fields in $E$. The set of all values restricted to the datatypes in $DT$ is $U_{\sigma}$
+where $C$ is the finite set of names of columuns, which we generalize to data fields in $E$. The set of all values restricted to the datatypes in $DT$ is $U_{\sigma}$
 
 \begin{equation}
     \begin{tikzcd}
@@ -120,17 +123,10 @@ where $C$ is the finite set of names of data fields in $E$. The set of all value
             C \arrow[r, "\sigma" description]                          & DT                            
     \end{tikzcd}
 \end{equation}
-The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ specifies the domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$. This domain bundle backs the fiber $F$ in the data total space $E$
-\begin{equation}
-    F = \prod_{i \in I} U_{\sigma_i} = 
-    \label{eq:fiber}
-\end{equation}
+The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ specifies the domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$. The fiber $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$. 
 
-where $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$
-
-
-The record function is the sigma function
-
+For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$ is $F$ over $E$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
+ 
 
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
@@ -141,33 +137,24 @@ The record function is the sigma function
 \end{figure}
 
 
-The fibers $F$ are a topological space embedded in $E$ on which lie the set of all possible values. For example, if $F$ is the interval $[0, 1]$, then $g(k)$ from equation~\ref{eq:sigma} returns a single measurement $x$ in the interval $F$:
-\begin{equation}
-    \label{eg:goff}
-    g(k) = x, \text{ where } 0\leq x \leq 1
-\end{equation}
-
-The fiber in figure~\ref{fig:temp} is the space of possible temperature values in $\circ$ celsius, ranging from [start, end], similar to the interval $F$ in equation~\ref{eg:goff}. F can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. Given:
-\begin{itemize}
-\item interval of all possible temperature values $[T_{min}, T_{max}]$ 
-\item interval of all possible time values $[t_{min}, t_{max}]$
-\end{itemize}
-
-then $F$ is the cross product $F= [T_{min}, T_{max}] \times [t_{min}, t_{max}]$, and $g(k)$ listed in equation~\ref{eq:sigma} is:
+%% pull out measurement
+The fiber in figure~\ref{fig:temp} is the space of possible temperature values in degrees celsius, such that $F=[temp_{min}, temp_{max}]$ and each $r$ is a record with a single element $temp$. $F$ can be any number of dimensions, for example in figure~\ref{fig:temp_time} time is encoded as a second dimension. This means that the set of possible values $F$ is
 
 \begin{equation}
-g(k) = (x_0, x_1) \text{ where } x_0 \in [T_{min}, T_{max}], x_1 \in [t_{min}, t_{max}]
+F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
 \end{equation}
 
+and the function $\tau$ that retrieves records from $F$ is
 
-% datetime type, columns = start, end 
+\begin{gather}
+\tau(k) =(k, (temp, time))\\
+temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
+\end{gather}
 
-% schema is ordered list of Column, type is approx F, U cross C over sigma, 
-% space of rows/records f:k -> r, sigma:k -> r, is the table function (dataframe as instance)
-When $E$ is trivial, then we can decompose $E$ so that each $E$ 
+Since $\tau(k)=(k, r)$, $\sigma$ binds the $temp$ to a named temperature data field and a temperature data type and $time$ to a named time field and a time data type.
 
-
-\subsubsection{Subset}
+\subsubsection{Sheaf: Subset}
+Something something this is how we get that subsets on E retain propertoes of transforms on E.
 $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U \subset K$ with the same fiber $F$
 \begin{equation}
     \begin{tikzcd}
@@ -177,6 +164,7 @@ $\Gamma(E)$ is the space of all points in $F$ returned by $\sigma$; therefore th
 \end{equation}
 where $\iota^*E$ and $\iota^*\sigma$ are $E$ and $\sigma$ restricted to points $k \in U \subset K$.   
 
+% add U ^ V + intersection to get section on union which is condition of sheafs. 
 
 \subsection{Prerender Space}
 \label{sec:display}
@@ -188,29 +176,32 @@ where $\iota^*E$ and $\iota^*\sigma$ are $E$ and $\sigma$ restricted to points $
     \label{fig:render}
 \end{figure}
 
-A physical display space can be thought of sets of $\mathbb{R}^{7}$ tuples, where 
-\begin{equation}
-    \mathbb{R}^{7} = \{X, Y, Z, R, G, B, A\}
-\end{equation}
 
-and the sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of $\mathbb{R}^7$ and a base space of $\S$:
+The sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber of   which is dependent on the render space and a base space of $\S$:
 \begin{equation}
     \begin{tikzcd}
-        \mathbb{R}^{7} \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
+        D \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
                                     & S \arrow[u, "\rho" description, bend right] 
     \end{tikzcd}
 \end{equation}
 
 
+We are primarily concerned with physical display space. For the renderers currently defined in Matplotlib, we can define the fiber as the $\mathbb{R}^{7}$ tuple
+\begin{equation}
+    \mathbb{R}^{7} = \{X, Y, Z, R, G, B, A\}
+\end{equation}
+where each tuple is representative of a pixel. 
+
+
 In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$. As illustrated in figure~\ref{fig:render}, a region on the screen defined by the corners $(x_1, y_1)$ and $(x_2, y_2)$ maps into a region on a 2-simplex in $S$ defined by $(\alpha_1, \beta_1)$ and $(\alpha_2, \beta_2)$. The function on the simplex $f$ returns the (R, G, B, A) value for that $(\alpha, \beta)$ pair. For a region, 
 
-\begin{equation*}
-\rho(S) = \int_{\alpha_1}^{\alpha_2}\int_{\beta_1}^{\beta_2}\int_{z_1}^{z_2}{R, G, B, A}  
-\end{equation*}
+
+\begin{equation}
+ab=23
+\end{equation}
 
 where the R,G,B,A values are derived from the how the data values are mapped to visual characteristics. The z component of the mapping to $\mathbb{R}^7$ is moved to the integration because this is a trivial space representing a 2D screen; $\rho$ varies depending on $H$. 
 
-%%%pho is paramterized over alpha, beta, which is obtained via pullback lookup from (Hx,Hy)-?(alpha, beta)
 
 \subsection{Artist}
 %% include some words about motivation 
