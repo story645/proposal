@@ -99,6 +99,7 @@ where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that ha
     %% add box around neighboring P and Map
     \label{fig:k_data}
 \end{figure}
+
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
@@ -171,9 +172,7 @@ where $\iota^*E$ and $\iota^*\tau$ are $E$ and $\tau$ restricted to points $k \i
 \label{sec:display}
 
 % preamble type intro to displays, examples - displays can include screen, 3D printer, sphereical display, H is the total space of the screen. 11
-
-
-The sets correspond to the sections on $\S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $\S$:
+Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $\S$:
 \begin{equation}
     \begin{tikzcd}
         D \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
@@ -203,8 +202,7 @@ Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can
 As illustrated in figure~\ref{fig:render}, ....
 
 
-\subsection{Artist}
-What is A supposed to preserve?
+\subsection{Artist)
 
 The artist is a mapping from the $\Gamma(E)$ space of all datasets with a shared $F$ and $K$ to a pre-render space $H$ with display target properties $D$ and visualization structure $S$. 
 
@@ -212,21 +210,20 @@ The artist is a mapping from the $\Gamma(E)$ space of all datasets with a shared
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
-As described in section~\ref{sec:display}, $rho: S \rightarrow H$ is composed of subfunctions that are dependent on the prerender fiber $D$. In the case of a screen
+As described in section~\ref{sec:display}, $rho: S \rightarrow H$ is composed of subfunctions that are dependent on the prerender fiber $D$. In the case of a screen where $D=\mathbb{R}^{7}$
+
 \begin{equation}
-    \rho (\alpha, \beta) = (\rho_X(\alpha, \beta), \rho_Y(\alpha, \beta), \rho_Z(\alpha, \beta), \rho_B(\alpha, \beta), \rho_G(\alpha, \beta), \rho_B(\alpha, \beta), \rho_A(\alpha, \beta))
+    \rho (u, v) = (\rho_X(u, v), \rho_Y (u, v), \rho_Z (u, v), \rho_B (u, v), \rho_G (u, v), \rho_B (u, v), \rho_A (u, v))
 \end{equation}
 
-where $(\alpha, \beta)$ are coordinates on $S$. The mapping $Q: \Gamma(\tau) \rightarrow D$ builds $\rho$ functions on $S$ by compositing $\nu: c \mapsto v \subset {x,y,z,r,g,b,a}$ functions that map data in some field $c$ to a subset of display variables. 
+where $(u,v)$ are coordinates of a point on $S$. The map reduce function $Q: F\rightarrow \rho$ builds $\rho$ functions on $S$ by compositing $\nu_{param}: c \mapsto \rho_{d \in D}$ functions that map data in some field $c$ to a subset of visual variables such as position or color\cite{bertinIIPropertiesGraphic2011, munznerChDataAbstraction} that are identified as parameters to the artist function. 
 
 \begin{equation}
-    \begin{tikzcd}
-        \Gamma(\tau) \arrow[rr, "{Q(\nu_{0}(c),\ldots,\nu_n(c))}"] &  & {\rho_X, \rho_Y, \rho_Z, \rho_R, \rho_B, \rho_G, \rho_A}
-    \end{tikzcd}
+     \rho(u, v) = Q(\nu_param_{0}(\tau_{c_0}), \ldots \nu_param_{n}(\tau_{c_n}))(u,v)
     \label{eq:Q}
 \end{equation}
 
-$Q$ composites $\nu$ functions because multiple mappings can target the same field in $D$, for example y position and linewidth will concurrently affect where a pixel is drawn on screen. 
+$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$
 
 \subsubsection{Marks}
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
@@ -267,7 +264,7 @@ Visual channels are mappings from data into visual space, for example distinguis
 Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
 \begin{equation}
     \begin{tikzcd}
-        A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) &                                                \\
+        A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) & \\
         A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) 
     \end{tikzcd}
 \end{equation}
