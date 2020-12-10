@@ -212,8 +212,23 @@ The artist is a mapping from the $\Gamma(E)$ space of all datasets with a shared
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
+As described in section~\ref{sec:display}, $rho: S \rightarrow H$ is composed of subfunctions that are dependent on the prerender fiber $D$. In the case of a screen
+\begin{equation}
+    \rho (\alpha, \beta) = (\rho_X(\alpha, \beta), \rho_Y(\alpha, \beta), \rho_Z(\alpha, \beta), \rho_B(\alpha, \beta), \rho_G(\alpha, \beta), \rho_B(\alpha, \beta), \rho_A(\alpha, \beta))
+\end{equation}
+
+where $(\alpha, \beta)$ are coordinates on $S$. The mapping $Q: \Gamma(\tau) \rightarrow D$ builds $\rho$ functions on $S$ by compositing $\nu: c \mapsto v \subset {x,y,z,r,g,b,a}$ functions that map data in some field $c$ to a subset of display variables. 
+
+\begin{equation}
+    \begin{tikzcd}
+        \Gamma(\tau) \arrow[rr, "{Q(\nu_{0}(c),\ldots,\nu_n(c))}"] &  & {\rho_X, \rho_Y, \rho_Z, \rho_R, \rho_B, \rho_G, \rho_A}
+    \end{tikzcd}
+    \label{eq:Q}
+\end{equation}
+
+$Q$ composites $\nu$ functions because multiple mappings can target the same field in $D$, for example y position and linewidth will concurrently affect where a pixel is drawn on screen. 
+
 \subsubsection{Marks}
-%% diagram of connected components/line thing 11-19-20 notes
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
 \begin{equation}
 \begin{tikzcd}
@@ -228,18 +243,7 @@ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected co
 
 
 \subsubsection{Channels}
-The function $rho: S \rightarrow H$ is composed of subfunctions that are dependent on the prerender fiber $D$. In the case of a screen
-\begin{equation}
-    \rho (\alpha, \beta) = (\rho_X(\alpha, \beta), \rho_Y(\alpha, \beta), \rho_Z(\alpha, \beta), \rho_B(\alpha, \beta), \rho_G(\alpha, \beta), \rho_B(\alpha, \beta), \rho_A(\alpha, \beta))
-\end{equation}
-
-where $(\alpha, \beta)$ are coordinates on $S$. The function $Q$
-
-\begin{equation}
-    \begin{tikzcd}
-        \Gamma(\theta) \arrow[rr, "{Q(\nu_{0}(c),\ldots,\nu_n(c))}"] &  & {\rho_X, \rho_Y, \rho_Z, \rho_R, \rho_B, \rho_G, \rho_A}
-    \end{tikzcd}
-\end{equation}
+Visual channels are mappings from data into visual space, for example distinguishing categories by coloring them differently  \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. Channels are an example of $\nu: c \mapsto d \in D$, which are the mappings from data $r \in \Gamma(\tau)$ to some part of the prerender fiber $D$. the $\nu$ functions can target only one field in $D$, such as $X$, or multiple such as $R,G,B$. 
 
 
 % complex columns are combined to \nu 
