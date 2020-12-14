@@ -175,7 +175,6 @@ which through $\iota$ gets the data in $E$ at and near to $k$.
 
 %not sure what's supposed to happen w/ sheafs here
 % add U ^ V + intersection to get section on union which is condition of sheafs. 
-
 \subsection{Prerender Space}
 \label{sec:display}
 
@@ -211,26 +210,26 @@ As illustrated in figure~\ref{fig:render}, words.
 
 \subsection{Artist}
 
-The artist is a mapping from the $\Gamma(E)$ space of all datasets with a shared $F$ and $K$ to a pre-render space $H$ with display target properties $D$ and visualization structure $S$. 
+The artist is a mapping from the sheaf $O(E)$ which a dataset to a pre-render space $O(H)$ with display target properties $D$ and visualization structure $S$. 
 
 \begin{equation}
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
-As described in section~\ref{sec:display}, $rho: S \rightarrow H$ is composed of subfunctions that are dependent on the prerender fiber $D$. In the case of a screen where $D=\mathbb{R}^{7}$
-
-\begin{equation}
-    \rho (u, v) = (\rho_X(u, v), \rho_Y (u, v), \rho_Z (u, v), \rho_B (u, v), \rho_G (u, v), \rho_B (u, v), \rho_A (u, v))
-\end{equation}
-
-where $(u,v)$ are coordinates of a point on $S$. The map reduce function $Q: F\rightarrow \rho$ builds $\rho$ functions on $S$ by compositing $\nu_{param}: c \mapsto \rho_{d \in D}$ functions that map data in some field $c$ to a subset of visual variables such as position or color\cite{bertinIIPropertiesGraphic2011, munznerChDataAbstraction} that are identified as parameters to the artist function. 
+where $A$ is composed of an asthethic mapping $\Xi = Q \circ \nu$ that builds the prerender render function $rho: S \rightarrow H$ functions described in section~\ref{sec:display}. $\XI$ builds $\rho$ functions on $S$ by compositing $\nu_{param}: c \mapsto \rho_{d \in D}$ functions that map data in some field $c$ to a subset of visual variables such as position or color\cite{bertinIIPropertiesGraphic2011, munznerChDataAbstraction} that are identified as parameters to the artist function. 
 
 \begin{equation}
      \rho(u, v) = Q(\nu_param_{0}(\tau_{c_0}), \ldots \nu_param_{n}(\tau_{c_n}))(u,v)
     \label{eq:Q}
 \end{equation}
 
-$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$
+$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$. The artist is 
+\begin{equation}
+\begin{tikzcd}
+    \iota^{*}E \arrow[rd, "\Xi" description] & H \arrow[d, "\rho^{-1}" description, bend right]                         \\
+    U \arrow[u, "\tau" description]          & S \arrow[u, "\rho" description, bend right] \arrow[l, "\xi" description]
+\end{tikzcd}
+\end{equation}
 
 \subsubsection{Marks}
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
