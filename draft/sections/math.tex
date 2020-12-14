@@ -5,7 +5,7 @@
 In this section we introduce a mathematical description of the visualization pipeline where artist $A$ functions transform data of type $\Gamma(E)$ to an intermediate representation in prerendered display space of type $\Gamma(H)$:
 
 \begin{equation}
-    A: \Gamma(E) \rightarrow \Gamma(H)
+    A: O(E) \rightarrow O(H)
     \label{eq:artist}
 \end{equation}
 
@@ -18,7 +18,7 @@ In this section we introduce a mathematical description of the visualization pip
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
 \item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
 \item $H$ is a fiber bundle over $S$ representing visual space
-\item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of $\Gamma(E)$
+\item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of the data in $E$
 \item $\tau: K\rightarrow E$ is the data being visualized
 \item $\rho: S \rightarrow H$ is the render map
 \end{itemize}
@@ -44,6 +44,7 @@ where there is a bijection from $F$ to every fiber $F_k$ over point $k \in K$ in
         \pi^{-1}(U) \arrow[r, "\varphi" description] \arrow[d, "\pi" description] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
         U                                                                         &                                         
     \end{tikzcd}
+    \label{eq:local_trivial}
 \end{equation}
 such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$ $F_k = \pi^{-1}({k \in K}) $ is homomorphic to the fiber $F$.
 
@@ -154,16 +155,23 @@ temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
 
 Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
-\subsubsection{Sheaf: Subset}
-
-$\Gamma(E)$ is the space of all points in $F$ returned by $\tau$; therefore the points being visualized in a streaming or animation example can be considered a subset that lives on base space $U \subset K$ with the same fiber $F$
+\subsubsection{Sheaf and Stalk}
+As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
     \begin{tikzcd}
         \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
         U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \tau" description, bend right, shift right=2] & K \arrow[u, "\tau" description, bend right]
     \end{tikzcd}    
 \end{equation}
-where $\iota^*E$ and $\iota^*\tau$ are $E$ and $\tau$ restricted to points $k \in U \subset K$.   
+
+The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019}
+
+\begin{equation}
+    \iota^{-1}\mathscr{F}(\{k\}) = \varinjlim_{k\subseteq U}\mathscr{F}(U) =  \varinjlim_{k \in U} = \mathscr{F}_k 
+\end{equation}
+
+which through $\iota$ gets the data in $E$ at and near to $k$. 
+
 
 %not sure what's supposed to happen w/ sheafs here
 % add U ^ V + intersection to get section on union which is condition of sheafs. 
