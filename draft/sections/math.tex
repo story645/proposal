@@ -158,13 +158,10 @@ Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds 
 \subsubsection{Sheaf and Stalk}
 As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
-    \begin{tikzcd}
-        \iota^\ast E \arrow[r, hook] \arrow[d]                                                                       & E \arrow[d, bend right]                       \\
-        U \arrow[r, "\iota" description, hook] \arrow[u, "\iota^\ast \tau" description, bend right, shift right=2] & K \arrow[u, "\tau" description, bend right]
-    \end{tikzcd}    
+   
 \end{equation}
 
-The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019}
+The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
     \iota^{-1}\mathscr{F}(\{k\}) = \varinjlim_{k\subseteq U}\mathscr{F}(U) =  \varinjlim_{k \in U} = \mathscr{F}_k 
@@ -178,7 +175,6 @@ which through $\iota$ gets the data in $E$ at and near to $k$.
 \subsection{Prerender Space}
 \label{sec:display}
 
-% preamble type intro to displays, examples - displays can include screen, 3D printer, sphereical display, H is the total space of the screen. 11
 Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $\S$:
 \begin{equation}
     \begin{tikzcd}
@@ -216,20 +212,23 @@ The artist is a mapping from the sheaf $O(E)$ which a dataset to a pre-render sp
     A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
-where $A$ is composed of an asthethic mapping $\Xi = Q \circ \nu$ that builds the prerender render function $rho: S \rightarrow H$ functions described in section~\ref{sec:display}. $\XI$ builds $\rho$ functions on $S$ by compositing $\nu_{param}: c \mapsto \rho_{d \in D}$ functions that map data in some field $c$ to a subset of visual variables such as position or color\cite{bertinIIPropertiesGraphic2011, munznerChDataAbstraction} that are identified as parameters to the artist function. 
+where $A$ is composed of an asthethic mapping $\Xi: \xi^*\tau \rightarrow \rho$ that builds the prerender render functions $\rho: S \rightarrow H$ described in section~\ref{sec:display}. Every region on $H$ maps back through $S$ to $K$ through $\xi: S_k \rightarrow K$ and $\xi^*k\tau$ pulls back to the data on $\xi^*E$ which is restricted over the visualization space $S$ . 
 
 \begin{equation}
-     \rho(u, v) = Q(\nu_param_{0}(\tau_{c_0}), \ldots \nu_param_{n}(\tau_{c_n}))(u,v)
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[d, "\pi" description]                           & \xi^*E \arrow[l] \arrow[d, "\pi" description]                                              &  & \xi^*E \arrow[rr, "\Xi" description] &                                                                                               & H \arrow[ld, "\rho^{-1}" description] \\
+                          & K \arrow[u, "\tau" description, bend right, shift right] & S \arrow[l, "\xi" description] \arrow[u, "\xi^*\tau" description, bend right, shift right] &  &                                      & S \arrow[ru, "\rho" description, bend right, shift right] \arrow[lu, "\xi^*\tau" description] &                                      
+        \end{tikzcd}
+\end{equation}
+
+The aesthetic property mapper $\Xi=Q\circ\nu$  builds $\rho$ functions via a function $Q$ that compose $\nu_{param}( \xi^*\tau)$ functions that map data in some field $c$ to a subset of $D$, such as x, or RGB. These $\rho$ functions are then mapped back into $S$ to provide the values for the region in $H$. $Q$ is analogous to a visualization type such as scatter or line plot, and $\nu$ to aesthetic parameters such as line color or marker shape \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels}.
+
+\begin{equation}
+     \rho(u, v) = Q(\nu_(\tau_{c_0}), \ldots \nu_param_{n}(\tau_{c_n}))(u,v)
     \label{eq:Q}
 \end{equation}
 
-$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$. The artist is 
-\begin{equation}
-\begin{tikzcd}
-    \iota^{*}E \arrow[rd, "\Xi" description] & H \arrow[d, "\rho^{-1}" description, bend right]                         \\
-    U \arrow[u, "\tau" description]          & S \arrow[u, "\rho" description, bend right] \arrow[l, "\xi" description]
-\end{tikzcd}
-\end{equation}
+$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$. 
 
 \subsubsection{Marks}
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
