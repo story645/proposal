@@ -156,12 +156,7 @@ temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
 Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
 \subsubsection{Sheaf and Stalk}
-As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
-\begin{equation}
-   
-\end{equation}
-
-The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
+As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
     \iota^{-1}\mathscr{F}(\{k\}) = \varinjlim_{k\subseteq U}\mathscr{F}(U) =  \varinjlim_{k \in U} = \mathscr{F}_k 
@@ -170,8 +165,6 @@ The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the she
 which through $\iota$ gets the data in $E$ at and near to $k$. 
 
 
-%not sure what's supposed to happen w/ sheafs here
-% add U ^ V + intersection to get section on union which is condition of sheafs. 
 \subsection{Prerender Space}
 \label{sec:display}
 
@@ -224,11 +217,11 @@ where $A$ is composed of an asthethic mapping $\Xi: \xi^*\tau \rightarrow \rho$ 
 The aesthetic property mapper $\Xi=Q\circ\nu$  builds $\rho$ functions via a function $Q$ that compose $\nu_{param}( \xi^*\tau)$ functions that map data in some field $c$ to a subset of $D$, such as x, or RGB. These $\rho$ functions are then mapped back into $S$ to provide the values for the region in $H$. $Q$ is analogous to a visualization type such as scatter or line plot, and $\nu$ to aesthetic parameters such as line color or marker shape \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels}.
 
 \begin{equation}
-     \rho(u, v) = Q(\nu_(\tau_{c_0}), \ldots \nu_param_{n}(\tau_{c_n}))(u,v)
+     \rho(u, v) = Q(\nu_{param_{n}}(\tau_{c_0}), \ldots \nu_{param_{n}}(\tau_{c_n}))(u,v)
     \label{eq:Q}
 \end{equation}
 
-$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the y position of a line drawn on screen such that $Q: \nu_{ypos}, \nu_{linewidth} \rightarrow \rho_{Y}$. 
+$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the output of the $\rho_y$ y position of a line on screen. 
 
 \subsubsection{Marks}
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
@@ -245,7 +238,14 @@ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected co
 
 
 \subsubsection{Channels}
-Visual channels are mappings from data into visual space, for example distinguishing categories by coloring them differently  \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. Channels are an example of $\nu: c \mapsto d \in D$, which are the mappings from data $r \in \Gamma(\tau)$ to some part of the prerender fiber $D$. the $\nu$ functions can target only one field in $D$, such as $X$, or multiple such as $R,G,B$. 
+For the aesthetic mapping function $\nu$ to faithfully transform the data in $\xi^*\tau$, the $\nu$ and $\tau$ must be symmetrical under all transformations such that
+\begin{equation}
+    \nu_{param}(\tau_{})
+\end{equation}
+
+
+
+
 
 
 % complex columns are combined to \nu 
