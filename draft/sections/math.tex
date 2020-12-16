@@ -76,36 +76,6 @@ where the domain of $g(k)$ is $F_k$ and returns a data point $r$. The space of a
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle is a line because the data points $r$ in $E$ are on a space that is  continous in one dimension. 
 
-\subsubsection{Base Space $K$}
-
-\begin{figure}[ht]
-    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
-    \label{fig:kquote}
-\end{figure}
-
-$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $r$ in $E$ defined via the map $\pi: E \rightarrow K$ that sends each $r \in E$ to its equivalence class in $[r] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
-
-As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
-
-\begin{equation}
-\mathcal{T}_k = \{U\subseteqq K: \{r \in E: [r] \in U\}\in \mathcal{T}_E\}
-\end{equation}
-
-where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: r \rightarrow [r]$. 
-
-
-
-\begin{figure}[ht]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
-    %% add box around neighboring P and Map
-    \label{fig:k_data}
-\end{figure}
-
-\begin{figure}[ht]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
-\end{figure}
-
-in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 \subsubsection{Fiber Space $F$}
 We use Spivak's formalization of data base schemas as the basis of our fiber space $F$ \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
@@ -148,10 +118,10 @@ F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
 
 and the function $\tau$ that retrieves records from $F$ is
 
-\begin{equation}
+\begin{multline}
 \tau(k) =(k, (r: \textrm{Temp}\rightarrow temp, r: \textrm{Time}\rightarrow time))\\
 temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
-\end{equation}
+\end{multline}
 
 Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
@@ -163,6 +133,37 @@ As described in equation~\ref{eq:local_trivial}, there is a local space $U \subs
 \end{equation}
 
 which through $\iota$ gets the data in $E$ at and near to $k$. 
+
+\subsubsection{Base Space $K$}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
+    \label{fig:kquote}
+\end{figure}
+
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $r$ in $E$ defined via the map $\pi: E \rightarrow K$ that sends each $r \in E$ to its equivalence class in $[r] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
+
+As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
+
+\begin{equation}
+\mathcal{T}_k = \{U\subseteqq K: \{r \in E: [r] \in U\}\in \mathcal{T}_E\}
+\end{equation}
+
+where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: r \rightarrow [r]$. 
+
+
+
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
+    %% add box around neighboring P and Map
+    \label{fig:k_data}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
+\end{figure}
+
+in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 
 \subsection{Prerender Space}
@@ -176,11 +177,18 @@ Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of th
     \end{tikzcd}
 \end{equation}
 
-where $\rho: H \rightarrow S$ is mapping from a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space. 
+where $\rho: S \rightarrow H$ is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+\begin{equation}
+    \rho(s)  = \{x, y, z, g, b, a\}
+    \label{eq:rho}
+\end{equation}
 
-For a physical screen display, the fiber $D$ encodes position and color of the visual elements as $\mathbb{R}^{7} = \{X, Y, Z, R, G, B, A\}$, where the patch $xy$ is a region in $H$ that we query into $S$ to get values that we integrate into an $\{r, g, b\}$ value. In the case of 2D screens, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$.
+To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where
+\begin{equation}
+s = \rho^{-1}_{XY}(xy)
+\end{equation}
+such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields in $p$
 
-To draw an image, a region  $H$ is inverse mapped into a region $s \in S$ where $s$ is the inverse mapping from pixel to region on $s = \rho^{-1}_XY(xy)$ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields in $p$
 \begin{align}
     R(p) &= \oint_s \rho_R(s)ds^{2}\\
     G(p) &= \oint_s \rho_G(s)ds^{2}\\
@@ -214,14 +222,24 @@ where $A$ is composed of an asthethic mapping $\Xi: \xi^*\tau \rightarrow \rho$ 
         \end{tikzcd}
 \end{equation}
 
-The aesthetic property mapper $\Xi=Q\circ\nu$  builds $\rho$ functions via a function $Q$ that compose $\nu_{param}( \xi^*\tau)$ functions that map data in some field $c$ to a subset of $D$, such as x, or RGB. These $\rho$ functions are then mapped back into $S$ to provide the values for the region in $H$. $Q$ is analogous to a visualization type such as scatter or line plot, and $\nu$ to aesthetic parameters such as line color or marker shape \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels}.
+
+
+
+\subsubsection{Channels}
+
+The visualization specification function $\Xi=Q\circ\nu$  builds $\rho$ functions via a function $Q$ that compose $\nu_{param}$ visual characteristic mappers
+\begin{equation}
+    \nu_{param}(\tau_{param}) = \mu_{param}
+\end{equation}
+where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$. $Q$ then composites the $\nu$ functions to build $\rho$ as described in equation~\ref{eq:rho}
 
 \begin{equation}
-     \rho(u, v) = Q(\nu_{param_{n}}(\tau_{c_0}), \ldots \nu_{param_{n}}(\tau_{c_n}))(u,v)
+    Q(\mu_{param_0}, \ldots, \mu_{param_n}(s) = \rho(s)
     \label{eq:Q}
 \end{equation}
 
-$Q$ composites $\nu$ functions because multiple parameters can target the same field in $D$, for example $\nu_{ypos}$ and $\nu_{linewidth}$ together determine the output of the $\rho_y$ y position of a line on screen. 
+$Q$ is analogous to a visualization type such as scatter or line plot, and $\nu$ to aesthetic parameters such as line color or marker shape \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels} and composites the $\nu$ mappings into $\rho$ functions as 
+
 
 \subsubsection{Marks}
 Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
@@ -232,16 +250,10 @@ Bertin describes a location on the plane as the signifying characteristic of a p
 \label{eq:mark}
 \end{equation}
 
-Each point $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on S 
+Each point $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ 
 
 then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected component $J \subset K$. To got back to the display space $H$  from the simplacial complex $J$ of the signifier implanted in the mark, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then  $\rho(\xi^{-1}(J))$ maps it into $R^{7}$. 
 
-
-\subsubsection{Channels}
-For the aesthetic mapping function $\nu$ to faithfully transform the data in $\xi^*\tau$, the $\nu$ and $\tau$ must be symmetrical under all transformations such that
-\begin{equation}
-    \nu_{param}(\tau_{})
-\end{equation}
 
 
 
