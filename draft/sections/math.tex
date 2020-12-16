@@ -76,6 +76,36 @@ where the domain of $g(k)$ is $F_k$ and returns a data point $r$. The space of a
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle is a line because the data points $r$ in $E$ are on a space that is  continous in one dimension. 
 
+\subsubsection{Base Space $K$}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
+    \label{fig:kquote}
+\end{figure}
+
+$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $r$ in $E$ defined via the map $\pi: E \rightarrow K$ that sends each $r \in E$ to its equivalence class in $[r] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
+
+As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
+
+\begin{equation}
+\mathcal{T}_k = \{U\subseteqq K: \{r \in E: [r] \in U\}\in \mathcal{T}_E\}
+\end{equation}
+
+where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: r \rightarrow [r]$. 
+
+
+
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
+    %% add box around neighboring P and Map
+    \label{fig:k_data}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
+\end{figure}
+
+in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 \subsubsection{Fiber Space $F$}
 We use Spivak's formalization of data base schemas as the basis of our fiber space $F$ \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
@@ -118,53 +148,30 @@ F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
 
 and the function $\tau$ that retrieves records from $F$ is
 
-\begin{multline}
-\tau(k) =(k, (r: \textrm{Temp}\rightarrow temp, r: \textrm{Time}\rightarrow time))\\
-temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
-\end{multline}
+\begin{align}
+\tau(k) =(k, (r: \textrm{Temp}\rightarrow &temp, r: \textrm{Time}\rightarrow time))\\
+&temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
+\end{align}
 
 Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
+
 \subsubsection{Sheaf and Stalk}
-As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
+As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
+\begin{equation}
+    \begin{tikzcd}
+        \xi^*E \arrow[d, "\pi" description]              & E \arrow[d, "\pi" description] \arrow[l, "\xi^*" description]            \\
+        U \arrow[u, "\xi^*\tau" description, bend right] & K \arrow[u, "\tau" description, bend right] \arrow[l, "\xi" description]
+    \end{tikzcd}
+\end{equation}
+
+The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ $\xi^*\tau$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
     \iota^{-1}\mathscr{F}(\{k\}) = \varinjlim_{k\subseteq U}\mathscr{F}(U) =  \varinjlim_{k \in U} = \mathscr{F}_k 
 \end{equation}
 
-which through $\iota$ gets the data in $E$ at and near to $k$. 
-
-\subsubsection{Base Space $K$}
-
-\begin{figure}[ht]
-    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
-    \label{fig:kquote}
-\end{figure}
-
-$K$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $r$ in $E$ defined via the map $\pi: E \rightarrow K$ that sends each $r \in E$ to its equivalence class in $[r] \in K$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
-
-As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
-
-\begin{equation}
-\mathcal{T}_k = \{U\subseteqq K: \{r \in E: [r] \in U\}\in \mathcal{T}_E\}
-\end{equation}
-
-where $[r] \in U$ is the point $k \in K$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: r \rightarrow [r]$. 
-
-
-
-\begin{figure}[ht]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
-    %% add box around neighboring P and Map
-    \label{fig:k_data}
-\end{figure}
-
-\begin{figure}[ht]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
-\end{figure}
-
-in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
-
+which through $\iota$ gets the data in $E$ at and near to $k$. Restricting the artist to the sheaf means the artist knows the data in $F$ and also has access to derivatives of the data. This property is useful for some visual transformations. 
 
 \subsection{Prerender Space}
 \label{sec:display}
