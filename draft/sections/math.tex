@@ -160,9 +160,9 @@ Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds 
 As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
     \begin{tikzcd}
-        \xi^*E \arrow[d, "\pi" description]              & E \arrow[d, "\pi" description] \arrow[l, "\xi^*" description]            \\
-        U \arrow[u, "\xi^*\tau" description, bend right] & K \arrow[u, "\tau" description, bend right] \arrow[l, "\xi" description]
-    \end{tikzcd}
+        \xi^*E \arrow[d, "\pi"']              & E \arrow[d, "\pi" description] \arrow[l, "\xi^*" description]            \\
+        U \arrow[u, "\xi^*\tau"', bend right] & K \arrow[u, "\tau" description, bend right] \arrow[l, "\xi" description]
+        \end{tikzcd}
 \end{equation}
 
 The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ $\xi^*\tau$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
@@ -214,52 +214,98 @@ As illustrated in figure~\ref{fig:render}, words.
 
 \subsection{Artist}
 
-The artist is a mapping from the sheaf $O(E)$ which a dataset to a pre-render space $O(H)$ with display target properties $D$ and visualization structure $S$. 
-
+The artist is a mapping from the sheaf $O(E)$ representing the data to a pre-render space $O(H)$. 
 \begin{equation}
-    A: \Gamma(E) \rightarrow \Gamma(H)
+    A: O(E) \rightarrow O(H)
 \end{equation}
 
-where $A$ is composed of an asthethic mapping $\Xi: \xi^*\tau \rightarrow \rho$ that builds the prerender render functions $\rho: S \rightarrow H$ described in section~\ref{sec:display}. Every region on $H$ maps back through $S$ to $K$ through $\xi: S_k \rightarrow K$ and $\xi^*k\tau$ pulls back to the data on $\xi^*E$ which is restricted over the visualization space $S$ . 
+The artist acts on a sheaf because some visual characterstics, such as line thickness, need more information than just the data at a point. The artist is the composition of visual variable mappers $F: E \rightarrow V$ and assembly function  $Q: V \rightarrow H$ that transforms $V$ into a visual idiom\cite{munznerMarksChannels} in pre-render space:
 
 \begin{equation}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi" description]                           & \xi^*E \arrow[l] \arrow[d, "\pi" description]                                              &  & \xi^*E \arrow[rr, "\Xi" description] &                                                                                               & H \arrow[ld, "\rho^{-1}" description] \\
-                          & K \arrow[u, "\tau" description, bend right, shift right] & S \arrow[l, "\xi" description] \arrow[u, "\xi^*\tau" description, bend right, shift right] &  &                                      & S \arrow[ru, "\rho" description, bend right, shift right] \arrow[lu, "\xi^*\tau" description] &                                      
+        O(E) \arrow[r, "F" description] \arrow[rd, "A"'] \arrow[rd] & O(V) \arrow[d, "Q" description] \\
+                                                                    & O(H)                           
         \end{tikzcd}
 \end{equation}
 
+The mapping from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[r, "\nu" description]                                & V \\
+        K \arrow[u, "\tau" description] \arrow[ru, "\mu" description] &  
+    \end{tikzcd}
+\end{equation}
+
+such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$ 
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[d, "\pi" description]              & H \arrow[d, "\pi" description]                                    \\
+        K \arrow[u, "\tau" description, bend right] & S \arrow[l, "\xi" description] \arrow[lu, "\xi^*\tau" description]
+        \end{tikzcd}
+\end{equation}
+and can be pulled back up to $E$ (or $V$) such that for a region $s$ there is an associated record $\tau$ and visual mapping $\mu$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
+\begin{equation}
+    \begin{tikzcd}
+        V \arrow[r, "q" description]                                       & H \\
+        S \arrow[u, "\xi^*\mu" description] \arrow[ru, "\rho" description] &  
+    \end{tikzcd}
+\end{equation}
+the composition $q \circ \xi^*\mu$ generates the $\rho$ function described in section~\ref{sec:display}. 
 
 
 
 \subsubsection{Channels}
-
-The visualization specification function $\Xi=Q\circ\nu$  builds $\rho$ functions via a function $Q$ that compose $\nu_{param}$ visual characteristic mappers
 \begin{equation}
-    \nu_{param}(\tau_{param}) = \mu_{param}
-\end{equation}
-where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$. $Q$ then composites the $\nu$ functions to build $\rho$ as described in equation~\ref{eq:rho}
-
-\begin{equation}
-    Q(\mu_{param_0}, \ldots, \mu_{param_n}(s) = \rho(s)
-    \label{eq:Q}
+    \begin{tikzcd}
+        E_1 \arrow[r, "F" description] \arrow[d, "f" description] & V_1 \arrow[d, "f" description] \\
+        E_2 \arrow[r, "F" description]                            & V_2                           
+    \end{tikzcd}
 \end{equation}
 
-$Q$ is analogous to a visualization type such as scatter or line plot, and $\nu$ to aesthetic parameters such as line color or marker shape \cite{bertinIIPropertiesGraphic2011, munznerMarksChannels} and composites the $\nu$ mappings into $\rho$ functions as 
+%nu is functor
+% examples of nu \tau\mu pairs - ordinal
+%maybe param is the wrong thing 
+Define a channel in terms of nus
+This is what we mean by equivariance: 
+step thrpoughh measurment scale groups
+doesn't matter where computation lives
+
+Here is the thing you need to preserve for {X} when writing a transform:
+
+
+compose $\nu_{param}$ visual characteristic mappers
+\begin{equation}
+    \nu(\tau) = \mu
+\end{equation}
+where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$.
+
+
+$\nu$ is Hom set? 
+1) must have identity
+2) is composable
+3) associativity 
+
+homomorphism in land of categories:
+objects in C, objects in D
+C arrow D
+ A-B for example stephens group scale
+
+every $\nu$ is a functor that
+
+put all the functorial things together is still functorial 
+%argument into  is $\[\nu_{0}(\tau_{0}), \ldots \nu_{n}(\tau_{n})\]$
 
 
 \subsubsection{Marks}
-Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space these are marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. 
+Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space are the point, line, and area marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. For each region $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected component $J \subset K$. 
 \begin{equation}
 \begin{tikzcd}
     H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K| \exists \Gamma \text{ s.t. } \Gamma(0)=k \text{ and }\Gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
 \end{tikzcd}
 \label{eq:mark}
 \end{equation}
-
-Each point $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ 
-
-then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected component $J \subset K$. To got back to the display space $H$  from the simplacial complex $J$ of the signifier implanted in the mark, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then  $\rho(\xi^{-1}(J))$ maps it into $R^{7}$. 
+To got back to the display space $H$  from the simplacial complex $J$ of the signifier implanted in the mark, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then  $\rho(\xi^{-1}(J))$ maps it into $R^{7}$. 
 
 
 
@@ -285,12 +331,9 @@ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected co
 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
-Two artists are equivalent when given data containers $\Gamma(E)$ of the same type, they output the same type of prerender $\Gamma(S)$:
-\begin{equation}
-    \begin{tikzcd}
-        A_{\tau_2}: \arrow[d, shift right=2] & \Gamma(E) \arrow[r] & \Gamma(H) & \\
-        A_{\tau_1}: \arrow[u, shift right]   & \Gamma(E) \arrow[r] & \Gamma(H) 
-    \end{tikzcd}
-\end{equation}
+n $O(E)$ of the same type, they output the same type of prerender $O(H)$:
+
+
+Natural transformation + composition is partial ordering? Back and forth is equivalent 
 
 \end{document}
