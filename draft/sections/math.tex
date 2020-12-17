@@ -219,16 +219,7 @@ The artist is a mapping from the sheaf $O(E)$ representing the data to a pre-ren
     A: O(E) \rightarrow O(H)
 \end{equation}
 
-The artist acts on a sheaf because some visual characterstics, such as line thickness, need more information than just the data at a point. The artist is the composition of visual variable mappers $F: E \rightarrow V$ and assembly function  $Q: V \rightarrow H$ that transforms $V$ into a visual idiom\cite{munznerMarksChannels} in pre-render space:
-
-\begin{equation}
-    \begin{tikzcd}
-        O(E) \arrow[r, "F" description] \arrow[rd, "A"'] \arrow[rd] & O(V) \arrow[d, "Q" description] \\
-                                                                    & O(H)                           
-        \end{tikzcd}
-\end{equation}
-
-The mapping from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+The artist acts on a sheaf because some visual characterstics, such as line thickness, need more information than just the data at a point. The artist through $F: E \rightarrow V$ maps from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
 
 \begin{equation}
     \begin{tikzcd}
@@ -246,19 +237,18 @@ such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equ
 \end{equation}
 and can be pulled back up to $E$ (or $V$) such that for a region $s$ there is an associated record $\tau$ and visual mapping $\mu$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
-    \begin{tikzcd}
-        V \arrow[r, "q" description]                                       & H \\
-        S \arrow[u, "\xi^*\mu" description] \arrow[ru, "\rho" description] &  
-    \end{tikzcd}
+
 \end{equation}
 the composition $q \circ \xi^*\mu$ generates the $\rho$ function described in section~\ref{sec:display}. 
 
 
 
 \subsubsection{Channels}
+Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nus$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
+
 \begin{equation}
     \begin{tikzcd}
-        E_1 \arrow[r, "F" description] \arrow[d, "f" description] & V_1 \arrow[d, "f" description] \\
+        E_1 \arrow[r, "F" description] \arrow[d, "" description] & V_1 \arrow[d, "f" description] \\
         E_2 \arrow[r, "F" description]                            & V_2                           
     \end{tikzcd}
 \end{equation}
