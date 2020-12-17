@@ -237,7 +237,10 @@ such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equ
 \end{equation}
 and can be pulled back up to $E$ (or $V$) such that for a region $s$ there is an associated record $\tau$ and visual mapping $\mu$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
-
+    \begin{tikzcd}
+        \xi^*V \arrow[r, "q"']                      & H \\
+        S \arrow[u, "\xi^*\mu"] \arrow[ru, "\rho"'] &  
+        \end{tikzcd}
 \end{equation}
 the composition $q \circ \xi^*\mu$ generates the $\rho$ function described in section~\ref{sec:display}. 
 
