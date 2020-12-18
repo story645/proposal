@@ -165,14 +165,14 @@ As described in equation~\ref{eq:local_trivial}, there is a local space $U \subs
         \end{tikzcd}
 \end{equation}
 
-The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ $\xi^*\tau$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
+The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ of $\xi^*\tau$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_k$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
     \iota^{-1}\mathscr{F}(\{k\}) = \varinjlim_{k\subseteq U}\mathscr{F}(U) =  \varinjlim_{k \in U} = \mathscr{F}_k 
 \end{equation}
 
 which through $\iota$ gets the data in $E$ at and near to $k$. Restricting the artist to the sheaf means the artist knows the data in $F$ and also has access to derivatives of the data. This property is useful for some visual transformations. 
-
+%% gives all direvatives but we need the jet which is Add stuff about jets
 \subsection{Prerender Space}
 \label{sec:display}
 
@@ -195,11 +195,11 @@ To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where
 s = \rho^{-1}_{XY}(xy)
 \end{equation}
 such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields in $p$
-
+%%change the integral to a double integral
 \begin{align}
-    R(p) &= \oint_s \rho_R(s)ds^{2}\\
-    G(p) &= \oint_s \rho_G(s)ds^{2}\\
-    B(p) &= \oint_s \rho_B(s)ds^{2}
+    R(p) &= \iint_s \rho_R(s)ds^{2}\\
+    G(p) &= \iint_s \rho_G(s)ds^{2}\\
+    B(p) &= \iint_s \rho_B(s)ds^{2}
 \end{align}
 
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. 
@@ -218,9 +218,13 @@ The artist is a mapping from the sheaf $O(E)$ representing the data to a pre-ren
 \begin{equation}
     A: O(E) \rightarrow O(H)
 \end{equation}
+The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$:
+\begin{equation}
+insert triangle here
+\end{equation}
 
-The artist acts on a sheaf because some visual characterstics, such as line thickness, need more information than just the data at a point. The artist through $F: E \rightarrow V$ maps from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
-
+The first stage of the artist $F: E \rightarrow V$ maps from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+%%include the $
 \begin{equation}
     \begin{tikzcd}
         E \arrow[r, "\nu" description]                                & V \\
@@ -228,14 +232,14 @@ The artist acts on a sheaf because some visual characterstics, such as line thic
     \end{tikzcd}
 \end{equation}
 
-such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$ 
+such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$ %%remove the taus from the diagram
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi" description]              & H \arrow[d, "\pi" description]                                    \\
         K \arrow[u, "\tau" description, bend right] & S \arrow[l, "\xi" description] \arrow[lu, "\xi^*\tau" description]
         \end{tikzcd}
 \end{equation}
-and can be pulled back up to $E$ (or $V$) such that for a region $s$ there is an associated record $\tau$ and visual mapping $\mu$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
+such that when $\xi(s) = k$, there is a mapping from screen space to k  $\xi^*\tau(s) = \tau(k)$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
     \begin{tikzcd}
         \xi^*V \arrow[r, "q"']                      & H \\
@@ -247,7 +251,7 @@ the composition $q \circ \xi^*\mu$ generates the $\rho$ function described in se
 
 
 \subsubsection{Channels}
-Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nus$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
+Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nu$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
 
 \begin{equation}
     \begin{tikzcd}
@@ -256,6 +260,7 @@ Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, 
     \end{tikzcd}
 \end{equation}
 
+$E$ or $J(E)$
 %nu is functor
 % examples of nu \tau\mu pairs - ordinal
 %maybe param is the wrong thing 
@@ -273,6 +278,7 @@ compose $\nu_{param}$ visual characteristic mappers
 \end{equation}
 where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$.
 
+%For example, given a categorical field $c$ carry through temperature, maybe picture? 
 
 $\nu$ is Hom set? 
 1) must have identity
