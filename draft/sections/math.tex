@@ -43,13 +43,14 @@ $B$ is the quotient space of $E$, meaning it is the set of equivalence classes o
 As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood around $F$. This subdivision is projected down to the toplology $\mathcal{T}$
 
 \begin{equation}
+    \label{eq:base_space}
 \mathcal{T}_b = \{U\subseteqq B: \{p \in E: [p] \in U\}\in \mathcal{T}_E\}
 \end{equation}
 
 where $[p] \in U$ is the point $b \in B$ with an open set surrounding it that has an open preimage in $E$ under the surjective map $\pi: p \rightarrow [p]$. 
 
 \subsubsection{Fiber}
-Every point in the base space $b \in B$ has a local open set neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
+As shown in equation!\ref{eg:base_space}, every point $b \in B$ has a local open set neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
 
 \begin{equation}
     \begin{tikzcd}
@@ -126,6 +127,7 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
 in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 \subsubsection{Fiber Space $F$}
+\label{sec:data_fiber}
 We use Spivak's formalization of data base schemas as the basis of our fiber space $F$ \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
 \begin{equation}
 \pi: U \rightarrow DT
@@ -228,21 +230,32 @@ The artist is a mapping from the sheaf $O(E)$ representing the data to a pre-ren
 \begin{equation}
     A: O(E) \rightarrow O(H)
 \end{equation}
-The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$:
-\begin{equation}
-insert triangle here
-\end{equation}
+The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$. The visual fiber bundle $V$ shares basespace $K$ with $E$:
 
-The first stage of the artist $F: E \rightarrow V$ maps from data space to visual variable  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
-%%include the $
 \begin{equation}
     \begin{tikzcd}
-        E \arrow[d, "\pi"'] \arrow[r, "\nu"]                                        & V \arrow[ld, "\pi"'] \\
-        K \arrow[u, "\tau"', bend right] \arrow[ru, "\mu"', bend right, shift left] &                     
+        P \arrow[r, hook] & V \arrow[r, "\pi"] & K\\   
+    \end{tikzcd}
+\end{equation}
+
+with fiber $P$ that encodes visual paramters such as position or color. As in section~\ref{sec:data_fiber}, the fields in $P$ are strongly typed. The function $\nu: E \rightarrow V$ maps from data space to visual space  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[d, "\pi"'] \arrow[r, "\nu"] & V \arrow[ld, "\pi"'] \\
+        K                                    &                     
         \end{tikzcd}
 \end{equation}
 
-such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$
+such that the visual section $\mu: K \rightarrow V$ 
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[r, "\nu"]                      & V \\
+        K \arrow[ru, "\mu"'] \arrow[u, "\tau"'] &  
+        \end{tikzcd}
+
+\end{equation}
+
+where visual transformers $\nu$ applied to data $\tau$ is equivalent to $\mu$ such that $\mu(k) = \nu\circ\tau(k)$. To obtain the equivalent visual values in screen space $S$, the look up map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
@@ -252,18 +265,35 @@ such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equ
 such that when $\xi(s) = k$, there is a mapping from screen space to k  $\xi^*\tau(s) = \tau(k)$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
     \begin{tikzcd}
-        \xi^*V \arrow[r, "q"']                      & H \\
-        S \arrow[u, "\xi^*\mu"] \arrow[ru, "\rho"'] &  
-        \end{tikzcd}
+        \xi^*V \arrow[r, "Q"] \arrow[rd, "\xi^*\pi"'] & H \arrow[d, "\pi"] \\
+                                                      & S                 
+    \end{tikzcd}
 \end{equation}
-the composition $q \circ \xi^*\mu$ generates the $\rho$ function described in section~\ref{sec:display}. 
+the function $Q:\xi^*V\rightarrow H$ composites points in $V$ into $\mathbb{R^7}$ tuples. The section $\mu$ is pulled over $s$ 
 
-An artist is the choice of ..... constraints are maps that preserve
+\begin{equation}
+    \begin{tikzcd}
+        \xi^*V \arrow[r, "Q"] & H                                           \\
+                              & S \arrow[lu, "\xi^*\mu"] \arrow[u, "\rho"']
+    \end{tikzcd}
+\end{equation}
+
+such that the composition $Q$ of $\mu$ is equivalent to the render $\rho(s) = Q\circ\mu(s)$. The full visualization path is
+\begin{equation} 
+    \begin{tikzcd}
+        E \arrow[r, "\nu=transforms"] & V                                                              & \xi^*V \arrow[r, "Q = \text{set attrs}"]                             & H \\
+                                  & K \arrow[lu, "\tau = data"] \arrow[u, "{\mu = \{\tau,\nu\}}"'] & S \arrow[l, "\xi - init?draw"] \arrow[u, "\xi^*\mu = \nu\circ\tau"'] &  
+    \end{tikzcd}
+\end{equation}
+
+
 \subsubsection{Compositing}
 
 $Q$ is the assembly function for the visual idiom step something something something something something 
 
 \subsubsection{Channels}
+
+%% the \mu [oeve gpes here maybe]
 Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nu$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
 
 \begin{equation}
