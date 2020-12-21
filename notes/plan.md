@@ -11,22 +11,39 @@
  ### outstanding
  * background/lit review
  * math in paragraph write ups
-    * fiber bundle + data figure
-    * taus & how they combine into VI?
  * implementation write up tied back to math
  * conclusion/proposal for further work - can steal from proposal?
         
-# schedule
- 
-- [] Nov 20: math in paragraph write up + figures
-    - [] Nov 18: pin down equation pipeline
-    - [] Nov 19: write through end to end equations w/ explaination and stand in figures
-    - [] Nov 20: full draft of section (w/ actual figures)
-- [] Nov 25: implementation write up (figures are made, probably needs process/software diagram)
-    - [] Nov 23: scatter
-    - [] Nov 24: line
-    - [] Nov 25: bar + multibar
-- [] Dec 4th: rough draft
-    - [] Dec 1: background/intro
-    - [] Dec 2: conclusion + transitions
+# tasks
+- [] in progress: math in paragraph write up + figures
+    - [] pin down equation pipeline
+         - [x] Data fiberbundle: (E, F, \pi, K, \tua)
+         - [x] Render fiberbundle: (H, D, \pi, S, \rho)
+         - [x] Visual fiberbundle: (V, P, \pi, K, \mu)
+         - [x] screen-data: \xi: S->K
+         - [x] style hop: \nu: E-> V
+         - [] assembly hop: Q: V-> H (\mu holds together the aesthetics on each K so Q doesn't have to
+         - [] artist: Q(\xi\mu) <-> rho, A: E-> H    
+    - [] go back in and latex define:
+         - [] fiber bundles:(total space, basespace, \pi, fiber)
+         - [] sections: \tau, \mu, \rho
+         - [] transforms between bundles: \nu, Q <- input/output - what do these transforms mean?
+         - [] maps between base spaces: \xi
+         - [] all together thing: A
+    - [] write through end to end equations w/ explaination and stand in figures
+         - [x] different k
+         - [x] different f
+         - [x] render with D = {x,y,z, r,g,b}
+         - [] \nu examples w/ scales + visual variables
+         -[] q example?
+    - [] full draft of section (w/ actual figures)
+- [] implementation + math write up
+    - [] scatter = q(\xi\mu_x, \xi\mu_y, \xi\mu_color)(u,v) <-> \rho -
+    - [] line
+    - [] bar + multibar
+- []  background/intro
+   - [] visual basics: bertin/munzner/carpendale
+   - [] math framework: gog
+   - [] pipeline: vtk
+- []  what's next? + operator, build a library
 
