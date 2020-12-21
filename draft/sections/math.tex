@@ -196,7 +196,10 @@ Where the section $\rho: S \rightarrow H$
         \end{tikzcd}
 \end{equation}
 
- is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+ is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space.
+ 
+ \subsubsection{Section $\rho$}
+ For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
 \begin{equation}
     \rho(s)  = \{x, y, z, r, g, b, a\}
     \label{eq:rho}
@@ -216,6 +219,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
 
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. 
 
+\subsubsection{{Example}}
 \begin{figure}[h]
     \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
     \caption{}
@@ -238,7 +242,18 @@ The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ ma
     \end{tikzcd}
 \end{equation}
 
-with fiber $P$ that encodes visual paramters such as position or color. As in section~\ref{sec:data_fiber}, the fields in $P$ are strongly typed. The function $\nu: E \rightarrow V$ maps from data space to visual space  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+with fiber $P$ that encodes visual paramters such as position or color. As in section~\ref{sec:data_fiber}, the fields in $P$ are strongly typed. Inside the artist is also the equivalance class map $\xi: S \rightarrow K$ that goes from a region $s$ to its associated point $k$
+\begin{equation}
+    \begin{tikzcd}
+        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
+        K                   & S \arrow[l, "\xi"']
+        \end{tikzcd}
+\end{equation}
+such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$.
+
+\subsubsection{Visual Mapping}
+
+The function $\nu: E \rightarrow V$ maps from data space to visual space  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] \arrow[r, "\nu"] & V \arrow[ld, "\pi"'] \\
@@ -246,23 +261,22 @@ with fiber $P$ that encodes visual paramters such as position or color. As in se
         \end{tikzcd}
 \end{equation}
 
-such that the visual section $\mu: K \rightarrow V$ 
+such that the visual section $\mu: K \rightarrow V$  is equivalent to the visual transformation of the data $\mu(k) = \nu\circ\tau(k)$
 \begin{equation}
     \begin{tikzcd}
         E \arrow[r, "\nu"]                      & V \\
         K \arrow[ru, "\mu"'] \arrow[u, "\tau"'] &  
         \end{tikzcd}
-
 \end{equation}
+ 
+The constraint on $\nu: \tau\rightarrow \mu$ is that $\tau$ and $\mu$ must be equivariant. 
 
-where visual transformers $\nu$ applied to data $\tau$ is equivalent to $\mu$ such that $\mu(k) = \nu\circ\tau(k)$. To obtain the equivalent visual values in screen space $S$, the look up map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$
-\begin{equation}
-    \begin{tikzcd}
-        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
-        K                   & S \arrow[l, "\xi"']
-        \end{tikzcd}
-\end{equation}
-such that when $\xi(s) = k$, there is a mapping from screen space to k  $\xi^*\tau(s) = \tau(k)$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
+%%set up proofs here
+
+
+
+\subsubsection{Visual Composition}
+The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
     \begin{tikzcd}
         \xi^*V \arrow[r, "Q"] \arrow[rd, "\xi^*\pi"'] & H \arrow[d, "\pi"] \\
@@ -278,88 +292,16 @@ the function $Q:\xi^*V\rightarrow H$ composites points in $V$ into $\mathbb{R^7}
     \end{tikzcd}
 \end{equation}
 
-such that the composition $Q$ of $\mu$ is equivalent to the render $\rho(s) = Q\circ\mu(s)$. The full visualization path is
+such that the composition $Q$ of $\mu$ is equivalent to the render $\rho(s) = Q\circ\mu(s)$. 
+
+
+\subsubsection{Pipeline}
+The full visualization path is
 \begin{equation} 
     \begin{tikzcd}
         E \arrow[r, "\nu=transforms"] & V                                                              & \xi^*V \arrow[r, "Q = \text{set attrs}"]                             & H \\
                                   & K \arrow[lu, "\tau = data"] \arrow[u, "{\mu = \{\tau,\nu\}}"'] & S \arrow[l, "\xi - init?draw"] \arrow[u, "\xi^*\mu = \nu\circ\tau"'] &  
     \end{tikzcd}
 \end{equation}
-
-
-\subsubsection{Compositing}
-
-$Q$ is the assembly function for the visual idiom step something something something something something 
-
-\subsubsection{Channels}
-
-%% the \mu [oeve gpes here maybe]
-Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nu$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
-
-\begin{equation}
-    \begin{tikzcd}
-        E_1 \arrow[r, "F" description] \arrow[d, "" description] & V_1 \arrow[d, "f" description] \\
-        E_2 \arrow[r, "F" description]                            & V_2                           
-    \end{tikzcd}
-\end{equation}
-
-$E$ or $J(E)$
-%nu is functor
-% examples of nu \tau\mu pairs - ordinal
-%maybe param is the wrong thing 
-Define a channel in terms of nus
-This is what we mean by equivariance: 
-step thrpoughh measurment scale groups
-doesn't matter where computation lives
-
-Here is the thing you need to preserve for {X} when writing a transform:
-
-
-compose $\nu_{param}$ visual characteristic mappers
-\begin{equation}
-    \nu(\tau) = \mu
-\end{equation}
-where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$.
-
-%For example, given a categorical field $c$ carry through temperature, maybe picture? 
-
-$\nu$ is Hom set? 
-1) must have identity
-2) is composable
-3) associativity 
-
-homomorphism in land of categories:
-objects in C, objects in D
-C arrow D
- A-B for example stephens group scale
-
-every $\nu$ is a functor that
-
-put all the functorial things together is still functorial 
-%argument into  is $\[\nu_{0}(\tau_{0}), \ldots \nu_{n}(\tau_{n})\]$
-
-
-
-
-
-
-
-
-% complex columns are combined to \nu 
-
-
-%% \nu is structure preserving if  E->E  & H->H under nu. \phi can be one of the scales in Stevens
-
-% concrete example of \nu as one of our encodings, if artist is faithfully preserving 
-% if was fiber, trans on fiber bundle. we require that nu goes to visual side that can support same translation  - work through some examples : if an artist wanted to preserve, this is what it would have to do - for example relations, interval
-
-
-
-
-
-%%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
-
- Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
-
 
 \end{document}
