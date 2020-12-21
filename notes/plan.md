@@ -17,24 +17,24 @@
 # tasks
 - [] in progress: math in paragraph write up + figures
     - [] pin down equation pipeline
-         -[x] Data fiberbundle: (E, F, \pi, K, \tua)
-         -[x] Render fiberbundle: (H, D, \pi, S, \rho)
-         -[x] Visual fiberbundle: (V, P, \pi, K, \mu)
-         -[x] screen-data: \xi: S->K
-         -[x] style hop: \nu: E-> V
-         -[] assembly hop: Q: V-> H (\mu holds together the aesthetics on each K so Q doesn't have to
-         -[] artist: Q(\xi\mu) <-> rho, A: E-> H    
-      -[] go back in and latex define:
-         -[] fiber bundles:(total space, basespace, \pi, fiber)
-         -[] sections: \tau, \mu, \rho
-         -[] transforms between bundles: \nu, Q <- input/output - what do these transforms mean?
-         -[] maps between base spaces: \xi
-         -[] all together thing: A
+         - [x] Data fiberbundle: (E, F, \pi, K, \tua)
+         - [x] Render fiberbundle: (H, D, \pi, S, \rho)
+         - [x] Visual fiberbundle: (V, P, \pi, K, \mu)
+         - [x] screen-data: \xi: S->K
+         - [x] style hop: \nu: E-> V
+         - [] assembly hop: Q: V-> H (\mu holds together the aesthetics on each K so Q doesn't have to
+         - [] artist: Q(\xi\mu) <-> rho, A: E-> H    
+    - [] go back in and latex define:
+         - [] fiber bundles:(total space, basespace, \pi, fiber)
+         - [] sections: \tau, \mu, \rho
+         - [] transforms between bundles: \nu, Q <- input/output - what do these transforms mean?
+         - [] maps between base spaces: \xi
+         - [] all together thing: A
     - [] write through end to end equations w/ explaination and stand in figures
-         -[x] different k
-         -[x] different f
-         -[x] render with D = {x,y,z, r,g,b}
-         -[] \nu examples w/ scales + visual variables
+         - [x] different k
+         - [x] different f
+         - [x] render with D = {x,y,z, r,g,b}
+         - [] \nu examples w/ scales + visual variables
          -[] q example?
     - [] full draft of section (w/ actual figures)
 - [] implementation + math write up
