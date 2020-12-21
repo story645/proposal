@@ -9,10 +9,6 @@ In this section we introduce a mathematical description of the visualization pip
     \label{eq:artist}
 \end{equation}
 
-\begin{equation}
-    A: \tau \rightarrow \rho
-\end{equation}
-
 \begin{itemize}
 \item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
@@ -30,7 +26,7 @@ We provide a brief introduction to fiber bundles because we model data, visual t
 
 \begin{equation}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi" description] & B  \\
+        F \arrow[r, hook] & E \arrow[r, "\pi"] & B
     \end{tikzcd}
 \end{equation}
 
@@ -57,8 +53,8 @@ Every point in the base space $b \in B$ has a local open set neighborhood $U$ \c
 
 \begin{equation}
     \begin{tikzcd}
-        \pi^{-1}(U) \arrow[r, "\varphi" description] \arrow[d, "\pi" description] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
-        U                                                                         &                                         
+        \pi^{-1}(U) \arrow[r, "\varphi"] \arrow[d, "\pi"'] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
+        U                                                  &                                         
     \end{tikzcd}
     \label{eq:local_trivial}
 \end{equation}
@@ -67,9 +63,9 @@ such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where
 The section $f$ is the mapping from base space to total space $f: B\rightarrow E$ 
 \begin{equation}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi" description]    \\
-                          & B \arrow[u, "f" description, bend right]
-        \end{tikzcd}
+        F \arrow[r, hook] & E \arrow[d, "\pi"']           \\
+        & B \arrow[u, "f"', bend right]
+    \end{tikzcd}
 \end{equation}
 
 such that it is the right inverse of $\pi$
@@ -88,12 +84,12 @@ where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space 
 As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset B$ around every $b$. The inclusion map $\iota: U \rightarrow B$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
     \begin{tikzcd}
-        \iota^*E \arrow[d, "\pi"']           & E \arrow[d, "\pi"'] \arrow[l, "\iota^*" description]                    \\
-        U \arrow[u, "\iota^*f"', bend right] & B \arrow[u, "f" description, bend right] \arrow[l, "\iota" description]
+        \iota^*E \arrow[d, "\pi"']           & E \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
+        U \arrow[u, "\iota^*f"', bend right] & B \arrow[u, "f"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
 
-The localized section of fibers $\iota^*\f: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ of $\xi^*f$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}
+The localized section of fibers $\iota^*f: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ of $\xi^*f$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
     \iota^{-1}\mathscr{F}(\{b\}) = \varinjlim_{b\subseteq U}\mathscr{F}(U) =  \varinjlim_{b \in U} = \mathscr{F}_b 
@@ -114,7 +110,7 @@ We use a fiber bundle model to represent the data, as proposed by Butler.
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle is a line because the data points $r$ in $E$ are on a space that is  continous in one dimension. 
 
-\subsubsection{Base Space $K$}
+\subsubsection{Base Space}
 
 
 \begin{figure}[ht]
@@ -143,8 +139,8 @@ where $C$ is the finite set of names of columuns, which we generalize to data fi
 
 \begin{equation}
     \begin{tikzcd}
-            U_{\sigma} \arrow[d, "\pi_{\sigma}" description] \arrow[r] & U \arrow[d, "\pi" description] \\
-            C \arrow[r, "\sigma" description]                          & DT                            
+        U_{\sigma} \arrow[d, "\pi_{\sigma}"'] \arrow[r] & U \arrow[d, "\pi"] \\
+        C \arrow[r, "\sigma"]                           & DT                
     \end{tikzcd}
 \end{equation}
 The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatypes of the fields in $C$ such that $U_{\sigma}$ is the fiber product $U \times_{DT} C$, and the pullback $\pi_{\sigma}:U_{\sigma} \rightarrow C$ specifies the domain bundle $U_{\sigma}$ over $C$ induced by $\sigma$. The fiber $F$ is the cartesian product of all sets in the disjoint union $U_{\sigma}$. 
@@ -182,30 +178,38 @@ Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds 
 \subsection{Prerender Space}
 \label{sec:display}
 
-Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $\S$:
+Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $S$:
 \begin{equation}
     \begin{tikzcd}
-        D \arrow[r, hook] & H \arrow[d, "\pi" description, bend right] \\
-                                    & S \arrow[u, "\rho" description, bend right] 
-    \end{tikzcd}
+        D \arrow[r, hook] & H \arrow[r, "\pi"] &S\\   
+        \end{tikzcd}
 \end{equation}
 
-where $\rho: S \rightarrow H$ is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+
+Where the section $\rho: S \rightarrow H$
 \begin{equation}
-    \rho(s)  = \{x, y, z, g, b, a\}
+    \begin{tikzcd}
+        D \arrow[r, hook] & H \arrow[d, "\pi"']              \\
+                          & S \arrow[u, "\rho"', bend right]
+        \end{tikzcd}
+\end{equation}
+
+ is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+\begin{equation}
+    \rho(s)  = \{x, y, z, r, g, b, a\}
     \label{eq:rho}
 \end{equation}
 
 To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where
 \begin{equation}
-s = \rho^{-1}_{XY}(xy)
+s = \rho^{-1}_{\tiny{XY}}(xy)
 \end{equation}
-such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields in $p$
+such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields:
 %%change the integral to a double integral
 \begin{align}
-    R(p) &= \iint_s \rho_R(s)ds^{2}\\
-    G(p) &= \iint_s \rho_G(s)ds^{2}\\
-    B(p) &= \iint_s \rho_B(s)ds^{2}
+    r &= \iint\limits_s \rho_{\tiny{R}}(s)ds^{2}\\
+    g &= \iint\limits_s \rho_{\tiny{G}}(s)ds^{2}\\
+    b &= \iint\limits_s \rho_{\tiny{B}}(s)ds^{2}
 \end{align}
 
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. 
@@ -233,16 +237,16 @@ The first stage of the artist $F: E \rightarrow V$ maps from data space to visua
 %%include the $
 \begin{equation}
     \begin{tikzcd}
-        E \arrow[r, "\nu" description]                                & V \\
-        K \arrow[u, "\tau" description] \arrow[ru, "\mu" description] &  
-    \end{tikzcd}
+        E \arrow[d, "\pi"'] \arrow[r, "\nu"]                                        & V \arrow[ld, "\pi"'] \\
+        K \arrow[u, "\tau"', bend right] \arrow[ru, "\mu"', bend right, shift left] &                     
+        \end{tikzcd}
 \end{equation}
 
-such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$ %%remove the taus from the diagram
+such that $\nu: \tau \mapsto \mu$ is a homorphism where $\tau$ and $\mu$ are equivariant such that the properties of the field type persist in the visual representation. The map $\xi: S \rightarrow K$ goes from a region $s$ to it associated $k$
 \begin{equation}
     \begin{tikzcd}
-        E \arrow[d, "\pi" description]              & H \arrow[d, "\pi" description]                                    \\
-        K \arrow[u, "\tau" description, bend right] & S \arrow[l, "\xi" description] \arrow[lu, "\xi^*\tau" description]
+        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
+        K                   & S \arrow[l, "\xi"']
         \end{tikzcd}
 \end{equation}
 such that when $\xi(s) = k$, there is a mapping from screen space to k  $\xi^*\tau(s) = \tau(k)$. The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
