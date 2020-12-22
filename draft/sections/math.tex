@@ -20,7 +20,7 @@ In this section we introduce a mathematical description of the visualization pip
 When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all fibers $F_{k}$ over $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}.
 
 \subsection{Fiber Bundles}
-We provide a brief introduction to fiber bundles because we model data, visual transformations, and a prerendered visual graphic as fiber bundles. A fiber bundle is a structure $(E, B, \pi, F)$  consisting of topological total space $E$, base space $K$, fiber space $F$ and the map from total space to base space:
+We provide a brief description of fiber bundles because we model data, visual transformations, and a prerendered visual graphic as fiber bundles. A fiber bundle is a structure $(E, B, \pi, F)$  consisting of topological total space $E$, base space $K$, fiber space $F$ and the map from total space to base space:
 
 \begin{equation}
     \label{eq:fiber_bundle}
@@ -60,6 +60,7 @@ As shown in equation!\ref{eg:base_space}, every point $b \in B$ has a local open
 \end{equation}
 such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$ $F_b = \pi^{-1}({b \in B}) $ is homomorphic to the fiber $F$.
 
+\subsubsection{Section}
 The section $f$ is the mapping from base space to total space $f: B\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
@@ -69,7 +70,7 @@ The section $f$ is the mapping from base space to total space $f: B\rightarrow E
     \end{tikzcd}
 \end{equation}
 
-such that it is the right inverse of $\pi$
+such that $f$ is the right inverse of $\pi$
 \begin{equation}
     \label{eq:section_domain}
     \pi(f(b)) = b \text{ for all } b \in B 
@@ -104,15 +105,7 @@ which through $\iota$ gets the data in $E$ at and near to $b$. Restricting the a
 %% gives all direvatives but we need the jet which is Add stuff about jets
 
 \subsection{Data Model}
-As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle:
-\begin{equation}
-    \label{eq:data_fiber_bundle}
-    \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi"] & B
-    \end{tikzcd}
-\end{equation}
-
-with a total space $E$, fiber space $F$, and base space $K$ which can be thought of as a set of keys $k$. The section $\tau:K \rightarrow E$ is an instance of the data that lies in $E$ and is discussed in section~\ref{sec:data_fiber}. 
+As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle (E, K, $\pi$, F) with $\pi: E \rightarrow K$ where $K$ which can be thought of as a set of keys $k$. A section $\tau:K \rightarrow E$ is an instance of the data that lies in $E$ and is discussed in section~\ref{sec:data_fiber}. 
 
 \subsubsection{Example}
 
@@ -189,29 +182,23 @@ and the function $\tau$ that retrieves records from $F$ is
 
 Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
-
-
 \subsection{Prerender Space}
 \label{sec:display}
+We model the prerender space on which lives on ideal version of the visulaization as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target physical display and a base space of $S$. 
 
-Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of the output of the artist $A$. The space $H$ is a total space representing the predisplay space, with a fiber dependent on the render space and a base space of $S$:
+\subsubsection{Base space}
+$K$ can be considered a subspace of the screen base space $S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
 \begin{equation}
     \begin{tikzcd}
-        D \arrow[r, hook] & H \arrow[r, "\pi"] &S\\   
+        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
+        K                   & S \arrow[l, "\xi"']
         \end{tikzcd}
 \end{equation}
 
-\subsubsection{Section $\rho$}
+that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. 
 
-A section $\rho: S \rightarrow H$
-\begin{equation}
-    \begin{tikzcd}
-        D \arrow[r, hook] & H \arrow[d, "\pi"']              \\
-                          & S \arrow[u, "\rho"', bend right]
-        \end{tikzcd}
-\end{equation}
-
- is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+\subsubsection{Fiber and Section}
+A section $\rho: S \rightarrow H$ is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
 \begin{equation}
     \rho(s)  = \{x, y, z, r, g, b, a\}
     \label{eq:rho}
@@ -245,35 +232,19 @@ In this section we will define the artist as a mapping from the sheaf $O(E)$ rep
 \begin{equation}
     A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
 \end{equation}
-The artist decomposes to data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$. In order to define $A$, we first define the visual fiber bundle $V$ that shares basespace $K$ with $E$:
+The artist decomposes to data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$. In order to define $A$, we first define the visual fiber bundle $V$ that shares basespace $K$ with $E$ as ($V$,$K$, $\pi$, $P$) with section $\mu: V \rightarrow K$. The fiber $P$ is the space of visual variables $\mu$ \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} that can be encoded in the visualization being generated by $A$. 
 
-\begin{equation}
-    \begin{tikzcd}
-        P \arrow[r, hook] & V \arrow[r, "\pi"] & K\\   
-    \end{tikzcd}
-\end{equation}
+\subsubsection{Example}
+If for example, a line artist as defined in \cite{Matplotlib} only supported the visual mappings xposition, yposition, width, color, style; then the $P$ for this line artist would be:
+\begin{itemize}
+    \item $C = \{\text{xposition, yposition, linewidth, color, linestyle}\}$ 
+    \item $DT =\{\mathbb{R}, \mathbb{R}, \mathbb{R}, \mathbb{R}^3, f\}$ 
+    \item $\sigma: C \rightarrow DT$ 
+    \item $P = \Gamma(\sigma) = \Gamma(\mu)$ 
+\end{itemize}
+   
 
-with fiber $P$ that encodes visual parameters such as position or color. The section $\mu: V \rightarrow K$
 
-\begin{equation}
-    \begin{tikzcd}
-        P \arrow[r, hook] & V \arrow[d, "\pi"']              \\
-                          & K \arrow[u, "\mu"', bend right]
-        \end{tikzcd}
-\end{equation}
-
-returns a record in $P$. The fiber $P$ is the space of visual parameters %% defined like P, dependent on Q, P is targeting our library
-
-\subsubsection{Data Screen Mapping}
-The data bases pace $K$ can be considered a subspace of the screen base space $S$ such that $\xi: S \rightarrow K$ is a deformation retraction
-\begin{equation}
-    \begin{tikzcd}
-        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
-        K                   & S \arrow[l, "\xi"']
-        \end{tikzcd}
-\end{equation}
-
-that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$.
 
 \subsubsection{Visual Channels}
 
