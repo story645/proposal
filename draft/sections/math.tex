@@ -5,18 +5,16 @@
 In this section we introduce a mathematical description of the visualization pipeline where artist $A$ functions transform data of type $\Gamma(E)$ to an intermediate representation in prerendered display space of type $\Gamma(H)$:
 
 \begin{equation}
-    A: O(E) \rightarrow O(H)
     \label{eq:artist}
+    A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
 \end{equation}
 
 \begin{itemize}
 \item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
-\item $K$ is a triangulizable space encoding the connectivity of the observations in the data. 
+\item $K$ is a triangulizable space encoding the connectivity of the points in $E$
 \item $H$ is a fiber bundle over $S$ representing visual space
-\item $S$ is a simplacial complex of triangles encoding the connectivity of the visualization of the data in $E$
-\item $\tau: K\rightarrow E$ is the data being visualized
-\item $\rho: S \rightarrow H$ is the render map
+\item $S$ is a simplacial complex encoding the visualization
 \end{itemize}
 
 When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all fibers $F_{k}$ over $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}.
@@ -25,17 +23,18 @@ When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all 
 We provide a brief introduction to fiber bundles because we model data, visual transformations, and a prerendered visual graphic as fiber bundles. A fiber bundle is a structure $(E, B, \pi, F)$  consisting of topological total space $E$, base space $K$, fiber space $F$ and the map from total space to base space:
 
 \begin{equation}
+    \label{eq:fiber_bundle}
     \begin{tikzcd}
         F \arrow[r, hook] & E \arrow[r, "\pi"] & B
     \end{tikzcd}
 \end{equation}
 
-where there is a bijection from $F$ to every fiber $F_b$ over point $b \in B$ in $E$ and the function $\pi: E \rightarrow B$ is the map into the $B$ quotient space of $E$.
+where there is a bijection from $F$ to every fiber $F_b$ over point $b \in B$ in $E$ and the function $\pi: E \rightarrow B$ is the map into the $B$ quotient space of $E$. By defintion of a fiber bundle, $\pi$ is always a mapping from total space to base space, independent of the points $p \in E$, and therefore we call this mapping $\pi$ for all the fiber bundles in the model. 
 
 \subsubsection{Base space}
 \begin{figure}[ht]
+    \label{fig:base_space}
     \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
-    \label{fig:kquote}
 \end{figure}
 
 $B$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in $E$ defined via the map $\pi: E \rightarrow B$ that sends each $p \in E$ to its equivalence class in $[p] \in B$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
@@ -53,16 +52,17 @@ where $[p] \in U$ is the point $b \in B$ with an open set surrounding it that ha
 As shown in equation!\ref{eg:base_space}, every point $b \in B$ has a local open set neighborhood $U$ \cite{FiberBundle2020, rowlandFiberBundle}
 
 \begin{equation}
+    \label{eq:fiber_local_trivial}
     \begin{tikzcd}
         \pi^{-1}(U) \arrow[r, "\varphi"] \arrow[d, "\pi"'] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
         U                                                  &                                         
     \end{tikzcd}
-    \label{eq:local_trivial}
 \end{equation}
 such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$ $F_b = \pi^{-1}({b \in B}) $ is homomorphic to the fiber $F$.
 
 The section $f$ is the mapping from base space to total space $f: B\rightarrow E$ 
 \begin{equation}
+    \label{eq:section}
     \begin{tikzcd}
         F \arrow[r, hook] & E \arrow[d, "\pi"']           \\
         & B \arrow[u, "f"', bend right]
@@ -71,11 +71,13 @@ The section $f$ is the mapping from base space to total space $f: B\rightarrow E
 
 such that it is the right inverse of $\pi$
 \begin{equation}
+    \label{eq:section_domain}
     \pi(f(b)) = b \text{ for all } b \in B 
 \end{equation}
 
 In a locally trivial fiber bundle, $E = B \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
+    \label{eq:section_return}
 f(b) = (b, g(b))
 \end{equation}
 
@@ -84,36 +86,48 @@ where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space 
 \subsubsection{Sheaf and Stalk}
 As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset B$ around every $b$. The inclusion map $\iota: U \rightarrow B$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
+    \label{eq:sheaf}
     \begin{tikzcd}
         \iota^*E \arrow[d, "\pi"']           & E \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
         U \arrow[u, "\iota^*f"', bend right] & B \arrow[u, "f"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
 
-The localized section of fibers $\iota^*f: U \rightarrow \iota^*E$ is the sheaf $O(E)$ with germ of $\xi^*f$. The neighborhood of points the sheaf lies over is the stalk $\mathscr{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}
+The localized section of fibers $\iota^*f: U \rightarrow \iota^*E$ is the sheaf $\mathcal{O}(E)$ with germ of $\xi^*f$. The neighborhood of points the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}
 
 \begin{equation}
-    \iota^{-1}\mathscr{F}(\{b\}) = \varinjlim_{b\subseteq U}\mathscr{F}(U) =  \varinjlim_{b \in U} = \mathscr{F}_b 
+    \label{eq:stalk}
+    \iota^{-1}\mathcal{F}(\{b\}) = \varinjlim_{b\subseteq U}\mathcal{F}(U) =  \varinjlim_{b \in U} = \mathcal{F}_b 
 \end{equation}
 
 which through $\iota$ gets the data in $E$ at and near to $b$. Restricting the artist to the sheaf means the artist knows the data in $F$ and also has access to derivatives of the data. This property is useful for some visual transformations. 
 %% gives all direvatives but we need the jet which is Add stuff about jets
 
 \subsection{Data Model}
+As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle:
+\begin{equation}
+    \label{eq:data_fiber_bundle}
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[r, "\pi"] & B
+    \end{tikzcd}
+\end{equation}
 
-We use a fiber bundle model to represent the data, as proposed by Butler.  
-\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}.
+with a total space $E$, fiber space $F$, and base space $K$ which can be thought of as a set of keys $k$. The section $\tau:K \rightarrow E$ is an instance of the data that lies in $E$ and is discussed in section~\ref{sec:data_fiber}. 
+
+\subsubsection{Example}
+
 \begin{figure}[ht]
+    \label{fig:data_fiber_bundle}
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
-    \label{fig:fiberbundle}
 \end{figure}
 
 As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the range of possible temperature values embedded in the total space $E$. The base space $K$ of the fiber bundle is a line because the data points $r$ in $E$ are on a space that is  continous in one dimension. 
 
 \subsubsection{Base Space}
+The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
 
-
+\subsubsection{Example}
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
     %% add box around neighboring P and Map
@@ -126,7 +140,7 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
 
 in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
-\subsubsection{Fiber Space $F$}
+\subsubsection{Fiber and Sections}
 \label{sec:data_fiber}
 We use Spivak's formalization of data base schemas as the basis of our fiber space $F$ \cite{spivakSIMPLICIALDATABASES}. He defines the type specification 
 \begin{equation}
@@ -149,7 +163,7 @@ The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatype
 
 For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
  
-
+\subsubsection{Example}
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
     \label{fig:}
@@ -187,8 +201,9 @@ Every point $k \in K$ maps to a space $S_{k} \in S$, which is the topology of th
         \end{tikzcd}
 \end{equation}
 
+\subsubsection{Section $\rho$}
 
-Where the section $\rho: S \rightarrow H$
+A section $\rho: S \rightarrow H$
 \begin{equation}
     \begin{tikzcd}
         D \arrow[r, hook] & H \arrow[d, "\pi"']              \\
@@ -196,10 +211,7 @@ Where the section $\rho: S \rightarrow H$
         \end{tikzcd}
 \end{equation}
 
- is mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to pixel space.
- 
- \subsubsection{Section $\rho$}
- For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
+ is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D. For a physical screen display, the predisplay space is a trivial fiber bundle $H=\mathbb{R}^{7}\times S$ such that $\rho$ is
 \begin{equation}
     \rho(s)  = \{x, y, z, r, g, b, a\}
     \label{eq:rho}
@@ -210,7 +222,6 @@ To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where
 s = \rho^{-1}_{\tiny{XY}}(xy)
 \end{equation}
 such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields:
-%%change the integral to a double integral
 \begin{align}
     r &= \iint\limits_s \rho_{\tiny{R}}(s)ds^{2}\\
     g &= \iint\limits_s \rho_{\tiny{G}}(s)ds^{2}\\
@@ -230,11 +241,11 @@ As illustrated in figure~\ref{fig:render}, words.
 
 \subsection{Artist}
 
-The artist is a mapping from the sheaf $O(E)$ representing the data to a pre-render space $O(H)$. 
+In this section we will define the artist as a mapping from the sheaf $O(E)$ representing the data to a pre-render space $O(H)$. 
 \begin{equation}
-    A: O(E) \rightarrow O(H)
+    A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
 \end{equation}
-The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$. The visual fiber bundle $V$ shares basespace $K$ with $E$:
+The artist decomposes to data $E$ to visual mappings $V$ and $V$ mappings composited to a visual in prerender space $H$. In order to define $A$, we first define the visual fiber bundle $V$ that shares basespace $K$ with $E$:
 
 \begin{equation}
     \begin{tikzcd}
@@ -242,18 +253,31 @@ The artist is composed of two stages, data $E$ to visual mappings $V$ and $V$ ma
     \end{tikzcd}
 \end{equation}
 
-with fiber $P$ that encodes visual paramters such as position or color. As in section~\ref{sec:data_fiber}, the fields in $P$ are strongly typed. Inside the artist is also the equivalance class map $\xi: S \rightarrow K$ that goes from a region $s$ to its associated point $k$
+with fiber $P$ that encodes visual parameters such as position or color. The section $\mu: V \rightarrow K$
+
+\begin{equation}
+    \begin{tikzcd}
+        P \arrow[r, hook] & V \arrow[d, "\pi"']              \\
+                          & K \arrow[u, "\mu"', bend right]
+        \end{tikzcd}
+\end{equation}
+
+returns a record in $P$. The fiber $P$ is the space of visual parameters %% defined like P, dependent on Q, P is targeting our library
+
+\subsubsection{Data Screen Mapping}
+The data bases pace $K$ can be considered a subspace of the screen base space $S$ such that $\xi: S \rightarrow K$ is a deformation retraction
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
         K                   & S \arrow[l, "\xi"']
         \end{tikzcd}
 \end{equation}
-such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$.
 
-\subsubsection{Visual Mapping}
+that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$.
 
-The function $\nu: E \rightarrow V$ maps from data space to visual space  \cite{carpendaleVisualRepresentationSemiology,bertinIIPropertiesGraphic2011,munznerWhatDataAbstraction2014} space
+\subsubsection{Visual Channels}
+
+The function $\nu: E \rightarrow V$ is a mapping from the data bundle to the visual bundle 
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] \arrow[r, "\nu"] & V \arrow[ld, "\pi"'] \\
@@ -261,21 +285,26 @@ The function $\nu: E \rightarrow V$ maps from data space to visual space  \cite{
         \end{tikzcd}
 \end{equation}
 
-such that the visual section $\mu: K \rightarrow V$  is equivalent to the visual transformation of the data $\mu(k) = \nu\circ\tau(k)$
-\begin{equation}
-    \begin{tikzcd}
-        E \arrow[r, "\nu"]                      & V \\
-        K \arrow[ru, "\mu"'] \arrow[u, "\tau"'] &  
-        \end{tikzcd}
-\end{equation}
- 
-The constraint on $\nu: \tau\rightarrow \mu$ is that $\tau$ and $\mu$ must be equivariant. 
+such that a visual section $\mu: K \rightarrow V$  is equivalent to the visual transformation of the data $\mu(k) = \nu\circ\tau(k)$
 
-%%set up proofs here
+%%throw out this diagram
+%%something about pushforward ...
+%% \mu is pushfowwards of \tau = \mu = \nu(lowercase * ,\tau), \nu: *\tau \mapsto \mu
+%% \nu acts from subspace E to subspace V
+The constraint on $\nu: \tau\rightarrow \mu$ 
+
+%%set up proofs here, are x&y transfereble here? (x,y coupled together, Es bundled by what nu is promosing, maps over to V in indepdent ways 
+%E ^ V decomposed in one to one correspondances, \nu_0 is map from E_0 to V_0...\nu_n from E_n, V_n...., \nu = {\nu_0....\nu_n}
+
+\paragraph{Allowable Maps}
+For example, stevens: preserve structure ....
+Some examples of allowable maps are described in Bertin/Munzner:
+nus are constrained to preserve..., expect functorial nus - transform on input side to transform on output side (E1-E1, V1-V1, nu) <- condition
+that's how we're constraining nu. 
+functorial in $\nu$ component
 
 
-
-\subsubsection{Visual Composition}
+\subsubsection{Constructing Marks}
 The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
 \begin{equation}
     \begin{tikzcd}
@@ -293,6 +322,11 @@ the function $Q:\xi^*V\rightarrow H$ composites points in $V$ into $\mathbb{R^7}
 \end{equation}
 
 such that the composition $Q$ of $\mu$ is equivalent to the render $\rho(s) = Q\circ\mu(s)$. 
+(In practice $\mu \approxeq \xi^*\mu$)
+$Q$ is the constructor for the mark, 
+one $Q$ per artist, A = sum of artists
+$Q$ as there's default line, point, etc that's stretched and tweaked and whatever else by the $\mu$
+visual variable + structure preserving, Q must have map that commutes such that a change in $\mu$ carries over somehow to $\rho$, functorial in its arguments - commutative diagram - into rho
 
 
 \subsubsection{Pipeline}
