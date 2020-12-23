@@ -242,18 +242,21 @@ The artist decomposes to data $E$ to visual mappings $V$ and $V$ mappings pulled
 \end{tikzcd}
 \end{equation}
 
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable $\mu$ \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The space of visual variables types in $P$ is restricted to the types $Q$ takes as input. 
-\subsubsection{Retinal Variables}
-Visual Variables need to ultimately target some aspect of D 
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable $\mu$ \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$.  $P$ is the cartesian product of types $U \times_{DT} C$ where $C$ is the set of parameter $\mu_param$ arguments into $Q$ and $DT$ is defined in terms of valid intermediate types. 
 
-\subsubsection{Example} 
-Given a $Q$ with signature $Q(\mu_{xpos}, \mu_{ypos}, \mu_{width}, \mu_{color}, \mu_{style})$ then the $P=\Gamma(\mu)$ for this artist would be:
-\begin{itemize}
-    \item $C = \{\text{xpos, ypos, width, color, style}\}$ 
-    \item $DT =\{\mathbb{R}, \mathbb{R}, \mathbb{R}, \mathbb{R}^3, f:s\mapsto\mathbb{R}^3 \}$ 
-    \item $P = U \times_{DT} C$
-\end{itemize}
-   
+\subsubsection {Example P}
+For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}:
+\begin{table}[]
+    \begin{tabular}{llll}
+    retinal variable         & $T \in DT$  & $\pi^{-1}(T) \subset U$                                 & example $C$                                                     \\
+    position                 & position    & $\mathbb{R}$                                              & x, y, z                                                         \\
+    size                     & size        & $\mathbb{R}$                                              & linewidth, markersize                                            \\
+    shape                    & markerstyle & $(\textrm{Strings})$                                      & markerstyle                                                     \\
+    color                    & color       & $(\mathbb{R}^3 \sqcup \mathbb{R}\sqcup \textrm{Strings})$ & color, colors, linecolor, facecolor, markerfacecolor, edgecolor \\
+    \multirow{2}{*}{texture} & hatch       & $(\textrm{Strings})$                                      & hatch                                                           \\
+                             & linestyle   & $(\textrm{Strings}\sqcup(\mathbb{ZS}, (\mathbb{Z}^*)))$                           & linestyle                                                      
+    \end{tabular}
+\end{table}
 
 \subsubsection{Visual Channels}
 The function $\nu: E \rightarrow V$ is a mapping from the data bundle to the visual bundle 
