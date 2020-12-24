@@ -255,21 +255,24 @@ where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \
 \subsubsection {Example: Matplotlib Visual Fiber}
 For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
 \begin{table}[ht]
+    \label{tab:mpl_visual_variable_fiber}
+\begin{threeparttable}
     \renewcommand{\arraystretch}{2}
-    \begin{tabulary}{\textwidth}{|l|C|L|}\hline
-     $\nu_{i}$                      & $\mu_{i}$                                                            & $dom(\nu_{i})$  \\ \hline                                              
+    \begin{tabulary}{\textwidth}{|l|L|L|}\hline
+     $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{dom(\nu_{i})}$  \\ \hline                                              
     position                    & x, y, z                                                          & $\mathbb{R}$   \\ \hline
     size                        & linewidth, markersize                                            & $\mathbb{R}$   \\ \hline
-    shape                       & markerstyle                                                      & $((\mathbb{R}, \mathbb{R}), x \in \{0,1,2,3,4,79\})^{n}^{\dag}$ \\ \hline
+    shape                       & markerstyle                                                      & $((\mathbb{R}, \mathbb{R}), x \in \{0,1,2,3,4,79\})^{n}$\tnote{\dag} \\ \hline
     color                       & color, colors, linecolor, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^4$ \\ \hline
-    \multirow{2}{*}{texture}    & hatch                                                            & $/^*\backslash^*-^*+^*x^*o^*O^*.^**^* \in \Sigma^{+}$ \newline $\Sigma=\{/, \backslash, |, -, +, x, o, O, ., *\}^{\ddag}$\\\cline{2-3}
-                                & linestyle                                                        & $(\mathbb{Z}, (\mathbb{Z}^n))^{\dag}$ \\ \hline              
+    \multirow{2}{*}{texture}    & hatch                                                            & $/^*\backslash^*-^*+^*x^*o^*O^*.^**^* \in \Sigma^{+}$ \newline $\Sigma=\{/, \backslash, |, -, +, x, o, O, ., *\}$ \tnote{\ddag}\\\cline{2-3}
+                                & linestyle                                                        & $(\mathbb{Z}, (\mathbb{Z}^n))$\tnote{\dag} \\ \hline              
     \end{tabulary}
-    \caption{\\
-        \footnotesize{\dag $n>0$}\\
-        \footnotesize{\ddag$\Sigma^+=\cup_{n\in\mathbb{Z}^+}\Sigma^n$}
-   
-    }
+    \begin{tablenotes}\footnotesize
+        \item[\dag] $n>0$
+        \item[\ddag]$\Sigma^+=\cup_{n\in\mathbb{Z}^+}\Sigma^n$
+    \end{tablenotes}
+
+\end{threeparttable}
 \end{table}
 
 \subsubsection{Visual Channels}
