@@ -3,7 +3,7 @@
 * group $\subset$ monoid $\subset$ semigroups $\subset$ magma
 * weak groups -
 * general definition of group
-    * set + binary operation *
+    * set + one binary operation *
     * closure:
         * $\forall a,b \in A,  (a*b) \in A$
     * associativity

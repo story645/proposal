@@ -523,3 +523,72 @@ $\sigma$ evaluated on $k \in K$
 \begin{equation}
     f: \T \mapsto R^{7}
 \end{equation}
+
+
+%% the \mu [oeve gpes here maybe]
+Each $\nu$ function maps a field $\tau_c$ to a paramterized visual field $\mu$, for example the color or shape visual channels \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels}. The set of $\nu$ is a functor from data to visual space such that any $\nu$ is an equivariant map if 
+
+\begin{equation}
+    \begin{tikzcd}
+        E_1 \arrow[r, "F" description] \arrow[d, "" description] & V_1 \arrow[d, "f" description] \\
+        E_2 \arrow[r, "F" description]                            & V_2                           
+    \end{tikzcd}
+\end{equation}
+
+$E$ or $J(E)$
+%nu is functor
+% examples of nu \tau\mu pairs - ordinal
+%maybe param is the wrong thing 
+Define a channel in terms of nus
+This is what we mean by equivariance: 
+step thrpoughh measurment scale groups
+doesn't matter where computation lives
+
+Here is the thing you need to preserve for {X} when writing a transform:
+
+
+compose $\nu_{param}$ visual characteristic mappers
+\begin{equation}
+    \nu(\tau) = \mu
+\end{equation}
+where $\tau_{param}$ is a field in $\tau$ bound to the paremeter and $\mu_param$ is an intermediate visual representation such that $\nu_shape(\tau_shape)$ returns a $\mu_shape$ function that returns a shape for each $k$.
+
+%For example, given a categorical field $c$ carry through temperature, maybe picture? 
+
+$\nu$ is Hom set? 
+1) must have identity
+2) is composable
+3) associativity 
+
+homomorphism in land of categories:
+objects in C, objects in D
+C arrow D
+ A-B for example stephens group scale
+
+every $\nu$ is a functor that
+
+put all the functorial things together is still functorial 
+%argument into  is $\[\nu_{0}(\tau_{0}), \ldots \nu_{n}(\tau_{n})\]$
+
+
+
+
+
+
+
+
+% complex columns are combined to \nu 
+
+
+%% \nu is structure preserving if  E->E  & H->H under nu. \phi can be one of the scales in Stevens
+
+% concrete example of \nu as one of our encodings, if artist is faithfully preserving 
+% if was fiber, trans on fiber bundle. we require that nu goes to visual side that can support same translation  - work through some examples : if an artist wanted to preserve, this is what it would have to do - for example relations, interval
+
+
+
+
+
+%%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
+
+ Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 

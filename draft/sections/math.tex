@@ -256,36 +256,39 @@ where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \
 For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
 \begin{table}[ht]
     \label{tab:mpl_visual_variable_fiber}
-\begin{threeparttable}
     \renewcommand{\arraystretch}{2}
-    \begin{tabulary}{\textwidth}{|l|L|L|}\hline
-     $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{dom(\nu_{i})}$  \\ \hline                                              
-    position                    & x, y, z                                                          & $\mathbb{R}$   \\ \hline
-    size                        & linewidth, markersize                                            & $\mathbb{R}$   \\ \hline
-    shape                       & markerstyle                                                      & $((\mathbb{R}, \mathbb{R}), x \in \{0,1,2,3,4,79\})^{n}$\tnote{\dag} \\ \hline
+    \begin{tabulary}{\textwidth}{|l|L|l|}\hline
+     $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{codomain(\nu_{i})}$  \\ \hline                                              
+    position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
+    size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
+    shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
     color                       & color, colors, linecolor, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^4$ \\ \hline
-    \multirow{2}{*}{texture}    & hatch                                                            & $/^*\backslash^*-^*+^*x^*o^*O^*.^**^* \in \Sigma^{+}$ \newline $\Sigma=\{/, \backslash, |, -, +, x, o, O, ., *\}$ \tnote{\ddag}\\\cline{2-3}
-                                & linestyle                                                        & $(\mathbb{Z}, (\mathbb{Z}^n))$\tnote{\dag} \\ \hline              
+    \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
+                                & linestyle                                                        & $(\mathbb{N}, \mathbb{N}^{n})$ \\ \hline              
     \end{tabulary}
-    \begin{tablenotes}\footnotesize
-        \item[\dag] $n>0$
-        \item[\ddag]$\Sigma^+=\cup_{n\in\mathbb{Z}^+}\Sigma^n$
-    \end{tablenotes}
-
-\end{threeparttable}
 \end{table}
 
 \subsubsection{Visual Channels}
+
+A monoid is a set with a closed operation 
+
+
+
 The function $\nu: E \rightarrow V$ is a mapping from the data bundle to the visual bundle 
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
-    E_1 \arrow[r] \arrow[r, "\nu"] \arrow[d, "f"'] & V_1 \arrow[d, "f"] \\
-    E_2 \arrow[r, "\nu"]                           & V_2               
+    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "f"'] & V_i \arrow[d, "f"] \\
+    E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
 
 such that a visual section $\mu: K \rightarrow V$  is equivalent to the visual transformation of the data $\mu(k) = \nu\circ\tau(k)$
+
+
+
+The Stevens measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} are examples of some of the group actions th
+
 
 +2 on data side means +2 on visual side 
 
@@ -321,21 +324,6 @@ $\lambda e: .2$
 {y,x} = {2,1}
 {y,x} = {1,2}
 
-%%throw out this diagram
-%%something about pushforward ...
-%% \mu is pushfowwards of \tau = \mu = \nu(lowercase * ,\tau), \nu: *\tau \mapsto \mu
-%% \nu acts from subspace E to subspace V
-The constraint on $\nu: \tau\rightarrow \mu$ 
-
-%%set up proofs here, are x&y transfereble here? (x,y coupled together, Es bundled by what nu is promosing, maps over to V in indepdent ways 
-%E ^ V decomposed in one to one correspondances, \nu_0 is map from E_0 to V_0...\nu_n from E_n, V_n...., \nu = {\nu_0....\nu_n}
-
-\paragraph{Allowable Maps}
-For example, stevens: preserve structure ....
-Some examples of allowable maps are described in Bertin/Munzner:
-nus are constrained to preserve..., expect functorial nus - transform on input side to transform on output side (E1-E1, V1-V1, nu) <- condition
-that's how we're constraining nu. 
-functorial in $\nu$ component
 
 
 \subsubsection{Constructing Marks}
