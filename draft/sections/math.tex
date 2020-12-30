@@ -269,12 +269,7 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
 \end{table}
 
 \subsubsection{Visual Channels}
-
-A monoid is a set with a closed operation 
-
-
-
-The function $\nu: E \rightarrow V$ is a mapping from the data bundle to the visual bundle 
+$\nu: \tau \mapsto \mu$ is an equivariant map such that there is a homomorphism from monoid actions on $E_{i}$ to manoid actions on $V_{i}$  
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
@@ -282,36 +277,24 @@ The function $\nu: E \rightarrow V$ is a mapping from the data bundle to the vis
     E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
+where the diagram commutes such that  $\nu g(\tau_{i}) = g(\nu(tau_{i})$. Manoid actions are:
+1) set of functions including identity, composition operator, closed, associative
 
-such that a visual section $\mu: K \rightarrow V$  is equivalent to the visual transformation of the data $\mu(k) = \nu\circ\tau(k)$
+To construct a valid $\nu$:
+\begin{enumerate}
+    \item identify monoid actions on $E_i$
+    \item choose $V_i$ that can support same monoid actions
+    \item implement $\nu$ such that composition holds
+\end{enumerate}
 
+\paragraph{Example: Translation}
+When $tau_{i}$ of $E_1$ returns interval data, Steven's defines the group actions on the data as the general linear group \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}; therefore to construct a valid $\nu$, we choose a target variable in $P$ that is
 
+$\nu_i(\tau_i) = \tau + 2$
 
-The Stevens measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} are examples of some of the group actions th
-
-
-+2 on data side means +2 on visual side 
-
-
-.2 = E1 - lambda e -> .2 V1 = .2
-+.2                              +.2
-.4 = E2 - lambda e -> .2 V2 = .2
-
-.2 = E1  - lambda e-> .2 V1 = .2
-
-                        V2 = .2
-
-1 = E1 - lambda e->e/5 = .25
-
-+ 1                      +.25 
-
-2 = E2 - lambda e->e/5 = .5
-
-
-preserve unique mapping? does $\nu$ need to be invertable? 
-
-shifts in either space need to be mirrored in the other space, this is not valid  here's why:
 $\lambda e: .2$ 
+\paragraph{Example: Invalid $\nu$}
+shifts in either space need to be mirrored in the other space, this is not valid  here's why:
 \begin{equation}
     \label{eq:nu_equation_bad}
     \begin{tikzcd}
@@ -320,9 +303,8 @@ $\lambda e: .2$
     \end{tikzcd}
 \end{equation}
 
-{x,y} = {1,2}
-{y,x} = {2,1}
-{y,x} = {1,2}
+\paragraph{Example: Partial Order}
+$\nu$ induces a monoid homomorphism, rather than a group homomorphism, to allow for partial ordering. For example if E1 is the set '{} 
 
 
 
