@@ -120,6 +120,26 @@ As illustrated by figure~\ref{fig:fiberbundle}, the vertical lines $F$ are the r
 \subsubsection{Base Space}
 The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
 
+In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
+
+\begin{figure}[ht]
+    \label{fig:simplex}
+    \includegraphics{figures/sections/math/simplex.png}
+    \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
+\end{figure}
+
+%% k is a triangularizable topological space 
+One way to represent the topological space K is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. Simplices are a way of encoding the connectivity of each observation ($\sigma(k)$) to another: %%formula for simplacial complexes/simplacial sets
+
+% replace this table w/ a diagram that shows this 
+\begin{description}
+    \item[0-simplex] discrete observations (inventory records)
+    \item[1-simplex] 1D continuos data (timeseries)
+    \item[2-simplex] 2D continuos data (map)
+    \item[3-simplex] 3D continuos data (video)
+\end{description}
+
+
 \subsubsection{Example}
 \begin{figure}[ht]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
@@ -277,7 +297,7 @@ $\nu: \tau \mapsto \mu$ is an equivariant map such that there is a homomorphism 
     E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
-where the diagram commutes such that  $\nu g(\tau_{i}) = g(\nu(tau_{i})$. Manoid actions are:
+where the diagram commutes such that  $\nu g(\tau_{i}) = g(\nu(tau_{i})$. Monoid actions are:
 1) set of functions including identity, composition operator, closed, associative
 
 To construct a valid $\nu$:

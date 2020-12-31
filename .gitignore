@@ -4,7 +4,6 @@ __pycache__/
 .vscode/
 *.egg-info/
 result_images/
-*.png
 Untitled*.ipynb
 
 # use glob syntax.
