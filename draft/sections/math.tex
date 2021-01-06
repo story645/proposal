@@ -6,7 +6,7 @@ In this section we introduce a mathematical description of the visualization pip
 
 \begin{equation}
     \label{eq:artist}
-    A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
+    A: \Gamma(E) \rightarrow \Gamma(H)
 \end{equation}
 
 \begin{itemize}
@@ -15,6 +15,7 @@ In this section we introduce a mathematical description of the visualization pip
 \item $K$ is a triangulizable space encoding the connectivity of the points in $E$
 \item $H$ is a fiber bundle over $S$ representing visual space
 \item $S$ is a simplacial complex encoding the visualization
+\item $\Gamma$ is the global space of sections
 \end{itemize}
 
 When $E$ is a trivial fiber bundle $E = F \times K$, it can be assumed that all fibers $F_{k}$ over $k \in K$ are equal. Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}.
@@ -32,7 +33,7 @@ We provide a brief description of fiber bundles because we model data, visual tr
 where there is a bijection from $F$ to every fiber $F_b$ over point $b \in B$ in $E$ and the function $\pi: E \rightarrow B$ is the map into the $B$ quotient space of $E$. By defintion of a fiber bundle, $\pi$ is always a mapping from total space to base space, independent of the points $p \in E$, and therefore we call this mapping $\pi$ for all the fiber bundles in the model. 
 
 \subsubsection{Base space}
-\begin{figure}[ht]
+\begin{figure}[H]
     \label{fig:base_space}
     \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
 \end{figure}
@@ -109,7 +110,7 @@ As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizatio
 
 \subsubsection{Example}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \label{fig:data_fiber_bundle}
     \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
     \caption{write up some words here}
@@ -122,7 +123,7 @@ The base space $K$ is a representation of the connectivity of the data, specific
 
 In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \label{fig:simplex}
     \includegraphics{figures/sections/math/simplex.png}
     \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
@@ -147,7 +148,7 @@ One way to represent the topological space K is as a set composed of simplices, 
     \label{fig:k_data}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 
@@ -177,11 +178,11 @@ The pullback $U_{\sigma} \coloneqq \sigma^{-1}(U)$ restricts $U$ to the datatype
 For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
  
 \subsubsection{Example}
-\begin{figure}[ht]
+\begin{figure}[H]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
     \label{fig:}
 \end{figure}
-\begin{figure}[ht]
+\begin{figure}[H]
     \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_3f.png}
 \end{figure}
 
@@ -238,7 +239,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. 
 
 \subsubsection{{Example}}
-\begin{figure}[h]
+\begin{figure}[H]
     \includegraphics[width=.4\linewidth]{figures/sections/math/render.png}
     \caption{}
     \label{fig:render}
@@ -266,7 +267,7 @@ The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  comp
 The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The visual transformer $\nu$ is a set of functions each targeting a different $\mu$
 \begin{equation}
     \label{eq:nu_expanded}
-    \nu:\{\nu_{0}, \ldots, \nu_{n}\} \rightarrow \{\mu_{0}, \ldots, \mu_{n}\}
+    \{\nu_{0}, \ldots, \nu_{n}\}: \{\tau_{0}, \ldots, \tau_{n}\} \mapsto \{\mu_{0}, \ldots, \mu_{n}\}
 \end{equation}
 
 where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \ldots, \mu_{n})(s) = \rho(s)$. 
@@ -282,22 +283,36 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
     position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
     size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
     shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
-    color                       & color, linecolor, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
+    color                       & color, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
     \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
-                                & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
+                                & linestyle                                                        & $\{f_{0}, \ldots, f_{n}\} \times (\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
 \end{table}
 
 \subsubsection{Visual Channels}
-$\nu: \tau \mapsto \mu$ is an equivariant map such that there is a homomorphism from monoid actions on $E_{i}$ to manoid actions on $V_{i}$  
+$\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber.  A validly constructed $\nu$ is one where the  diagram
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
-    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "f"'] & V_i \arrow[d, "f"] \\
+    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "m"'] & V_i \arrow[d, "m"] \\
     E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
-where the diagram commutes such that  $\nu_{i}\circ f(\tau_{i}) = f \circ \nu_{i}(\tau_{i})$. A monoid is a set $M$ with a closed associative binary operation ($\*$) and an identity element $e$. 
+ commutes such that $\nu_i(m(E_i)) = m(\nu_i(E_i))$ where $m$ is a monoid action. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively.
+
+\paragraph{Definition}
+A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$.  A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an operation $\cdot$ with the monoid properties:
+\begin{description}
+    \item[closure] $\cdot: M\times X \rightarrow X$
+    \item[associativity] $\text{for all} m,t \in M \text{and} x\in X, m\cdot(t\cdot x) = (m\ast t)\cdot x$ 
+    \item[identity] $\text{for all} x\in X, e\in M,  e\cdot x = x$ 
+\end{description}
+
+
+
+
+
+
 
 
 \paragraph{Example: Translation}
@@ -321,39 +336,41 @@ $\nu$ induces a monoid homomorphism to allow for partial ordering. For example i
 
 
 
-\subsubsection{Constructing Marks}
-The visual fiber bundle $V$ gets pulled back over $S$ via $\xi$ such that 
+\subsubsection{Assembling Marks}
+
+\begin{figure}[H]
+    \includegraphics[width=0.4\linewidth]{figures/sections/math/path_of_q}
+    \label{fig:q}
+    \caption{change $\rho$ to input J}
+\end{figure}
+
+The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. <why gamma? 
+
+Lets call $\Gamma(V) = X$ and $Q(\Gamma(V))$
+
+
+
+For each region $s$ in the display space $H$, the mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology} it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the path connected component $J \subset K$. 
 \begin{equation}
     \begin{tikzcd}
-        \xi^*V \arrow[r, "Q"] \arrow[rd, "\xi^*\pi"'] & H \arrow[d, "\pi"] \\
-                                                      & S                 
+        H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K| \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
     \end{tikzcd}
+    \label{eq:mark}
 \end{equation}
-the function $Q:\xi^*V\rightarrow H$ composites points in $V$ into $\mathbb{R^7}$ tuples. The section $\mu$ is pulled over $s$ 
+where $\gamma$ is a path where input is a point on the interval [0,1] and 
 
-\begin{equation}
-    \begin{tikzcd}
-        \xi^*V \arrow[r, "Q"] & H                                           \\
-                              & S \arrow[lu, "\xi^*\mu"] \arrow[u, "\rho"']
-    \end{tikzcd}
-\end{equation}
 
-such that the composition $Q$ of $\mu$ is equivalent to the render $\rho(s) = Q\circ\mu(s)$. 
-(In practice $\mu \approxeq \xi^*\mu$)
-$Q$ is the constructor for the mark, 
-one $Q$ per artist, A = sum of artists
-$Q$ as there's default line, point, etc that's stretched and tweaked and whatever else by the $\mu$
-visual variable + structure preserving, Q must have map that commutes such that a change in $\mu$ carries over somehow to $\rho$, functorial in its arguments - commutative diagram - into rho
 
-Bertin describes a location on the plane as the signifying characteristic of a point, measurable length as the signifying characteristic of a line, and measurable size as the signifying characteristic of an area and that in display (pixel) space are the point, line, and area marks \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}. For each region $s$ in the display space $H$, the mark it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the connected component $J \subset K$. 
-\begin{equation}
-\begin{tikzcd}
-    H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K| \exists \Gamma \text{ s.t. } \Gamma(0)=k \text{ and }\Gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
-\end{tikzcd}
-\label{eq:mark}
-\end{equation}
-To got back to the display space $H$  from the simplacial complex $J$ of the signifier implanted in the mark, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then  $\rho(\xi^{-1}(J))$ maps it into $R^{7}$. 
+To get back to the display space $H$ from $J$, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then $\rho(\xi^{-1}(J))$ maps it into $R^{7}$ such that $Q\circ\xi^*\mu(\xi^{-1}(J))$ generates a graphical mark.
 
+
+%%abs: R \rightarrow R^+, 
+%%f: R \rightarrow R, 
+%%abs:[real->real] -> [real->real+]
+%%fmap?, fmap(abs)->ufunc on all functions
+%%lifting: decorator that only looks at arguments
+
+Q goes from one to the other, could need more information than just the return values... map on global sections means I might need to know the whole section, map V to H says I only need to know points, restrict to the case where defined on the stalk..but will look at particular cases - sections to sections is most general case that is true, but can be defined V to H or or O(V) to O(H) depending on the visualization. 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 n $O(E)$ of the same type, they output the same type of prerender $O(H)$:
