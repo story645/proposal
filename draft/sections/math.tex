@@ -315,31 +315,40 @@ To preserve ordering of elements in $E_i$, $\nu$ must be a monotonic function su
 \end{equation}
 
 \paragraph{Example: Translation}
-According to Stevens, interval data jas general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation \cite{bertinIIPropertiesGraphic2011,krygierMakingMapsVisual2005,munznerMarksChannels}. 
+\textbf{fairly certain I lost the thread here}
+According to Stevens, interval data is a set with general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation \cite{bertinIIPropertiesGraphic2011,krygierMakingMapsVisual2005,munznerMarksChannels}. 
 
-For example, here $\nu$ is a direct map $nu(e) = v$ and the transform function is a multiplicative shift $t(x) = x + x$ applied twice 
+For example, here $\nu$ is a direct map $\nu(\tau_{i,k}) = \mu{i,k}$ and the transform function is a multiplicative shift $t(x) = x + x$ applied twice 
 
 \begin{align}
-    \nu(t(t(e))) &= t_v(t(\nu(e)))\\
-    \nu(t(e+e)) &= t(t_v(v))\\
-    \nu((e+e) + (e+e)) &= t(v+v)\\
-    \nu(4e) &= (v_v) + (v+v)\\
-    \nu(4e)&=4v
+    \nu(t(t(\tau_{i,k}))) &= t(t(\nu(\tau_{i,k})))\\
+    \nu(t(2\tau_{i,k})) &= t(t_v(\mu_{i,k}))\\
+    \nu(2\tau_{i,k} + 2\tau_{i,k}) &= t(2\mu_{i,k})\\
+    \nu(4\tau_{i,k}) &= 2\mu_{i,k} + 2\mu_{i,k} \\
+    \nu(4\tau_{i,k})&=4\mu_{i,k}\\
+    4\mu_{i,k}&=4\mu_{i,k}\\
 \end{align}
-
-Here $\nu$ is valid because scaling the data by a factor of 4 causes a scaling of the equivalent visualization by 4. 
+$\nu$ is valid because scaling the data by a factor of 4 causes a scaling of the equivalent visualization by 4, which since the constant factor can be pulled out means they are equivalent. 
 
 
 \paragraph{Example: Invalid $\nu$}
-shifts in either space need to be mirrored in the other space, this is not valid  here's why:
+Given a transform $t(x) = 2*x$, we construct a $\nu$ that always takes data to .5: 
 \begin{equation}
     \label{eq:nu_equation_bad}
     \begin{tikzcd}
-        E_1 \arrow[r] \arrow[r, "\lambda:e\mapsto.5"] \arrow[d, "e+2"'] & V_1 \arrow[d, "h+2"] \\
-        E_2 \arrow[r, "\lambda"]                                        & V_2                 
+        E_1 \arrow[r] \arrow[r, "\lambda:e\mapsto.5"] \arrow[d, "2e"'] & V_i \arrow[d, "2v"] \\
+        E_1 \arrow[r, "\lambda"]                                        & V_1                 
     \end{tikzcd}
 \end{equation}
 
+This $\nu$ is invalid because the graph does not commute for $t$:
+\begin{align}
+    \nu(t(e)) & \overset{?}{=} t(\nu(e))\\
+    .5 & \overset{?}{=} t(.5)\\
+    .5 & \neq 2*.5
+\end{align}
+
+To consutruct a valid $\nu$, the diagram must commute for all monoid actions on the sets $E_i, V_i$.
 
 
 \subsubsection{Assembling Marks}
@@ -349,33 +358,20 @@ shifts in either space need to be mirrored in the other space, this is not valid
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
 \end{figure}
 
-The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. 
+The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. While $\Gamma(V)$ holds for all cases, we can specialize to the bundle $V$ or the sheaf $\mathcal(V)$ depending on the specific visualization. 
 
-Lets call $\Gamma(V) = X$ and $Q(\Gamma(V))$
-
+\paragraph{Proposition}
+If $\forall g \in M$ and $\forall x_1, x_2 \in \Gamma(V)$ then  $Q(x_1) = Q(x_2) \\implies Q(g\circ x_1) = Q(g\circ x_2)$; therefore we can define a group action on $Q(\Gamma(V))=Y$ as $g \circ y = y'$ where $y' = Q(g\circ x)$ with $x \in f^{-1}(y)$ 
 
 
 For each region $s$ in the display space $H$, the mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology} it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the path connected component $J \subset K$. 
 \begin{equation}
     \begin{tikzcd}
-        H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K| \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
+        H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
     \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-where $\gamma$ is a path where input is a point on the interval [0,1] and 
-
-
-
-To get back to the display space $H$ from $J$, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then $\rho(\xi^{-1}(J))$ maps it into $R^{7}$ such that $Q\circ\xi^*\mu(\xi^{-1}(J))$ generates a graphical mark.
-
-
-%%abs: R \rightarrow R^+, 
-%%f: R \rightarrow R, 
-%%abs:[real->real] -> [real->real+]
-%%fmap?, fmap(abs)->ufunc on all functions
-%%lifting: decorator that only looks at arguments
-
-Q goes from one to the other, could need more information than just the return values... map on global sections means I might need to know the whole section, map V to H says I only need to know points, restrict to the case where defined on the stalk..but will look at particular cases - sections to sections is most general case that is true, but can be defined V to H or or O(V) to O(H) depending on the visualization. 
+where the path\cite{ConnectedSpace2020}  $\gamma$ from $k$ to $j$ is a continous function from the interval [0,1]. To get back to the display space $H$ from $J$, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then $\rho(\xi^{-1}(J))$ maps it into $R^{7}$ such that $Q\circ\xi^*\mu(\xi^{-1}(J))$ generates a graphical mark.
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 n $O(E)$ of the same type, they output the same type of prerender $O(H)$:
