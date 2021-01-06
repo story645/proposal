@@ -290,37 +290,46 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
 \end{table}
 
 \subsubsection{Visual Channels}
-$\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber.  A validly constructed $\nu$ is one where the  diagram
+$\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
-    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "m"'] & V_i \arrow[d, "m"] \\
+    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "m_e"'] & V_i \arrow[d, "m_v"] \\
     E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
- commutes such that $\nu_i(m(E_i)) = m(\nu_i(E_i))$ where $m$ is a monoid action. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively.
+commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$.
 
 \paragraph{Definition}
-A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$.  A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an operation $\cdot$ with the monoid properties:
+A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$.  A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an action $\bullet$ with the properties:
 \begin{description}
-    \item[closure] $\cdot: M\times X \rightarrow X$
-    \item[associativity] $\text{for all} m,t \in M \text{and} x\in X, m\cdot(t\cdot x) = (m\ast t)\cdot x$ 
-    \item[identity] $\text{for all} x\in X, e\in M,  e\cdot x = x$ 
-\end{description}
+    \item[closure] $\bullet: M\times X \rightarrow X$,
+    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in X, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
+    \item[identity] $\text{for all } x\in X, e\in M,  e\bullet x = x$ 
+\end{description} 
 
-
-
-
-
-
-
+\paragraph{Example: Partial Order}
+To preserve ordering of elements in $E_i$, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
+\begin{equation}
+\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)
+\end{equation}
 
 \paragraph{Example: Translation}
-When $\tau_{i}$ of $E_1$ returns interval data, Steven's defines the group actions on the data as the general linear group \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}; therefore to construct a valid $\nu$, we choose a target variable in $P$ that is
+According to Stevens, interval data jas general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation \cite{bertinIIPropertiesGraphic2011,krygierMakingMapsVisual2005,munznerMarksChannels}. 
 
-$\nu_i(\tau_i) = \tau + 2$
+For example, here $\nu$ is a direct map $nu(e) = v$ and the transform function is a multiplicative shift $t(x) = x + x$ applied twice 
 
-$\lambda e: .2$ 
+\begin{align}
+    \nu(t(t(e))) &= t_v(t(\nu(e)))\\
+    \nu(t(e+e)) &= t(t_v(v))\\
+    \nu((e+e) + (e+e)) &= t(v+v)\\
+    \nu(4e) &= (v_v) + (v+v)\\
+    \nu(4e)&=4v
+\end{align}
+
+Here $\nu$ is valid because scaling the data by a factor of 4 causes a scaling of the equivalent visualization by 4. 
+
+
 \paragraph{Example: Invalid $\nu$}
 shifts in either space need to be mirrored in the other space, this is not valid  here's why:
 \begin{equation}
@@ -331,20 +340,16 @@ shifts in either space need to be mirrored in the other space, this is not valid
     \end{tikzcd}
 \end{equation}
 
-\paragraph{Example: Partial Order}
-$\nu$ induces a monoid homomorphism to allow for partial ordering. For example if E1 is the set '{} 
-
 
 
 \subsubsection{Assembling Marks}
-
 \begin{figure}[H]
     \includegraphics[width=0.4\linewidth]{figures/sections/math/path_of_q}
     \label{fig:q}
-    \caption{change $\rho$ to input J}
+    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
 \end{figure}
 
-The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. <why gamma? 
+The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. 
 
 Lets call $\Gamma(V) = X$ and $Q(\Gamma(V))$
 
