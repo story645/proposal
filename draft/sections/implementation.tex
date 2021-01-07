@@ -1,15 +1,84 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
+\section{Matplottoy}
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/sections/math/path_of_q.png}
 \end{figure}
+%%% objects: Data, V, H
+%%% functions: \nu, q
 
-\
-\subsection{Data Markup}
+We build on top of the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the other graphical elements of the visualization and the rendering. For a primitive graph such as a bar, scatter, line, our path is: 
+\begin{minted}{python}
 
-\subsection{Artist}
+E = Section()
+V = {'parameter': ('field': transformer)}
 
-\subsubsection{Visual Characteristic Encoders $\nu$}
+fig, ax = plt.subplots()
+artist = primative_Q(E, V)
+ax.add_artist(artist)
+\end{minted}
 
-\subsubsection{}
+
+
+\subsection{Data: $\mathcal{E}$}
+We propose a semantic markup of the fiber and connectivity that we will later use to check the constraints of the $\nu$ and $Q$. 
+\begin{minted}{python}
+class FiberBundle:
+    def __init__(self, K, F):
+            """
+            K: {'tables':[]}
+            F: {'field name': (type, monoid action)}
+            """
+
+    def is_section(self, section):
+        """checks if a section is from a given fiber bundle:
+        are values in F, are keys in K"""
+\end{minted}
+We add a monoid field to the schema like structure of the fiber since the monoid actions are the constraints on the $\nu$ and $Q$. We implement $K$ using the triangulization scheme described in section~\ref{sec:triangulization}. This means we expect data to be provided as tables where the name encodes the connectivity:
+
+\begin{description}
+    \item[vertex] - disconnected points
+    \item[edge] - 1D continuity along the edge
+    \item[face] - 2D continuity along the face
+\end{description}
+Nested continuity is encoded in the fiber. For example, one way to encode a movie is a 1D timeseries of \mathrm{Frame} objects, where each \mathrm{Frame} is a $n\x m$ continuous array. 
+
+\subsubsection{Sections}
+As described in section~\ref{sec:section_data}, the data values are encode as the section of the fiber bundle. We implement this as as a wrapper class around a data container object of the form:
+\begin{minted}
+class Section:
+    FB = FiberBundle(K, F)
+
+    def __init__(self, *args):
+        pass
+    def view(self, simplex="vertex"):
+        """"converts data into atomic column order for get method
+        # maybe also pass in the columns?
+        """
+        return {fieldname: data}
+\end{minted}
+
+The view function is the closest analog to $\tau$, as it returns a a data container type object. We specify field based top level indexing so that we can pair the fields with transformer $\nu$ objects. 
+
+\subsection{Encoding: $\mathcal{V}$}
+We implement $\nu$ as encoder objects with an optional `__init__` method that can be used to specify the range of target visual variables. 
+
+\begin{minted}{python}
+class Encoder:
+    def __init__(self, args):
+        pass
+    def validate(self, monoid):
+        pass
+    def convert(self, value):
+        return converted_value
+\end{minted}
+
+The \mathrm{validate} method specifies the monoids for which this a valid $\nu$ and checks against the specification in the fiber. The \mathrm{convert} method converts a value from data space to an internalized normal form as described in table~\ref{tab:mpl_visual_variable_fiber}.  
+
+\subsection{Graphic: $\mathcal{H}$}
+
+\subsection{Case Study: Iris(Penguins)}
+
+
+
 \end{document}
