@@ -7,6 +7,8 @@ from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 
+from matplottoy.artists import utils
+
 class Point(mcollections.Collection):
     required = {'x', 'y'}
     optional = {'facecolors'} 
@@ -23,16 +25,10 @@ class Point(mcollections.Collection):
         # has a way to provide vertex data  
         assert 'vertex' in data.FB.K['tables']
         # check that you've given the required parameters
-        assert Point.required <= transforms.keys()
-        # this one might not be necessary 
-        # (checks that rest of keys are valid)
-        assert ((transforms.keys()-Point.required) 
-                            <= Point.optional) 
+        utils.check_constraints(Point, transforms)
+        utils.validate_transforms(data.FB.F, transforms)
+
         
-        # checking that transform can take that type
-        # group symmetry steo
-        assert all(tau.validate(data.FB.F[column]) 
-                    for (column, tau) in transforms.values())
         self.data = data
         self.transforms = transforms
 

@@ -5,6 +5,7 @@ import numpy as np
 
 from matplottoy.encoders import mtypes
  
+ 
 class FiberBundle:
     def __init__(self, K, F):
         """
@@ -14,14 +15,14 @@ class FiberBundle:
             attributes of the base space of the fiber bundle, 
             describes domain of base space + the type of simplexs
             on the base space
-            {'simplexes':{}, domain: type }
-            k is a tuple (which simplex)
-                         (which simplex, which line)
-                         (which simplex, face x, face y)
+            {'tables': []}
+
         F: dict
             the fiber, which is the space of all possible observations 
             type is used here to describe the space 
             {variable name: type}
+
+            # rework as ('field name': (type, monoid action))
         """
         self.K = K 
         self.F = F
@@ -39,9 +40,12 @@ class VertexSimplex: #maybe change name to something else
     some k's in K
     """
     FB = FiberBundle({'tables': ['vertex']},  
-                     {'v1': mtypes.Ordinal(range(1,6)), 
-                      'v2': mtypes.IntervalClosed([0,10]),
-                      'v3': mtypes.Nominal(['true', 'false'])})
+                     {'v1': {'type': int, 'monoid': 'ordinal', 
+                             'range': [1,2,3,4,5]},
+                      'v2': {'type': float,'monoid':'interval',
+                             'range': [0,1]},
+                      'v3': {'type': str, 'monoid':'nominal', 
+                             'range':['true', 'false']}})
 
     def __init__(self, sid = 45, size=1000, max_key=10**10):
         self.section_id = sid
@@ -51,15 +55,15 @@ class VertexSimplex: #maybe change name to something else
         rng = np.random.default_rng(sid)
         self.keys = rng.integers(0,max_key, size)
 
-    def sigma(self, k):
+    def tau(self, k):
         """Returns the (k, obs) at k"""
         # set of functions for choosing values from F at a given k
         # is usually the data structure
         rng = np.random.default_rng(k*self.section_id)
-        return (k, (rng.choice(self.FB.F['v1'].categories), 
-                    rng.uniform(self.FB.F['v2'].min, 
-                                self.FB.F['v2'].max),
-                    rng.choice(self.FB.F['v3'].categories)))
+        e1 = rng.choice(self.FB.F['v1']['range'])
+        e2 = rng.uniform(*self.FB.F['v2']['range'])
+        e3 = rng.choice(self.FB.F['v3']['range'])
+        return (k, (e1, e2, e3))
 
     def view(self, simplex="vertex"):
         """"converts data into atomic column order for get method
@@ -68,7 +72,7 @@ class VertexSimplex: #maybe change name to something else
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
-            for (name, value) in zip(self.FB.F.keys(), self.sigma(k)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(k)[1]):
                 table[name].append(value)
         return table
 

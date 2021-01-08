@@ -9,6 +9,7 @@ import matplotlib.path as mpath
 
 from matplottoy.artists import utils
 
+## should probably remove transforms and spell out *args, **kwargs?
 class Line(mcollections.LineCollection):
     required = {'x', 'y'}
     optional = {'facecolor'} 

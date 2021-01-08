@@ -16,10 +16,10 @@ def check_constraints(artist, transforms):
             <= artist.optional):
         raise ValueError(f"Valid optional encodings: {artist.optional}")
 
-def validate_transforms(data, transforms):
+def validate_transforms(fibers, transforms):
     for column, tau in transforms.values():
         for col in np.atleast_1d(column):
-            if not tau.validate(data.FB.F[col]):
+            if not tau.validate(fibers[col]['monoid']):
                 raise ValueError(f"Invalid transform {tau} for {col}")
 
 def convert_transforms(view, transforms, exclude=None):

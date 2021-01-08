@@ -14,7 +14,7 @@ E = Section()
 V = {'parameter': ('field': transformer)}
 
 fig, ax = plt.subplots()
-artist = primative_Q(E, V)
+artist = Q(E, V)
 ax.add_artist(artist)
 \end{minted}
 
@@ -33,6 +33,7 @@ class FiberBundle:
     def is_section(self, section):
         """checks if a section is from a given fiber bundle:
         are values in F, are keys in K"""
+        pass
 \end{minted}
 We add a monoid field to the schema like structure of the fiber since the monoid actions are the constraints on the $\nu$ and $Q$. We implement $K$ using the triangulization scheme described in section~\ref{sec:triangulization}. This means we expect data to be provided as tables where the name encodes the connectivity:
 
@@ -45,16 +46,14 @@ Nested continuity is encoded in the fiber. For example, one way to encode a movi
 
 \subsubsection{Sections}
 As described in section~\ref{sec:section_data}, the data values are encode as the section of the fiber bundle. We implement this as as a wrapper class around a data container object of the form:
-\begin{minted}
+\begin{minted}{python}
 class Section:
     FB = FiberBundle(K, F)
 
     def __init__(self, *args):
         pass
     def view(self, simplex="vertex"):
-        """"converts data into atomic column order for get method
-        # maybe also pass in the columns?
-        """
+        #convert data into atomic column order 
         return {fieldname: data}
 \end{minted}
 
@@ -68,14 +67,34 @@ class Encoder:
     def __init__(self, args):
         pass
     def validate(self, monoid):
+        #check if transform supports monoid action
         pass
     def convert(self, value):
-        return converted_value
+        # convert value to libraries internal normalized form
+        pass
 \end{minted}
 
 The \mathrm{validate} method specifies the monoids for which this a valid $\nu$ and checks against the specification in the fiber. The \mathrm{convert} method converts a value from data space to an internalized normal form as described in table~\ref{tab:mpl_visual_variable_fiber}.  
 
 \subsection{Graphic: $\mathcal{H}$}
+We inherent from the current Matplotlib artists for our $Q$, which is responsible for constructing a curried fully specified internal representation of the graphic.
+\begin{minted}{python}
+class Q(BaseClass):
+    required = {}
+    optional = {}
+    def __init__(self, data, *args, kwargs):
+        # check that required and optional visual parameters are passed in
+        # check that the transforms can be applied to the data 
+        pass
+    def draw(self, render, *args, **kwargs):
+        # get frozen atomic section of the data 
+        # apply  transforms data
+        # set internal attributes of the graphic q generates
+        #hands off to backends to draw on screen
+        super().draw(renderer, *args, **kwargs)
+\end{minted}
+While equation~\ref{eq:artist} specifies that the values of $\mu$ can be generated before they are input to $Q$, we curry the opertaions of obtaining the data and performing the transforms to the draw method because that allows us to more easily propogate updates to the data to the screen. 
+
 
 \subsection{Case Study: Iris(Penguins)}
 

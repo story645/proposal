@@ -10,7 +10,7 @@ class Identity:
         return np.array(value)
     @staticmethod
     def validate(mtype):
-        return mtype.mtype in ['nominal', 'ordinal', 'interval']
+        return mtype in ['nominal', 'ordinal', 'interval', 'ratio']
 
 class Log:
     def __init__(self, base=10):
