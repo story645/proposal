@@ -90,10 +90,11 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
     """
 
     FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : mtypes.IntervalClosed([-1,1]),
-                      'y':  mtypes.IntervalClosed([-1,1]),
-                      'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])
-                      })
+                     {'x' : {'type:':float, 'monoid':'interval', 'range':[-1,1]},
+                      'y':  {'type:':float, 'monoid':'interval', 'range':[-1,1]},
+                      'color': {'type':mtypes.Color(), 'monoid':'nominal', 
+                                'range': ['red', 'green', 'orange', 'blue']}
+                    })
 
     def __init__(self, num_verts=4, num_samples=1000):
         """which simplex am I on and distance""" 
@@ -123,7 +124,7 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
         return np.cos(angles), np.sin(angles)
 
         
-    def sigma(self, k, simplex='edge'):
+    def tau(self, k, simplex='edge'):
         """arbitrary k, even between vertices, will give back
         an observation, so all functions must target back to vertice 
         table
@@ -141,7 +142,7 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
         table = defaultdict(list)
         for k in self.keys:
             table['index'].append(k)
-            for (name, value) in zip(self.FB.F.keys(), self.sigma(k, simplex)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(k, simplex)[1]):
                 table[name].append(value)
         
         if simplex =='vertex':
@@ -163,26 +164,34 @@ def is_continuous(vertices):
 
 class ContinuousLine:
     FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : mtypes.IntervalClosed([ 0,4]),
-                      'y':  mtypes.IntervalClosed([-1,1]),
-                      'color': mtypes.Nominal(['red', 'green', 'orange', 'blue'])
-                      })
+                     {'x' : {'type:':float, 'monoid':'interval', 'range':[0,4]},
+                      'y': {'type:':float, 'monoid':'interval', 'range':[-1,1]},
+                      'color': {'type':str, 'monoid':'nominal', 
+                                'range': ['red', 'green', 'orange', 'blue']}
+                    })
+                    
     def __init__(self, edge_table, vertex_table, num_samples=1000):
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
         assert edge_table.keys() == self.FB.F.keys()
         assert is_continuous(vertex_table)
         for  (column, functions) in edge_table.items():
+            fiber_set = self.FB.F[column]['range']
             for f in functions:
                 #check using random point along [0,1]
-                self.FB.F[column].validate(f(np.random.random()))
+                val = f(np.random.random())
+                if self.FB.F[column]['monoid'] == 'nominal':
+                    assert val in fiber_set
+                else:
+                    assert all([min(fiber_set)<=v<=max(fiber_set) 
+                                    for v in np.atleast_1d(val)])
 
         self.ids = range(len(vertex_table))
         self.vertices = vertex_table        
         self.edges = edge_table
 
 
-    def sigma(self, k, simplex='edge'):
+    def tau(self, k, simplex='edge'):
         """this function knows that there are functions on the fibers defined in F"""
         x = self.edges['x'][k](self.distances)
         y = self.edges['y'][k](self.distances)
@@ -203,7 +212,7 @@ class ContinuousLine:
         #sort on start or end should yield ordering
         for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
             table['index'].append(i)
-            for (name, value) in zip(self.FB.F.keys(), self.sigma(i, simplex)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i, simplex)[1]):
                 table[name].append(value)
         
         if simplex =='vertex':
@@ -212,26 +221,29 @@ class ContinuousLine:
                 table[name] = list(itertools.chain.from_iterable(table[name]))
         return table
 
-
 class DiscontinousLine:
     FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : mtypes.IntervalClosed([ -1, 13]),
-                      'y':  mtypes.IntervalClosed([-1,3]),
+                     {'x' : {'type':float, 'monoid':'interval', 'range':[-1,13]},
+                      'y':  {'type':float, 'monoid':'interval', 'range':[-1,4]},
                       })
+
+    
     def __init__(self, edge_table, vertex_table, num_samples=2, connect=False):
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
         for  (column, functions) in edge_table.items():
+            fiber_set = self.FB.F[column]['range']
             for f in functions:
                 #check using random point along [0,1]
-                self.FB.F[column].validate(f(np.random.random()))
+                assert all([min(fiber_set)<=v<=max(fiber_set) 
+                            for v in np.atleast_1d(f(np.random.random()))])
 
         self.ids = range(len(vertex_table))
         self.vertices = vertex_table        
         self.edges = edge_table
         self.connect = connect
 
-    def sigma(self, k, simplex='edge'):
+    def tau(self, k, simplex='edge'):
         """this function knows that there are functions on the fibers defined in F"""
         x = self.edges['x'][k](self.distances)
         y = self.edges['y'][k](self.distances)
@@ -247,7 +259,7 @@ class DiscontinousLine:
         #sort on start or end should yield ordering
         for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
             table['index'].append(i)
-            for (name, value) in zip(self.FB.F.keys(), self.sigma(i, simplex)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i, simplex)[1]):
                 table[name].append(value)
 
         if simplex =='vertex':
