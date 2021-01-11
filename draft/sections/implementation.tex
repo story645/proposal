@@ -27,7 +27,8 @@ class FiberBundle:
     def __init__(self, K, F):
             """
             K: {'tables':[]}
-            F: {'field name': (type, monoid action)}
+            F: {'field name': {'type': data type, 'monoid': measurement type, 
+                                'range': restrictions on data type }}
             """
 
     def is_section(self, section):
@@ -35,7 +36,7 @@ class FiberBundle:
         are values in F, are keys in K"""
         pass
 \end{minted}
-We add a monoid field to the schema like structure of the fiber since the monoid actions are the constraints on the $\nu$ and $Q$. We implement $K$ using the triangulization scheme described in section~\ref{sec:triangulization}. This means we expect data to be provided as tables where the name encodes the connectivity:
+We add a monoid field to the schema like structure of the fiber since the monoid actions are the constraints on the $\nu$ and $Q$. These will usually be identified by a measurment scale such as 'nominal', 'ordinal', 'interval', and 'ratio'. The optional? range field can be used to specify restrictions on the type such as set of string categorical values or fixed interval of float values.  We implement $K$ using the triangleization scheme described in section~\ref{sec:triangulization}. This means we expect data to be provided as tables where the name encodes the connectivity:
 
 \begin{description}
     \item[vertex] - disconnected points

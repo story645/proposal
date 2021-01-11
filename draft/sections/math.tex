@@ -4,37 +4,27 @@
 %% convention is base space \times fiber bundle
 %% change B to K
 \section{Notation \& Definitions}
-%% intro placeholder of eq in intro
-%% use let or where before you introduce symbols
-%% more notations w/ general words 
-%% tone down - mathcal A, mathcal E, and mathcal H - space, will formalized in this section 
+
 %% give the why of the math after every mention of why
-In this section we introduce a mathematical description of the visualization pipeline where artist $A$ functions transform data of type $\Gamma(E)$ to an intermediate representation in prerendered display space of type $\Gamma(H)$:
+ 
+In this section we introduce a mathematical description of the visualization pipeline where artist $\mathcal{A}$ functions transform data  $\mathcal{E}$ to an intermediate representation in a prerendered display space $\mathcal{H}$. 
 
 \begin{equation}
     \label{eq:artist}
-    A: \Gamma(E) \rightarrow \Gamma(H)
+    \mathcal{A}: \mathcal{E} \rightarrow \mathcal{H}
 \end{equation}
 
+We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they are products of a topological total space that encodes points and a topological base space that can encode the connectivity of those points:
 \begin{itemize}
-\item $A$ is the function that converts an instance of data $\Gamma(E)$ to an instance of a visual representation $\Gamma(H)$ 
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
 \item $H$ is a fiber bundle over $S$ representing visual space
-\item $K$ and $S$ is a triangulizable topological space or CW complex encoding the connectivity of the points in $E$
+\item $K$ and $S$ are a triangulizable topological space or a CW complex encoding the connectivity of points in $E$ and $H$ respectively
 \end{itemize}
-All the fiber bundles mentioned in this work is assumed to be locally trivial \cite{rowlandFiberBundle,FiberBundle2020}. 
+
+The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}.
 
 \subsection{Data Fiber Bundles}
-\begin{figure}[H]
-    \label{fig:data_fiber_bundle}
-    \includegraphics[width=.2\linewidth]{figures/sections/math/fiberbundle.png}
-    \caption{write up some words here}
-\end{figure}
-
-As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle (E, K, $\pi$, F) with $\pi: E \rightarrow K$ where $K$ which can be thought of as a set of keys $k$. A section $\tau:K \rightarrow E$ is an instance of the data that lies in $E$ and is discussed in section~\ref{sec:data_fiber}. 
-
-
-We provide a brief description of fiber bundles because we model data, visual transformations, and a prerendered visual graphic as fiber bundles.  Fiber bundles are product spaces of toplological spaces, which are a set of points with a set of neighborhoods for each point\cite{FiberBundle2020, rowlandFiberBundle}. A fiber bundle is a structure $(E, B, \pi, F)$  consisting of topological total space $E$, base space $K$, fiber space $F$ and the map from total space to base space:
+As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 
 \begin{equation}
     \label{eq:fiber_bundle}
@@ -43,38 +33,74 @@ We provide a brief description of fiber bundles because we model data, visual tr
     \end{tikzcd}
 \end{equation}
 
-where there is a bijection from $F$ to every fiber $F_b$ over point $b \in B$ in $E$ and the function $\pi: E \rightarrow B$ is the map into the $B$ quotient space of $E$. By defintion of a fiber bundle, $\pi$ is always a mapping from total space to base space, independent of the points $p \in E$, and therefore we call this mapping $\pi$ for all the fiber bundles in the model. 
+with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
+
+\paragraph{example}
+
+\begin{figure}[H]
+    \label{fig:data_fiber_bundle}
+    \includegraphics[width=1\linewidth]{figures/sections/math/fiberbundle.png}
+    \caption{$F$ is an $n\times m$ space of points. The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
+\end{figure}
+
+The fibers $F$ in figure~\ref{fig:data_fiber_bundle} lie in some total space $E$ and are points that lie in a 2D space. For example, this space can be $\mathrm{temperature}\times \mathrm{pressure}$ or $\mathrm{time} \times \mathrm{precipitation}$. $K$ is a line on the interval [0,1] and indicates that the points lie on a 1D continous space, but we derive whether the data is a distribution or a timeseries or a function from the fields in $F$. The sections $\tau_1$ and $\tau_2$ are distinct maps from $k$ to the blue and purple points in $E$ respectively.
+
 
 \subsubsection{Base Space}
 \label{sec:base_data}
 \begin{figure}[H]
-    \label{fig:base_space}
-    \includegraphics[width=0.4\linewidth]{figures/sections/math/k_qspace.png}
+    %%\includegraphics[\textwidth]{}
+    \label{fig:base_space_types}
+    %%% pull up data structures like discrete, continous, etc w/ base space 
+    %%% little drawing dots, line, plane, cube
+    \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
+\end{figure}
+
+Data can be discrete observations, timeseries, maps, fields \cite{munznerWhatDataAbstraction2014} and $K$ is a set of points $k$ that can act as keys from a representative space, such as seen in figure~\ref{fig:base_space_types}, to the data values in $E$ \cite{munznerWhatDataAbstraction2014}.
+
+
+\begin{figure}[H]
+    \label{fig:base_space_div}
+    \includegraphics[width=.5\linewidth]{figures/sections/math/k_qspace.png}
     %%include second figure where fiber goes otherway
 \end{figure}
 
-%%% add in motivation - encodes the connectiveity of the points, choice of split is intrinsinc to how we want to view the data
+$K$ and $F$ are not intrinsic to $E$, rather they are choices in how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
-$B$ is the quotient space of $E$, meaning it is the set of equivalence classes of elements $p$ in $E$ defined via the map $\pi: E \rightarrow B$ that sends each $p \in E$ to its equivalence class in $[p] \in B$ \cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}.
 
-As shown in figure~\ref{fig:kquote}, the fibers $F$ divide $E$ into smaller spaces consisisting of $F$ and an open set neighborhood \cite{FiberBundle2020, rowlandFiberBundle}  around $F$.
-%%so why topology? 
+
 \paragraph{Example}
-%%% pull up data structures like discrete, continous, etc w/ base space 
-%%% little drawing dots, line, plane, cube
-
 \begin{figure}[ht]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_1k.png}
+    \includegraphics[width=\textwidth]{figures/sections/math/temp_1k.png}
     %% add box around neighboring P and Map
     \label{fig:k_data}
 \end{figure}
 
 \begin{figure}[H]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2k.png}
+    \includegraphics[width=\textwidth]{figures/sections/math/temp_2k.png}
 \end{figure}
 
 in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
+
+\subsubsection{Triangulization}
+\label{sec:triangulization}
+
+The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
+
+In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
+
+\begin{figure}[H]
+    \label{fig:simplex}
+    \includegraphics{figures/sections/math/simplex.png}
+    \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
+\end{figure}
+
+K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. 
+
+
+\paragraph{Example}
+chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
 
 
 \subsubsection{Fiber Space}
@@ -103,6 +129,15 @@ $F_b = \pi^{-1}({b \in B}) $ is homomorphic to the fiber $F$.
 
 %%the break out more about how fibers are cross products and what that means and how that's the structure - pull the monoids definitions here 
 
+\paragraph{Definition}
+A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an action $\bullet$ with the properties:
+\begin{description}
+    \item[closure] $\bullet: M\times X \rightarrow X$,
+    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in X, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
+    \item[identity] $\text{for all } x\in X, e\in M,  e\bullet x = x$ 
+\end{description} 
+
+
 \paragraph{Example}
 %% stevens scales are examples of this 
 %% one ecample of F1 is (names, strings, concat), (ordinal, Z,  ordering), () 
@@ -112,7 +147,7 @@ $F_b = \pi^{-1}({b \in B}) $ is homomorphic to the fiber $F$.
 \subsubsection{Section}
 \label{sec:section_data}
 %% add context
-The section $f$ is the mapping from base space to total space $f: B\rightarrow E$ 
+The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
@@ -127,7 +162,7 @@ such that $f$ is the right inverse of $\pi$
     \pi(f(b)) = b \text{ for all } b \in B 
 \end{equation}
 
-In a locally trivial fiber bundle, $E = B \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
+In a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
     \label{eq:section_return}
 f(b) = (b, g(b))
@@ -167,6 +202,8 @@ Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds 
 
 \subsubsection{Sheaf and Stalk}
 %% add motivation - zoom, subsection, streaming, also for realizing visualization, restricting to that piece - need to know near point w/o 
+
+
 As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset B$ around every $b$. The inclusion map $\iota: U \rightarrow B$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
     \label{eq:sheaf}
@@ -178,37 +215,18 @@ As described in equation~\ref{eq:local_trivial}, there is a local space $U \subs
 
 The localized section of fibers $\iota^*f: U \rightarrow \iota^*E$ is the sheaf $\mathcal{O}(E)$ with germ of $\xi^*f$ which is the localized section. The neighborhood of points the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic} which is a ...$\dots$
 . Restricting the artist to the sheaf means the artist knows the data in $F$ and also has access to derivatives of the data. This property is useful for some visual transformations. 
-%% gives all direvatives but we need the jet which is Add stuff about jets
+%% gives all direvatives but we need the jet which is add stuff about jets
 
-\subsubsection{Triangulization}
-\label{sec:triangulization}
-%%drop down to after the fiber section
-The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
-
-In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
-
-\begin{figure}[H]
-    \label{fig:simplex}
-    \includegraphics{figures/sections/math/simplex.png}
-    \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
-\end{figure}
-
-%% k is a triangularizable topological space 
-One way to represent the topological space K is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. Simplices are a way of encoding the connectivity of each observation ($\sigma(k)$) to another: %%formula for simplacial complexes/simplacial sets
-
-\paragraph{Example}
-chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
 
 
 \subsection{Prerender Space}
 \label{sec:display}
+We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. 
 
-
-We model the prerender space on which lives on ideal version of the visulaization as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target physical display and a base space of $S$. 
+We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
 
 \subsubsection{Base space}
-%%pull up to the very top that dim(k) < screen space, need to thicken therefore S
-$K$ can be considered a subspace of the screen base space $S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
+The underlying topology $S$ of a graphic often needs more dimensions than the data topology $K$ because of the specifications of the display space. For example, a line plot on a plane (such as a screen or a piece of paper) by necessity needs to also have a thickness so that it is visible, which maps back to a set of connected points in $H$. The topology of these connected points is therefore the region $s \subset S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
@@ -268,7 +286,7 @@ The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  comp
                                               & K                  & S \arrow[l, "\xi"']                                              &                    
         \end{tikzcd}
 \end{equation}
-%%map backwords via pullback can copy values over k over and over to corresponding S_k
+The pullback map $\xi^*$ copies each value in $V$ over $k$ to $s$ in corresponding $S_k$ such that $\xi^*V$ can have multiple values that map to one value in $V$. 
 
 The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The visual transformer $\nu$ is a set of functions each targeting a different $\mu$
 \begin{equation}
@@ -306,14 +324,6 @@ $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism f
 \end{equation}
 commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$.
 
-\paragraph{Definition}
-A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$.  A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an action $\bullet$ with the properties:
-\begin{description}
-    \item[closure] $\bullet: M\times X \rightarrow X$,
-    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in X, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
-    \item[identity] $\text{for all } x\in X, e\in M,  e\bullet x = x$ 
-\end{description} 
-
 \paragraph{Example: Partial Order}
 To preserve ordering of elements in $E_i$, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
 \begin{equation}
@@ -350,27 +360,34 @@ To consutruct a valid $\nu$, the diagram must commute for all monoid actions on 
 
 \subsubsection{Assembling Marks}
 \begin{figure}[H]
-    \includegraphics[width=0.4\linewidth]{figures/sections/math/path_of_q}
-    \label{fig:q}
+    \includegraphics[width=\textwidth]{figures/sections/math/path_of_q}
+    \label{fig:artist_q}
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
 \end{figure}
 
-The assembly function $Q: \Gamma(V) \rightarrow \Gamma(H)$ composites the visual variables in $V$ into an element in $H$. Given a monoid action on a set in $V$, there should be a monoid action on the corresponding $Q(\Gamma(V))$. While $\Gamma(V)$ holds for all cases, we can specialize to the bundle $V$ or the sheaf $\mathcal(V)$ depending on the specific visualization. 
+As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$. 
 
 \paragraph{Proposition}
 If $\forall g \in M$ and $\forall x_1, x_2 \in \Gamma(V)$ then  $Q(x_1) = Q(x_2) \\implies Q(g\circ x_1) = Q(g\circ x_2)$; therefore we can define a group action on $Q(\Gamma(V))=Y$ as $g \circ y = y'$ where $y' = Q(g\circ x)$ with $x \in f^{-1}(y)$ 
 
 
-For each region $s$ in the display space $H$, the mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology} it belongs to can be found by mapping $s$ back to $K$ via the lookup on $S$ then taking $\xi(s)$ back to a point on $k \in K$ which lies on the path connected component $J \subset K$. 
+To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, $Q$ is called with all the regions $s$ that map back to a set of connected components $J \subset K$:
+\begin{equation}
+J = \{j \in K \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\}
+\end{equation}
+where the path\cite{ConnectedSpace2020}  $\gamma$ from $k$ to $j$ is a continous function from the interval [0,1].
 
-%% defined J_{k} first, then pull down to here, then can do \rho S_j
+We define the mark as the graphic generated by $Q(S_j)$:
+
 \begin{equation}
     \begin{tikzcd}
-        H \arrow[r, shift left] & S \arrow[l, "\rho(\xi^{-1}(J))", shift left] \arrow[rr, "\xi(s)", shift left] &  & J_{k} =  \{j \in K \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\} \arrow[ll, "\xi^{-1}(J)", shift left]
-    \end{tikzcd}
+        H \arrow[r, shift left] & S_j \arrow[rr, "\xi(s)", shift left] \arrow[l, "\rho(S_j)"] &  & J_{k} \arrow[ll, "\xi^{-1}(J)"]
+        \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-where the path\cite{ConnectedSpace2020}  $\gamma$ from $k$ to $j$ is a continous function from the interval [0,1]. To get back to the display space $H$ from $J$, the inverse image of $J \in S, \xi^{-1}(J)$ is pushed back to $S$, and then $\rho(\xi^{-1}(J))$ maps it into $R^{7}$ such that $Q\circ\xi^*\mu(\xi^{-1}(J))$ generates a graphical mark.
+
+where the set $j \subset J$ is the set of marks in the graphic.
+
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 n $O(E)$ of the same type, they output the same type of prerender $O(H)$:
