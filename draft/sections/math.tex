@@ -96,34 +96,28 @@ The Steven's measurement scales are identified via the group actions on $F_{i}$ 
 
 \subsubsection{Section}
 \label{sec:section_data}
-%% add context
-The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
+The sections of the fiber bundles are the instances of the data. They are the functions that map from a key on $K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
         F \arrow[r, hook] & E \arrow[d, "\pi"']           \\
-        & B \arrow[u, "f"', bend right]
+        & K \arrow[u, "\tau"', bend right]
     \end{tikzcd}
 \end{equation}
 
-such that $f$ is the right inverse of $\pi$
-\begin{equation}
-    \label{eq:section_domain}
-    \pi(f(k)) = k \text{ for all } k \in K 
-\end{equation}
-
-In a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
+such that in a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
     \label{eq:section_return}
-f(b) = (b, g(b))
+    \tau(k) = (k, (x_{F_{0}}, \ldots, x_{F_{n}}))
 \end{equation}
+which we can also decompose such that
+\begin{align}
+\tau_{0}(k) &= (k, (x_{F_{0}}))\\
+            & \vdotswithin{=}\\
+\tau_{n}(k) &= (k, (x_{F_{n}}))
+\end{align}
 
-where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space of all possible sections $f$ of $E$ is $\Gamma(E)$. All sections $f \in \Gamma(E)$ have the same fibers $F$ and connectivity $K$. 
-\paragraph{Example}
-%%talk about table and all that jazz
-
-For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
- 
+which allows us to have field wise access to the data so long as there is a shared $K$.  
 
 \subsubsection{Sheaf and Stalk}
 
