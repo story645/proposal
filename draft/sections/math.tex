@@ -56,67 +56,43 @@ The topology $K$ and the fields $F$ are determined by how $E$ is subdivided\cite
 
 \paragraph{Triangulization}
 \label{sec:triangulization}
-
-The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
-
 In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
 
 \begin{figure}[H]
     \label{fig:simplex}
     \includegraphics{figures/sections/math/simplex.png}
-    \caption{Simplices encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations. Higher order simplicies are outside the scope of this paper.}
+    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
 \end{figure}
 
-K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. 
-
+K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices\cite{geometricaSimplicialComplexes}, such as those shown in figure~\ref{fig:simplex}.
 
 \subparagraph{Example}
+\textcolor{blue}{Need to sketch and write this example}\\
 chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
 
 
 \subsubsection{Fiber Space}
 \label{sec:fiber_data}
+Datasets can be univariate or multivariate, homogenous or heteregenous, and fibers are where we encode this information. Each field in the dataset $f_{i}$ contains a range of values that come from the codomain of $f_{i}$. The fiber is the cartesian product of the codomains of fields:
+\begin{align}
+F &= codomain(f_{0})\times \ldots \times codomain(f_{n})\\
+F &= F_{0} \times \ldots \times F_{n}
+\end{align}
 
-%% pull fiber stuff up here? what is it? why? fiber as cartesian product of sets
-%% actual values are in the fiber 
-%% gonna view spaces as simple piece put together 
-%% Our fibers are cross products of (column name, domain) as described by Spivak's \cite{spivakSIMPLICIALDATABASES}. 
-
-
+We formulate the fiber such that it has a mapping between the codomain and the field name, as discussed in Spivak's simplacial description of databases \cite{spivakSIMPLICIALDATABASES,spivakDatabasesAreCategories2010}. An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
 \begin{equation}
-    \label{eq:fiber_local_trivial}
-    \begin{tikzcd}
-        \pi^{-1}(U) \arrow[r, "\varphi"] \arrow[d, "\pi"'] & U \times F \arrow[ld, "\mathrm{proj}_U"] \\
-        U                                                  &                                         
-    \end{tikzcd}
+M = M_{0} \times \ldots\times M_{i}
 \end{equation}
-such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where $\pi$ and $\mathrm{proj}_U$ both map to $U$ and the fiber over $k$
+is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid \cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. 
 
-%% rewrite this section - what are the goals here and why should we care? 
-%% devoid of any context
-
-$F_k = \pi^{-1}({k}) $ is homomorphic to the fiber $F$.
-%% add a sentence for why we care
-%% fibers are cartesian products of these typles sets (name, domain, monoidal action) 
-
-%%the break out more about how fibers are cross products and what that means and how that's the structure - pull the monoids definitions here 
-
-\paragraph{Definition}
-A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $X$ with an action $\bullet$ with the properties:
+A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet$ with the properties:
 \begin{description}
-    \item[closure] $\bullet: M\times X \rightarrow X$,
-    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in X, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
-    \item[identity] $\text{for all } x\in X, e\in M,  e\bullet x = x$ 
+    \item[closure] $\bullet: M\times F \rightarrow X$,
+    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
+    \item[identity] $\text{for all } x\in F, e\in M,  e\bullet x = x$ 
 \end{description} 
 
-
-$M = M_{1} \times M_{2} \times \ldots \times M_{n}$
-
-\paragraph{Example}
-%% stevens scales are examples of this 
-%% one ecample of F1 is (names, strings, concat), (ordinal, Z,  ordering), () 
-
-
+The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variaty of scales such as partial order
 
 \subsubsection{Section}
 \label{sec:section_data}
@@ -225,9 +201,7 @@ such that sections with the constraint that time is monotonic return a timeserie
 
 \subsection{Prerender Space $H$}
 \label{sec:display}
-We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. 
-
-We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
+We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
 
 \subsubsection{Base space}
 The underlying topology $S$ of a graphic often needs more dimensions than the data topology $K$ because of the specifications of the display space. For example, a line plot on a plane (such as a screen or a piece of paper) by necessity needs to also have a thickness so that it is visible, which maps back to a set of connected points in $H$. The topology of these connected points is therefore the region $s \subset S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
@@ -273,7 +247,7 @@ Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can
 As illustrated in figure~\ref{fig:render}, words.
 
 \subsection{Artist}
-
+\label{sec:artist}
 
 In this section we will define the artist as a mapping from a sheaf $\mathcal{O}(E)$  to $\mathcal{O}(H)$. 
 \begin{equation}
@@ -303,7 +277,6 @@ where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \
 \subsubsection {Example: Matplotlib Visual Fiber}
 For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
 \begin{table}[ht]
-    \label{tab:mpl_visual_variable_fiber}
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
      $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{codomain(\nu_{i})}$  \\ \hline                                              
@@ -314,9 +287,10 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
     \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
                                 & linestyle                                                        & $\{f_{0}, \ldots, f_{n}\} \times (\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
+    \label{tab:mpl_visual_variable_fiber}
 \end{table}
-%%needs context, pulling monoids up gives it
-Table~\ref{tab:mpl_visual_variable_fiber} is a 
+
+Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defined in terms of common parameters to plots in Matplotlib. The range of $\mu_{i}$ determine the monoid actions on $\mu_{i}$. A section of V $\mu$ is a tuple of visual values that specifies the visual characteristics of a glyph. For example, given a fiber of $\{xpos, ypos, color\}$ one section is $\{.5, .5, (255, 20,147)\}$. $Q$ determines how this section is applied to a graphic.  
 
 \subsubsection{Visual Channels}
 $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
@@ -359,7 +333,7 @@ This $\nu$ is invalid because the graph does not commute for $t$:
     .5 & \neq 2*.5
 \end{align}
 
-To consutruct a valid $\nu$, the diagram must commute for all monoid actions on the sets in $E_i, V_i$.
+To construct a valid $\nu$, the diagram must commute for all monoid actions on the sets in $E_i, V_i$.
 
 
 \subsubsection{Assembling Marks}
@@ -369,23 +343,53 @@ To consutruct a valid $\nu$, the diagram must commute for all monoid actions on 
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
 \end{figure}
 
-As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$:
+As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$
 \begin{equation}
     Q: \Gamma(V) \rightarrow \Gamma(H)
 \end{equation}
+When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ over all $S_k$, then $M$ can be defined over $\Gamma(H)$ such that a constraint on $Q$ is that it must be equivariant. For example, when $\mu_{i}$ is the color of the glyph, it maps directly to (R,G,B) in D.
 
-$Q: \mu \mapsto \rho$
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/sections/math/diff_type_q.png}
+    \label{fig:artist_mark_change}
+\end{figure}
 
-We want a monoid/group action on $Q(\Gamma(V))$, do not need an action on all of $\Gamma(H)$
+Many $\mu_{i}$ are graphical parameters that do not apply to the whole glyph, such as edge thickness in figure~\ref{fig:artist_mark_change}. In these situations, not all  $\rho$ in $\Gamma(H)$ will support these parameters; instead we define an action on the output graphic $Q(\Gamma(V)) \in \Gamma(H)$ since by definition every section $\mu$ will have a corresponding $\rho$.
+
+We then define the constraint on $Q$ such that if $Q$ applied to two sections $\mu, \mu\prime$ generate the same graphic $\rho$, then the output of both sections acted on by the same monoid $m$ must also be the same.    
+
+Lets call the visual encodings $\Gamma(V)=X$ and the graphic $Q(\Gamma(V))=Y$. If $\forall m \in M$ and $\forall \mu, \mu\prime \in X$, 
+\begin{equation}
+Q(\mu) = Q(\mu\prime)\implies Q(m\circ\mu) = Q(m\circ\mu\prime)
+\end{equation}
+then a group action on $Y$ can be defined as $m\circ \rho = \rho\prime$ where $\rho\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$. 
+
+Given  
+\begin{itemize}
+    \item $P = \{xpos, ypos, color, thickness\}$
+    \item $\mu = {0,0,0, 1}$
+    \item  $Q(\mu)=\rho$ generates a piece of the thin circle in figure~\ref{fig:artist_mark_change}
+\end{itemize}
+
+the constraint on $Q$ means that the translation $m=\{e, e, e, x+2\}$ applied to $\mu$ such that $\mu\prime=\{0,0,0,3\}$ has an equivalent action on $\rho$ that causes $Q(\mu\prime)$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
+
+\paragraph{Example: Invalid Q}
+\textcolor{blue}{Insert some degenerate Q that generates an inconsistent glyph}
 
 
+Check a well defined map $M\times Y \rightarrow Y$.
+
+
+constraint: inputs go to same output means changes to inputs mean same changes to output
+
+\paragraph{Graphical Marks}
 To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, $Q$ is called with all the regions $s$ that map back to a set of connected components $J \subset K$:
 \begin{equation}
 J = \{j \in K \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\}
 \end{equation}
 where the path\cite{ConnectedSpace2020}  $\gamma$ from $k$ to $j$ is a continous function from the interval [0,1].
 
-We define the mark as the graphic generated by $Q(S_j)$:
+We define the mark as the graphic generated by $Q(S_j)$
 
 \begin{equation}
     \begin{tikzcd}
@@ -394,43 +398,7 @@ We define the mark as the graphic generated by $Q(S_j)$:
     \label{eq:mark}
 \end{equation}
 
-where the set $j \subset J$ is the set of marks in the graphic.
-
-$M = M_{1} \times M_{2} \times \ldots \times M_{n}$
-color X xpos (Cross product of monoid actions over V/E), cartesian product b/c independent. $M$ over $E$ was translated to acting over $\Gamma(V)$ of these act on $\Gamma(V)$
-$\nu$ translates the sets, constraint on $\nu$ is equivariance of M. Is limited to the $Q(\Gamma(V))\subset of \Gamma(H)$ because not all visual tramsforms ($\mu$) are supported by all  $\rho$.
-
-\begin{figure}
-    \includegraphics[width=\textwidth]{figures/sections/math/diff_type_q.png}
-\end{figure}
-So we define the actions $M$ on the image of $Q$, $Q(\Gamma(V)) = Y$. We can backward define our actions?
-
-When the visual atrtribute in $\mu$ is some kind of direct property of D, then we can define $M$ on $\Gamma(H)$ and require that $Q$ preserves it. But we have graphical parameters that do not apply to the whole glyph and therefore are not direct mappings on D, such as facecolor or line thickness. For these types of properties, we need to define an action on the target graphic $Q(\Gamma(V)) \in \Gamma(H)$.
-%%in a direct transformation of D, the map on s to d will fall out. Need the eqiuvariance in cases where there are not direct maps to D but instead are partial/compositional/ 
-
-If can check this on $Q$, then you can define an equivariant $M$. Use action of $M$ on $V$ to define action $M$ on $Y$. 
-
-Let ....
-
-If $\forall g \in M$ and $\forall \mu, \mu\prime \in X$, 
-\begin{equation}
-Q(\mu) = Q(x2) 
-\end{equation}
-If true, then we can define a group action on $Y$ is defined as $g\circ \rho = \rho\prime$ where $\rho\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$.
-
-tuple of figure above Is ... %%mu is first circle, mu' is second circle, broken mu is squggle%%
-if two $\mu$ go to the same graphic(glyph), then if we transform them the same way they need to generate the same graphic in H. two sections of V if they map to the same thing, they need to map to the same thing if you transform they need to map to the same thing. 
-
-change g to  m
-
-%% m is a cartesian product of group actions in M, for example {identity, ...., identity, thickens}
-%% \mu and \mu' are different sections of \Gamma(V)
-
-\paragraph{Example: Invalid Q}
-Check a well defined map $M\times Y \rightarrow Y$.
-
-
-constraint: inputs go to same output means changes to inputs mean same changes to output
+in terms of $K$ because mark is a semantic term denoting the graphic representation of the data.
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 Given $O(E)$ of the same type that output to the same type of graphic $O(H)$, the 
