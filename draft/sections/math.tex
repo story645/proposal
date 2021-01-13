@@ -7,25 +7,24 @@
 
 %% give the why of the math after every mention of why
  
-In this section we introduce a mathematical description of the visualization pipeline where artist $\mathfrak{A}$ functions transform data space $\mathfrak{E}$ to an intermediate representation in a prerendered display space $\mathfrak{H}$. 
+In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
 
 \begin{equation}
     \label{eq:artist}
-    \mathcal{A}: \mathcal{E} \rightarrow \mathcal{H}
+    \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
 \end{equation}
 
-We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow to seperate concerns 
-
-%%find word to put here topological total space that encodes points and a topological base space that can encode the connectivity of those points:
+We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the fields in a dataset from how the values in those fields are connected to each other:
 \begin{itemize}
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
 \item $H$ is a fiber bundle over $S$ representing visual space
 \item $K$ and $S$ are a triangulizable topological space or a CW complex encoding the connectivity of points in $E$ and $H$ respectively
 \end{itemize}
 
-The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}.
+The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
 
-\subsection{Data Space $E$}
+
+\subsection{Data Space}
 As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 
 \begin{equation}
@@ -37,34 +36,15 @@ As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizatio
 
 with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
-\paragraph{Example}
-
-\begin{figure}[H]
-    \label{fig:data_fiber_bundle}
-    \includegraphics[width=1\linewidth]{figures/sections/math/fiberbundle.png}
-    \caption{$F$ is an $n\times m$ space of points. The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
-\end{figure}
-
-The fiber bundle in figure~\ref{fig:data_fiber_bundle} can encode different types of data. $F$ is a cartesian product of the codomains of 2 variables and $K$ is a line on the interval [0,1]. The sections $\tau_{1}$ and $\tau_{2}$ are different sets of data values in the space. 
-
-\begin{description}
-    \item[distribution] $F$ is the cartesian cross product of temperature values and the range of probabilities [0,1] such that every point in $E$ is a (temperature, probabilty) pair. $\tau_1$ and $\tau_2$ each return a different distribution of temperatures. 
-    \item[timeseries]  $F = \{\text{temperature}\} \times \{\text{timestamps}\}$, such that every point is a (temperature, time) pair. $\tau_1$ and $\tau_2$ each return different timeseries of temperature.
-\end{description}
-
-
-
 \subsubsection{Base Space $\mathcal{K}$}
 \label{sec:base_data}
 \begin{figure}[H]
-    %%\includegraphics[\textwidth]{}
+    \includegraphics[width=\textwidth]{figures/sections/math/k_different_types.png}
     \label{fig:base_space_types}
-    %%% pull up data structures like discrete, continous, etc w/ base space 
-    %%% little drawing dots, line, plane, cube
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
 \end{figure}
 
-Data can be discrete observations, timeseries, maps, fields \cite{munznerWhatDataAbstraction2014} and $K$ is a set of points $k$ that can act as keys from a representative space, such as seen in figure~\ref{fig:base_space_types}, to the data values in $E$ \cite{munznerWhatDataAbstraction2014}.
+Datasets have a semantic topology such as the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. As illustrated in fig~\ref{fig:base_space_div}, $K$ is this underlying structure. $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
 
 
 \begin{figure}[H]
@@ -72,24 +52,7 @@ Data can be discrete observations, timeseries, maps, fields \cite{munznerWhatDat
     \includegraphics[width=.5\linewidth]{figures/sections/math/k_qspace.png}
     %%include second figure where fiber goes otherway
 \end{figure}
-
-$K$ and $F$ are not intrinsic to $E$, rather they are choices in how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
-
-
-
-\paragraph{Example}
-\begin{figure}[ht]
-    \includegraphics[width=\textwidth]{figures/sections/math/temp_1k.png}
-    %% add box around neighboring P and Map
-    \label{fig:k_data}
-\end{figure}
-
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/sections/math/temp_2k.png}
-\end{figure}
-
-in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
-
+The topology $K$ and the fields $F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
 \paragraph{Triangulization}
 \label{sec:triangulization}
@@ -185,36 +148,10 @@ where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space 
 
 For each field $c \in C$, the record function $r: C \rightarrow U_{\sigma}$ returns an object of type $\sigma(c) \in DT$. The set of all records $\Gamma(\sigma)$ is the set of all sections on $U_\sigma$. Spivak defines the $\tau$ mapping from an index of databases $K$ to records $\Gamma(\sigma)$ as $\tau: K \rightarrow \Gamma(\sigma)$. This is equivalent to $\tau: k \rightarrow E$ since $F = \Gamma(\sigma)$ and $F$ is the embedding in $E$ on which the records $r$ lie.
  
-\subsubsection{Example}
-\begin{figure}[H]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_2f.png}
-    \label{fig:}
-\end{figure}
-\begin{figure}[H]
-    \includegraphics[width=0.2\linewidth]{figures/sections/math/temp_3f.png}
-\end{figure}
-
-
-%% pull out measurement
-The fiber in figure~\ref{fig:temp} is the space of possible temperature values in degrees celsius, such that $F=[temp_{min}, temp_{max}]$ and is named \textrm{Temp}. In figure~\ref{fig:temp_time} \textrm{time} is encoded as a second dimension. This means that the set of possible values $F$ with $C=\{\textrm{Temp}, \textrm{Time}\}$:
-
-\begin{equation}
-F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
-\end{equation}
-
-and the function $\tau$ that retrieves records from $F$ is
-
-\begin{align}
-\tau(k) =(k, (r: \textrm{Temp}\rightarrow &temp, r: \textrm{Time}\rightarrow time))\\
-&temp \in [temp_{min}, temp_{max}], time \in [time_{min}, time_{max}])
-\end{align}
-
-Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds $temp$ to a temperature data type. 
 
 \subsubsection{Sheaf and Stalk}
-%% add motivation - zoom, subsection, streaming, also for realizing visualization, restricting to that piece - need to know near point w/o 
 
-Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$: 
+Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$
 
 \begin{equation}
     \label{eq:sheaf}
@@ -223,10 +160,67 @@ Often a graphic may need to be updated with live data or support zooming in on a
         U \arrow[u, "\iota^*\tau"', bend right] & K \arrow[u, "\tau"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
-
-As shown in equation~\ref{eq:fiber_local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ is pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $K$. The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf with a germ of $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
+which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ pulled back via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
 
 The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a type of sheaf that allows for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
+
+\subsubsection{Example: Temperature}
+\textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
+The fiber bundle model is flexible enough to express some of the many different forms that temperature data can come in. 
+
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/sections/math/temp_1k.png}
+        %% add box around neighboring P and Map
+        \label{fig:base_example_line}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/sections/math/temp_2k.png}
+        \label{fig:base_example_plane}
+    \end{subfigure}
+    \label{fig:base_example}
+    \caption{These two datasets have the same fiber of temperature but different base spaces. In figure~\ref{fig:base_example_line} the temperature values are 1D continuous, while in figure~\ref{fig:base_example_plane} the temperature values are 2D continuous.}
+\end{figure}
+
+The datasets in figure~\ref{fig:base_example} have identical fibers that encode a set of temperature values. In figure~\ref{fig:base_example_line} the temperatures lie on a line such that a section could return a timeseries or a distribution. In figure~\ref{fig:base_example_plane}, the temperatures lie on a 2D continuous plane; a section could return a map or contour. Because the fiber is 1D, it does not encode metadata 
+
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/sections/math/temp_2f.png}
+        \label{fig:fiber_example_plane}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/sections/math/temp_3f.png}
+        \label{fig:fiber_example_cube}
+    \end{subfigure}
+    \label{fig:fiber_example}
+    \caption{The fiber is expanded to include metadata fields that describe the semantics of $K$. In figure~\ref{fig:fiber_example_plane} the fiber is \textrm{temperature} $\times$ \textrm{time} and in figure~\ref{fig:fiber_example_cube} the fiber is \textrm{temperature}$\times$ \textrm{latitude} $\times$ {longitude}}.
+\end{figure}
+
+To encode the metadata, the fiber is expanded as illustrated in figure~\ref{fig:fiber_example}. The fiber in figure~\ref{fig:fiber_example_plane} is the cartesian product of the space of possible temperature values in degrees celsius and space of possible time values
+\begin{equation}
+F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
+\label{eq:fiber_plane}
+\end{equation}
+
+while the fiber in figure~\ref{fig:fiber_example_cube} is the cartesian product of temperature, latitude, and longitude
+\begin{equation}
+F = [temp_{min}, temp_{max}] \times [-90, 90] \times [-180, 180]
+\label{eg:fiber_cube}
+\end{equation}
+
+such that $E$ is the space of all possible points in $F$.
+
+\begin{figure}[H]
+    \includegraphics[width=1\linewidth]{figures/sections/math/fiberbundle.png}
+    \label{fig:fiber_example_section}
+    \caption{The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
+\end{figure}
+Given the fiber described in equation~\ref{eq:fiber_plane}, the sections $\tau_{1}$ and $\tau_{2}$ in figure~\ref{fig:fiber_example_section} return tuples of the form
+\begin{equation}
+\tau(k) = (k, (temperature, time))
+\end{equation}
+such that sections with the constraint that time is monotonic return a timeseries. 
 
 
 \subsection{Prerender Space $H$}
@@ -405,7 +399,10 @@ where the set $j \subset J$ is the set of marks in the graphic.
 $M = M_{1} \times M_{2} \times \ldots \times M_{n}$
 color X xpos (Cross product of monoid actions over V/E), cartesian product b/c independent. $M$ over $E$ was translated to acting over $\Gamma(V)$ of these act on $\Gamma(V)$
 $\nu$ translates the sets, constraint on $\nu$ is equivariance of M. Is limited to the $Q(\Gamma(V))\subset of \Gamma(H)$ because not all visual tramsforms ($\mu$) are supported by all  $\rho$.
-%%insert little thickness sketch maybe?O->(O)
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/sections/math/diff_type_q.png}
+\end{figure}
 So we define the actions $M$ on the image of $Q$, $Q(\Gamma(V)) = Y$. We can backward define our actions?
 
 When the visual atrtribute in $\mu$ is some kind of direct property of D, then we can define $M$ on $\Gamma(H)$ and require that $Q$ preserves it. But we have graphical parameters that do not apply to the whole glyph and therefore are not direct mappings on D, such as facecolor or line thickness. For these types of properties, we need to define an action on the target graphic $Q(\Gamma(V)) \in \Gamma(H)$.
