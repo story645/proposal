@@ -7,14 +7,16 @@
 
 %% give the why of the math after every mention of why
  
-In this section we introduce a mathematical description of the visualization pipeline where artist $\mathcal{A}$ functions transform data  $\mathcal{E}$ to an intermediate representation in a prerendered display space $\mathcal{H}$. 
+In this section we introduce a mathematical description of the visualization pipeline where artist $\mathfrak{A}$ functions transform data space $\mathfrak{E}$ to an intermediate representation in a prerendered display space $\mathfrak{H}$. 
 
 \begin{equation}
     \label{eq:artist}
     \mathcal{A}: \mathcal{E} \rightarrow \mathcal{H}
 \end{equation}
 
-We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they are products of a topological total space that encodes points and a topological base space that can encode the connectivity of those points:
+We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow to seperate concerns 
+
+%%find word to put here topological total space that encodes points and a topological base space that can encode the connectivity of those points:
 \begin{itemize}
 \item $E$ is a locally trivial fiber bundle over $K$ representing data space.
 \item $H$ is a fiber bundle over $S$ representing visual space
@@ -23,19 +25,19 @@ We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and
 
 The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}.
 
-\subsection{Data Fiber Bundles}
+\subsection{Data Space $E$}
 As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi"] & B
+        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
     \end{tikzcd}
 \end{equation}
 
 with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
-\paragraph{example}
+\paragraph{Example}
 
 \begin{figure}[H]
     \label{fig:data_fiber_bundle}
@@ -43,10 +45,16 @@ with topological total space $E$, base space $K$, fiber space $F$, and the map f
     \caption{$F$ is an $n\times m$ space of points. The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
 \end{figure}
 
-The fibers $F$ in figure~\ref{fig:data_fiber_bundle} lie in some total space $E$ and are points that lie in a 2D space. For example, this space can be $\mathrm{temperature}\times \mathrm{pressure}$ or $\mathrm{time} \times \mathrm{precipitation}$. $K$ is a line on the interval [0,1] and indicates that the points lie on a 1D continous space, but we derive whether the data is a distribution or a timeseries or a function from the fields in $F$. The sections $\tau_1$ and $\tau_2$ are distinct maps from $k$ to the blue and purple points in $E$ respectively.
+The fiber bundle in figure~\ref{fig:data_fiber_bundle} can encode different types of data. $F$ is a cartesian product of the codomains of 2 variables and $K$ is a line on the interval [0,1]. The sections $\tau_{1}$ and $\tau_{2}$ are different sets of data values in the space. 
+
+\begin{description}
+    \item[distribution] $F$ is the cartesian cross product of temperature values and the range of probabilities [0,1] such that every point in $E$ is a (temperature, probabilty) pair. $\tau_1$ and $\tau_2$ each return a different distribution of temperatures. 
+    \item[timeseries]  $F = \{\text{temperature}\} \times \{\text{timestamps}\}$, such that every point is a (temperature, time) pair. $\tau_1$ and $\tau_2$ each return different timeseries of temperature.
+\end{description}
 
 
-\subsubsection{Base Space}
+
+\subsubsection{Base Space $\mathcal{K}$}
 \label{sec:base_data}
 \begin{figure}[H]
     %%\includegraphics[\textwidth]{}
@@ -83,7 +91,7 @@ $K$ and $F$ are not intrinsic to $E$, rather they are choices in how $E$ is subd
 in figure~\ref{fig:k_data}, temperature is the only one data field in $r$ but the $K$ base spaces are different. subfig[1] is a timeseries, so the temperature in $r$ at time $t$ is dependent on the temperature in $r_{t-1}$ and the temperature in $r_{t+1}$ is dependent on  $r_t$; this connectivity is expressed as a one dimensional $K$ where $K$ is the number line. In the case of the map, every temperature in $r$ is dependent on its nearest neighbors on the plane, and one way to express this is by encoding $K$ as a plane. $K$ does not know the time or latitude or longitude of the point as those are metadata variables describing the $k$ rather than the value of $k$. The mapping $\tau: K \rightarrow E$ provides the binding between the key $k \in K$ and the value $r$ in $E$ \cite{munznerChDataAbstraction}.
 
 
-\subsubsection{Triangulization}
+\paragraph{Triangulization}
 \label{sec:triangulization}
 
 The base space $K$ is a representation of the connectivity of the data, specifically whether the points in $E$ are discrete or sampled from a continous space. The same dataset can be expressed with different $K$. 
@@ -99,12 +107,13 @@ In our draft implementation of the data as fiber bundle model, we represent $K$ 
 K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices, such as those shown in figure~\ref{fig:simplex}. 
 
 
-\paragraph{Example}
+\subparagraph{Example}
 chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
 
 
 \subsubsection{Fiber Space}
 \label{sec:fiber_data}
+
 %% pull fiber stuff up here? what is it? why? fiber as cartesian product of sets
 %% actual values are in the fiber 
 %% gonna view spaces as simple piece put together 
@@ -123,7 +132,7 @@ such that $\varphi: \pi^{-1}(U) \rightarrow U \times F$ is a homeomorphism where
 %% rewrite this section - what are the goals here and why should we care? 
 %% devoid of any context
 
-$F_b = \pi^{-1}({b \in B}) $ is homomorphic to the fiber $F$.
+$F_k = \pi^{-1}({k}) $ is homomorphic to the fiber $F$.
 %% add a sentence for why we care
 %% fibers are cartesian products of these typles sets (name, domain, monoidal action) 
 
@@ -137,6 +146,8 @@ A monoid\cite{Monoid2021} $M$ is a set that is closed under an associative binar
     \item[identity] $\text{for all } x\in X, e\in M,  e\bullet x = x$ 
 \end{description} 
 
+
+$M = M_{1} \times M_{2} \times \ldots \times M_{n}$
 
 \paragraph{Example}
 %% stevens scales are examples of this 
@@ -159,7 +170,7 @@ The section $\tau$ is the mapping from base space to total space $\tau: K\righta
 such that $f$ is the right inverse of $\pi$
 \begin{equation}
     \label{eq:section_domain}
-    \pi(f(b)) = b \text{ for all } b \in B 
+    \pi(f(k)) = k \text{ for all } k \in K 
 \end{equation}
 
 In a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
@@ -168,7 +179,7 @@ In a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle
 f(b) = (b, g(b))
 \end{equation}
 
-where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space of all possible sections $f$ of $E$ is $\Gamma(E)$. All sections $f \in \Gamma(E)$ have the same fibers $F$ and connectivity $B$. 
+where the domain of $g(b)$ is $F_b$ and returns a point $p$ in $F_b$. The space of all possible sections $f$ of $E$ is $\Gamma(E)$. All sections $f \in \Gamma(E)$ have the same fibers $F$ and connectivity $K$. 
 \paragraph{Example}
 %%talk about table and all that jazz
 
@@ -203,23 +214,22 @@ Since $\tau(k)=(k, r)$, $temp$ is bound to a named data field and $sigma$ binds 
 \subsubsection{Sheaf and Stalk}
 %% add motivation - zoom, subsection, streaming, also for realizing visualization, restricting to that piece - need to know near point w/o 
 
+Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$: 
 
-As described in equation~\ref{eq:local_trivial}, there is a local space $U \subset B$ around every $b$. The inclusion map $\iota: U \rightarrow B$ can be pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $U$. 
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}
         \iota^*E \arrow[d, "\pi"']           & E \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
-        U \arrow[u, "\iota^*f"', bend right] & B \arrow[u, "f"', bend right] \arrow[l, "\iota"']
+        U \arrow[u, "\iota^*\tau"', bend right] & K \arrow[u, "\tau"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
 
-The localized section of fibers $\iota^*f: U \rightarrow \iota^*E$ is the sheaf $\mathcal{O}(E)$ with germ of $\xi^*f$ which is the localized section. The neighborhood of points the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic} which is a ...$\dots$
-. Restricting the artist to the sheaf means the artist knows the data in $F$ and also has access to derivatives of the data. This property is useful for some visual transformations. 
-%% gives all direvatives but we need the jet which is add stuff about jets
+As shown in equation~\ref{eq:fiber_local_trivial}, there is a local space $U \subset K$ around every $k$. The inclusion map $\iota: U \rightarrow K$ is pulled back such that $\iota^{*}E$ is the space of $E$ restricted over $K$. The localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ is the sheaf with a germ of $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
+
+The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a type of sheaf that allows for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
 
-
-\subsection{Prerender Space}
+\subsection{Prerender Space $H$}
 \label{sec:display}
 We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. 
 
@@ -257,8 +267,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
     b &= \iint\limits_s \rho_{\tiny{B}}(s)ds^{2}
 \end{align}
 
-Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we consider $D=R^{7}$
-%%H can be other spaces  
+Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
 
 \subsubsection{{Example}}
 \begin{figure}[H]
@@ -270,7 +279,7 @@ Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can
 As illustrated in figure~\ref{fig:render}, words.
 
 \subsection{Artist}
-%%introduce O(E) up in previous section, then refer back to that section 
+
 
 In this section we will define the artist as a mapping from a sheaf $\mathcal{O}(E)$  to $\mathcal{O}(H)$. 
 \begin{equation}
@@ -288,7 +297,7 @@ The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  comp
 \end{equation}
 The pullback map $\xi^*$ copies each value in $V$ over $k$ to $s$ in corresponding $S_k$ such that $\xi^*V$ can have multiple values that map to one value in $V$. 
 
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The visual transformer $\nu$ is a set of functions each targeting a different $\mu$
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The visual transformer $\nu$ is a set of functions each targeting a different $\mu$
 \begin{equation}
     \label{eq:nu_expanded}
     \{\nu_{0}, \ldots, \nu_{n}\}: \{\tau_{0}, \ldots, \tau_{n}\} \mapsto \{\mu_{0}, \ldots, \mu_{n}\}
@@ -313,6 +322,8 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
     \end{tabulary}
 \end{table}
 %%needs context, pulling monoids up gives it
+Table~\ref{tab:mpl_visual_variable_fiber} is a 
+
 \subsubsection{Visual Channels}
 $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
@@ -324,15 +335,14 @@ $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism f
 \end{equation}
 commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$.
 
-\paragraph{Example: Partial Order}
+\paragraph{Example: Ordering}
 To preserve ordering of elements in $E_i$, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
 \begin{equation}
 \text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)
 \end{equation}
 
 \paragraph{Example: Translation}
-\textbf{fairly certain I lost the thread here}
-According to Stevens, interval data is a set with general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation \cite{bertinIIPropertiesGraphic2011,krygierMakingMapsVisual2005,munznerMarksChannels}. 
+According to Stevens, interval data is a set with general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation 
 \begin{equation}
 \nu(x + c) = \nu(x) + \nu(c)
 \end{equation}
@@ -355,7 +365,7 @@ This $\nu$ is invalid because the graph does not commute for $t$:
     .5 & \neq 2*.5
 \end{align}
 
-To consutruct a valid $\nu$, the diagram must commute for all monoid actions on the sets $E_i, V_i$.
+To consutruct a valid $\nu$, the diagram must commute for all monoid actions on the sets in $E_i, V_i$.
 
 
 \subsubsection{Assembling Marks}
@@ -365,10 +375,14 @@ To consutruct a valid $\nu$, the diagram must commute for all monoid actions on 
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
 \end{figure}
 
-As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$. 
+As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$:
+\begin{equation}
+    Q: \Gamma(V) \rightarrow \Gamma(H)
+\end{equation}
 
-\paragraph{Proposition}
-If $\forall g \in M$ and $\forall x_1, x_2 \in \Gamma(V)$ then  $Q(x_1) = Q(x_2) \\implies Q(g\circ x_1) = Q(g\circ x_2)$; therefore we can define a group action on $Q(\Gamma(V))=Y$ as $g \circ y = y'$ where $y' = Q(g\circ x)$ with $x \in f^{-1}(y)$ 
+$Q: \mu \mapsto \rho$
+
+We want a monoid/group action on $Q(\Gamma(V))$, do not need an action on all of $\Gamma(H)$
 
 
 To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, $Q$ is called with all the regions $s$ that map back to a set of connected components $J \subset K$:
@@ -388,9 +402,41 @@ We define the mark as the graphic generated by $Q(S_j)$:
 
 where the set $j \subset J$ is the set of marks in the graphic.
 
+$M = M_{1} \times M_{2} \times \ldots \times M_{n}$
+color X xpos (Cross product of monoid actions over V/E), cartesian product b/c independent. $M$ over $E$ was translated to acting over $\Gamma(V)$ of these act on $\Gamma(V)$
+$\nu$ translates the sets, constraint on $\nu$ is equivariance of M. Is limited to the $Q(\Gamma(V))\subset of \Gamma(H)$ because not all visual tramsforms ($\mu$) are supported by all  $\rho$.
+%%insert little thickness sketch maybe?O->(O)
+So we define the actions $M$ on the image of $Q$, $Q(\Gamma(V)) = Y$. We can backward define our actions?
+
+When the visual atrtribute in $\mu$ is some kind of direct property of D, then we can define $M$ on $\Gamma(H)$ and require that $Q$ preserves it. But we have graphical parameters that do not apply to the whole glyph and therefore are not direct mappings on D, such as facecolor or line thickness. For these types of properties, we need to define an action on the target graphic $Q(\Gamma(V)) \in \Gamma(H)$.
+%%in a direct transformation of D, the map on s to d will fall out. Need the eqiuvariance in cases where there are not direct maps to D but instead are partial/compositional/ 
+
+If can check this on $Q$, then you can define an equivariant $M$. Use action of $M$ on $V$ to define action $M$ on $Y$. 
+
+Let ....
+
+If $\forall g \in M$ and $\forall \mu, \mu\prime \in X$, 
+\begin{equation}
+Q(\mu) = Q(x2) 
+\end{equation}
+If true, then we can define a group action on $Y$ is defined as $g\circ \rho = \rho\prime$ where $\rho\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$.
+
+tuple of figure above Is ... %%mu is first circle, mu' is second circle, broken mu is squggle%%
+if two $\mu$ go to the same graphic(glyph), then if we transform them the same way they need to generate the same graphic in H. two sections of V if they map to the same thing, they need to map to the same thing if you transform they need to map to the same thing. 
+
+change g to  m
+
+%% m is a cartesian product of group actions in M, for example {identity, ...., identity, thickens}
+%% \mu and \mu' are different sections of \Gamma(V)
+
+\paragraph{Example: Invalid Q}
+Check a well defined map $M\times Y \rightarrow Y$.
+
+
+constraint: inputs go to same output means changes to inputs mean same changes to output
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
-n $O(E)$ of the same type, they output the same type of prerender $O(H)$:
+Given $O(E)$ of the same type that output to the same type of graphic $O(H)$, the 
 
 
 Natural transformation + composition is partial ordering? Back and forth is equivalent 
