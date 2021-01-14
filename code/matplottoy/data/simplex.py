@@ -45,7 +45,10 @@ class VertexSimplex: #maybe change name to something else
                       'v2': {'type': float,'monoid':'interval',
                              'range': [0,1]},
                       'v3': {'type': str, 'monoid':'nominal', 
-                             'range':['true', 'false']}})
+                             'range':['true', 'false']},
+                      'v4': {'type': float, 'monoid':'interval', 
+                             'range':[2,3]}       
+                        })
 
     def __init__(self, sid = 45, size=1000, max_key=10**10):
         self.section_id = sid
@@ -63,7 +66,8 @@ class VertexSimplex: #maybe change name to something else
         e1 = rng.choice(self.FB.F['v1']['range'])
         e2 = rng.uniform(*self.FB.F['v2']['range'])
         e3 = rng.choice(self.FB.F['v3']['range'])
-        return (k, (e1, e2, e3))
+        e4 = rng.uniform(*self.FB.F['v4']['range'])
+        return (k, (e1, e2, e3, e4))
 
     def view(self, simplex="vertex"):
         """"converts data into atomic column order for get method
