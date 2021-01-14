@@ -14,19 +14,21 @@ In this section we introduce a mathematical description of the visualization pip
     \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
 \end{equation}
 
-We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the fields in a dataset from how the values in those fields are connected to each other:
-\begin{itemize}
-\item $E$ is a locally trivial fiber bundle over $K$ representing data space.
-\item $H$ is a fiber bundle over $S$ representing visual space
-\item $K$ and $S$ are a triangulizable topological space or a CW complex encoding the connectivity of points in $E$ and $H$ respectively
-\end{itemize}
+We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the variables in a dataset from how the values in those fields are connected to each other. The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
 
-The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
-
+%% we will define data, visual, and graphic spaces in terms of fiberbundles and then describe equivariant maps from E to V to H
 
 \subsection{Data Space}
-As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, we model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
+% introduce what this is gonna happen in this section - we will talk about, fiber and connectivity 
+% motivate w/ data/ example - have weather station. %tidydata 
+% we will introduce the fiber bundle and its components base and total space to explain the fiber
 
+As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}
+
+
+%%% might get moved into basespace discussion:
+
+We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -36,7 +38,47 @@ As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizatio
 
 with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
-\subsubsection{Base Space $\mathcal{K}$}
+\subsubsection{Variable Field in F }
+\label{sec:fiber_data}
+ %%%first sentence should be a paragraph
+%%% butler's paper, no notion of distance on K, can only map F to the visual fibers, so need an X to map to Xpos
+% variable, measurement, pull in tidy here, 
+% % motivate by example, temperature \ time 
+%% F_0 = {temp_0, temp_n}, 
+%% then adding in a second set of variables time: 
+%% F_1 = {time_0, time_1}
+% break out into F first as set of values, then F=F_{0}\times F_{1} as component 
+
+
+
+The fiber is the cartesian product of the variable spaces:
+\begin{align}
+F &= F_{0} \times \ldots \times F_{n}
+\end{align}
+
+We formulate the fiber such that it has a mapping between the somethine thing and the field name, as discussed in Spivak's simplacial description of databases \cite{spivakSIMPLICIALDATABASES,spivakDatabasesAreCategories2010}. 
+
+Fibers do not need to be 1D.
+
+\subsubsection{Measurement Type}
+%% maybe move somewhere else w/ some more motivation
+%% do this section in terms of $M0, F_0$
+An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
+\begin{equation}
+M = M_{0} \times \ldots\times M_{i}
+\end{equation}
+is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid \cite{Monoid2021} $M$ is a set with an associative binary operator $\ast:M \times M\rightarrow M$. A monoid has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet: M\times F \rightarrow F$ with the properties:
+\begin{description}
+    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
+    \item[identity] $\text{for all } x\in F, e\in M,  e\bullet x = x$ 
+\end{description} 
+
+The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variety of scales such as partial order. 
+
+%%close out the fiber bundle section with the cartesian products, which gives us heterogenous data , univariate to multivariate. We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
+\subsubsection{Connectivity of the Data} 
+%% flows out of the fiber section into, now gluing observations together into a thing
+%% can then put functions on edges/planes/etc so we have true continouity
 \label{sec:base_data}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/sections/math/k_different_types.png}
@@ -44,59 +86,23 @@ with topological total space $E$, base space $K$, fiber space $F$, and the map f
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
 \end{figure}
 
-Datasets have a semantic topology such as the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. As illustrated in fig~\ref{fig:base_space_div}, $K$ is this underlying structure. $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
+Datasets have a semantic topology such as the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. %%turn it into a paragraph
 
+As illustrated in fig~\ref{fig:base_space_div}, $K$ is this underlying structure. $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
 
 \begin{figure}[H]
     \label{fig:base_space_div}
     \includegraphics[width=.5\linewidth]{figures/sections/math/k_qspace.png}
     %%include second figure where fiber goes otherway
 \end{figure}
-The topology $K$ and the fields $F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
+The topology $K$ and the
 
-\paragraph{Triangulization}
-\label{sec:triangulization}
-In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
+%%this paragraph isn't working
+$F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
-\begin{figure}[H]
-    \label{fig:simplex}
-    \includegraphics{figures/sections/math/simplex.png}
-    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
-\end{figure}
-
-K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices\cite{geometricaSimplicialComplexes}, such as those shown in figure~\ref{fig:simplex}.
-
-\subparagraph{Example}
-\textcolor{blue}{Need to sketch and write this example}\\
-chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
-
-
-\subsubsection{Fiber Space}
-\label{sec:fiber_data}
-Datasets can be univariate or multivariate, homogenous or heteregenous, and fibers are where we encode this information. Each field in the dataset $f_{i}$ contains a range of values that come from the codomain of $f_{i}$. The fiber is the cartesian product of the codomains of fields:
-\begin{align}
-F &= codomain(f_{0})\times \ldots \times codomain(f_{n})\\
-F &= F_{0} \times \ldots \times F_{n}
-\end{align}
-
-We formulate the fiber such that it has a mapping between the codomain and the field name, as discussed in Spivak's simplacial description of databases \cite{spivakSIMPLICIALDATABASES,spivakDatabasesAreCategories2010}. An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
-\begin{equation}
-M = M_{0} \times \ldots\times M_{i}
-\end{equation}
-is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid \cite{Monoid2021} $M$ is a set that is closed under an associative binary operator $\ast$ and has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. 
-
-A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet$ with the properties:
-\begin{description}
-    \item[closure] $\bullet: M\times F \rightarrow X$,
-    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
-    \item[identity] $\text{for all } x\in F, e\in M,  e\bullet x = x$ 
-\end{description} 
-
-The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variaty of scales such as partial order
-
-\subsubsection{Section}
+\subsubsection{Data: Section}
 \label{sec:section_data}
-The sections of the fiber bundles are the instances of the data. They are the functions that map from a key on $K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
+The sections of the fiber bundles are the instances of the data. They are the functions that map from a point $k \in K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
@@ -105,11 +111,14 @@ The sections of the fiber bundles are the instances of the data. They are the fu
     \end{tikzcd}
 \end{equation}
 
+%%% change to b\c locally trivial, can represent 
 such that in a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
     \label{eq:section_return}
     \tau(k) = (k, (x_{F_{0}}, \ldots, x_{F_{n}}))
 \end{equation}
+
+%%%can decompose bundles into Ei such that \tau: E_{i} \rightarrow K, where F_{i} is the fiber of E_{i}
 which we can also decompose such that
 \begin{align}
 \tau_{0}(k) &= (k, (x_{F_{0}}))\\
@@ -118,9 +127,10 @@ which we can also decompose such that
 \end{align}
 
 which allows us to have field wise access to the data so long as there is a shared $K$.  
+%% we will use this property later for visual mapping such that we can seperate each variable into its own bundle
 
 \subsubsection{Sheaf and Stalk}
-
+%%% sheaf is how we break up the base space 
 Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$
 
 \begin{equation}
@@ -132,10 +142,15 @@ Often a graphic may need to be updated with live data or support zooming in on a
 \end{equation}
 which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ pulled back via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
 
-The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a type of sheaf that allows for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
+%% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber 
+The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
 \subsubsection{Example: Temperature}
 \textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
+
+% can't make a 1D fiber - can't make a 1D fiber, switch the picture to plane over 0D and 1D and then can talk about disconnected or connected
+
+% break out the mbox/clean up the typesetting
 The fiber bundle model is flexible enough to express some of the many different forms that temperature data can come in. 
 
 \begin{figure}[H]
@@ -348,15 +363,18 @@ When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ o
     \label{fig:artist_mark_change}
 \end{figure}
 
-Many $\mu_{i}$ are graphical parameters that do not apply to the whole glyph, such as edge thickness in figure~\ref{fig:artist_mark_change}. In these situations, not all  $\rho$ in $\Gamma(H)$ will support these parameters; instead we define an action on the output graphic $Q(\Gamma(V)) \in \Gamma(H)$ since by definition every section $\mu$ will have a corresponding $\rho$.
+Many $\mu_{i}$ are graphical parameters that do not apply to the whole glyph, such as edge thickness in figure~\ref{fig:artist_mark_change}. 
+
+%%% rework this sentence
+In these situations, not all  $\rho$ in $\Gamma(H)$ will support these parameters; instead we define an action on the output graphic $Q(\Gamma(V)) \in \Gamma(H)$ since by definition every section $\mu$ will have a corresponding $\rho$.
 
 We then define the constraint on $Q$ such that if $Q$ applied to two sections $\mu, \mu\prime$ generate the same graphic $\rho$, then the output of both sections acted on by the same monoid $m$ must also be the same.    
 
-Lets call the visual encodings $\Gamma(V)=X$ and the graphic $Q(\Gamma(V))=Y$. If $\forall m \in M$ and $\forall \mu, \mu\prime \in X$, 
+Lets call the visual encodings $\Gamma(V)=X$ and the graphic $Q(\Gamma(V))=Y$. If $\forall m \in M$ and $\forall \mu, \mu^\prime \in X$, 
 \begin{equation}
-Q(\mu) = Q(\mu\prime)\implies Q(m\circ\mu) = Q(m\circ\mu\prime)
+Q(\mu) = Q(\mu^\prime)\implies Q(m\circ\mu) = Q(m\circ\mu^\prime)
 \end{equation}
-then a group action on $Y$ can be defined as $m\circ \rho = \rho\prime$ where $\rho\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$. 
+then a group action on $Y$ can be defined as $m\circ \rho = \rho^\prime$ where $\rho^\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$. 
 
 Given  
 \begin{itemize}
@@ -365,7 +383,7 @@ Given
     \item  $Q(\mu)=\rho$ generates a piece of the thin circle in figure~\ref{fig:artist_mark_change}
 \end{itemize}
 
-the constraint on $Q$ means that the translation $m=\{e, e, e, x+2\}$ applied to $\mu$ such that $\mu\prime=\{0,0,0,3\}$ has an equivalent action on $\rho$ that causes $Q(\mu\prime)$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
+the constraint on $Q$ means that the translation $m=\{e, e, e, x+2\}$ applied to $\mu$ such that $\mu^\prime=\{0,0,0,3\}$ has an equivalent action on $\rho$ that causes $Q(\mu\prime)$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
 
 \paragraph{Example: Invalid Q}
 \textcolor{blue}{Insert some degenerate Q that generates an inconsistent glyph}
@@ -399,4 +417,23 @@ Given $O(E)$ of the same type that output to the same type of graphic $O(H)$, th
 
 
 Natural transformation + composition is partial ordering? Back and forth is equivalent 
+
+
+\subsection{Making the fiber bundle computable}
+\label{sec:triangulization}
+%% we can talk about triangulazation backwards from the mark
+%% To implement this, we 
+In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
+
+\begin{figure}[H]
+    \label{fig:simplex}
+    \includegraphics{figures/sections/math/simplex.png}
+    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
+\end{figure}
+
+K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices\cite{geometricaSimplicialComplexes}, such as those shown in figure~\ref{fig:simplex}.
+
+\subparagraph{Example}
+\textcolor{blue}{Need to sketch and write this example}\\
+chopping up a torus maybe? talk about how that gets unpacked into triangles and then into vertices
 \end{document}
