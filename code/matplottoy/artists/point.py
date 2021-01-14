@@ -10,8 +10,9 @@ import matplotlib.path as mpath
 from matplottoy.artists import utils
 
 class Point(mcollections.Collection):
+    # this is the visual fiber 
     required = {'x', 'y'}
-    optional = {'facecolors'} 
+    optional = {'facecolors', 's'} 
     def __init__(self, data, transforms, *args, **kwargs):
         """
         Parameters
@@ -25,10 +26,9 @@ class Point(mcollections.Collection):
         # has a way to provide vertex data  
         assert 'vertex' in data.FB.K['tables']
         # check that you've given the required parameters
-        utils.check_constraints(Point, transforms)
+        utils.check_constraints(Point, transforms.keys())
         utils.validate_transforms(data.FB.F, transforms)
 
-        
         self.data = data
         self.transforms = transforms
 
@@ -36,15 +36,13 @@ class Point(mcollections.Collection):
         view = self.data.view('vertex') #resolve to size
 
         # call tau step
-        visual = dict([(t, tau.convert(view[var]))
-            for (t, (var, tau)) in self.transforms.items()])
+        visual = utils.convert_transforms(view, self.transforms)
            
         # assembles taus to generate idiom
         # dictionary here in place of visual(parameter) function
-        if 's' not in visual:
-            visual['s'] = itertools.repeat(0.05)
-        if 'facecolors' not in visual:
-            visual['facecolors'] = "C0"
+       
+        visual['s'] = itertools.repeat(visual.get('s', 0.05))
+        visual['facecolors'] = visual.get('facecolors', "C0")
         #switch out to a marker 
         self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
                         for (x, y, s) 
