@@ -76,9 +76,10 @@ is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid
 The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variety of scales such as partial order. 
 
 %%close out the fiber bundle section with the cartesian products, which gives us heterogenous data , univariate to multivariate. We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
-\subsubsection{Connectivity of the Data} 
+\subsubsection{Connectivity: Base Space} 
 %% flows out of the fiber section into, now gluing observations together into a thing
 %% can then put functions on edges/planes/etc so we have true continouity
+
 \label{sec:base_data}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/sections/math/k_different_types.png}
@@ -101,6 +102,7 @@ The topology $K$ and the
 $F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
 \subsubsection{Data: Section}
+%%% visual variable encoding in a consistent/atomic way in a complex strcutrue 
 \label{sec:section_data}
 The sections of the fiber bundles are the instances of the data. They are the functions that map from a point $k \in K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
