@@ -1,15 +1,18 @@
 \documentclass[letterpaper,onecolumn,titlepage]{Ythesis}
+\usepackage{minted}
+\makeatletter
+\newcommand\subfix[1]{\import@path#1}
+\makeatother
+\usepackage{subfiles}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{cd}
 \usepackage{blindtext, xcolor}
-\usepackage{comment}
 \usepackage{array,multirow}
 \usepackage{tabulary}
 \usepackage{threeparttable}
 \usepackage{mathtools}
 \usepackage{subcaption}
-\usepackage{subfiles}
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{amssymb}

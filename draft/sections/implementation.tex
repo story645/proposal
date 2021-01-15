@@ -1,105 +1,69 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
+    
 
 \section{Matplottoy}
-\begin{figure}
-\includegraphics[width=\linewidth]{figures/sections/math/path_of_q.png}
+
+We build on the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the other graphical elements of the visualization and the rendering. We first introduce an implementation of scatter, line, and bar charts because they map to the fundemental marks of point, line, and area. We then introduce aggregated bar charts to show how to build more complex graphics.  
+
+\subsection{Scatter}
+ A scatter plot \cite{friendlyBriefHistoryData2006a,tukeyExploratoryDataAnalysis1977} is a chart type for plotting discrete values against each other. Minimally a scatter plot requires and x or y position, but the other variables in our dataset can be mapped to visual aspects of the scatter graphical mark. 
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
+    \label{fig:scatter}
 \end{figure}
-%%% objects: Data, V, H
-%%% functions: \nu, q
 
-We build on top of the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the other graphical elements of the visualization and the rendering. For a primitive graph such as a bar, scatter, line, our path is: 
+For the scatter plot in figure~\ref{fig:scatter}, we define $Q$ as 
+ \begin{equation}
+    Q(\mu_{xpos}, \mu_{ypos}, \mu_{facecolor}, \mu_{s})
+ \end{equation}
+
+which we implement building on the \texttt{matplotlib.collections} API:
+
 \begin{minted}{python}
-
-E = Section()
-V = {'parameter': ('field': transformer)}
-
-fig, ax = plt.subplots()
-artist = Q(E, V)
-ax.add_artist(artist)
-\end{minted}
-
-
-
-\subsection{Data: $\mathcal{E}$}
-We propose a semantic markup of the fiber and connectivity that we will later use to check the constraints of the $\nu$ and $Q$. 
-\begin{minted}{python}
-class FiberBundle:
-    def __init__(self, K, F):
+    class Point(mcollections.Collection):
+        # this is the visual fiber 
+        required = {'x', 'y'}
+        optional = {'facecolors', 's'} 
+        def __init__(self, data, transforms, *args, **kwargs):
             """
-            K: {'tables':[]}
-            F: {'field name': {'type': data type, 'monoid': measurement type, 
-                                'range': restrictions on data type }}
+            Parameters
+            ----------
+            data: sections of the fiber bundle
+            transforms
             """
-
-    def is_section(self, section):
-        """checks if a section is from a given fiber bundle:
-        are values in F, are keys in K"""
-        pass
-\end{minted}
-We add a monoid field to the schema like structure of the fiber since the monoid actions are the constraints on the $\nu$ and $Q$. These will usually be identified by a measurment scale such as 'nominal', 'ordinal', 'interval', and 'ratio'. The optional? range field can be used to specify restrictions on the type such as set of string categorical values or fixed interval of float values.  We implement $K$ using the triangleization scheme described in section~\ref{sec:triangulization}. This means we expect data to be provided as tables where the name encodes the connectivity:
-
-\begin{description}
-    \item[vertex] - disconnected points
-    \item[edge] - 1D continuity along the edge
-    \item[face] - 2D continuity along the face
-\end{description}
-Nested continuity is encoded in the fiber. For example, one way to encode a movie is a 1D timeseries of \mathrm{Frame} objects, where each \mathrm{Frame} is a $n\x m$ continuous array. 
-
-\subsubsection{Sections}
-As described in section~\ref{sec:section_data}, the data values are encode as the section of the fiber bundle. We implement this as as a wrapper class around a data container object of the form:
-\begin{minted}{python}
-class Section:
-    FB = FiberBundle(K, F)
-
-    def __init__(self, *args):
-        pass
-    def view(self, simplex="vertex"):
-        #convert data into atomic column order 
-        return {fieldname: data}
-\end{minted}
-
-The view function is the closest analog to $\tau$, as it returns a a data container type object. We specify field based top level indexing so that we can pair the fields with transformer $\nu$ objects. 
-
-\subsection{Encoding: $\mathcal{V}$}
-We implement $\nu$ as encoder objects with an optional `__init__` method that can be used to specify the range of target visual variables. 
-
-\begin{minted}{python}
-class Encoder:
-    def __init__(self, args):
-        pass
-    def validate(self, monoid):
-        #check if transform supports monoid action
-        pass
-    def convert(self, value):
-        # convert value to libraries internal normalized form
-        pass
-\end{minted}
-
-The \mathrm{validate} method specifies the monoids for which this a valid $\nu$ and checks against the specification in the fiber. The \mathrm{convert} method converts a value from data space to an internalized normal form as described in table~\ref{tab:mpl_visual_variable_fiber}.  
-
-\subsection{Graphic: $\mathcal{H}$}
-We inherent from the current Matplotlib artists for our $Q$, which is responsible for constructing a curried fully specified internal representation of the graphic.
-\begin{minted}{python}
-class Q(BaseClass):
-    required = {}
-    optional = {}
-    def __init__(self, data, *args, kwargs):
-        # check that required and optional visual parameters are passed in
-        # check that the transforms can be applied to the data 
-        pass
-    def draw(self, render, *args, **kwargs):
-        # get frozen atomic section of the data 
-        # apply  transforms data
-        # set internal attributes of the graphic q generates
-        #hands off to backends to draw on screen
-        super().draw(renderer, *args, **kwargs)
-\end{minted}
-While equation~\ref{eq:artist} specifies that the values of $\mu$ can be generated before they are input to $Q$, we curry the opertaions of obtaining the data and performing the transforms to the draw method because that allows us to more easily propogate updates to the data to the screen. 
-
-
-\subsection{Case Study: Iris(Penguins)}
-
-
+            super().__init__(*args, **kwargs)
+            
+            # check that the data you're trying to transform 
+            # has a way to provide vertex data  
+            assert 'vertex' in data.FB.K['tables']
+            # check that you've given the required parameters
+            utils.check_constraints(Point, transforms.keys())
+            utils.validate_transforms(data.FB.F, transforms)
+    
+            self.data = data
+            self.transforms = transforms
+    
+        def draw(self, renderer, *args, **kwargs):
+            view = self.data.view('vertex') #resolve to size
+    
+            # call tau step
+            visual = utils.convert_transforms(view, self.transforms)
+               
+            # assembles taus to generate idiom
+            # dictionary here in place of visual(parameter) function
+           
+            visual['s'] = itertools.repeat(visual.get('s', 0.05))
+            visual['facecolors'] = visual.get('facecolors', "C0")
+            #switch out to a marker 
+            self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
+                            for (x, y, s) 
+                            in zip(visual['x'],visual['y'], visual['s'])] 
+           
+            self.set_facecolors(visual['facecolors'])
+            super().draw(renderer, *args, **kwargs)
+    \end{minted}
+    
+    
 
 \end{document}
