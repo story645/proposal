@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{transforms} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{:} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}v2\PYGZsq{}}\PYG{p}{,} \PYG{n}{position}\PYG{o}{.}\PYG{n}{Identity}\PYG{p}{()),}
+              \PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}}\PYG{p}{:} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}v4\PYGZsq{}}\PYG{p}{,} \PYG{n}{position}\PYG{o}{.}\PYG{n}{Identity}\PYG{p}{()),}
+              \PYG{l+s+s1}{\PYGZsq{}facecolors\PYGZsq{}}\PYG{p}{:} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}v3\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{.}\PYG{n}{Categorical}\PYG{p}{(}
+                                    \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}true\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}deeppink\PYGZsq{}}\PYG{p}{,}
+                                     \PYG{l+s+s1}{\PYGZsq{}false\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}deepskyblue\PYGZsq{}}\PYG{p}{\PYGZcb{})),}
+              \PYG{l+s+s1}{\PYGZsq{}s\PYGZsq{}}\PYG{p}{:}\PYG{o}{.}\PYG{l+m+mi}{01}\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

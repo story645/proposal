@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{data}\PYG{p}{,} \PYG{n}{transforms}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+    \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} check that the data you\PYGZsq{}re trying to transform}
+    \PYG{c+c1}{\PYGZsh{} has a way to provide vertex data}
+    \PYG{k}{assert} \PYG{l+s+s1}{\PYGZsq{}vertex\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{data}\PYG{o}{.}\PYG{n}{FB}\PYG{o}{.}\PYG{n}{K}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}tables\PYGZsq{}}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{}there is no check here}
+
+    \PYG{c+c1}{\PYGZsh{} check that you\PYGZsq{}ve given the required parameters}
+    \PYG{n}{utils}\PYG{o}{.}\PYG{n}{check\PYGZus{}constraints}\PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{n}{transforms}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{())}
+    \PYG{n}{utils}\PYG{o}{.}\PYG{n}{validate\PYGZus{}transforms}\PYG{p}{(}\PYG{n}{data}\PYG{o}{.}\PYG{n}{FB}\PYG{o}{.}\PYG{n}{F}\PYG{p}{,} \PYG{n}{transforms}\PYG{p}{)}
+
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data} \PYG{o}{=} \PYG{n}{data}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{transforms} \PYG{o}{=} \PYG{n}{transforms}
+\end{Verbatim}

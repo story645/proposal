@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{Categorical}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mapping}\PYG{p}{):}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}goal of init is to store parameters that would otherwise be}
+\PYG{l+s+sd}{        curried higher level function\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{assert}\PYG{p}{(}\PYG{n}{mcolors}\PYG{o}{.}\PYG{n}{is\PYGZus{}color\PYGZus{}like}\PYG{p}{(}\PYG{n}{color}\PYG{p}{)} \PYG{k}{for} \PYG{n}{color} \PYG{o+ow}{in} \PYG{n}{mapping}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}mapping} \PYG{o}{=} \PYG{n}{mapping}
+
+    \PYG{k}{def} \PYG{n+nf}{convert}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+        \PYG{n}{values} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{atleast\PYGZus{}1d}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n}{value}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n+nb}{object}\PYG{p}{))}
+        \PYG{k}{return} \PYG{p}{[}\PYG{n}{mcolors}\PYG{o}{.}\PYG{n}{to\PYGZus{}rgba}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}mapping}\PYG{p}{[}\PYG{n}{v}\PYG{p}{])} \PYG{k}{for} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n}{values}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{validate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{mtype} \PYG{o+ow}{in} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nominal\PYGZsq{}}\PYG{p}{]}
+\end{Verbatim}
