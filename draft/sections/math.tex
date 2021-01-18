@@ -485,13 +485,6 @@ D_y &= ypos(\xi(\alpha_1, \alpha_2))
 through $\rho$. 
 
 
-\subsubsection{Visual Idioms: Equivalance class of artists}
-Given $O(E)$ of the same type that output to the same type of graphic $O(H)$, the 
-
-
-Natural transformation + composition is partial ordering? Back and forth is equivalent 
-
-
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
 
@@ -501,7 +494,7 @@ Natural transformation + composition is partial ordering? Back and forth is equi
     \label{fig:triangle_simplex}
 \end{figure}
 
-One way to build reusable and flexible $\xi$ is to choose a consistent way of representing$K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build the rest of $Q$.
+One way to build flexible $\xi$ is to choose a consistent way of representing$K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build components that could potentially be reused across $Q$.
 
 \subparagraph{Example}
 \begin{figure}[h!]
@@ -510,6 +503,9 @@ One way to build reusable and flexible $\xi$ is to choose a consistent way of re
 \end{figure}
 
 Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_torus}, the torus $K$ can be implemented as a simplacial complex of two 2-simplexes. We unfold the torus into the two triangles that compose the square in figure~\ref{fig:artist_heatmap} and encode that as K. We also constrain the functions on $A$, $A^\prime$, $B$ and $B^\prime$ such that $A$ can be glued to $A^\prime$ and $B$ to $B^\prime$ to reconstruct the torus. 
+
+\subsubsection{Visual Idioms: Equivalance class of artists}
+As formulated above, every artist function $A$ has fixed $\nu$ and generates a distinct graphic $\rho$. It is unfeasible to implement $A$ for every single graphic; instead we implement the equivalence class of artists $\{A \in A^\prime: A_{1} \equiv A_{2}\}$ which is $Q:\Gamma(V) \rightarrow \Gamma(H)$. 
 
 
 \end{document}
