@@ -14,10 +14,13 @@ In this section we introduce a mathematical description of the visualization pip
 
 We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the variables in a dataset from how the values  are connected to each other. The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
 
-In this section, we describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}). We then discuss the equivariant maps between data and visual characteristics (~\ref{sec:artist_nu}) and visual characteristics and graphics (~\ref{sec:artist_q}) that make up the artist. 
+We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}). We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
 \subsection{Data Space}
-\label{sec:space_data}
+\label{sec:data}
+Generally when we discuss data, we are interested in two aspects: the variables in the dataset
+
+
 % introduce what this is gonna happen in this section - we will talk about, fiber and connectivity 
 % motivate w/ data/ example - have weather station. %tidydata 
 % we will introduce the fiber bundle and its components base and total space to explain the fiber
@@ -25,20 +28,9 @@ In this section, we describe the fiber bundle spaces of data(\ref{sec:data}), gr
 As proposed by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}
 
 
-%%% might get moved into basespace discussion:
-
-We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
-\begin{equation}
-    \label{eq:fiber_bundle}
-    \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
-    \end{tikzcd}
-\end{equation}
-
-with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
 \subsubsection{Variable Field in F }
-\label{sec:data}
+\label{sec:data_fiber}
  %%%first sentence should be a paragraph
 %%% butler's paper, no notion of distance on K, can only map F to the visual fibers, so need an X to map to Xpos
 % variable, measurement, pull in tidy here, 
@@ -76,10 +68,19 @@ The Steven's measurement scales are identified via the group actions on $F_{i}$ 
 
 %%close out the fiber bundle section with the cartesian products, which gives us heterogenous data , univariate to multivariate. We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
 \subsubsection{Connectivity: Base Space} 
+\label{sec:data_base}
 %% flows out of the fiber section into, now gluing observations together into a thing
 %% can then put functions on edges/planes/etc so we have true continouity
+We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
+\begin{equation}
+    \label{eq:fiber_bundle}
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
+    \end{tikzcd}
+\end{equation}
 
-\label{sec:base_data}
+with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
+
 \begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/k_different_types.png}
     \label{fig:base_space_types}
@@ -101,7 +102,7 @@ The topology $K$ and the
 $F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
 \subsubsection{Data: Section}
-%%% visual variable encoding in a consistent/atomic way in a complex strcutrue 
+%%% visual variable encoding in a consistent/atomic way in a complex structure 
 \label{sec:section_data}
 The sections of the fiber bundles are the instances of the data. They are the functions that map from a point $k \in K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
@@ -507,4 +508,11 @@ Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_tor
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 As formulated above, every artist function $A$ has fixed $\nu$ and generates a distinct graphic $\rho$. It is unfeasible to implement $A$ for every single graphic; instead we implement the equivalence class of artists $\{A \in A^\prime: A_{1} \equiv A_{2}\}$ which is $Q:\Gamma(V) \rightarrow \Gamma(H)$. 
+
+%% Well maybe. I think this is where required components comes in. There is some minimal V where if you didn't have those variables you wouldn't call it a scatter plot .... something like xpos,ypos with K just a descrete set.
+%% so V probably can be any V that contains that sub-bundle
+%% so if bubble plot is not the same as scatter plot, and something where the colors change based on data is not scatter plot then it is the equivalent class of something with that minimal bundle.
+%% But then if you want to include ANYTHING that also maps with X-Y ... then you hit "direct limits" where you limit over all possivle V_big containing V_minimal
+%% You still get a map on some A_minimal -> A_big
+%% If you know how to visualize with more variables .. you can always fix them.
 \end{document}
