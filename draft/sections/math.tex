@@ -81,7 +81,7 @@ The Steven's measurement scales are identified via the group actions on $F_{i}$ 
 %% can then put functions on edges/planes/etc so we have true continouity
 
 \label{sec:base_data}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/k_different_types.png}
     \label{fig:base_space_types}
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
@@ -91,7 +91,7 @@ Datasets have a semantic topology such as the values are interpreted as discrete
 
 As illustrated in fig~\ref{fig:base_space_div}, $K$ is this underlying structure. $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \label{fig:base_space_div}
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
     %%include second figure where fiber goes otherway
@@ -156,7 +156,7 @@ The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet20
 % break out the mbox/clean up the typesetting
 The fiber bundle model is flexible enough to express some of the many different forms that temperature data can come in. 
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
         %% add box around neighboring P and Map
@@ -172,7 +172,7 @@ The fiber bundle model is flexible enough to express some of the many different 
 
 The datasets in figure~\ref{fig:base_example} have identical fibers that encode a set of temperature values. In figure~\ref{fig:base_example_line} the temperatures lie on a line such that a section could return a timeseries or a distribution. In figure~\ref{fig:base_example_plane}, the temperatures lie on a 2D continuous plane; a section could return a map or contour. Because the fiber is 1D, it does not encode metadata 
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
         \label{fig:fiber_example_plane}
@@ -199,7 +199,7 @@ F = [temp_{min}, temp_{max}] \times [-90, 90] \times [-180, 180]
 
 such that $E$ is the space of all possible points in $F$.
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
     \label{fig:fiber_example_section}
     \caption{The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
@@ -250,7 +250,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
 
 \subsubsection{{Example}}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=.4\linewidth]{figures/math/render.png}
     \caption{}
     \label{fig:render}
@@ -349,7 +349,7 @@ To construct a valid $\nu$, the diagram must commute for all monoid actions on t
 
 
 \subsubsection{Assembling Marks}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
     \label{fig:artist_q}
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
@@ -361,7 +361,7 @@ As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as
 \end{equation}
 When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ over all $S_k$, then $M$ can be defined over $\Gamma(H)$ such that a constraint on $Q$ is that it must be equivariant. For example, when $\mu_{i}$ is the color of the glyph, it maps directly to (R,G,B) in D.
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
     \label{fig:artist_mark_change}
 \end{figure}
@@ -421,7 +421,7 @@ in terms of $K$ because mark is a semantic term denoting the graphic representat
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a simple heatmap. 
 
 \paragraph{Q: scatter plot}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/scatter.png}
     \label{fig:artist_scatter}
 \end{figure}
@@ -439,7 +439,7 @@ y &= size\bullet \alpha_1 \bullet \sin(\alpha_2) + ypos
 such that $\rho(s) = (x, y, 0, 0, 0)$ where $s$ is the region in $H$. 
 
 \paragraph{Q: line plot}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/line.png}
     \label{fig:artist_line}
 \end{figure}
@@ -468,7 +468,7 @@ which yields components of $\rho(s)$:
 
 
 \paragraph{Q: heatmap}
-\begin{figure}[H]
+\begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/heatmap.png}
     \label{fig:artist_heatmap}
 \end{figure}
@@ -494,18 +494,14 @@ Natural transformation + composition is partial ordering? Back and forth is equi
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
-%% we can talk about triangulazation backwards from the mark
-%% To implement this, we 
-In our draft implementation of the data as fiber bundle model, we represent $K$ as a simplacial complex. 
 
 \begin{figure}[h!]
-    \label{fig:simplex}
     \includegraphics{figures/math/simplex.png}
     \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
+    \label{fig:triangle_simplex}
 \end{figure}
 
-K is a triangularizable topological space; one triangularization scheme is as a set composed of simplices\cite{geometricaSimplicialComplexes}, such as those shown in figure~\ref{fig:simplex}. 
-
+One way to build reusable and flexible $\xi$ is to choose a consistent way of representing$K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build the rest of $Q$.
 
 \subparagraph{Example}
 \begin{figure}[h!]
@@ -513,7 +509,7 @@ K is a triangularizable topological space; one triangularization scheme is as a 
     \label{fig:triangle_torus}
 \end{figure}
 
-Given data that lies on a toroidal space as shown in figure~\ref{fig:triangle_torus}, in our model this structure can be implemented as a simplacial complex of two 2-simplexes. We unfold the torus into the two triangles that compose the square in figure~\ref{fig:artist_heatmap} and encode that as K. We also constrain the functions on $A$, $A^\prime$, $B$ and $B^\prime$ such that $A$ can be glued to $A^\prime$ and $B$ to $B^\prime$ to reconstruct the torus. 
+Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_torus}, the torus $K$ can be implemented as a simplacial complex of two 2-simplexes. We unfold the torus into the two triangles that compose the square in figure~\ref{fig:artist_heatmap} and encode that as K. We also constrain the functions on $A$, $A^\prime$, $B$ and $B^\prime$ such that $A$ can be glued to $A^\prime$ and $B$ to $B^\prime$ to reconstruct the torus. 
 
 
 \end{document}
