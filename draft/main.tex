@@ -1,9 +1,8 @@
 \documentclass[letterpaper,onecolumn,titlepage]{Ythesis}
+
 \usepackage{minted}
-\makeatletter
-\newcommand\subfix[1]{\import@path#1}
-\makeatother
 \usepackage{subfiles}
+
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{cd}
@@ -26,7 +25,7 @@
 \author{Hannah Aizenman}
 \committee{Dr. Michael Grossberg (Advisor), Dr. Robert Haralick, Dr. Lev Manovich, Dr. Huy Vo}
 \submitted{}
-\abstract{}
+\abstract{\subfile{sections/abstract.tex}}
 
 \begin{document}
 \makefrontmatter
