@@ -1,8 +1,6 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-%% convention is base space \times fiber bundle
-%% change B to K
 \section{Notation \& Definitions}
 
 %% give the why of the math after every mention of why
@@ -14,11 +12,12 @@ In this section we introduce a mathematical description of the visualization pip
     \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
 \end{equation}
 
-We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the variables in a dataset from how the values in those fields are connected to each other. The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
+We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the variables in a dataset from how the values  are connected to each other. The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}. 
 
-%% we will define data, visual, and graphic spaces in terms of fiberbundles and then describe equivariant maps from E to V to H
+In this section, we first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}). We then discuss the equivariant maps between data and visual characteristics (~\ref{sec:artist_nu}) and visual characteristics and graphics (~\ref{sec:artist_q}) that make up the artist. 
 
 \subsection{Data Space}
+\label{sec:space_data}
 % introduce what this is gonna happen in this section - we will talk about, fiber and connectivity 
 % motivate w/ data/ example - have weather station. %tidydata 
 % we will introduce the fiber bundle and its components base and total space to explain the fiber
@@ -39,7 +38,7 @@ We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
 \subsubsection{Variable Field in F }
-\label{sec:fiber_data}
+\label{sec:data}
  %%%first sentence should be a paragraph
 %%% butler's paper, no notion of distance on K, can only map F to the visual fibers, so need an X to map to Xpos
 % variable, measurement, pull in tidy here, 
@@ -212,7 +211,7 @@ such that sections with the constraint that time is monotonic return a timeserie
 
 
 \subsection{Prerender Space $H$}
-\label{sec:display}
+\label{sec:graphic}
 We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
 
 \subsubsection{Base space}
@@ -305,6 +304,7 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
 Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defined in terms of common parameters to plots in Matplotlib. The range of $\mu_{i}$ determine the monoid actions on $\mu_{i}$. A section of V $\mu$ is a tuple of visual values that specifies the visual characteristics of a glyph. For example, given a fiber of $\{xpos, ypos, color\}$ one section is $\{.5, .5, (255, 20,147)\}$. $Q$ determines how this section is applied to a graphic.  
 
 \subsubsection{Visual Channels}
+\label{sec:artist_nu}
 $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
     \label{eq:nu_categorical}
@@ -349,6 +349,7 @@ To construct a valid $\nu$, the diagram must commute for all monoid actions on t
 
 
 \subsubsection{Assembling Marks}
+\label{sec:artist_q}
 \begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
     \label{fig:artist_q}
@@ -506,6 +507,4 @@ Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_tor
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 As formulated above, every artist function $A$ has fixed $\nu$ and generates a distinct graphic $\rho$. It is unfeasible to implement $A$ for every single graphic; instead we implement the equivalence class of artists $\{A \in A^\prime: A_{1} \equiv A_{2}\}$ which is $Q:\Gamma(V) \rightarrow \Gamma(H)$. 
-
-
 \end{document}
