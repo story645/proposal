@@ -17,11 +17,11 @@ We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref
 
 \subsection{Data Space}
 \label{sec:data}
-Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall. Using a fiber bundle allows us to express the properties of the variables(\ref{sec:data_fiber}), the connectivity of the observations (\ref{sec:data_base}), and tables of records (\ref{sec:data_section}).
+Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall. Using a fiber bundle allows us to express the properties of the variables(\ref{sec:data_fiber}), the connectivity of the records (\ref{sec:data_base}), and tables of records (\ref{sec:data_section}).
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this
+The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this $F$ to a component 
 \begin{equation}
 F_0 = \{tp_0, \ldots, tp_n\} 
 \end{equation}
@@ -76,10 +76,7 @@ of the monoids $M_{i}$ on each $F_{i}\in F$. Because each $F_i, M_i$ can be inde
 
 \subsubsection{Connectivity: Base Space $K$} 
 \label{sec:data_base}
-%We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
-%% flows out of the fiber section into, now gluing observations together into a thing
-%% can then put functions on edges/planes/etc so we have true continouity
-We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
+The fiber bundle is the gluing map $\pi$ between the fiber space included in the total space $E$ and the base space $K$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -87,7 +84,7 @@ We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
     \end{tikzcd}
 \end{equation}
 
-with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
+The base space $K$ provides a way to encode how the records are connected to each other; for example the GHCN data can be expressed as discrete observations, many timeseries, maps, a network of stations, etc.
 
 \begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/k_different_types.png}
@@ -95,17 +92,31 @@ with topological total space $E$, base space $K$, fiber space $F$, and the map f
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
 \end{figure}
 
-As mentioned in section~\ref{sec:intro_data_structure}, datasets have a semantic topology wherein the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. one way of encoding this underlying structure are the $K$s illustrated in figure~\ref{fig:base_space_div}, $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
+$K$ has no knowledge of the records. As illustrated in figure~\ref{fig:base_space_div}, $K$ is more of an indexing space into $E$ that describes the structure of $E$ and itself can be any number of dimensions. 
 
 \begin{figure}[ht!]
     \label{fig:base_space_div}
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
-    %%include second figure where fiber goes otherway
+    \caption{ The base space $E$ is divided into fiber segments $F$. The base space $K$ acts as an index into the fibers.}
 \end{figure}
-The topology $K$ and the
 
-%%this paragraph isn't working
-$F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
+Formally, $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space such that every $k \in K$ has a corresponding fiber $F_k$ in $E$. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the straight line. 
+
+We encode indexing from $K$ to $E$ as sections $\tau$ of the fiber bundle that return corresponding records. For example when $K$ has
+\begin{align*}
+    \textbf{vertexes}\;& \tau(k) \text{k= vertex id}
+    \textbf{edges}\; \tau(k,\alpha), \text{k = edge id, $\alpha$ = distance along edge} 
+    \textbf{faces}\; \tau(k,\alpha_1, \alpha_2), \text{k = face id, $\alpha_1$ = x on face, $\alpha_2$ = y on face}
+\end{align*}
+such that we can check for continuity of sections $\tau$ by verifying that the edges align such that $\tau(k_{i},1) = \tau(k_{j},0)$.
+
+As with fibers and monoids, we can decompose the total space into components 
+\begin{equation}
+    \pi: E_1 \rightarrow K, \ldots, \pi: E_i \rightarrow K, \ldots \pi: E_n \rightarrow K
+\end{equation}
+
+which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer variables in each record.
+
 
 \subsubsection{Values: Sections $\tau$}
 \label{sec:data_section}
@@ -137,6 +148,7 @@ which we can also decompose such that
 
 which allows us to have field wise access to the data so long as there is a shared $K$.  
 %% we will use this property later for visual mapping such that we can seperate each variable into its own bundle
+
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
@@ -504,7 +516,7 @@ through $\rho$.
 
 \begin{figure}[ht!]
     \includegraphics{figures/math/simplex.png}
-    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
+    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) records to all records are connected to at least 3 others}
     \label{fig:triangle_simplex}
 \end{figure}
 
