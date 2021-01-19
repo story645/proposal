@@ -5,6 +5,9 @@ __pycache__/
 *.egg-info/
 result_images/
 Untitled*.ipynb
+#minted
+_minted*
+*.pyg
 
 # use glob syntax.
 syntax: glob
