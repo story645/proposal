@@ -37,20 +37,19 @@ The elements in a given fiber set do not need to be scalers; for example the loc
 
 We also add the variable name and measurement scale $M$ monoid to the fiber $F_i$ such that 
 \begin{align}
-    $F_0$ &= (\mathrm{temperature}, \text{Temp}, $M_0$)\\
-    $F_1$ &= (\mathrm{time}, \text{Time}, $M_1$)\\
-    $F_2$ &= (\mathrm{location}, \text{Loc}, $M_2$)
+    F_0 &= (\mathrm{temperature}, \text{Temp}, M_0)\\
+    F_1 &= (\mathrm{time}, \text{Time}, M_1)\\
+    F_2 &= (\mathrm{location}, \text{Loc}, M_2)
 \end{align}
-
+ or more generally (name, set, monoid)
+ \begin{equation}
+    F_i = (\mathrm{name}, \{x_{i}, \ldots, \x_{n}\}, M_{i})
+ \end{equation}
 as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
 \begin{equation}
 F= F_{0} \times \ldots \times F_{n}
 \end{equation}
-while also retaining the individual sets $F_{i}$ that we will later apply visual variables to. 
-
-
-
-
+while also retaining the individual sets $F_{i}$ that we will transform into visual characteristics of the graphic. 
 
 \subsubsection{Measurement Type}
 \label{sec:data_monoid}
