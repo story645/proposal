@@ -1,24 +1,29 @@
 \documentclass[letterpaper,onecolumn,titlepage]{Ythesis}
 
-\usepackage{minted}
-\usepackage{subfiles}
+\usepackage[utf8]{inputenc} %utf-8 support
+\usepackage{minted} % syntax highlighting
+\usepackage{xcolor} %text color
+\usepackage{textcomp} % degree
+\usepackage{url} % hyperlinks\usepackage{tikz} %diagrams
 
-\usepackage[utf8]{inputenc}
-\usepackage{tikz}
-\usetikzlibrary{cd}
-\usepackage{blindtext, xcolor}
-\usepackage{array,multirow}
-\usepackage{tabulary}
-\usepackage{threeparttable}
-\usepackage{mathtools}
-\usepackage{subcaption}
-\usepackage{url}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{bm}
-\usepackage{mathrsfs}  
-\usepackage{float}
-\usepackage{graphicx}
+\usepackage{subfiles} % seperate files for sections
+\usepackage{array} %array typesetting
+\usepackage{multirow} %col/row spans
+\usepackage{tabulary} % dynamic width tables
+\usepackage{threeparttable} % complex tables w/ footnotes
+\usepackage{subcaption} % subfigure float captioning
+\usepackage{float} %better figure placement
+\usepackage{graphicx} %better include graphics
+
+\usepackage{tikz} %diagrams
+\usetikzlibrary{cd} %commutative diagrams
+\usepackage{amsmath} %misc math utlities
+\usepackage{amsthm} %theorems
+\usepackage{amssymb} %extended math symbols
+\usepackage{bm} %bold math symbols
+\usepackage{mathtools} %pretty math typesetting
+\usepackage{mathrsfs} %math script fonts 
+
 \usepackage[backend=bibtex, style=numeric-comp]{biblatex}
 \bibliography{glasslab_viz}
 \title{Make any stupid plot you want}
