@@ -3,8 +3,7 @@
 
 \section{Notation \& Definitions}
 
-%% give the why of the math after every mention of why
- 
+%% give the why of the math after every mention of why 
 In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
 
 \begin{equation}
@@ -18,33 +17,43 @@ We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref
 
 \subsection{Data Space}
 \label{sec:data}
-Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a global daily record of weather station  such as rainfall and temperature. Depending on which aspects of the data we want to visualize, we can encode it as a timeseries or map or both or even represent the measurements as completely disconnected. 
-
-Using a fiber bundle allows us to encode the properties of the heterogenous variables (\ref{sec:data_fiber}), the connectivity of the measurements (\ref{sec:data_base}), and functions between these spaces that yield the measurements (\ref{sec:data_section}).
+Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall. Using a fiber bundle allows us to express the properties of the variables(\ref{sec:data_fiber}), the connectivity of the observations (\ref{sec:data_base}), and tables of records (\ref{sec:data_section}).
 
 \subsubsection{Variable Field in F }
 \label{sec:data_fiber}
- %%%first sentence should be a paragraph
-%%% butler's paper, no notion of distance on K, can only map F to the visual fibers, so need an X to map to Xpos
-% variable, measurement, pull in tidy here, 
-% % motivate by example, temperature \ time 
-%% F_0 = {temp_0, temp_n}, 
-%% then adding in a second set of variables time: 
-%% F_1 = {time_0, time_1}
-% break out into F first as set of values, then F=F_{0}\times F_{1} as component 
+The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, lets construct a fiber bundle that is just the temperature column from GHCN. Then the fiber $F$ is the range of physically possible temperature values $\text{Temp} \subset \mathbb{R}$. Lets rename this
+\begin{equation}
+F_0 = \{\text{Temp}\}
+\end{equation}
+so that more variables can be added to the fiber. For example, lets add the time from GHCN $F_1 =\text{Time}$
+\begin{equation}
+F =  \{\text{Temp}\} \times \text{Time}
+\end{equation}
 
+The elements in a given fiber set do not need to be scalers; for example the location can be encoded as $F_3=\text{Loc}$ where $(\text{lat},\text{lon{}) \in \text{Loc}$.  We add the location to the fiber by adding the set to the cartesian product
+\begin{equation}
+    F =  \{\text{Temp}\} \times \text{Time} \times \text{Loc}
+\end{equation}
 
-
-The fiber is the cartesian product of the variable spaces:
+We also add the variable name and measurement scale $M$ monoid to the fiber $F_i$ such that 
 \begin{align}
-F &= F_{0} \times \ldots \times F_{n}
+    $F_0$ &= (\mathrm{temperature}, \text{Temp}, $M_0$)\\
+    $F_1$ &= (\mathrm{time}, \text{Time}, $M_1$)\\
+    $F_2$ &= (\mathrm{location}, \text{Loc}, $M_2$)
 \end{align}
 
-We formulate the fiber such that it has a mapping between the somethine thing and the field name, as discussed in Spivak's simplacial description of databases \cite{spivakSIMPLICIALDATABASES,spivakDatabasesAreCategories2010}. 
+as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
+\begin{equation}
+F= F_{0} \times \ldots \times F_{n}
+\end{equation}
+while also retaining the individual sets $F_{i}$ that we will later apply visual variables to. 
 
-Fibers do not need to be 1D.
+
+
+
 
 \subsubsection{Measurement Type}
+\label{sec:data_monoid}
 %% maybe move somewhere else w/ some more motivation
 %% do this section in terms of $M0, F_0$
 An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
@@ -80,9 +89,7 @@ with topological total space $E$, base space $K$, fiber space $F$, and the map f
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
 \end{figure}
 
-Datasets have a semantic topology such as the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. %%turn it into a paragraph
-
-As illustrated in fig~\ref{fig:base_space_div}, $K$ is this underlying structure. $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
+As mentioned in section~\ref{sec:intro_data_structure}, datasets have a semantic topology wherein the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. one way of encoding this underlying structure are the $K$s illustrated in figure~\ref{fig:base_space_div}, $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
 
 \begin{figure}[h!]
     \label{fig:base_space_div}
@@ -417,6 +424,7 @@ in terms of $K$ because mark is a semantic term denoting the graphic representat
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a simple heatmap. 
 
 \paragraph{Q: scatter plot}
+\\
 \begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/scatter.png}
     \label{fig:artist_scatter}
@@ -435,13 +443,14 @@ y &= size\bullet \alpha_1 \bullet \sin(\alpha_2) + ypos
 such that $\rho(s) = (x, y, 0, 0, 0)$ where $s$ is the region in $H$. 
 
 \paragraph{Q: line plot}
+\\
 \begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/line.png}
     \label{fig:artist_line}
 \end{figure}
 
 The line plot shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet discussed in section~\ref{sec:sheaf_stalk}
-
+(needs the normal to push up/down against the normal)
 
 \begin{equation}
     Q(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha_1, \alpha_2)
@@ -456,6 +465,7 @@ such that the components are
     \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
 \end{equation}
     
+%% only alpha1 exists on the data side
 which yields components of $\rho(s)$:
 \begin{align}
  x = xpos(\xi(\alpha_1)) &+ \alpha_2\hat(n_1)(\xi(\alpha_1)) \\
@@ -464,6 +474,7 @@ which yields components of $\rho(s)$:
 
 
 \paragraph{Q: heatmap}
+\\
 \begin{figure}[h!]
     \includegraphics[width=\textwidth]{figures/math/heatmap.png}
     \label{fig:artist_heatmap}
@@ -473,6 +484,7 @@ The heatmap in figure~\ref{fig:artist_heatmap}
 Q(xpos, ypos, color)
 \end{equation}
 has in the simple case a direct lookup into $K$ to obtain the $\mu = (x,y,c)$ values that are mapped into 
+(arrays are upside down, x is y, is x) - $\xi$ is about translating indices from data to visual alignment
 \begin{align}
 D_{RGB} &= color(\xi(\alpha_1, \alpha_2))
 D_x & = xpos(\xi(\alpha_1, \alpha_2))
@@ -490,7 +502,7 @@ through $\rho$.
     \label{fig:triangle_simplex}
 \end{figure}
 
-One way to build flexible $\xi$ is to choose a consistent way of representing$K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build components that could potentially be reused across $Q$.
+One way to build flexible $\xi$ is to choose a consistent way of representing $K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build components that could potentially be reused across $Q$.
 
 \subparagraph{Example}
 \begin{figure}[h!]
