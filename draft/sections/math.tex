@@ -47,33 +47,36 @@ such that one record $r$ in the fiber would have the form $(tp, t, (la,ln))$. We
  \end{equation}
 as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
 \begin{equation}
-F= F_{0} \times \ldots \times F_{n}
+F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
 \end{equation}
 and identify the elements in the record by the variable name. We will often be working with the decoupled fiber $F_i$ rather than the total fiber $F$. 
 
 
-\subsubsection{Measurement Scale: Monoid Actions}
+\subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-The monoid actions $M_i$ is the set of transformations on $F_i$ that we expect to be preserved in the visual transform. For example, the temperature $F_0$ with units $\degree C$ 
-Steven's measurement scales define group actions \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}
+A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape; this model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
 
-%% maybe move somewhere else w/ some more motivation
-%% do this section in terms of $M0, F_0$
-An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
+We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M$ is a set with an associative binary operator $\ast:M \times M\rightarrow M$. A monoid has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet: M\times F \rightarrow F$ with the properties:
+\begin{align*}
+    \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in F, e\in M,  e\bullet x = x 
+\end{align*}
+
+For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $F_0$ are the set of all transformations $tp_i + c$ such that 
 \begin{equation}
-M = M_{0} \times \ldots\times M_{i}
+F_0 = (\textit{temperature}, \{tp_0, \ldots, tp_n\}, \{tp_0 + c_0, \ldots, tp_0 + c_n, \ldots, tp_n + c_0, \ldots, tp_n + c_n\} ) 
+\end{equation} 
+
+
+As with the fiber $F$, the total monoid space $M$ is the cartesian product
+\begin{equation}
+M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
 \end{equation}
-is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid \cite{Monoid2021} $M$ is a set with an associative binary operator $\ast:M \times M\rightarrow M$. A monoid has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet: M\times F \rightarrow F$ with the properties:
-\begin{description}
-    \item[associativity] $\text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x$
-    \item[identity] $\text{for all } x\in F, e\in M,  e\bullet x = x$ 
-\end{description} 
+of the monoids $M_{i}$ on each $F_{i}\in F$. Because each $F_i, M_i$ can be independent of the other fibers, we can formally express the constraints on heterogenous multivariate datasets in the same manner as univariate datasets. 
 
-The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variety of scales such as partial order. 
-
-%%close out the fiber bundle section with the cartesian products, which gives us heterogenous data , univariate to multivariate. We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
 \subsubsection{Connectivity: Base Space $K$} 
 \label{sec:data_base}
+%We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
 %% flows out of the fiber section into, now gluing observations together into a thing
 %% can then put functions on edges/planes/etc so we have true continouity
 We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
