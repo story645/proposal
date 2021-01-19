@@ -19,9 +19,9 @@ We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref
 \label{sec:data}
 Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall. Using a fiber bundle allows us to express the properties of the variables(\ref{sec:data_fiber}), the connectivity of the observations (\ref{sec:data_base}), and tables of records (\ref{sec:data_section}).
 
-\subsubsection{Variable Field in F }
+\subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, lets construct a fiber bundle that is just the temperature column from GHCN. Then the fiber $F$ is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this
+The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this
 \begin{equation}
 F_0 = \{tp_0, \ldots, tp_n\} 
 \end{equation}
@@ -35,7 +35,7 @@ The elements in a given fiber set do not need to be scalers; for example the loc
     F = \{tp_0, \ldots, tp_n\}  \times \{ti_0, \ldots, ti_n\} \times 
     \{(la_0, ln_0),\ldots, (la_j, ln_k), \ldots (la_n,ln_n)\}
 \end{equation}
-such that one record $r$ in the fiber would have the form $(tp, t, (la,ln))$. We also add the variable name and measurement scale $M$ monoid to the fiber $F_i$ such that 
+such that one record $r$ in the fiber would have the form $(tp, t, (la,ln))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
 \begin{align}
     F_0 &= (\textit{temperature}, \{tp_0, \ldots, tp_n\}, M_0)\\
     F_1 &= (\textit{time}, \{ti_0, \ldots, ti_n\}, M_1)\\
@@ -49,10 +49,14 @@ as described in Spivak's categorical formulation of databases \cite{spivakSIMPLI
 \begin{equation}
 F= F_{0} \times \ldots \times F_{n}
 \end{equation}
-while also retaining the individual sets $F_{i}$ that we will transform into visual characteristics of the graphic. 
+and identify the elements in the record by the variable name. We will often be working with the decoupled fiber $F_i$ rather than the total fiber $F$. 
 
-\subsubsection{Measurement Type}
+
+\subsubsection{Measurement Scale: Monoid Actions}
 \label{sec:data_monoid}
+The monoid actions $M_i$ is the set of transformations on $F_i$ that we expect to be preserved in the visual transform. For example, the temperature $F_0$ with units $\degree C$ 
+Steven's measurement scales define group actions \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}
+
 %% maybe move somewhere else w/ some more motivation
 %% do this section in terms of $M0, F_0$
 An important property of data fields are the measurement type, which we generalize to identifying the left monoid action such that the monoid actions $M$ 
@@ -68,7 +72,7 @@ is the cartesion cross product of monoids applied to each $F_{i}\in F$. A monoid
 The Steven's measurement scales are identified via the group actions on $F_{i}$  \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale} they support. For example, nominal variables are permutable and interval values are translatable. We identify monoid actions, rather than group, to support an extended variety of scales such as partial order. 
 
 %%close out the fiber bundle section with the cartesian products, which gives us heterogenous data , univariate to multivariate. We can decompose the fiber bundle to components bundles \pi:E_1\rightarrow K, .... \pi: E_n\rightarrow K
-\subsubsection{Connectivity: Base Space} 
+\subsubsection{Connectivity: Base Space $K$} 
 \label{sec:data_base}
 %% flows out of the fiber section into, now gluing observations together into a thing
 %% can then put functions on edges/planes/etc so we have true continouity
@@ -100,7 +104,7 @@ The topology $K$ and the
 %%this paragraph isn't working
 $F$ are determined by how $E$ is subdivided\cite{QuotientSpaceTopology2020,QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div} we can divide a rectangular base space such that there is a short fiber and long base space or a long fiber and short base space. This is analogous to long and wide forms of the same table \cite{wickham2014tidy}.
 
-\subsubsection{Data: Section}
+\subsubsection{Values: Sections $\tau$}
 \label{sec:data_section}
 %%% visual variable encoding in a consistent/atomic way in a complex structure 
 \label{sec:section_data}
@@ -148,7 +152,7 @@ which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ p
 %% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber 
 The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
-\subsubsection{Case Study: Temperature}
+\subsubsection{Case Study: GHCN}
 \textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
 
 % can't make a 1D fiber - can't make a 1D fiber, switch the picture to plane over 0D and 1D and then can talk about disconnected or connected
