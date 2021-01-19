@@ -21,29 +21,29 @@ Lets say we are working with the Global Historical Climatology Network\cite{AnOv
 
 \subsubsection{Variable Field in F }
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, lets construct a fiber bundle that is just the temperature column from GHCN. Then the fiber $F$ is the range of physically possible temperature values $\text{Temp} \subset \mathbb{R}$. Lets rename this
+The fiber is a topological space containing the set of all observations that could possible be in the dataset, even values that do not actually exist in the dataset. For example, lets construct a fiber bundle that is just the temperature column from GHCN. Then the fiber $F$ is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this
 \begin{equation}
-F_0 = \{\text{Temp}\}
+F_0 = \{tp_0, \ldots, tp_n\} 
 \end{equation}
-so that more variables can be added to the fiber. For example, lets add the time from GHCN $F_1 =\text{Time}$
+so that more variables can be added to the fiber. Then lets add the time from GHCN $F_1 =\{t_0, \ldots, t_n\}$
 \begin{equation}
-F =  \{\text{Temp}\} \times \text{Time}
-\end{equation}
-
-The elements in a given fiber set do not need to be scalers; for example the location can be encoded as $F_3=\text{Loc}$ where $(\text{lat},\text{lon{}) \in \text{Loc}$.  We add the location to the fiber by adding the set to the cartesian product
-\begin{equation}
-    F =  \{\text{Temp}\} \times \text{Time} \times \text{Loc}
+F =  \{tp_0, \ldots, tp_n\}  \times \{ti_0, \ldots, ti_n\} 
 \end{equation}
 
-We also add the variable name and measurement scale $M$ monoid to the fiber $F_i$ such that 
+The elements in a given fiber set do not need to be scalers; for example the location can be encoded as the set of tuples $(\textit{lat},\textit{lon})$.  We add the location to the fiber 
+\begin{equation}
+    F = \{tp_0, \ldots, tp_n\}  \times \{ti_0, \ldots, ti_n\} \times 
+    \{(la_0, ln_0),\ldots, (la_j, ln_k), \ldots (la_n,ln_n)\}
+\end{equation}
+such that one record $r$ in the fiber would have the form $(tp, t, (la,ln))$. We also add the variable name and measurement scale $M$ monoid to the fiber $F_i$ such that 
 \begin{align}
-    F_0 &= (\mathrm{temperature}, \text{Temp}, M_0)\\
-    F_1 &= (\mathrm{time}, \text{Time}, M_1)\\
-    F_2 &= (\mathrm{location}, \text{Loc}, M_2)
+    F_0 &= (\textit{temperature}, \{tp_0, \ldots, tp_n\}, M_0)\\
+    F_1 &= (\textit{time}, \{ti_0, \ldots, ti_n\}, M_1)\\
+    F_2 &= (\textit{location},   \{(la_0, ln_0),\ldots, (la_j, ln_k), \ldots (la_n,ln_n)\}, M_2)
 \end{align}
  or more generally (name, set, monoid)
  \begin{equation}
-    F_i = (\mathrm{name}, \{x_{i}, \ldots, \x_{n}\}, M_{i})
+    F_i = (\textit{name}, \{x_{i}, \ldots, x_{n}\}, M_{i})
  \end{equation}
 as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
 \begin{equation}
@@ -82,7 +82,7 @@ We model data as a fiber bundle ($E$, $K$, $\pi$, $F$)
 
 with topological total space $E$, base space $K$, fiber space $F$, and the map from total space to base space $\pi: E \rightarrow K$. Maps from $K$ to $E$ are called sections and select specific points in $K$. The global space of sections in $E$ is $\Gamma(E)$.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/k_different_types.png}
     \label{fig:base_space_types}
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
@@ -90,7 +90,7 @@ with topological total space $E$, base space $K$, fiber space $F$, and the map f
 
 As mentioned in section~\ref{sec:intro_data_structure}, datasets have a semantic topology wherein the values are interpreted as discrete observations or part of a timeseries or map, or nodes in a networks \cite{munznerWhatDataAbstraction2014,geveci2012vtk}. one way of encoding this underlying structure are the $K$s illustrated in figure~\ref{fig:base_space_div}, $K$ does not directly know the values; instead it is the sections that define the lookup between keys $k \in K$ and the corresponding values in $E$.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \label{fig:base_space_div}
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
     %%include second figure where fiber goes otherway
@@ -148,7 +148,7 @@ which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ p
 %% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber 
 The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
-\subsubsection{Example: Temperature}
+\subsubsection{Case Study: Temperature}
 \textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
 
 % can't make a 1D fiber - can't make a 1D fiber, switch the picture to plane over 0D and 1D and then can talk about disconnected or connected
@@ -156,7 +156,7 @@ The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet20
 % break out the mbox/clean up the typesetting
 The fiber bundle model is flexible enough to express some of the many different forms that temperature data can come in. 
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
         %% add box around neighboring P and Map
@@ -172,7 +172,7 @@ The fiber bundle model is flexible enough to express some of the many different 
 
 The datasets in figure~\ref{fig:base_example} have identical fibers that encode a set of temperature values. In figure~\ref{fig:base_example_line} the temperatures lie on a line such that a section could return a timeseries or a distribution. In figure~\ref{fig:base_example_plane}, the temperatures lie on a 2D continuous plane; a section could return a map or contour. Because the fiber is 1D, it does not encode metadata 
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
         \label{fig:fiber_example_plane}
@@ -199,7 +199,7 @@ F = [temp_{min}, temp_{max}] \times [-90, 90] \times [-180, 180]
 
 such that $E$ is the space of all possible points in $F$.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
     \label{fig:fiber_example_section}
     \caption{The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
@@ -250,7 +250,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
 
 \subsubsection{{Example}}
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=.4\linewidth]{figures/math/render.png}
     \caption{}
     \label{fig:render}
@@ -269,7 +269,7 @@ In this section we will define the artist as a mapping from a sheaf $\mathcal{O}
 The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  compositing $V$ pulled back along $\xi$ to $\xi^*V$ to a visual mark in prerender space $Q:\xi^*V\rightarrow H$. 
 
 \begin{equation}
-    \label{eq:artist}
+    \label{eq:artist_daigram}
     \begin{tikzcd}
         E \arrow[r, "\nu"] \arrow[rd, "\pi"'] & V \arrow[d, "\pi"] & \xi^*V \arrow[r, "Q"] \arrow[d, "\xi^*\pi"'] \arrow[l, "\xi^*"'] & H \arrow[ld, "\pi"] \\
                                               & K                  & S \arrow[l, "\xi"']                                              &                    
@@ -351,7 +351,7 @@ To construct a valid $\nu$, the diagram must commute for all monoid actions on t
 
 \subsubsection{Assembling Marks}
 \label{sec:artist_q}
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
     \label{fig:artist_q}
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
@@ -363,7 +363,7 @@ As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as
 \end{equation}
 When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ over all $S_k$, then $M$ can be defined over $\Gamma(H)$ such that a constraint on $Q$ is that it must be equivariant. For example, when $\mu_{i}$ is the color of the glyph, it maps directly to (R,G,B) in D.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
     \label{fig:artist_mark_change}
 \end{figure}
@@ -422,9 +422,9 @@ in terms of $K$ because mark is a semantic term denoting the graphic representat
 \subsubsection{Sample Qs}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a simple heatmap. 
 
-\paragraph{Q: scatter plot}
-\\
-\begin{figure}[h!]
+\paragraph{Q: scatter plot}\mbox{} \\
+\label{sec:artist_example_scatter}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/scatter.png}
     \label{fig:artist_scatter}
 \end{figure}
@@ -441,9 +441,9 @@ y &= size\bullet \alpha_1 \bullet \sin(\alpha_2) + ypos
 
 such that $\rho(s) = (x, y, 0, 0, 0)$ where $s$ is the region in $H$. 
 
-\paragraph{Q: line plot}
-\\
-\begin{figure}[h!]
+\paragraph{Q: line plot}\mbox{} \\
+\label{sec:artist_example_line}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/line.png}
     \label{fig:artist_line}
 \end{figure}
@@ -472,9 +472,9 @@ which yields components of $\rho(s)$:
 \end{align}
 
 
-\paragraph{Q: heatmap}
-\\
-\begin{figure}[h!]
+\paragraph{Q: heatmap}\mbox{} \\
+\label{sec:artist_example_heatmap}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/heatmap.png}
     \label{fig:artist_heatmap}
 \end{figure}
@@ -495,7 +495,7 @@ through $\rho$.
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics{figures/math/simplex.png}
     \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) observations to all observations are connected to at least 3 other observations}
     \label{fig:triangle_simplex}
@@ -504,7 +504,7 @@ through $\rho$.
 One way to build flexible $\xi$ is to choose a consistent way of representing $K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build components that could potentially be reused across $Q$.
 
 \subparagraph{Example}
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
     \label{fig:triangle_torus}
 \end{figure}
