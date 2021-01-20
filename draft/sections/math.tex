@@ -21,33 +21,29 @@ Lets say we are working with the Global Historical Climatology Network\cite{AnOv
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ \mathscr{}\subset \mathbb{R}$. Lets rename this $F$ to a component 
-%%use spivaks U w/ subset data {x \in R | x >= 0}
+The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ U_{temp} = \{x \in \mathbb{R}^+\}$. 
 \begin{equation}
-F_0 = \{T_0, \ldots, T_n\} 
+    F = U_{temp}
 \end{equation}
-so that more variables can be added to the fiber. Then lets add the time from GHCN $F_1 =\{t_0, \ldots, t_n\}$
+Then lets add the time variable from GHCN $U_{time} = \{x \in \mathbb({Z}^+ \mid x \geq 1011832\}$ 
 \begin{equation}
-F =  \{T_0, \ldots, T_n\}  \times \{t_0, \ldots, t_n\} 
+F =  U_{temp} \times U_{time}
 \end{equation}
-
-The elements in a given fiber set do not need to be scalers; for example the location can be encoded as the set of tuples $(\textit{lat},\textit{lon})$.  We add the location to the fiber 
-%lat,lon in U
+such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_loc = \{y, x \in \mathbb{R}^{2} \mid -90 \leq y \leq 90, -180 \leq x -180\}$: 
 \begin{equation}
-    F = \{T_0, \ldots, T_n\}  \times \{t_0, \ldots, t_n\} \times 
-    \{(a_0, o_0),\ldots, (a_j, o_k), \ldots (a_n, o_n)\}
+    F = U_{temp} \times U_{time} \times U_{loc}
 \end{equation}
-such that one record $r$ in the fiber would have the form $(T, t, (a, o))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
+such that one record $r$ in the fiber would have the form $(temperature,\, time,\, (latitude,\, longitude))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
 \begin{align}
-    F_0 &= (\textit{temperature}, \{tp_0, \ldots, tp_n\}, M_0)\\
-    F_1 &= (\textit{time}, \{ti_0, \ldots, ti_n\}, M_1)\\
-    F_2 &= (\textit{location},   \{(la_0, ln_0),\ldots, (la_j, ln_k), \ldots (la_n,ln_n)\}, M_2)
+    F_0 &= (\textit{temperature}, U_{temp}, M_0)\\
+    F_1 &= (\textit{time}, U_{time}, M_1)\\
+    F_2 &= (\textit{location}, U_{loc}, M_2)
 \end{align}
- or more generally (name, set, monoid)
+ or more generally (name, type, monoid)
  \begin{equation}
-    F_i = (\textit{name}, \{x_{i}, \ldots, x_{n}\}, M_{i})
+    F_i = (\textit{name}, U_{type}, M_{i})
  \end{equation}
-as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
+where type is the set of values defined by the datatype as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
 \begin{equation}
 F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
 \end{equation}
@@ -130,10 +126,10 @@ such that we can check for continuity of sections $\tau$ by verifying that the e
 \begin{figure}
     \label{fig:data_base_transition}
     \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
-    \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
+    \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
 \end{figure}
 
-We can represent some spaces that are not trivial as 
+Many
 
 with transition functions that are maps from the fiber to the fiber along the edges. can also fold in if monoid is commutative on transition function:
 
