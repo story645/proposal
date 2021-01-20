@@ -33,7 +33,7 @@ such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. T
 \begin{equation}
     F = U_{temp} \times U_{time} \times U_{loc}
 \end{equation}
-such that one record $r$ in the fiber would have the form $(temperature,\, time,\, (latitude,\, longitude))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
+such that one record $r$ in the fiber would have the form $r=(temperature,\, time,\, (latitude,\, longitude))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
 \begin{align}
     F_0 &= (\textit{temperature},\, U_{temp},\, M_0)\\
     F_1 &= (\textit{time},\, U_{time},\, M_1)\\
@@ -108,7 +108,7 @@ Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, mean
     \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
 \end{figure}
 
-A fiber bundle is trivial if $E = K\times F$, which means that the fibers $F$ are the same over every $k$. We can make many non-trivial spaces locally trivial by breaking up the total space $E$ over local neighborhoods $U \subset K$ such that the fibers are equivalant. An example of a non-trivial fiber bundle is a mobius strip, where because of the twist some fibers are $\left[0,1\right]$ and others are $\left[1,0\right]$ such that we cannot construct a global map of which edge is 0 and which edge is 1.  In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
+A fiber bundle is trivial if $E = K\times F$, which means that the fibers $F$ are the same over every $k$ \cite{rowlandFiberBundle,FiberBundle2020}. We can make many non-trivial spaces locally trivial by breaking up the total space $E$ over local neighborhoods $U \subset K$ such that the fibers are equivalant. An example of a non-trivial fiber bundle is a mobius strip, where because of the twist some fibers are $\left[0,1\right]$ and others are $\left[1,0\right]$ such that we cannot construct a global map of which edge is 0 and which edge is 1.  In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
 -% need more detail please on commutativty
 
 As with fibers and monoids, we can decompose the total space into components 
@@ -120,10 +120,15 @@ which is a decomposition of $F$. The $K$ remains the same because the connectivi
 
 \subsubsection{Values: Sections $\tau$}
 \label{sec:data_section}
-%%maybe pull down/redo figure
-%%% visual variable encoding in a consistent/atomic way in a complex structure 
-\label{sec:section_data}
-The sections of the fiber bundles are the instances of the data. They are the functions that map from a point $k \in K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
+\begin{figure}[ht!]
+    \label{fig:base_space_div}
+    \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
+    \caption{ A section $\tau$ is a mapping from $K$ to $F$ that returns a record for each $k \in K$.}
+\end{figure}
+
+The sections of the fiber bundle are maps from points $k$ on $K$ to records $r$ in $F$. When we map our data to visual variables, the $\tau$ returns the set of values that are mapped together into a single graphic element. For GHCN, the $\tau$ functions return a table in a database with the schema defined in $F$ and the connectivity defined in $K$: this means the sections can be defined such that all values have the same year or location, e.g each table returned by a $\tau$ is for a different station. 
+
+The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
@@ -133,7 +138,7 @@ The sections of the fiber bundles are the instances of the data. They are the fu
 \end{equation}
 such that %%insrt math equiality here 
 %%% change to b\c locally trivial, can represent 
-If the fiber bundle is trivial, then $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
+If the fiber bundle is trivial, then :
 \begin{equation}
     \label{eq:section_return}
     \tau(k) = (k, (x_{F_{0}}, \ldots, x_{F_{n}}))
