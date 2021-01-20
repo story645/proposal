@@ -49,7 +49,6 @@ F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
 \end{equation}
 and identify the elements in the record by the variable name. We will often be working with the decoupled fiber $F_i$ rather than the total fiber $F$. 
 
-
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
 
@@ -109,10 +108,8 @@ Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, mean
     \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
 \end{figure}
 
-Many
-
-with transition functions that are maps from the fiber to the fiber along the edges. can also fold in if monoid is commutative on transition function:
-
+A fiber bundle is trivial if $E = K\times F$, which means that the fibers $F$ are the same over every $k$. We can make many non-trivial spaces locally trivial by breaking up the total space $E$ over local neighborhoods $U \subset K$ such that the fibers are equivalant. An example of a non-trivial fiber bundle is a mobius strip, where because of the twist some fibers are $\left[0,1\right]$ and others are $\left[1,0\right]$ such that we cannot construct a global map of which edge is 0 and which edge is 1.  In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
+-% need more detail please on commutativty
 
 As with fibers and monoids, we can decompose the total space into components 
 \begin{equation}
@@ -120,7 +117,6 @@ As with fibers and monoids, we can decompose the total space into components
 \end{equation}
 
 which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
-
 
 \subsubsection{Values: Sections $\tau$}
 \label{sec:data_section}
