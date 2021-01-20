@@ -29,19 +29,19 @@ Then lets add the time variable from GHCN $U_{time} = \{x \in \mathbb({Z}^+ \mid
 \begin{equation}
 F =  U_{temp} \times U_{time}
 \end{equation}
-such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_loc = \{y, x \in \mathbb{R}^{2} \mid -90 \leq y \leq 90, -180 \leq x -180\}$: 
+such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_{loc} = \{y, x \in \mathbb{R}^{2} \mid -90 \leq y \leq 90, -180 \leq x -180\}$: 
 \begin{equation}
     F = U_{temp} \times U_{time} \times U_{loc}
 \end{equation}
 such that one record $r$ in the fiber would have the form $(temperature,\, time,\, (latitude,\, longitude))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
 \begin{align}
-    F_0 &= (\textit{temperature}, U_{temp}, M_0)\\
-    F_1 &= (\textit{time}, U_{time}, M_1)\\
-    F_2 &= (\textit{location}, U_{loc}, M_2)
+    F_0 &= (\textit{temperature},\, U_{temp},\, M_0)\\
+    F_1 &= (\textit{time},\, U_{time},\, M_1)\\
+    F_2 &= (\textit{location},\, U_{loc},\, M_2)
 \end{align}
- or more generally (name, type, monoid)
+ or more generally (name, type, monoid action)
  \begin{equation}
-    F_i = (\textit{name}, U_{type}, M_{i})
+    F_i = (\textit{name},\, U_{type},\, M_{i})
  \end{equation}
 where type is the set of values defined by the datatype as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
 \begin{equation}
@@ -52,35 +52,29 @@ and identify the elements in the record by the variable name. We will often be w
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or enlarging a shape. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. 
 
-\begin{figure}
+
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/rotation_actions.png}
     \label{fig:data_monoid_rotation}
+    \caption{The set of rotation actions [turn 0, 90, 180] on the star produce a star (closed), include a rotation that does not change the orientation (identity), and can be done in any order to produce the same final orientation (closure); therefore the rotations are a set of monoid actions.}.  
 \end{figure}
-One such set of transforms is the rotation group showin in figure~\ref{fig:}
-One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
 
-% change to Mi 
-We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M$ is a set with an associative binary operator $\ast:M \times M\rightarrow M$. A monoid has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet: M\times F \rightarrow F$ with the properties:
-\begin{align*}%lost the \ast
-    \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in F, e\in M,  e\bullet x = x 
+A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape such as in figure~\ref{fig:data_monoid_rotation}. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
+
+We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{type}$ with an action $\bullet: M\times U_{type} \rightarrow U_{type}$ with the properties:
+\begin{align*}
+    \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in U_{type}, m\bullet(t\bullet x) = (m\ast t) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in U_{type}, e\in M,  e\bullet x = x 
 \end{align*}
 
-For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $F_0$ are the set of all transformations $tp_i + c$ such that %%generalize out to x in \U_{temp}, c in \R
-%%the action of the interval is the + 
-%% c is the element that shifts from x1 to x2
-\begin{equation}
-F_0 = (\textit{temperature}, \{tp_0, \ldots, tp_n\}, \{tp_0 + c_0, \ldots, tp_0 + c_n, \ldots, tp_n + c_0, \ldots, tp_n + c_n\} ) 
-\end{equation} 
-
+For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $U_{temp}$ are the set of transformations $\{x + c \in U_{temp} \mid x,c \in U_temp\}$ where $c$ is a valid interval between two temperatures $c=x_i-x_j$.
 
 As with the fiber $F$, the total monoid space $M$ is the cartesian product
 \begin{equation}
 M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
 \end{equation}
-of the monoids $M_{i}$ on each $F_{i}\in F$. Because each $F_i, M_i$ can be independent of the other fibers, we can formally express the constraints on heterogenous multivariate datasets in the same manner as univariate datasets. 
+of the monoid $M_{i}$ on each $F_{i}\in F$. Because each $F_i, M_i$ can be independent of the other fibers, we can formally express the constraints on heterogenous multivariate datasets in the same manner as univariate datasets. 
 
 \subsubsection{Connectivity: Base Space $K$} 
 \label{sec:data_base}
