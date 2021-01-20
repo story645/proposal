@@ -21,21 +21,23 @@ Lets say we are working with the Global Historical Climatology Network\cite{AnOv
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $\{tp_0, \ldots, tp_n\} \subset \mathbb{R}$. Lets rename this $F$ to a component 
+The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ \mathscr{}\subset \mathbb{R}$. Lets rename this $F$ to a component 
+%%use spivaks U w/ subset data {x \in R | x >= 0}
 \begin{equation}
-F_0 = \{tp_0, \ldots, tp_n\} 
+F_0 = \{T_0, \ldots, T_n\} 
 \end{equation}
 so that more variables can be added to the fiber. Then lets add the time from GHCN $F_1 =\{t_0, \ldots, t_n\}$
 \begin{equation}
-F =  \{tp_0, \ldots, tp_n\}  \times \{ti_0, \ldots, ti_n\} 
+F =  \{T_0, \ldots, T_n\}  \times \{t_0, \ldots, t_n\} 
 \end{equation}
 
 The elements in a given fiber set do not need to be scalers; for example the location can be encoded as the set of tuples $(\textit{lat},\textit{lon})$.  We add the location to the fiber 
+%lat,lon in U
 \begin{equation}
-    F = \{tp_0, \ldots, tp_n\}  \times \{ti_0, \ldots, ti_n\} \times 
-    \{(la_0, ln_0),\ldots, (la_j, ln_k), \ldots (la_n,ln_n)\}
+    F = \{T_0, \ldots, T_n\}  \times \{t_0, \ldots, t_n\} \times 
+    \{(a_0, o_0),\ldots, (a_j, o_k), \ldots (a_n, o_n)\}
 \end{equation}
-such that one record $r$ in the fiber would have the form $(tp, t, (la,ln))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
+such that one record $r$ in the fiber would have the form $(T, t, (a, o))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
 \begin{align}
     F_0 &= (\textit{temperature}, \{tp_0, \ldots, tp_n\}, M_0)\\
     F_1 &= (\textit{time}, \{ti_0, \ldots, ti_n\}, M_1)\\
@@ -54,15 +56,25 @@ and identify the elements in the record by the variable name. We will often be w
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape; this model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
+A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or enlarging a shape. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. 
 
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/math/rotation_actions.png}
+    \label{fig:data_monoid_rotation}
+\end{figure}
+One such set of transforms is the rotation group showin in figure~\ref{fig:}
+One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
+
+% change to Mi 
 We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M$ is a set with an associative binary operator $\ast:M \times M\rightarrow M$. A monoid has an identity element $e\in M$ such that $e\ast a= a \ast e = a$ for all $a \in M$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M$ is a set $F$ with an action $\bullet: M\times F \rightarrow F$ with the properties:
-\begin{align*}
+\begin{align*}%lost the \ast
     \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in F, m\bullet(t\bullet x) = (m\bullet t) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in F, e\in M,  e\bullet x = x 
 \end{align*}
 
-For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $F_0$ are the set of all transformations $tp_i + c$ such that 
+For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $F_0$ are the set of all transformations $tp_i + c$ such that %%generalize out to x in \U_{temp}, c in \R
+%%the action of the interval is the + 
+%% c is the element that shifts from x1 to x2
 \begin{equation}
 F_0 = (\textit{temperature}, \{tp_0, \ldots, tp_n\}, \{tp_0 + c_0, \ldots, tp_0 + c_n, \ldots, tp_n + c_0, \ldots, tp_n + c_n\} ) 
 \end{equation} 
@@ -87,7 +99,7 @@ The fiber bundle is the gluing map $\pi$ between the fiber space included in the
 The base space $K$ provides a way to encode how the records are connected to each other; for example the GHCN data can be expressed as discrete observations, many timeseries, maps, a network of stations, etc.
 
 \begin{figure}[ht!]
-    \includegraphics[width=\textwidth]{figures/math/k_different_types.png}
+    \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
     \label{fig:base_space_types}
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
 \end{figure}
@@ -102,24 +114,37 @@ $K$ has no knowledge of the records. As illustrated in figure~\ref{fig:base_spac
 
 Formally, $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space such that every $k \in K$ has a corresponding fiber $F_k$ in $E$. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the straight line. 
 
-We encode indexing from $K$ to $E$ as sections $\tau$ of the fiber bundle that return corresponding records. For example when $K$ has
+We encode indexing from $K$ to $E$ as sections $\tau$ of the fiber bundle that return corresponding records. 
+
+%%if we had a coordinate on 
+
+%%pull this down to triangulization section 
+For example when $K$ has
 \begin{align*}
-    \textbf{vertexes}\;& \tau(k) \text{k= vertex id}
-    \textbf{edges}\; \tau(k,\alpha), \text{k = edge id, $\alpha$ = distance along edge} 
-    \textbf{faces}\; \tau(k,\alpha_1, \alpha_2), \text{k = face id, $\alpha_1$ = x on face, $\alpha_2$ = y on face}
+    \textbf{vertexes}\;& \tau(k) \text{k= vertex id}\\
+    \textbf{edges}\;& \tau(k,\alpha), \text{k = edge id, $\alpha$ = distance along edge} \\
+    \textbf{faces}\;& \tau(k,\alpha_1, \alpha_2), \text{k = face id, $\alpha_1$ = x on face, $\alpha_2$ = y on face}
 \end{align*}
-such that we can check for continuity of sections $\tau$ by verifying that the edges align such that $\tau(k_{i},1) = \tau(k_{j},0)$.
+such that we can check for continuity of sections $\tau$ by verifying that the edges align such that $\tau(k_{i},1) = \tau(k_{j},0)$. 
+
+\begin{figure}
+    %%include transition function sketch
+\end{figure}
+
+We can represent more complex spaces with transition functions that are maps from the fiber to the fiber along the edges. can also fold in if monoid is commutative on transition function:
+
 
 As with fibers and monoids, we can decompose the total space into components 
 \begin{equation}
     \pi: E_1 \rightarrow K, \ldots, \pi: E_i \rightarrow K, \ldots \pi: E_n \rightarrow K
 \end{equation}
 
-which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer variables in each record.
+which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
 
 
 \subsubsection{Values: Sections $\tau$}
 \label{sec:data_section}
+%%maybe pull down/redo figure
 %%% visual variable encoding in a consistent/atomic way in a complex structure 
 \label{sec:section_data}
 The sections of the fiber bundles are the instances of the data. They are the functions that map from a point $k \in K$ to a set of values in $F$. For example, if we have a database, the section is the table that yields a row given an index. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
@@ -130,14 +155,14 @@ The sections of the fiber bundles are the instances of the data. They are the fu
         & K \arrow[u, "\tau"', bend right]
     \end{tikzcd}
 \end{equation}
-
+such that %%insrt math equiality here 
 %%% change to b\c locally trivial, can represent 
-such that in a trivial fiber bundle, $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
+If the fiber bundle is trivial, then $E = K \times F$ \cite{rowlandFiberBundle,FiberBundle2020}:
 \begin{equation}
     \label{eq:section_return}
     \tau(k) = (k, (x_{F_{0}}, \ldots, x_{F_{n}}))
 \end{equation}
-
+which is also true when the fiber bundle is locally trivial over $U \subset K$.
 %%%can decompose bundles into Ei such that \tau: E_{i} \rightarrow K, where F_{i} is the fiber of E_{i}
 which we can also decompose such that
 \begin{align}
@@ -164,8 +189,8 @@ Often a graphic may need to be updated with live data or support zooming in on a
 \end{equation}
 which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ pulled back via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
 
-%% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber 
-The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is a for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
+%% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber /fatten the E , notatoe E' = E + Jet
+The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
 \subsubsection{Case Study: GHCN}
 \textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
@@ -234,6 +259,8 @@ such that sections with the constraint that time is monotonic return a timeserie
 \label{sec:graphic}
 We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
 
+%%define a region b = [top, bottom, right, left]
+%% inverse of b is capital S_b
 \subsubsection{Base space}
 The underlying topology $S$ of a graphic often needs more dimensions than the data topology $K$ because of the specifications of the display space. For example, a line plot on a plane (such as a screen or a piece of paper) by necessity needs to also have a thickness so that it is visible, which maps back to a set of connected points in $H$. The topology of these connected points is therefore the region $s \subset S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
 \begin{equation}
@@ -251,19 +278,20 @@ A section $\rho: S \rightarrow H$ is a mapping from a region $s$ on a mathematic
 \paragraph{Example}
 For a physical screen display, we can consider a predisplay space that is a trivial fiber bundle $H=\mathbb{R}^{5}\times S$ such that $\rho$ is
 \begin{equation}
-    \rho(s)  = [x(s), y(s), r(s), g(s), b(s)]
+    \rho(s)  = (D_x(s), D_y(s), D_r(s), D_g(s), D_b(s))
     \label{eq:rho}
 \end{equation}
 
-To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where
+To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where %%% 
 \begin{equation}
 s = \rho^{-1}_{\tiny{XY}}(xy)
 \end{equation}
-such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields:
+such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields
+%% redefining notation 
 \begin{align}
-    r &= \iint\limits_s \rho_{\tiny{R}}(s)ds^{2}\\
-    g &= \iint\limits_s \rho_{\tiny{G}}(s)ds^{2}\\
-    b &= \iint\limits_s \rho_{\tiny{B}}(s)ds^{2}
+    R_b &= \iint\limits_s D_r(s)ds^{2}\\
+    G_b &= \iint\limits_s D_g(s)ds^{2}\\
+    B_b &= \iint\limits_s D_b(s)ds^{2}
 \end{align}
 
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
@@ -280,6 +308,7 @@ As illustrated in figure~\ref{fig:render}, words.
 \subsection{Artist}
 \label{sec:artist}
 
+%% E' not E
 In this section we will define the artist as a mapping from a sheaf $\mathcal{O}(E)$  to $\mathcal{O}(H)$. 
 \begin{equation}
     A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
@@ -288,7 +317,7 @@ In this section we will define the artist as a mapping from a sheaf $\mathcal{O}
 The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  compositing $V$ pulled back along $\xi$ to $\xi^*V$ to a visual mark in prerender space $Q:\xi^*V\rightarrow H$. 
 
 \begin{equation}
-    \label{eq:artist_daigram}
+    \label{eq:artist_diagram}
     \begin{tikzcd}
         E \arrow[r, "\nu"] \arrow[rd, "\pi"'] & V \arrow[d, "\pi"] & \xi^*V \arrow[r, "Q"] \arrow[d, "\xi^*\pi"'] \arrow[l, "\xi^*"'] & H \arrow[ld, "\pi"] \\
                                               & K                  & S \arrow[l, "\xi"']                                              &                    
@@ -373,7 +402,8 @@ To construct a valid $\nu$, the diagram must commute for all monoid actions on t
 \begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
     \label{fig:artist_q}
-    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}  
+    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}
+    %%maybe change to \tau, \mu, \rho  
 \end{figure}
 
 As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$
