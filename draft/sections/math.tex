@@ -111,9 +111,9 @@ Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, mean
 A fiber bundle is trivial if $E = K\times F$, which means that the fibers $F$ are the same over every $k$ \cite{rowlandFiberBundle,FiberBundle2020}. We can make many non-trivial spaces locally trivial by breaking up the total space $E$ over local neighborhoods $U \subset K$ such that the fibers are equivalant. An example of a non-trivial fiber bundle is a mobius strip, where because of the twist some fibers are $\left[0,1\right]$ and others are $\left[1,0\right]$ such that we cannot construct a global map of which edge is 0 and which edge is 1.  In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
 -% need more detail please on commutativty
 
-As with fibers and monoids, we can decompose the total space into components 
+As with fibers and monoids, we can decompose the total space into components $\pi:E_i\rightarrow K$ where
 \begin{equation}
-    \pi: E_1 \rightarrow K, \ldots, \pi: E_i \rightarrow K, \ldots \pi: E_n \rightarrow K
+    \pi:E_1\oplus\ldots\oplus E_i \oplus\ldots \oplus E_n \rightarrow K
 \end{equation}
 
 which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
@@ -136,12 +136,12 @@ The section $\tau$ is the mapping from base space to total space $\tau: K\righta
         & K \arrow[u, "\tau"', bend right]
     \end{tikzcd}
 \end{equation}
-such that %%insrt math equiality here 
-%%% change to b\c locally trivial, can represent 
-If the fiber bundle is trivial, then :
+such that there is $\pi(\tau(k)) = k$ map back to $K$. 
+
+If the fiber bundle is locally trivial, then
 \begin{equation}
     \label{eq:section_return}
-    \tau(k) = (k, (x_{F_{0}}, \ldots, x_{F_{n}}))
+    \tau(k) = (k, (g_{F_{0}}(k), \ldots, g_{F_{n}}(k))
 \end{equation}
 which is also true when the fiber bundle is locally trivial over $U \subset K$.
 %%%can decompose bundles into Ei such that \tau: E_{i} \rightarrow K, where F_{i} is the fiber of E_{i}
