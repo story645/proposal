@@ -11,25 +11,30 @@ In this section we introduce a mathematical description of the visualization pip
     \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
 \end{equation}
 
-We use fiber bundles\cite{FiberBundle2020, rowlandFiberBundle} to model data and graphics because they allow us to seperate the variables in a dataset from how the values  are connected to each other \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre} unless otherwise specified. 
-
 We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}). We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
 \subsection{Data Space}
 \label{sec:data}
-Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall. Using a fiber bundle allows us to express the properties of the variables(\ref{sec:data_fiber}), the connectivity of the records (\ref{sec:data_base}), and tables of records (\ref{sec:data_section}).
+%%% maybe change this to a generic representational data set
+We build on Butler's fiber bundle driven abstraction of data formats\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} because fiber bundles can express the properties of the variables(\ref{sec:data_fiber}), the continuity of the records (\ref{sec:data_base}), and distinct instances of records (\ref{sec:data_section}). The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre} unless otherwise specified. 
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ U_{temp} = \{x \in \mathbb{R}^+\}$. 
+The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. 
+
+%%push straight math generalization up
+%% We define w/ mapping, as Spivak
+
+%%push down to an example, knock it back to semi concrete
+For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ U_{temp} = \{x \in \mathbb{R}^+\}$. 
 \begin{equation}
     F = U_{temp}
 \end{equation}
-Then lets add the time variable from GHCN $U_{time} = \{x \in \mathbb({Z}^+ \mid x \geq 1011832\}$ 
+Then lets add the time variable from GHCN $U_{time} = \{x \in \mathbb{R}^+\}$ 
 \begin{equation}
 F =  U_{temp} \times U_{time}
 \end{equation}
-such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_{loc} = \{y, x \in \mathbb{R}^{2} \mid -90 \leq y \leq 90, -180 \leq x -180\}$: 
+such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_{loc} = \{y, x \in \mathbb{R}^{2} \mid -90^\circ \leq y \leq 90^\circ, -180^\circ \leq x -180^\circ\}$: %add comment about latitude and longitude
 \begin{equation}
     F = U_{temp} \times U_{time} \times U_{loc}
 \end{equation}
@@ -38,7 +43,7 @@ such that one record $r$ in the fiber would have the form $r=(temperature,\, tim
     F_0 &= (\textit{temperature},\, U_{temp},\, M_0)\\
     F_1 &= (\textit{time},\, U_{time},\, M_1)\\
     F_2 &= (\textit{location},\, U_{loc},\, M_2)
-\end{align}
+\end{align}%the fiber is the set, variable is the tuple such that there is a map from the index i in F to the tuple (name, M_0)  for every U_{type} we can construct a map to the name and the type as described by Spivak 
  or more generally (name, type, monoid action)
  \begin{equation}
     F_i = (\textit{name},\, U_{type},\, M_{i})
@@ -49,32 +54,40 @@ F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
 \end{equation}
 and identify the elements in the record by the variable name. We will often be working with the decoupled fiber $F_i$ rather than the total fiber $F$. 
 
+%%invert this section, start w/ general math than GHCN 
+
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
 
 \begin{figure}[ht!]
     \includegraphics[width=\textwidth]{figures/math/rotation_actions.png}
     \label{fig:data_monoid_rotation}
-    \caption{The set of rotation actions [turn 0, 90, 180] on the star produce a star (closed), include a rotation that does not change the orientation (identity), and can be done in any order to produce the same final orientation (closure); therefore the rotations are a set of monoid actions.}.  
+    \caption{The set of rotation actions [turn 0, 90, 180] on the star produce a star (closed), include a rotation that does not change the orientation (identity), and can be done in any order to produce the same final orientation (closure); therefore the rotations are a set of monoid actions.
+    %% dataset that is symmetric, fiber is x,y, rotatation action
+    %% rotate + plot or plot + rotate
+    %%emoji shuffle 
+    }  
 \end{figure}
 
-A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape such as in figure~\ref{fig:data_monoid_rotation}. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. One method of classifying the types of operations that can be performed on data are Steven's measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}.
+A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape such as in figure~\ref{fig:data_monoid_rotation}. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}.
 
 We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{type}$ with an action $\bullet: M\times U_{type} \rightarrow U_{type}$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in U_{type}, m\bullet(t\bullet x) = (m\ast t) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in U_{type}, e\in M,  e\bullet x = x 
 \end{align*}
-
-For example, the temperature $F_0$ defined in unit \textdegree C is on an interval scale; this means that the monoid actions $M_0$ on $U_{temp}$ are the set of transformations $\{x + c \in U_{temp} \mid x,c \in U_temp\}$ where $c$ is a valid interval between two temperatures $c=x_i-x_j$.
-
 As with the fiber $F$, the total monoid space $M$ is the cartesian product
 \begin{equation}
 M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
 \end{equation}
-of the monoid $M_{i}$ on each $F_{i}\in F$. Because each $F_i, M_i$ can be independent of the other fibers, we can formally express the constraints on heterogenous multivariate datasets in the same manner as univariate datasets. 
+of the monoid $M_{i}$ on each $F_{i}\in F$. 
 
-\subsubsection{Connectivity: Base Space $K$} 
+Steven's defined the measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
+
+For example, the temperature in \textdegree C is on an interval scale, which means that the monoid actions $M_0$ on $U_{temp}$ are the set of translations $\{f: x\mapsto x + c \in U_{temp} \mid x,c \in U_temp\}$ where $c$ is a valid interval between two temperatures $c=x_i-x_j$.
+
+\subsubsection{continuity: Base Space $K$} 
+%%fold butlder
 \label{sec:data_base}
 The fiber provides the schema of the dataset, but the fiber bundle is what glues that schema to a structure. The fiber bundle is the map $\pi$ between the fiber space included in the total space $E$ and the base space $K$
 \begin{equation}
@@ -102,14 +115,6 @@ $K$ has no knowledge of the records. As illustrated in figure~\ref{fig:base_spac
 
 Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space such that every $k \in K$ has a corresponding fiber $F_k$ in $E$. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the line. 
 
-\begin{figure}
-    \label{fig:data_base_transition}
-    \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
-    \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
-\end{figure}
-
-A fiber bundle is trivial if $E = K\times F$, which means that the fibers $F$ are the same over every $k$ \cite{rowlandFiberBundle,FiberBundle2020}. We can make many non-trivial spaces locally trivial by breaking up the total space $E$ over local neighborhoods $U \subset K$ such that the fibers are equivalant. An example of a non-trivial fiber bundle is a mobius strip, where because of the twist some fibers are $\left[0,1\right]$ and others are $\left[1,0\right]$ such that we cannot construct a global map of which edge is 0 and which edge is 1.  In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
--% need more detail please on commutativty
 
 As with fibers and monoids, we can decompose the total space into components $\pi:E_i\rightarrow K$ where
 \begin{equation}
@@ -126,9 +131,7 @@ which is a decomposition of $F$. The $K$ remains the same because the connectivi
     \caption{ A section $\tau$ is a mapping from $K$ to $F$ that returns a record for each $k \in K$.}
 \end{figure}
 
-The sections of the fiber bundle are maps from points $k$ on $K$ to records $r$ in $F$. When we map our data to visual variables, the $\tau$ returns the set of values that are mapped together into a single graphic element. For GHCN, the $\tau$ functions return a table in a database with the schema defined in $F$ and the connectivity defined in $K$: this means the sections can be defined such that all values have the same year or location, e.g each table returned by a $\tau$ is for a different station. 
-
-The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
+The sections of the fiber bundle are maps from points $k$ on $K$ to records $r$ in $F$. When we map our data to visual variables, the $\tau$ returns the set of values that are mapped together into a single graphic element. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
@@ -138,23 +141,21 @@ The section $\tau$ is the mapping from base space to total space $\tau: K\righta
 \end{equation}
 such that there is $\pi(\tau(k)) = k$ map back to $K$. 
 
-If the fiber bundle is locally trivial, then
+A fiber bundle is trivial if $E = K\times F$\cite{rowlandFiberBundle,FiberBundle2020}.
+All fiber bundles are locally trivial, which means if you restrict $E$ over a small enough neighborhood $U \subset K$ then it is a locally trivial bundle over $U$.
+When the fiber bundle is locally trivial, then
 \begin{equation}
     \label{eq:section_return}
     \tau(k) = (k, (g_{F_{0}}(k), \ldots, g_{F_{n}}(k))
 \end{equation}
-which is also true when the fiber bundle is locally trivial over $U \subset K$.
-%%%can decompose bundles into Ei such that \tau: E_{i} \rightarrow K, where F_{i} is the fiber of E_{i}
-which we can also decompose such that
+the section $\tau$ is the record in the $F$. Because we can decompose the bundle and the fiber, we can formulate $\tau$ as 
 \begin{align}
-\tau_{0}(k) &= (k, (x_{F_{0}}))\\
-            & \vdotswithin{=}\\
-\tau_{n}(k) &= (k, (x_{F_{n}}))
+\tau = (\tau_0,\ldots, \tau_i, \dots, \tau_n) 
 \end{align}
+where each section $\tau_i$ is a variable or set of variables. 
 
-which allows us to have field wise access to the data so long as there is a shared $K$.  
-%% we will use this property later for visual mapping such that we can seperate each variable into its own bundle
-
+\paragraph{Example?}
+For GHCN, the $\tau$ functions return a table in a database with the schema defined in $F$ and the continuity defined in $K$: this means the sections can be defined such that all values have the same year or location, e.g each table returned by a $\tau$ is for a different station. 
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
@@ -176,6 +177,7 @@ The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet20
 \subsubsection{Case Study: GHCN}
 \textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
 
+Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall.
 % can't make a 1D fiber - can't make a 1D fiber, switch the picture to plane over 0D and 1D and then can talk about disconnected or connected
 
 % break out the mbox/clean up the typesetting
@@ -543,7 +545,19 @@ By using simplicies, we can then encode the following indexing structure on $\ta
 
 which $\xi$ can use as part of its mapping from visual space back to data space. Path connected components are then sections where $\tau(k_{i},1) = \tau(k_{j},0)$ or the edges of the faces align.  
 
-\subparagraph{Example}
+\subparagraph{Example: Mobius Strip}\mbox{}\\
+\begin{figure}[ht!]
+    \label{fig:data_base_transition}
+    \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
+    \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
+\end{figure}
+
+ An example of a non-trivial fiber bundle is a mobius strip\cite{find the citation for why};
+
+In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
+%monoid action m*f\mapsto delta(mf)= m*delta(f)
+
+\subparagraph{Example: Torus}\mbox{}\\
 \begin{figure}[ht!]
     \label{fig:triangle_torus}
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
