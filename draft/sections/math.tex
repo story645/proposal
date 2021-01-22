@@ -11,12 +11,36 @@ In this section we introduce a mathematical description of the visualization pip
     \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
 \end{equation}
 
-We first describe the fiber bundle spaces of data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}). We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
+We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
 \subsection{Data Space}
 \label{sec:data}
-%%% maybe change this to a generic representational data set
-We build on Butler's fiber bundle driven abstraction of data formats\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} because fiber bundles can express the properties of the variables(\ref{sec:data_fiber}), the continuity of the records (\ref{sec:data_base}), and distinct instances of records (\ref{sec:data_section}). The fiber bundles mentioned in this work are assumed to be locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre} unless otherwise specified. 
+%%% 
+We build on Butler's fiber bundle driven abstraction of data formats\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989},  ....
+
+
+Fiber bundles are structures $(E,\,B,\,\pi ,\,F)$ where $E$, $F$, and $K$ are topological spaces that encode 
+\begin{itemize}
+\item the properties of the variables in the fiber $F$ (\ref{sec:data_fiber})
+\item the continuity of the records in the base space $K$ (\ref{sec:data_base})
+\item collections of records $\tau$ (\ref{sec:data_section}). 
+\end{itemize}
+
+where $E$ is the total space of data that $F$ lives in. The bundle is the projection map $\pi$
+\begin{equation}
+    \label{eq:fiber_bundle}
+    \begin{tikzcd}
+        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
+    \end{tikzcd}
+\end{equation}
+
+that binds the variable space $F$ to the base space $K$. 
+
+%%probbaly need some more words here maybe, maybe pull that first picture back up now 
+
+
+The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre} unless otherwise specified. In the trivial bundle $E=K\times F$ such that the total space $E$ falls out and discussion can be limited to the $K$ and $F$ spaces. 
+
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
@@ -89,14 +113,6 @@ For example, the temperature in \textdegree C is on an interval scale, which mea
 \subsubsection{continuity: Base Space $K$} 
 %%fold butlder
 \label{sec:data_base}
-The fiber provides the schema of the dataset, but the fiber bundle is what glues that schema to a structure. The fiber bundle is the map $\pi$ between the fiber space included in the total space $E$ and the base space $K$
-\begin{equation}
-    \label{eq:fiber_bundle}
-    \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
-    \end{tikzcd}
-\end{equation}
-
 The base space $K$ provides a way to encode how the records are connected to each other; for example the GHCN data can be expressed as discrete observations, many timeseries, maps, a network of stations, etc.
 
 \begin{figure}[ht!]
