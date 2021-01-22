@@ -15,18 +15,14 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 
 \subsection{Data Space}
 \label{sec:data}
-%%% 
-We build on Butler's fiber bundle driven abstraction of data formats\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989},  ....
-
-
-Fiber bundles are structures $(E,\,B,\,\pi ,\,F)$ where $E$, $F$, and $K$ are topological spaces that encode 
+We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough to encode all the types of data described in section~\ref{sec:intro_data_structure} and many more. We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
 \begin{itemize}
 \item the properties of the variables in the fiber $F$ (\ref{sec:data_fiber})
 \item the continuity of the records in the base space $K$ (\ref{sec:data_base})
 \item collections of records $\tau$ (\ref{sec:data_section}). 
 \end{itemize}
 
-where $E$ is the total space of data that $F$ lives in. The bundle is the projection map $\pi$
+and $E$ is the total space of data that $F$ lives in. The bundle is the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -34,22 +30,44 @@ where $E$ is the total space of data that $F$ lives in. The bundle is the projec
     \end{tikzcd}
 \end{equation}
 
-that binds the variable space $F$ to the base space $K$. 
+that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space.
 
-%%probbaly need some more words here maybe, maybe pull that first picture back up now 
-
-
-The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre} unless otherwise specified. In the trivial bundle $E=K\times F$ such that the total space $E$ falls out and discussion can be limited to the $K$ and $F$ spaces. 
-
+\begin{figure}[ht!]
+    \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
+    \label{fig:data_base_space}
+    \caption{}.  
+\end{figure}
+ We propose fiber bundles as an underlying data representation because they provide a way to decouple the components of a dataset. In figure~\ref{fig:}, we have two datasets $\tau_1$ and $\tau_2$ that have the same indexing structure $K$ and and the same schema $F$ and we can independently codify which properties of each component need to be preserved in the visualization.
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space containing the set of all records that could possibly be in the dataset, even values that do not actually exist in the dataset. 
+We use Spivak's description of schemas in his categorical formulation of databases \cite{spivakSIMPLICIALDATABASES} as our fiber space. He describes the variables in a dataset as having names $C$ and datetypes $D$. Spivak then constructs a set $U_{\sigma}$ that is the universal set of values 
+\begin{tikzcd}
+    U_{\sigma} \arrow[r] \arrow[d, "\pi_{\sigma}"'] & U \arrow[d, "\pi"] \\
+    C \arrow[r, "\sigma"']                          & \textbf{DT}       
+\end{tikzcd}
 
-%%push straight math generalization up
-%% We define w/ mapping, as Spivak
+restricted to values of types $\mathbf{DT}$ bound to variable names $C$. Therefore the fiber is for a one variable dataset is
+\begin{equation}
+    F = U_{\sigma}
+\end{equation}
+where $\sigma$ is the schema binding variable name to variable type. Therefore a dataset with multiple variables $c \in C$ has a fiber that is the cartesian cross product of $U_{\sigma}$ restricted over $c$ spaces:
 
-%%push down to an example, knock it back to semi concrete
+\begin{equation}
+F = U_{\sigma(c_1)}\times \ldots U{\sigma{c_i}} \ldots\timesU_{sigma(c_n)}
+\end{equation}
+
+which is equivalent to 
+
+\begin{equation}
+    F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
+\end{equation}
+
+
+%%somehoe close out this piece. 
+
+
+
 For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ U_{temp} = \{x \in \mathbb{R}^+\}$. 
 \begin{equation}
     F = U_{temp}
@@ -67,16 +85,7 @@ such that one record $r$ in the fiber would have the form $r=(temperature,\, tim
     F_0 &= (\textit{temperature},\, U_{temp},\, M_0)\\
     F_1 &= (\textit{time},\, U_{time},\, M_1)\\
     F_2 &= (\textit{location},\, U_{loc},\, M_2)
-\end{align}%the fiber is the set, variable is the tuple such that there is a map from the index i in F to the tuple (name, M_0)  for every U_{type} we can construct a map to the name and the type as described by Spivak 
- or more generally (name, type, monoid action)
- \begin{equation}
-    F_i = (\textit{name},\, U_{type},\, M_{i})
- \end{equation}
-where type is the set of values defined by the datatype as described in Spivak's categorical formulation of databases \cite{spivakSIMPLICIALDATABASES}. We describe $M$ in more detail in section~\ref{sec:data_monoid}. We can keep growing the fiber
-\begin{equation}
-F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
-\end{equation}
-and identify the elements in the record by the variable name. We will often be working with the decoupled fiber $F_i$ rather than the total fiber $F$. 
+\end{align}
 
 %%invert this section, start w/ general math than GHCN 
 
@@ -189,70 +198,6 @@ which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ p
 
 %% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber /fatten the E , notatoe E' = E + Jet
 The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
-
-\subsubsection{Case Study: GHCN}
-\textcolor{red}{Moved \& walked through b/c was getting clunky to not have terms yet}\\
-
-Lets say we are working with the Global Historical Climatology Network\cite{AnOverviewoftheGlobalHistoricalClimatologyNetworkDailyDatabase}, which is a dataset of global daily meterological observations. Each record includes the timestamp, location, and measurements such as temperature, precipitation, and snowfall.
-% can't make a 1D fiber - can't make a 1D fiber, switch the picture to plane over 0D and 1D and then can talk about disconnected or connected
-
-% break out the mbox/clean up the typesetting
-The fiber bundle model is flexible enough to express some of the many different forms that temperature data can come in. 
-
-\begin{figure}[ht!]
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
-        %% add box around neighboring P and Map
-        \label{fig:base_example_line}
-    \end{subfigure}
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_2k.png}
-        \label{fig:base_example_plane}
-    \end{subfigure}
-    \label{fig:base_example}
-    \caption{These two datasets have the same fiber of temperature but different base spaces. In figure~\ref{fig:base_example_line} the temperature values are 1D continuous, while in figure~\ref{fig:base_example_plane} the temperature values are 2D continuous.}
-\end{figure}
-
-The datasets in figure~\ref{fig:base_example} have identical fibers that encode a set of temperature values. In figure~\ref{fig:base_example_line} the temperatures lie on a line such that a section could return a timeseries or a distribution. In figure~\ref{fig:base_example_plane}, the temperatures lie on a 2D continuous plane; a section could return a map or contour. Because the fiber is 1D, it does not encode metadata 
-
-\begin{figure}[ht!]
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
-        \label{fig:fiber_example_plane}
-    \end{subfigure}
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
-        \label{fig:fiber_example_cube}
-    \end{subfigure}
-    \label{fig:fiber_example}
-    \caption{The fiber is expanded to include metadata fields that describe the semantics of $K$. In figure~\ref{fig:fiber_example_plane} the fiber is \textrm{temperature} $\times$ \textrm{time} and in figure~\ref{fig:fiber_example_cube} the fiber is \textrm{temperature}$\times$ \textrm{latitude} $\times$ {longitude}}.
-\end{figure}
-
-To encode the metadata, the fiber is expanded as illustrated in figure~\ref{fig:fiber_example}. The fiber in figure~\ref{fig:fiber_example_plane} is the cartesian product of the space of possible temperature values in degrees celsius and space of possible time values
-\begin{equation}
-F = [temp_{min}, temp_{max}] \times [time_{min}, time_{max}]
-\label{eq:fiber_plane}
-\end{equation}
-
-while the fiber in figure~\ref{fig:fiber_example_cube} is the cartesian product of temperature, latitude, and longitude
-\begin{equation}
-F = [temp_{min}, temp_{max}] \times [-90, 90] \times [-180, 180]
-\label{eg:fiber_cube}
-\end{equation}
-
-such that $E$ is the space of all possible points in $F$.
-
-\begin{figure}[ht!]
-    \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
-    \label{fig:fiber_example_section}
-    \caption{The section $\tau_1$ returns the blue points,  while $\tau_2$ returns the purple points. $\Gamma(E)$ is the set of all sections, including $\tau_1$ and $\tau_2$}.  
-\end{figure}
-Given the fiber described in equation~\ref{eq:fiber_plane}, the sections $\tau_{1}$ and $\tau_{2}$ in figure~\ref{fig:fiber_example_section} return tuples of the form
-\begin{equation}
-\tau(k) = (k, (temperature, time))
-\end{equation}
-such that sections with the constraint that time is monotonic return a timeseries. 
-
 
 \subsection{Prerender Space $H$}
 \label{sec:graphic}
