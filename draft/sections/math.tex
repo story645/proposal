@@ -1,9 +1,8 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\section{Notation \& Definitions}
+\section{Topological Artist Model}
 
-%% give the why of the math after every mention of why 
 In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
 
 \begin{equation}
@@ -15,7 +14,10 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 
 \subsection{Data Space}
 \label{sec:data}
-We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough to encode all the types of data described in section~\ref{sec:intro_data_structure} and many more. We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
+We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
+\textcolor{blue}{potentially more words on why fiber bundles stolen from like the scipy proposal but maybe this goes in the intro}
+
+We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
 \begin{itemize}
 \item the properties of the variables in the fiber $F$ (\ref{sec:data_fiber})
 \item the continuity of the records in the base space $K$ (\ref{sec:data_base})
@@ -37,24 +39,25 @@ that binds the variable space $F$ to the base space $K$. The fiber bundles menti
     \label{fig:data_base_space}
     \caption{}.  
 \end{figure}
- We propose fiber bundles as an underlying data representation because they provide a way to decouple the components of a dataset. In figure~\ref{fig:}, we have two datasets $\tau_1$ and $\tau_2$ that have the same indexing structure $K$ and and the same schema $F$ and we can independently codify which properties of each component need to be preserved in the visualization.
+In figure~\ref{fig:}, $\tau_1$ and $\tau_2$ encode two different timeseries of temperature. Both these timeseries live in the fiber $F$ which is an $\n \times \m$ array because it is the set of all possible (time, temperature) values. The base space $K$ encodes that all datasets in this fiberbundle are 1D continous.
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-We use Spivak's description of schemas in his categorical formulation of databases \cite{spivakSIMPLICIALDATABASES} as our fiber space. He describes the variables in a dataset as having names $C$ and datetypes $D$. Spivak then constructs a set $U_{\sigma}$ that is the universal set of values 
+The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the values in the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of the types $T\in DT$ that are in the datasets embedded in the fiber bundle. He then defines the single variable set $U_\sigma$ 
+\begin{equation}
+    \label{eq:data_types}
 \begin{tikzcd}
     U_{\sigma} \arrow[r] \arrow[d, "\pi_{\sigma}"'] & U \arrow[d, "\pi"] \\
     C \arrow[r, "\sigma"']                          & \textbf{DT}       
 \end{tikzcd}
-
-restricted to values of types $\mathbf{DT}$ bound to variable names $C$. Therefore the fiber is for a one variable dataset is
-\begin{equation}
-    F = U_{\sigma}
 \end{equation}
-where $\sigma$ is the schema binding variable name to variable type. Therefore a dataset with multiple variables $c \in C$ has a fiber that is the cartesian cross product of $U_{\sigma}$ restricted over $c$ spaces:
-
+which is $U$ restricted to objects of type $T$ bound to variable name $c$. Given $\U_{\sigma}$, the fiber for a one variable dataset is
 \begin{equation}
-F = U_{\sigma(c_1)}\times \ldots U{\sigma{c_i}} \ldots\timesU_{sigma(c_n)}
+    F = U_{\sigma(c)} = U_{T} 
+\end{equation}
+where $\sigma$ is the schema binding variable name $c$ to its datatype $T$. A dataset with multiple variables has a fiber that is the cartesian cross product of $U_{\sigma}$ applied to all the columns:
+\begin{equation}
+F = U_{T_1}\times \ldots U{T_i} \ldots\timesU_{T_n}
 \end{equation}
 
 which is equivalent to 
@@ -63,61 +66,66 @@ which is equivalent to
     F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
 \end{equation}
 
-
-%%somehoe close out this piece. 
-
-
-
-For example, a fiber $F$ that is the temperature variable from GHCN is the range of physically possible temperature values $ U_{temp} = \{x \in \mathbb{R}^+\}$. 
+which allows us to decouple $F$ into its component fibers $F_i$. For every variable
 \begin{equation}
-    F = U_{temp}
-\end{equation}
-Then lets add the time variable from GHCN $U_{time} = \{x \in \mathbb{R}^+\}$ 
-\begin{equation}
-F =  U_{temp} \times U_{time}
-\end{equation}
-such that $F$ is the cartesian product of $F_0=U_{temp}$ and $F_1 = U_{time}$. The elements in a given fiber set do not need to be scalers; for example the location of each record can be encoded as $U_{loc} = \{y, x \in \mathbb{R}^{2} \mid -90^\circ \leq y \leq 90^\circ, -180^\circ \leq x -180^\circ\}$: %add comment about latitude and longitude
-\begin{equation}
-    F = U_{temp} \times U_{time} \times U_{loc}
-\end{equation}
-such that one record $r$ in the fiber would have the form $r=(temperature,\, time,\, (latitude,\, longitude))$. We also add the variable name and measurement scale $M$ monoid actions to the fiber $F_i$ such that 
-\begin{align}
-    F_0 &= (\textit{temperature},\, U_{temp},\, M_0)\\
-    F_1 &= (\textit{time},\, U_{time},\, M_1)\\
-    F_2 &= (\textit{location},\, U_{loc},\, M_2)
-\end{align}
+V_i = (c_i,\, T_i,\, U_{T_i}\)
+\end{equation} 
+we keep track of its name $c$, type $T$, and component in the fiber $U_{T}$. 
 
-%%invert this section, start w/ general math than GHCN 
+\begin{figure}[ht!]
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
+        \label{fig:fiber_example_plane}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
+        \label{fig:fiber_example_cube}
+    \end{subfigure}
+    \label{fig:data_fiber_example}
+    \caption{}}.
+\end{figure}
+For example, the data in figure~\ref{fig:fiber_example_plane} is a set of temperature measurements in \textdegree C and the times those measurements were taken at. Temperature values are floating point numbers that come from the set of real numbers $U_{float} = \mathbb{R}$ and times that are always positive $U_{datetime}= \mathbb{R}^+$, so the fiber is 
+\begin{equation}
+    F = \mathbb{R} \times \mathbb{R}^{+}
+\end{equation} 
+where $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ and $V_1 = (time,\, \texttt{datetime},\, \mathbb{R}^+)$
+In figure~\ref{fig:fiber_example_cube}, a third variable wind is added to the dataset. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(m,d) \in \mathbb{R}^{2} \mid  0\leq m,\, 0 \leq d \leq 360\}$ . The new variable is added to the fiber
+\begin{equation}
+    F = \mathbb{R} \times \mathbb{R} \times \mathbb{R}^2
+\end{equation} 
+such that $V_2 = (wind,\, \texttt{wind},\, \mathbb{R}^{2})$  
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-
-\begin{figure}[ht!]
-    \includegraphics[width=\textwidth]{figures/math/rotation_actions.png}
-    \label{fig:data_monoid_rotation}
-    \caption{The set of rotation actions [turn 0, 90, 180] on the star produce a star (closed), include a rotation that does not change the orientation (identity), and can be done in any order to produce the same final orientation (closure); therefore the rotations are a set of monoid actions.
-    %% dataset that is symmetric, fiber is x,y, rotatation action
-    %% rotate + plot or plot + rotate
-    %%emoji shuffle 
-    }  
-\end{figure}
-
-A common task is modifying the values in $F_i$ in some consistent way, such as converting data from \textdegree F to \textdegree C or changing category labels or rotating a shape such as in figure~\ref{fig:data_monoid_rotation}. This model formally encodes the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}.
-
-We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{type}$ with an action $\bullet: M\times U_{type} \rightarrow U_{type}$ with the properties:
+We formally describe the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. We generalize this set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{T_i}$ with an action $\bullet: M\times U_{T_i} \rightarrow U_{T_i}$ with the properties:
 \begin{align*}
-    \textbf{associativity}\;& \text{for all } m,t \in M \text{ and } x\in U_{type}, m\bullet(t\bullet x) = (m\ast t) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in U_{type}, e\in M,  e\bullet x = x 
+    \textbf{associativity}\;& \text{for all } f,g \in M_i \text{ and } x\in U_{T_i}, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in U_{T_i}, e\in M_i,  e\bullet x = x 
 \end{align*}
 As with the fiber $F$, the total monoid space $M$ is the cartesian product
 \begin{equation}
 M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
 \end{equation}
-of the monoid $M_{i}$ on each $F_{i}\in F$. 
+of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variables 
+\begin{equation}
+        V_i = (c_i,\, T_i,\, U_{T_i}\, M_i)
+\end{equation}
+to include the monoid actions that act on $U_{T_i}$. 
 
-Steven's defined the measurment scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
-
-For example, the temperature in \textdegree C is on an interval scale, which means that the monoid actions $M_0$ on $U_{temp}$ are the set of translations $\{f: x\mapsto x + c \in U_{temp} \mid x,c \in U_temp\}$ where $c$ is a valid interval between two temperatures $c=x_i-x_j$.
+Steven's defined the measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given 
+\begin{itemize}
+    \item temperature $x \in \mathbb{R}$
+    \item monoid addition operator $\ast = +$
+    \item with monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
+    \item monoid action operator $\bullet = \circ$
+\end{itemize}
+then the translation monoid actions on temperature satisfy the condition
+\begin{equation}
+    \begin{tikzcd}
+        \mathbb{R} \arrow[rd, "(x+c_1)\circ(x+c_2)"] \arrow[d, "x+c_1"'] &            \\
+        \mathbb{R} \arrow[r, "x+c_2"']                                   & \mathbb{R}
+    \end{tikzcd}
+\end{equation}
 
 \subsubsection{continuity: Base Space $K$} 
 %%fold butlder
