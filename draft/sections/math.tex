@@ -35,6 +35,7 @@ that binds the variable space $F$ to the base space $K$. The fiber bundles menti
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
+\note{yes, I know i may need to change this U to like \mathcal{U}, spivak uses U}
 The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of types $\{T_0, \ldots, T_n\} \in DT$ where $DT$ are the data types of the variables in the dataset. He then defines the single variable set $U_\sigma$ 
 \begin{equation}
     \label{eq:data_types}
@@ -202,10 +203,7 @@ In the example in figure~\ref{fig:data_sections}, the fiber is $\mathbb{R}^+\tim
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-%%% sheaf is how we break up the base space 
-
-all fiber bundles are locally trivial, which means that $E$ restricted over a small enough neighborhood $U \subset K$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre},
-Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$
+Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$. All fiber bundles are locally trivial, which means that $E$ restricted over a small enough neighborhood $U \subset K$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(E)$ is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$
 
 \begin{equation}
     \label{eq:sheaf}
@@ -214,10 +212,8 @@ Often a graphic may need to be updated with live data or support zooming in on a
         U \arrow[u, "\iota^*\tau"', bend right] & K \arrow[u, "\tau"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
-which is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$ pulled back via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}.
+pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While $E$ is only the records in a fiber $F_k$ over a specific $k$, because the stalk includes the neighborhood $U$ it also includes nearby records. While this can be useful for visual transforms, often the extra needed information can be found in the jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in the fattened $E^\prime=E+\mathcal{J}(E)$
 
-%% the stalk contains all the local information, typically we only need some of the information, such as the firtst or second direivative. in practice we only need the jet which is...in practive will extend the fiber /fatten the E , notatoe E' = E + Jet
-The jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} is for writing differential equations on sections of fiber bundles; this information is required for some visual characteristics, such as line thickness. 
 
 \subsection{Prerender Space $H$}
 \label{sec:graphic}
