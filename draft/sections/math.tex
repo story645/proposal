@@ -31,7 +31,7 @@ and $E$ is the total space of data that $F$ lives in. The bundle is the projecti
     \end{tikzcd}
 \end{equation}
 
-that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space.
+that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space. 
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
@@ -91,12 +91,12 @@ such that $V_1 = (wind,\, \texttt{wind},\, \mathbb{R}^{2})$
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-We formally describe the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of these transformations: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
+After specifying the variables $V$ in the dataset, we next describe ways in which we can transform the variables by identifying the monoid actions $M_i$ on the $F_i$. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
 
-We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{T_i}$ with an action $\bullet: M\times U_{T_i} \rightarrow U_{T_i}$ with the properties:
+A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $F_i$ with an action $\bullet: M\times F_i \rightarrow F_i$ with the properties:
 \begin{align*}
-    \textbf{associativity}\;& \text{for all } f,g \in M_i \text{ and } x\in U_{T_i}, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in U_{T_i}, e\in M_i,  e\bullet x = x 
+    \textbf{associativity}\;& \text{for all } f,g \in M_i \text{ and } x\in F_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in F_i, e\in M_i,\,  e\bullet x = x 
 \end{align*}
 As with the fiber $F$, the total monoid space $M$ is the cartesian product
 \begin{equation}
@@ -104,11 +104,11 @@ M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
 \end{equation}
 of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variables 
 \begin{equation}
-        V_i = (c_i,\, T_i,\, U_{T_i}\, M_i)
+        V_i = (c_i,\, T_i,\, F_i\, M_i)
 \end{equation}
-to include the monoid actions that act on $U_{T_i}$. 
+to include the monoid actions that act on $F_i$. 
 
-For example, given  $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ with
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  $V_0 = (temperature,\, \txtett{float},\, \mathbb{R})$ which is interval data:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
     \item monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
@@ -122,6 +122,7 @@ then the translation monoid actions on temperature satisfy the condition
     \end{tikzcd}
 \end{equation}
 where $c_1, c_2$ are intervals $x_i-x_j$. 
+
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
@@ -170,44 +171,40 @@ does not change just because there are fewer elements in each record.
 
 The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time) which is $F=\mathbb{R}\times \mathbb{R}^+$. In figure~\ref{fig:base_example_discrete} the fibers lie over discrete $K$ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval $K$ such that the records are samples from a continuous function defined on $K$.
 
-
 \subsubsection{Data: Sections $\tau$}
 \label{sec:data_section}
-\begin{figure}[H]
-    \label{fig:base_space_div}
-    \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
-    \caption{ A section $\tau$ is a mapping from $K$ to $F$ that returns a record for each $k \in K$.}
-\end{figure}
-
-The sections of the fiber bundle are maps from points $k$ on $K$ to records $r$ in $F$. When we map our data to visual variables, the $\tau$ returns the set of values that are mapped together into a single graphic element. The section $\tau$ is the mapping from base space to total space $\tau: K\rightarrow E$ 
+While the fiber and base space describe the general structure of all data that lives in the fiber bundle, the sections $\tau: K\rightarrow E$ define the datasets that live in the fiber. We generalize Spivak's section as table $\tau$\cite{spivakSIMPLICIALDATABASES} to any sort of structured dataset such that 
 \begin{equation}
     \label{eq:section}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi"']           \\
+        F \arrow[r, hook] & E \arrow[d, "\pi"']           
         & K \arrow[u, "\tau"', bend right]
     \end{tikzcd}
 \end{equation}
-such that there is $\pi(\tau(k)) = k$ map back to $K$. 
-
-A fiber bundle is trivial if $E = K\times F$\cite{rowlandFiberBundle,FiberBundle2020}.
-All fiber bundles are locally trivial, which means if you restrict $E$ over a small enough neighborhood $U \subset K$ then it is a locally trivial bundle over $U$.
-When the fiber bundle is locally trivial, then
+such that there is $\pi(\tau(k)) = k$ map back to $K$. There can be many sections $\tau$, and the space of global sections is $\Gamma(E)$. For a trivial fiber bundle
 \begin{equation}
     \label{eq:section_return}
     \tau(k) = (k, (g_{F_{0}}(k), \ldots, g_{F_{n}}(k))
 \end{equation}
-the section $\tau$ is the record in the $F$. Because we can decompose the bundle and the fiber, we can formulate $\tau$ as 
+where $g: K \rightarrow F$ is the index function into the fiber. Because we can decompose the bundle and the fiber, we can formulate $\tau$ as 
 \begin{align}
 \tau = (\tau_0,\ldots, \tau_i, \dots, \tau_n) 
 \end{align}
 where each section $\tau_i$ is a variable or set of variables. 
 
-\paragraph{Example?}
-For GHCN, the $\tau$ functions return a table in a database with the schema defined in $F$ and the continuity defined in $K$: this means the sections can be defined such that all values have the same year or location, e.g each table returned by a $\tau$ is for a different station. 
+\begin{figure}[ht!]
+    \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
+    \caption{ Fiber (time, temperature) with an interval $K$ basespace. The sections $\tau_1$ and $\tau_2$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\tau_1, \tau_2 \in \Gamma(E)$}
+    \label{fig:data_sections}
+\end{figure}
+
+In the example in figure~\ref{fig:data_sections}, the fiber is $\mathbb{R}^+\times \mathbb{R}$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval $K$. The section $\tau_1$ resolves to a series of monotonically increasing in time records of temperature. Section $\tau_2$ returns a different timeseries of temperature values. Both sections are included in the global set of sections $\tau_1, \tau_2 \in \Gamma(E)$.
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
 %%% sheaf is how we break up the base space 
+
+all fiber bundles are locally trivial, which means that $E$ restricted over a small enough neighborhood $U \subset K$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre},
 Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$
 
 \begin{equation}
@@ -326,7 +323,7 @@ Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defi
     \caption{An equivariant $\nu$ preserves monoid actions. Here $\nu$ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
     \label{fig:artist_nu}
 \end{figure}
-The expectation of a visual transformation is that it will convert data to visual variables in a consistent manner. For example in figure~\ref{fig:artist_nu}, the $\nu$ maps words to emojies. Our constraint on $\nu$ is that if we shuffle the words, the emojis should be shuffled such that the map defined by $\nu$ is still valid. Formally, this means that $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
+The expectation of a visual transformation is that it will convert data to visual variables in a consistent manner. For example in figure~\ref{fig:artist_nu}, the $\nu$ maps words to emojies. Our constraint on $\nu$ is that if we shuffle the words, the emojis should be shuffled such that the map defined by $\nu$ is still valid. We construct $\nu: E \rightarrow V$ as an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
