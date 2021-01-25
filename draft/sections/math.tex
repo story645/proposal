@@ -225,16 +225,11 @@ The fiber $D$ is specified in terms of the target display space, for example a 2
 \begin{equation}
     d = (x, y, R, G, B)
 \end{equation}
-such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x,y,z, R, G, B, A)$,
-
-
-
-%%define a region b = [top, bottom, right, left]
-%% inverse of b is capital S_b
+such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x,y,z, R, G, B, A)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the \textrm{R,G,B} values are filled in via a lookup on $S$. 
 
 \subsubsection{Continuity of the Graphic $S$} 
 \label{sec:graphic_base}
-An assumption of graphical representations is that they match the continuity of the data, for example discrete data is mapped to discrete elements\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology $S$ of a graphic may need more dimensions than the data topology $K$ because of the specifications of the display space. Therefore we define the base space mapping from graphic $S$ to data $K$ 
+An assumption of graphical representations is that they match the continuity of the data\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology $S$ of a graphic may need more dimensions than the data topology $K$ so that the glyph can be defined in $D$. Therefore we define the base space mapping from graphic $S$ to data $K$ 
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
@@ -242,7 +237,7 @@ An assumption of graphical representations is that they match the continuity of 
         \end{tikzcd}
 \end{equation}
 
- as the deformation retraction \cite{RetractionTopology2020} $\xi: S \rightarrow K$ that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. 
+ as the deformation retraction \cite{RetractionTopology2020} $\xi: S \rightarrow K$ that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. While dimensions can be added to $S$, it retains the same continuity as $K$.
  
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
@@ -250,14 +245,15 @@ An assumption of graphical representations is that they match the continuity of 
     \note{add $\alpha, \beta$ coordinates}}
     \label{fig:graphic_retraction_map}
 \end{figure}
-Figure~\ref{fig:graphic_retraction_map} illustrates some examples of $\xi$. The base space $S$ is mapping to a in $D$. For example, in the scatter plot, $S$ encodes what the glyph looks like such that each piece of a single glyph maps to a different region on $S$. The line plot $S$ can encode position in the $\alpha$ dimension, but the $\beta$ dimension describes 
 
-The  line plot $S$ encodes on a plane  by necessity needs to have a thickness to be visible; therefore we construct a rectangular base space $S$ that mirrors the plane on which we can encode the position in one dimension and thickness (should this pixel be colored?) in the other. The map $xi$ then goes from a rectangle to 
+In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how the records in $D$ are held together to generate a single glyph that is the visual representation of a single point in $F_k$. For the line, the region $\beta$ over a point $\alpha_i$ specifies the thickness of the line in $D$ for the corresponding section on the interval $K$. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
 
-
+ 
 \subsubsection{Renderable Glyph $\rho$}
 \label{sec:graphic_section}
 A section $\rho: S \rightarrow H$ is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D.
+
+We define a section of the displayed graphic as a region on D defined by the bounding box $b=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$
 
 \paragraph{Example}
 For a physical screen display, we can consider a predisplay space that is a trivial fiber bundle $H=\mathbb{R}^{5}\times S$ such that $\rho$ is
