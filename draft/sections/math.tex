@@ -2,7 +2,7 @@
 \begin{document}
 
 \section{Topological Artist Model}
-
+\note{can change this all to 3rd person passive later}\\
 In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
 
 \begin{equation}
@@ -34,9 +34,10 @@ and $E$ is the total space of data that $F$ lives in. The bundle is the projecti
 that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space.
 
 \begin{figure}[ht!]
-    \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
-    \label{fig:data_base_space}
-    \caption{ The fiber $F$ is a continuous plane encoding the set of all possible (time, temperature) values.  The base space $K$ expresses that the fibers lie in continous space and therefore the data is continuous. The mapping $\pi:E\rightarrow K$ from total space to base space is what defines this structure as a fiber bundle. The continuous function $\tau_1$ returns a record in each fiber for each point on $K$; the set of all values $\tau_1$ returns is a dataset that lies in this fiberbundle. \textcolor{MidnightBlue}{remove one of the sections from this figure}} 
+    \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
+  
+    \caption{ The fiber $F$ is a continuous plane encoding the set of all possible (time, temperature) values.  The base space $K$ expresses that the fibers lie in continous space and therefore the data is continuous. The mapping $\pi:E\rightarrow K$ from total space to base space is what defines this structure as a fiber bundle. The continuous function $\tau_1$ returns a record in each fiber for each point on $K$; the set of all values $\tau_1$ returns is a dataset that lies in this fiberbundle. \note{remove one of the sections from this figure/maybe kill this example}}
+    \label{fig:data_base_space} 
 \end{figure}
 The fiber bundle in figure~\ref{fig:data_base_space} is a representation of continuous (temperature, time) data. The fiber bundle abstraction facilitates seperately representing the time and temperature variables in the fiber $F$ and how these variables are connected in the base space $K$.  The function $\tau_1$ returns a record (temperature, time) for ever point on the interval $K$ and there can be many $\tau$ functions in the fiber bundle. 
 
