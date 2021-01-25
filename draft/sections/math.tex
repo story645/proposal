@@ -165,7 +165,7 @@ does not change just because there are fewer elements in each record.
         \caption{}
         \label{fig:base_example_continuous}
     \end{subfigure}
-    \caption{These two datasets have the same (time, temperature) fiber, but in figure~\ref{fig:base_example_line} the records are discrete, while in figure~\ref{fig:base_example_plane} the records are sampled from the continuous interval $K$
+    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space $E$ is discrete over points $k \in K$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} $E$ lies over the continuous interval $K$, meaning the records in the fiber are sampled from a continous space. 
     \note{revamp figure: F=Plane, k1 = dots, k2=line}}
     \label{fig:base_example}
 \end{figure}
@@ -212,11 +212,12 @@ Often a graphic may need to be updated with live data or support zooming in on a
         U \arrow[u, "\iota^*\tau"', bend right] & K \arrow[u, "\tau"', bend right] \arrow[l, "\iota"']
         \end{tikzcd}
 \end{equation}
-pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While $E$ is only the records in a fiber $F_k$ over a specific $k$, because the stalk includes the neighborhood $U$ it also includes nearby records. While this can be useful for visual transforms, often the extra needed information can be found in the jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in the fattened $E^\prime=E+\mathcal{J}(E)$
+pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While $E$ is only the records in a fiber $F_k$ over a specific $k$, because the stalk includes the neighborhood $U$ it also includes nearby records. While this can be useful for visual transforms, often the extra needed information can be found in the jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $E^\prime=E+\mathcal{J}(E)$
 
 
 \subsection{Prerender Space $H$}
-\label{sec:graphic}
+\label{sec:graphic}  
+
 We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
 
 %%define a region b = [top, bottom, right, left]
