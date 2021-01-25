@@ -14,7 +14,7 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 
 \subsection{Data Space}
 \label{sec:data}
-We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}. The advantage of fiber bundles is they provide a way to encode the continuity in a dataset without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.   
+We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
 
 We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
 \begin{itemize}
@@ -33,17 +33,9 @@ and $E$ is the total space of data that $F$ lives in. The bundle is the projecti
 
 that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space.
 
-\begin{figure}[ht!]
-    \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
-  
-    \caption{ The fiber $F$ is a continuous plane encoding the set of all possible (time, temperature) values.  The base space $K$ expresses that the fibers lie in continous space and therefore the data is continuous. The mapping $\pi:E\rightarrow K$ from total space to base space is what defines this structure as a fiber bundle. The continuous function $\tau_1$ returns a record in each fiber for each point on $K$; the set of all values $\tau_1$ returns is a dataset that lies in this fiberbundle. \note{remove one of the sections from this figure/maybe kill this example}}
-    \label{fig:data_base_space} 
-\end{figure}
-The fiber bundle in figure~\ref{fig:data_base_space} is a representation of continuous (temperature, time) data. The fiber bundle abstraction facilitates seperately representing the time and temperature variables in the fiber $F$ and how these variables are connected in the base space $K$.  The function $\tau_1$ returns a record (temperature, time) for ever point on the interval $K$ and there can be many $\tau$ functions in the fiber bundle. 
-
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the values in the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of the types $T\in DT$ that are in the datasets embedded in the fiber bundle. He then defines the single variable set $U_\sigma$ 
+The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of types $\{T_0, \ldots, T_n\} \in DT$ where $DT$ are the data types of the variables in the dataset. He then defines the single variable set $U_\sigma$ 
 \begin{equation}
     \label{eq:data_types}
 \begin{tikzcd}
@@ -70,35 +62,38 @@ which allows us to decouple $F$ into its component fibers $F_i$. For every varia
 \begin{equation}
 V_i = (c_i,\, T_i,\, U_{T_i})
 \end{equation} 
-we keep track of its name $c$, type $T$, and component in the fiber $U_{T}$. 
+we keep track of its name $c$, type $T$, and values $U_{T}$. 
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
+        \caption{}
         \label{fig:fiber_example_plane}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
+        \caption{}
         \label{fig:fiber_example_cube}
     \end{subfigure}
+    \caption{These two datasets have the same base space $K$, but figure~\ref{fig:fiber_example_plane} has fiber  $F=\mathbb{R}\times\mathbb{R}^+$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\mathbb{R}^{+}\times\mathbb{R}^2$ which is (time, wind=(speed, direction))}
     \label{fig:data_fiber_example}
-    \caption{}.
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a set of temperature measurements in \textdegree C and the times those measurements were taken at. Temperature values are floating point numbers that come from the set of real numbers $U_{float} = \mathbb{R}$ and times that are always positive $U_{datetime}= \mathbb{R}^+$, so the fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number ot type \textt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
 \begin{equation}
-    F = \mathbb{R} \times \mathbb{R}^{+}
+    F =  \mathbb{R}^{+} \times \mathbb{R} 
 \end{equation} 
-where $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ and $V_1 = (time,\, \texttt{datetime},\, \mathbb{R}^+)$
-In figure~\ref{fig:fiber_example_cube}, a third variable wind is added to the dataset. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(m,d) \in \mathbb{R}^{2} \mid  0\leq m,\, 0 \leq d \leq 360\}$ . The new variable is added to the fiber
+where $V_0 = (time,\, \texttt{datetime},\, \mathbb{R}^+)$ and $V_1 = (temperature,\, \texttt{float},\, \mathbb{R})$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \mathbb{R}^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
 \begin{equation}
-    F = \mathbb{R} \times \mathbb{R} \times \mathbb{R}^2
+    F = \mathbb{R}^{+} \times \mathbb{R}^2
 \end{equation} 
-such that $V_2 = (wind,\, \texttt{wind},\, \mathbb{R}^{2})$  
+such that $V_1 = (wind,\, \texttt{wind},\, \mathbb{R}^{2})$  
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-We formally describe the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. We generalize this set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{T_i}$ with an action $\bullet: M\times U_{T_i} \rightarrow U_{T_i}$ with the properties:
+We formally describe the set of allowable operations in the fiber because a transformation on the data side needs to be reflected in the visual representation, discussed in more detail in section~\ref{sec:artist_nu}. Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of these transformations: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
+
+We generalize the set of allowable transformations to the monoid actions $M_i$ on $F_i$. A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $U_{T_i}$ with an action $\bullet: M\times U_{T_i} \rightarrow U_{T_i}$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } f,g \in M_i \text{ and } x\in U_{T_i}, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in U_{T_i}, e\in M_i,  e\bullet x = x 
@@ -112,8 +107,6 @@ of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variable
         V_i = (c_i,\, T_i,\, U_{T_i}\, M_i)
 \end{equation}
 to include the monoid actions that act on $U_{T_i}$. 
-
-Steven's defined the measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
 
 For example, given  $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ with
 \begin{itemize}
@@ -130,38 +123,57 @@ then the translation monoid actions on temperature satisfy the condition
 \end{equation}
 where $c_1, c_2$ are intervals $x_i-x_j$. 
 
-\subsubsection{continuity: Base Space $K$} 
-%%fold butlder
+\subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The base space $K$ provides a way to encode how the records are connected to each other; for example the GHCN data can be expressed as discrete observations, many timeseries, maps, a network of stations, etc.
+The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the basespace $K$ without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
-    \label{fig:base_space_types}
     \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
+    \label{fig:base_space_types}
 \end{figure}
+As illustrated in figure~\ref{fig:base_space_types}, $K$ is akin to an indexing space into $E$ that describes the structure of $E$.  $K$ can have any number of dimensions and be continuous or discrete. 
 
-$K$ has no knowledge of the records. As illustrated in figure~\ref{fig:base_space_div}, $K$ is more of an indexing space into $E$ that describes the structure of $E$ and itself can be any number of dimensions. 
-
-\begin{figure}[ht!]
-    \label{fig:base_space_div}
+\begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
-    \caption{ The base space $E$ is divided into fiber segments $F$. The base space $K$ acts as an index into the fibers.}
+    \caption{The base space $E$ is divided into fiber segments $F$. The base space $K$ acts as an index into the records in the fibers.
+    \note{this figure might be good all the way up top to lay out the components of fb}}
+    \label{fig:base_space_div}
 \end{figure}
 
-Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space such that every $k \in K$ has a corresponding fiber $F_k$ in $E$. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the line. 
-
+Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $k \in K$ has a corresponding fiber $F_k$ in $E$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the line. 
 
 As with fibers and monoids, we can decompose the total space into components $\pi:E_i\rightarrow K$ where
 \begin{equation}
     \pi:E_1\oplus\ldots\oplus E_i \oplus\ldots \oplus E_n \rightarrow K
 \end{equation}
 
-which is a decomposition of $F$. The $K$ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
+which is a decomposition of $F$. The $K$ remains the same because the connectivity of records 
+does not change just because there are fewer elements in each record.
 
-\subsubsection{Values: Sections $\tau$}
-\label{sec:data_section}
 \begin{figure}[ht!]
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
+        %% add box around neighboring P and Map
+        \caption{}
+        \label{fig:base_example_discrete}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/math/temp_2k.png}
+        \caption{}
+        \label{fig:base_example_continuous}
+    \end{subfigure}
+    \caption{These two datasets have the same (time, temperature) fiber, but in figure~\ref{fig:base_example_line} the records are discrete, while in figure~\ref{fig:base_example_plane} the records are sampled from the continuous interval $K$
+    \note{revamp figure: F=Plane, k1 = dots, k2=line}}
+    \label{fig:base_example}
+\end{figure}
+
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time) which is $F=\mathbb{R}\times \mathbb{R}^+$. In figure~\ref{fig:base_example_discrete} the fibers lie over discrete $K$ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval $K$ such that the records are samples from a continuous function defined on $K$.
+
+
+\subsubsection{Data: Sections $\tau$}
+\label{sec:data_section}
+\begin{figure}[H]
     \label{fig:base_space_div}
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
     \caption{ A section $\tau$ is a mapping from $K$ to $F$ that returns a record for each $k \in K$.}
@@ -252,7 +264,7 @@ such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s
 Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
 
 \subsubsection{{Example}}
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=.4\linewidth]{figures/math/render.png}
     \caption{}
     \label{fig:render}
@@ -309,7 +321,12 @@ Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defi
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
-$\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
+    \caption{An equivariant $\nu$ preserves monoid actions. Here $\nu$ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
+    \label{fig:artist_nu}
+\end{figure}
+The expectation of a visual transformation is that it will convert data to visual variables in a consistent manner. For example in figure~\ref{fig:artist_nu}, the $\nu$ maps words to emojies. Our constraint on $\nu$ is that if we shuffle the words, the emojis should be shuffled such that the map defined by $\nu$ is still valid. Formally, this means that $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
@@ -320,13 +337,13 @@ $\nu: E \rightarrow V$ is an equivariant map such that there is a homomorphism f
 commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$.
 
 \paragraph{Example: Ordering}
-To preserve ordering of elements in $E_i$, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
+To preserve ordering of elements, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
 \begin{equation}
 \text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)
 \end{equation}
 
 \paragraph{Example: Translation}
-According to Stevens, interval data is a set with general linear group actions \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Position is a visual variable that can support translation 
+A $\nu$ is equivariant under translation monoid actions if 
 \begin{equation}
 \nu(x + c) = \nu(x) + \nu(c)
 \end{equation}
@@ -354,7 +371,7 @@ To construct a valid $\nu$, the diagram must commute for all monoid actions on t
 
 \subsubsection{Assembling Marks}
 \label{sec:artist_q}
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
     \label{fig:artist_q}
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}
@@ -367,7 +384,7 @@ As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as
 \end{equation}
 When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ over all $S_k$, then $M$ can be defined over $\Gamma(H)$ such that a constraint on $Q$ is that it must be equivariant. For example, when $\mu_{i}$ is the color of the glyph, it maps directly to (R,G,B) in D.
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
     \label{fig:artist_mark_change}
 \end{figure}
@@ -429,7 +446,7 @@ In this section we formulate the minimal Q that will generate distinguishable gr
 
 \paragraph{Q: scatter plot}\mbox{} \\
 \label{sec:artist_example_scatter}
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/scatter.png}
     \label{fig:artist_scatter}
 \end{figure}
@@ -448,7 +465,7 @@ such that $\rho(s) = (x, y, 0, 0, 0)$ where $s$ is the region in $H$.
 
 \paragraph{Q: line plot}\mbox{} \\
 \label{sec:artist_example_line}
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line.png}
     \label{fig:artist_line}
 \end{figure}
@@ -479,7 +496,7 @@ which yields components of $\rho(s)$:
 
 \paragraph{Q: heatmap}\mbox{} \\
 \label{sec:artist_example_heatmap}
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/heatmap.png}
     \label{fig:artist_heatmap}
 \end{figure}
@@ -500,7 +517,7 @@ through $\rho$.
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics{figures/math/simplex.png}
     \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) records to all records are connected to at least 3 others}
     \label{fig:triangle_simplex}
@@ -518,7 +535,7 @@ By using simplicies, we can then encode the following indexing structure on $\ta
 which $\xi$ can use as part of its mapping from visual space back to data space. Path connected components are then sections where $\tau(k_{i},1) = \tau(k_{j},0)$ or the edges of the faces align.  
 
 \subparagraph{Example: Mobius Strip}\mbox{}\\
-\begin{figure}[ht!]
+\begin{figure}[H]
     \label{fig:data_base_transition}
     \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
     \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
@@ -530,7 +547,7 @@ In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rect
 %monoid action m*f\mapsto delta(mf)= m*delta(f)
 
 \subparagraph{Example: Torus}\mbox{}\\
-\begin{figure}[ht!]
+\begin{figure}[H]
     \label{fig:triangle_torus}
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
     \caption{Representation of the base space $K$ of a toridal total space $E$ as two connected 2-simplices.}
