@@ -35,7 +35,7 @@ that binds the variable space $F$ to the base space $K$. The fiber bundles menti
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
-\note{yes, I know i may need to change this U to like \mathcal{U}, spivak uses U}
+\note{yes, I know i may need to change this U to like $\mathcal{U}$, spivak uses U}
 The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of types $\{T_0, \ldots, T_n\} \in DT$ where $DT$ are the data types of the variables in the dataset. He then defines the single variable set $U_\sigma$ 
 \begin{equation}
     \label{eq:data_types}
@@ -80,7 +80,7 @@ we keep track of its name $c$, type $T$, and values $U_{T}$.
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number ot type \textt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number ot type \texttt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
 \begin{equation}
     F =  \mathbb{R}^{+} \times \mathbb{R} 
 \end{equation} 
@@ -109,7 +109,7 @@ of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variable
 \end{equation}
 to include the monoid actions that act on $F_i$. 
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  $V_0 = (temperature,\, \txtett{float},\, \mathbb{R})$ which is interval data:
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ which is interval data:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
     \item monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
@@ -215,15 +215,26 @@ Often a graphic may need to be updated with live data or support zooming in on a
 pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While $E$ is only the records in a fiber $F_k$ over a specific $k$, because the stalk includes the neighborhood $U$ it also includes nearby records. While this can be useful for visual transforms, often the extra needed information can be found in the jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $E^\prime=E+\mathcal{J}(E)$
 
 
-\subsection{Prerender Space $H$}
+\subsection{Graphic: $H$}
 \label{sec:graphic}  
+We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(H, S, \pi, D)$. As with data, the fiber bundle is for a class of graphics with shared base space $S$ (~\ref{sec:graphic_fiber}) and fiber $D$ (~\ref{sec:graphic_base}) and the sections $\rho$ (~\ref{sec:graphic_section}) encode the fully specified graphics. 
 
-We define a graphic space $H$ such that we do not have to assume the physical output space of the renderer. This means that the graphic in $H$ can be output to a screen or 3D printed space or a dome. We model the prerender space as a fiber bundle (H, S, $\pi$, D). $H$ is the predisplay space, with a fiber $D$ dependent on the target display and a base space of $S$. 
+\subsubsection{Display $D$}
+\label{sec:graphic_fiber}
+The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a simple 2D opaque image $D=\mathbb{R}^5$ with a record $d \in D$ of the form
+\begin{equation}
+    d = (x, y, R, G, B)
+\end{equation}
+such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x,y,z, R, G, B, A)$,
+
+
 
 %%define a region b = [top, bottom, right, left]
 %% inverse of b is capital S_b
-\subsubsection{Base space}
-The underlying topology $S$ of a graphic often needs more dimensions than the data topology $K$ because of the specifications of the display space. For example, a line plot on a plane (such as a screen or a piece of paper) by necessity needs to also have a thickness so that it is visible, which maps back to a set of connected points in $H$. The topology of these connected points is therefore the region $s \subset S$ such that $\xi: S \rightarrow K$ is a deformation retraction \cite{RetractionTopology2020}
+
+\subsubsection{Continuity of the Graphic $S$} 
+\label{sec:graphic_base}
+An assumption of graphical representations is that they match the continuity of the data, for example discrete data is mapped to discrete elements\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology $S$ of a graphic may need more dimensions than the data topology $K$ because of the specifications of the display space. Therefore we define the base space mapping from graphic $S$ to data $K$ 
 \begin{equation}
     \begin{tikzcd}
         E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
@@ -231,9 +242,21 @@ The underlying topology $S$ of a graphic often needs more dimensions than the da
         \end{tikzcd}
 \end{equation}
 
-that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. 
+ as the deformation retraction \cite{RetractionTopology2020} $\xi: S \rightarrow K$ that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. 
+ 
+\begin{figure}
+    \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
+    \caption{The scatter and line graphic base spaces $S$ are larger than $K$ so that they can encode physical aspects of the glyph, such as shape (a circle) or thickness. The heatmap base $S$ is the same as $K$ because a heatmap is directly mapping the values in the data to the graphic.
+    \note{add $\alpha, \beta$ coordinates}}
+    \label{fig:graphic_retraction_map}
+\end{figure}
+Figure~\ref{fig:graphic_retraction_map} illustrates some examples of $\xi$. The base space $S$ is mapping to a in $D$. For example, in the scatter plot, $S$ encodes what the glyph looks like such that each piece of a single glyph maps to a different region on $S$. The line plot $S$ can encode position in the $\alpha$ dimension, but the $\beta$ dimension describes 
 
-\subsubsection{Fiber and Section}
+The  line plot $S$ encodes on a plane  by necessity needs to have a thickness to be visible; therefore we construct a rectangular base space $S$ that mirrors the plane on which we can encode the position in one dimension and thickness (should this pixel be colored?) in the other. The map $xi$ then goes from a rectangle to 
+
+
+\subsubsection{Renderable Glyph $\rho$}
+\label{sec:graphic_section}
 A section $\rho: S \rightarrow H$ is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D.
 
 \paragraph{Example}
