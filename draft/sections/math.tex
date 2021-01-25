@@ -14,8 +14,7 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 
 \subsection{Data Space}
 \label{sec:data}
-We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
-\textcolor{blue}{potentially more words on why fiber bundles stolen from like the scipy proposal but maybe this goes in the intro}
+We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}. The advantage of fiber bundles is they provide a way to encode the continuity in a dataset without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.   
 
 We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
 \begin{itemize}
@@ -37,9 +36,9 @@ that binds the variable space $F$ to the base space $K$. The fiber bundles menti
 \begin{figure}[ht!]
     \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
     \label{fig:data_base_space}
-    \caption{}.  
+    \caption{ The fiber $F$ is a continuous plane encoding the set of all possible (time, temperature) values.  The base space $K$ expresses that the fibers lie in continous space and therefore the data is continuous. The mapping $\pi:E\rightarrow K$ from total space to base space is what defines this structure as a fiber bundle. The continuous function $\tau_1$ returns a record in each fiber for each point on $K$; the set of all values $\tau_1$ returns is a dataset that lies in this fiberbundle. \textcolor{MidnightBlue}{remove one of the sections from this figure}} 
 \end{figure}
-In figure~\ref{fig:}, $\tau_1$ and $\tau_2$ encode two different timeseries of temperature. Both these timeseries live in the fiber $F$ which is an $\n \times \m$ array because it is the set of all possible (time, temperature) values. The base space $K$ encodes that all datasets in this fiberbundle are 1D continous.
+The fiber bundle in figure~\ref{fig:data_base_space} is a representation of continuous (temperature, time) data. The fiber bundle abstraction facilitates seperately representing the time and temperature variables in the fiber $F$ and how these variables are connected in the base space $K$.  The function $\tau_1$ returns a record (temperature, time) for ever point on the interval $K$ and there can be many $\tau$ functions in the fiber bundle. 
 
 \subsubsection{Variables: Fiber Space $F$}
 \label{sec:data_fiber}
@@ -51,13 +50,13 @@ The fiber is a topological space that is the set of possible values of the data;
     C \arrow[r, "\sigma"']                          & \textbf{DT}       
 \end{tikzcd}
 \end{equation}
-which is $U$ restricted to objects of type $T$ bound to variable name $c$. Given $\U_{\sigma}$, the fiber for a one variable dataset is
+which is $U$ restricted to objects of type $T$ bound to variable name $c$. Given $U_{\sigma}$, the fiber for a one variable dataset is
 \begin{equation}
     F = U_{\sigma(c)} = U_{T} 
 \end{equation}
 where $\sigma$ is the schema binding variable name $c$ to its datatype $T$. A dataset with multiple variables has a fiber that is the cartesian cross product of $U_{\sigma}$ applied to all the columns:
 \begin{equation}
-F = U_{T_1}\times \ldots U{T_i} \ldots\timesU_{T_n}
+F = U_{T_1}\times \ldots U{T_i} \ldots\times U_{T_n}
 \end{equation}
 
 which is equivalent to 
@@ -68,7 +67,7 @@ which is equivalent to
 
 which allows us to decouple $F$ into its component fibers $F_i$. For every variable
 \begin{equation}
-V_i = (c_i,\, T_i,\, U_{T_i}\)
+V_i = (c_i,\, T_i,\, U_{T_i})
 \end{equation} 
 we keep track of its name $c$, type $T$, and component in the fiber $U_{T}$. 
 
@@ -82,8 +81,9 @@ we keep track of its name $c$, type $T$, and component in the fiber $U_{T}$.
         \label{fig:fiber_example_cube}
     \end{subfigure}
     \label{fig:data_fiber_example}
-    \caption{}}.
+    \caption{}.
 \end{figure}
+
 For example, the data in figure~\ref{fig:fiber_example_plane} is a set of temperature measurements in \textdegree C and the times those measurements were taken at. Temperature values are floating point numbers that come from the set of real numbers $U_{float} = \mathbb{R}$ and times that are always positive $U_{datetime}= \mathbb{R}^+$, so the fiber is 
 \begin{equation}
     F = \mathbb{R} \times \mathbb{R}^{+}
@@ -112,12 +112,13 @@ of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variable
 \end{equation}
 to include the monoid actions that act on $U_{T_i}$. 
 
-Steven's defined the measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given 
+Steven's defined the measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions permissible on the measurments; nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. 
+
+For example, given  $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ with
 \begin{itemize}
-    \item temperature $x \in \mathbb{R}$
-    \item monoid addition operator $\ast = +$
-    \item with monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
-    \item monoid action operator $\bullet = \circ$
+    \item monoid operator addition $\ast = +$
+    \item monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
+    \item monoid action operator composition $\bullet = \circ$
 \end{itemize}
 then the translation monoid actions on temperature satisfy the condition
 \begin{equation}
@@ -126,6 +127,7 @@ then the translation monoid actions on temperature satisfy the condition
         \mathbb{R} \arrow[r, "x+c_2"']                                   & \mathbb{R}
     \end{tikzcd}
 \end{equation}
+where $c_1, c_2$ are intervals $x_i-x_j$. 
 
 \subsubsection{continuity: Base Space $K$} 
 %%fold butlder
