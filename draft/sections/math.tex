@@ -220,7 +220,7 @@ We can separate the structure of the graphic from the properties of the output f
 
 \subsubsection{Display $D$}
 \label{sec:graphic_fiber}
-The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a simple 2D opaque image $D=\mathbb{R}^5$ with a record $d \in D$ of the form
+The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a simple 2D opaque image $D=\mathbb{R}^5$ with an element $d \in D$ of the form
 \begin{equation}
     d = (x, y, r, g, b)
 \end{equation}
@@ -245,7 +245,7 @@ An assumption of graphical representations is that they match the continuity of 
     \label{fig:graphic_retraction_map}
 \end{figure}
 
-In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how the records in $D$ are held together to generate a single glyph that is the visual representation of a single point in $F_k$. For the line, the region $\beta$ over a point $\alpha_i$ specifies the thickness of the line in $D$ for the corresponding section on the interval $K$. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
+In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how elements in $D$ are held together to generate a single glyph that is the visual representation of a single point in $F_k$. For the line, the region $\beta$ over a point $\alpha_i$ specifies the thickness of the line in $D$ for the corresponding section on the interval $K$. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
 
  
 \subsubsection{Renderable Glyph $\rho$}
@@ -263,21 +263,21 @@ to then compute the remaining $(R, G, B)$ components of the bounded display regi
 
 \begin{figure}
     \includegraphics[width=\textwidth]{figures/math/graphic_render.png}
-    \caption{To render a graphic, a region $b$ is selected in the display space. This region is in coordinates $D$ so the inverse mapping $\rho^{-1}(b)$ maps to an equivalent region $S_b \subset S$. We then take the sections $\rho(S_b)$ which are the collection of records $d$ that combine together to make the piece of the graphic in $b$.}
+    \caption{To render a graphic, a region $b$ is selected in the display space. This region is in coordinates $D$ so the inverse mapping $\rho^{-1}(b)$ maps to an equivalent region $S_b \subset S$. We then take the sections $\rho(S_b)$ which are the elements $\{d_0, \ldots, d_n\}$ that make the piece of the graphic in $b$.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
-As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$ which yields a set of corresponding records $d$. These records specify the $(r, g, b)$ values corresponding to the coordinates in $b$. These records are then combined to render the piece of the graphic in $b$. 
+As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$. The section yields the set of elements $\{d_0, \ldots, d_n\}$ that specify the $(r, g, b)$ values corresponding to the coordinates in $b$. 
 
 \subsection{Artist}
 \label{sec:artist}
+The artist is the composite function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture. The binding of $\xi:S \rightarrow K$ keeps track of which data goes to which part of the graphic such that the artist can be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
 
-%% E' not E
-In this section we will define the artist as a mapping from a sheaf $\mathcal{O}(E)$  to $\mathcal{O}(H)$. 
+The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$
 \begin{equation}
-    A: \mathcal{O}(E) \rightarrow \mathcal{O}(H)
+    A: E^\prime \rightarrow \Gamma(H)
 \end{equation}
-
-The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  compositing $V$ pulled back along $\xi$ to $\xi^*V$ to a visual mark in prerender space $Q:\xi^*V\rightarrow H$. 
+\note{this is soup}
+to a graphic in $\Gamma(H)$. The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  compositing $V$ pulled back along $\xi$ to $\xi^*V$ to a visual mark in prerender space $Q:\xi^*V\rightarrow H$. 
 
 \begin{equation}
     \label{eq:artist_diagram}
@@ -296,7 +296,11 @@ The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K
 
 where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \ldots, \mu_{n})(s) = \rho(s)$. 
 
-
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/math/artist_stages.png}
+    \caption{The artist $A$ converts data into the visual variables in $V$ and then composes those visual variables into a graphic in $H$}
+    \label{fig:artist_stages}
+\end{figure}
 \subsubsection {Example: Matplotlib Visual Fiber}
 For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
 \begin{table}[ht]
