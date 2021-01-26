@@ -176,10 +176,9 @@ The datasets in figure~\ref{fig:base_example} have the same fiber of (temperatur
 \label{sec:data_section}
 While the fiber and base space describe the general structure of all data that lives in the fiber bundle, the sections $\tau: K\rightarrow E$ define the datasets that live in the fiber. We generalize Spivak's section as table $\tau$\cite{spivakSIMPLICIALDATABASES} to any sort of structured dataset such that 
 \begin{equation}
-    \label{eq:section}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi"']           
-        & K \arrow[u, "\tau"', bend right]
+        F \arrow[r, hook] & E \arrow[d, "\pi"']              \\
+                          & K \arrow[u, "\tau"', bend right]
     \end{tikzcd}
 \end{equation}
 such that there is $\pi(\tau(k)) = k$ map back to $K$. There can be many sections $\tau$, and the space of global sections is $\Gamma(E)$. For a trivial fiber bundle
@@ -223,9 +222,9 @@ We can separate the structure of the graphic from the properties of the output f
 \label{sec:graphic_fiber}
 The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a simple 2D opaque image $D=\mathbb{R}^5$ with a record $d \in D$ of the form
 \begin{equation}
-    d = (x, y, R, G, B)
+    d = (x, y, r, g, b)
 \end{equation}
-such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x,y,z, R, G, B, A)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the \textrm{R,G,B} values are filled in via a lookup on $S$. 
+such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x, y, z, r, g, b, a)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the $(r,g,b)$ values are filled in via a lookup on $S$. 
 
 \subsubsection{Continuity of the Graphic $S$} 
 \label{sec:graphic_base}
@@ -251,39 +250,23 @@ In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how the recor
  
 \subsubsection{Renderable Glyph $\rho$}
 \label{sec:graphic_section}
-A section $\rho: S \rightarrow H$ is a mapping from a region $s$ on a mathematical encoding of the image to a region $xy$ on the screen that the renderer then maps to visual space as defined in D.
 
-We define a section of the displayed graphic as a region on D defined by the bounding box $b=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$
+A section $\rho: S\rightarrow H$ defines a piece of the graphical representation of the data. The physical display coordinates in $D$ are not equivalent to the mathematical coordinates in $S$ such that many points $s \in S$ might map to a single $d\in D$ and many $d$ might go into a visible section of a displayed graphic. Therefore, we define the bounding box $b=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ in the display space $D$ that is a piece of the rendered graphic.  
 
-\paragraph{Example}
-For a physical screen display, we can consider a predisplay space that is a trivial fiber bundle $H=\mathbb{R}^{5}\times S$ such that $\rho$ is
-\begin{equation}
-    \rho(s)  = (D_x(s), D_y(s), D_r(s), D_g(s), D_b(s))
-    \label{eq:rho}
-\end{equation}
-
-To draw an image, a region, $H$ is inverse mapped into a region $s \in S$ where %%% 
-\begin{equation}
-s = \rho^{-1}_{\tiny{XY}}(xy)
-\end{equation}
-such that the rest of the fields in $\mathbb{R}^{7}$ are then integrated over $s$ to yield the remaining fields
-%% redefining notation 
+We inverse map this bounding box $S_b =\rho^{-1}(b)$ into a region $S_b \subset S$  
 \begin{align}
-    R_b &= \iint\limits_s D_r(s)ds^{2}\\
-    G_b &= \iint\limits_s D_g(s)ds^{2}\\
-    B_b &= \iint\limits_s D_b(s)ds^{2}
+    R_b &= \iint\limits_{S_b} \rho_r(s)ds^{2}\\
+    G_b &= \iint\limits_{S_b} \rho_g(s)ds^{2}\\
+    B_b &= \iint\limits_{S_b} \rho_b(s)ds^{2}
 \end{align}
+to then compute the remaining $(R, G, B)$ components of the bounded display region $D_b$.
 
-Here we assume a single opaque 2D image such that the $z$ and $alpha$ fields can be omitted. To support overplotting and transparency, we can consider $D=R^{7}$
-
-\subsubsection{{Example}}
-\begin{figure}[H]
-    \includegraphics[width=.4\linewidth]{figures/math/render.png}
-    \caption{}
-    \label{fig:render}
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/math/graphic_render.png}
+    \caption{To render a graphic, a region $b$ is selected in the display space. This region is in coordinates $D$ so the inverse mapping $\rho^{-1}(b)$ maps to an equivalent region $S_b \subset S$. We then take the sections $\rho(S_b)$ which are the collection of records $d$ that combine together to make the piece of the graphic in $b$.}
+    \label{fig:graphic_rho_lookup}
 \end{figure}
-
-As illustrated in figure~\ref{fig:render}, words.
+As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$ which yields a set of corresponding records $d$. These records specify the $(r, g, b)$ values corresponding to the coordinates in $b$. These records are then combined to render the piece of the graphic in $b$. 
 
 \subsection{Artist}
 \label{sec:artist}
