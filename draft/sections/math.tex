@@ -218,13 +218,13 @@ pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarro
 \label{sec:graphic}  
 We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(H, S, \pi, D)$. As with data, the fiber bundle is for a class of graphics with shared base space $S$ (~\ref{sec:graphic_fiber}) and fiber $D$ (~\ref{sec:graphic_base}) and the sections $\rho$ (~\ref{sec:graphic_section}) encode the fully specified graphics. 
 
-\subsubsection{Display $D$}
+\subsubsection{Abstract Display $D$}
 \label{sec:graphic_fiber}
-The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a simple 2D opaque image $D=\mathbb{R}^5$ with an element $d \in D$ of the form
+The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a 2D opaque image $D=\mathbb{R}^5$ with elements in $D$ of the form
 \begin{equation}
     d = (x, y, r, g, b)
 \end{equation}
-such that a graphic only has 2D position and color. To support overplotting and transparency, the fiber would be $D=R^{7}$ such that $d=(x, y, z, r, g, b, a)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the $(r,g,b)$ values are filled in via a lookup on $S$. 
+such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $D=R^{7}$ such that $d=(x, y, z, r, g, b, a)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the $(r,g,b)$ values are filled in via a lookup on $S$. 
 
 \subsubsection{Continuity of the Graphic $S$} 
 \label{sec:graphic_base}
@@ -288,20 +288,15 @@ to a graphic in $\Gamma(H)$. The artist decomposes to mapping data to visual $\n
 \end{equation}
 The pullback map $\xi^*$ copies each value in $V$ over $k$ to $s$ in corresponding $S_k$ such that $\xi^*V$ can have multiple values that map to one value in $V$. 
 
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The visual transformer $\nu$ is a set of functions each targeting a different $\mu$
-\begin{equation}
-    \label{eq:nu_expanded}
-    \{\nu_{0}, \ldots, \nu_{n}\}: \{\tau_{0}, \ldots, \tau_{n}\} \mapsto \{\mu_{0}, \ldots, \mu_{n}\}
-\end{equation}
-
-where $\mu_{i}$ are the visual parameters in the assembly function $Q(\mu_{0}, \ldots, \mu_{n})(s) = \rho(s)$. 
-
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$.
 \begin{figure}
     \includegraphics[width=\textwidth]{figures/math/artist_stages.png}
     \caption{The artist $A$ converts data into the visual variables in $V$ and then composes those visual variables into a graphic in $H$}
     \label{fig:artist_stages}
 \end{figure}
-\subsubsection {Example: Matplotlib Visual Fiber}
+\subsubsection {Visual Fiber Bundle}
+
+
 For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
 \begin{table}[ht]
     \renewcommand{\arraystretch}{2}
@@ -326,7 +321,12 @@ Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defi
     \caption{An equivariant $\nu$ preserves monoid actions. Here $\nu$ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
     \label{fig:artist_nu}
 \end{figure}
-The expectation of a visual transformation is that it will convert data to visual variables in a consistent manner. For example in figure~\ref{fig:artist_nu}, the $\nu$ maps words to emojies. Our constraint on $\nu$ is that if we shuffle the words, the emojis should be shuffled such that the map defined by $\nu$ is still valid. We construct $\nu: E \rightarrow V$ as an equivariant map such that there is a homomorphism from left monoid actions on $E_{i}$ to left monoid actions on $V_{i}$ where $i$ identifies a field in the fiber. $E_i$ and $V_{i}$ each contain a set of values as defined in $F$ and $P$ respectively. A validly constructed $\nu$ is one where the  diagram 
+As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers $\nu$ as the set of conversion functions 
+\begin{equation}
+    \label{eq:nu_expanded}
+    \{\nu_{0}, \ldots, \nu_{n}\}: \{\tau_{0}, \ldots, \tau_{n}\} \mapsto \{\mu_{0}, \ldots, \mu_{n}\}
+\end{equation}
+such that $\nu_i: \tau_i \mapsto \mu_i$ is an equivariant map such that there is a monoid homomorphism from $F_{i}$ to $V_{i}$. A validly constructed $\nu$ is one where the  diagram 
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
@@ -334,40 +334,13 @@ The expectation of a visual transformation is that it will convert data to visua
     E_i \arrow[r, "\nu_i"]                           & V_i               
 \end{tikzcd}
 \end{equation}
-commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$.
-
-\paragraph{Example: Ordering}
-To preserve ordering of elements, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$
-\begin{equation}
-\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)
-\end{equation}
-
-\paragraph{Example: Translation}
-A $\nu$ is equivariant under translation monoid actions if 
-\begin{equation}
-\nu(x + c) = \nu(x) + \nu(c)
-\end{equation}
-
-
-\paragraph{Example: Invalid $\nu$}
-Given a transform $t(x) = x+2$, we construct a $\nu$ that always takes data to .5: 
-\begin{equation}
-    \label{eq:nu_equation_bad}
-    \begin{tikzcd}
-        E_1 \arrow[r] \arrow[r, "\lambda:e\mapsto.5"] \arrow[d, "2e"'] & V_i \arrow[d, "2v"] \\
-        E_1 \arrow[r, "\lambda"]                                        & V_1                 
-    \end{tikzcd}
-\end{equation}
-
-This $\nu$ is invalid because the graph does not commute for $t$:
+commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$. This equivariance constraint yields guidance on what makes for an invalid transform. For example, the single value conversion $\nu_{i}(x) = .5$ does not commute under translation  $t(x) = x+2$  
 \begin{align}
-    \nu(t(e)) & \overset{?}{=} t(\nu(e))\\
-    .5 & \overset{?}{=} t(.5)\\
-    .5 & \neq 2*.5
+    \nu(t(e + 2)) & \overset{?}{=} \nu(e) + \nu(2)\\
+    .5 &\neq .5 + .5
 \end{align}
 
-To construct a valid $\nu$, the diagram must commute for all monoid actions on the sets in $E_i, V_i$.
-
+On the other hand figure~\ref{fig:artist_nu} illustrates a valid $\nu$ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$, $\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)$. For interval scale data, $\nu$ is equivariant under translation monoid actions if $\nu(x + c) = \nu(x) + \nu(c)$. For ratio data, there must be equivalent scaling $ \nu(xc) = \nu(x)\nu(c)$.
 
 \subsubsection{Assembling Marks}
 \label{sec:artist_q}
