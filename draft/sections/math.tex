@@ -270,35 +270,34 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into t
 
 \subsection{Artist}
 \label{sec:artist}
-The artist is the composite function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture. The binding of $\xi:S \rightarrow K$ keeps track of which data goes to which part of the graphic such that the artist can be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/dar.png}
+    \caption{The artist $A$ converts an section of data $\tau$ into a section of visual equivalents $\mu$ that are then composed into a piece of a glyph defined by the graphic section $\rho$
+    \note{might need to label this as E', V, H}}
+    \label{fig:artist_stages}
+\end{figure}
 
-The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$
-\begin{equation}
-    A: E^\prime \rightarrow \Gamma(H)
-\end{equation}
-\note{this is soup}
-to a graphic in $\Gamma(H)$. The artist decomposes to mapping data to visual $\nu:E\rightarrow V$, then  compositing $V$ pulled back along $\xi$ to $\xi^*V$ to a visual mark in prerender space $Q:\xi^*V\rightarrow H$. 
-
+The artist is the function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture that builds visual elements to pass off to the renderer. The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$ to a graphic that is a section $\rho$ in  $\Gamma(H)$
 \begin{equation}
     \label{eq:artist_diagram}
     \begin{tikzcd}
-        E \arrow[r, "\nu"] \arrow[rd, "\pi"'] & V \arrow[d, "\pi"] & \xi^*V \arrow[r, "Q"] \arrow[d, "\xi^*\pi"'] \arrow[l, "\xi^*"'] & H \arrow[ld, "\pi"] \\
+        E' \arrow[r, "\nu"] \arrow[rd, "\pi"'] & V \arrow[d, "\pi"] & \xi^*V \arrow[r, "Q"] \arrow[d, "\xi^*\pi"'] \arrow[l, "\xi^*"'] & \Gamma(H) \arrow[ld, "\pi"] \\
                                               & K                  & S \arrow[l, "\xi"']                                              &                    
         \end{tikzcd}
 \end{equation}
-The pullback map $\xi^*$ copies each value in $V$ over $k$ to $s$ in corresponding $S_k$ such that $\xi^*V$ can have multiple values that map to one value in $V$. 
+with an intermediate fiber bundle $V$ to hold visual representations and stages
+\begin{enumerate}
+    \item $\xi$ binding the continuity in the graphic to the continuity in the data (~\ref{sec:graphic_base})
+    \item $\nu$ conversion of data into visual characteristics (~\ref{sec:artist_nu})
+    \item $Q$ assembly of visual variables into a glyph (~\ref{sec:artist_q})
+\end{enumerate}
+ 
+of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions $\xi$, $\nu$ and $Q$ are constructed such that the input can be a single section on $K$ or $S$, which allows the artist to be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
 
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$.
-\begin{figure}
-    \includegraphics[width=\textwidth]{figures/math/artist_stages.png}
-    \caption{The artist $A$ converts data into the visual variables in $V$ and then composes those visual variables into a graphic in $H$}
-    \label{fig:artist_stages}
-\end{figure}
-\subsubsection {Visual Fiber Bundle}
+\subsubsection {Visual Fiber Bundle $V$}
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example APT\cite{mackinlayAutomatingDesignGraphical1986} or Vega\cite{satyanarayanDeclarativeInteractionDesign2014}. 
 
-
-For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the possible types in $P$ are:
-\begin{table}[ht]
+\begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
      $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{codomain(\nu_{i})}$  \\ \hline                                              
@@ -309,10 +308,12 @@ For example, for Matplotlib \cite{hunterMatplotlib2DGraphics2007}, some of the p
     \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
                                 & linestyle                                                        & $\{f_{0}, \ldots, f_{n}\} \times (\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
+    \caption{Some possible components of the fiber $P$ for a visualization implemented in Matplotlib}
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
-Table~\ref{tab:mpl_visual_variable_fiber} is an example of the visual fiber defined in terms of common parameters to plots in Matplotlib. The range of $\mu_{i}$ determine the monoid actions on $\mu_{i}$. A section of V $\mu$ is a tuple of visual values that specifies the visual characteristics of a glyph. For example, given a fiber of $\{xpos, ypos, color\}$ one section is $\{.5, .5, (255, 20,147)\}$. $Q$ determines how this section is applied to a graphic.  
+Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.  
+A section $\mu$ of $V$ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\nu_i)$ determines the monoid actions on $\mu_i)$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
@@ -343,6 +344,7 @@ commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$. This equivariance constr
 On the other hand figure~\ref{fig:artist_nu} illustrates a valid $\nu$ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$, $\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)$. For interval scale data, $\nu$ is equivariant under translation monoid actions if $\nu(x + c) = \nu(x) + \nu(c)$. For ratio data, there must be equivalent scaling $ \nu(xc) = \nu(x)\nu(c)$.
 
 \subsubsection{Assembling Marks}
+\note{HAVE NOT REACHED HERE TO EDIT YET}
 \label{sec:artist_q}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
@@ -489,6 +491,7 @@ through $\rho$.
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
+\note{HAVE NOT REACHED HERE TO EDIT YET}
 
 \begin{figure}[H]
     \includegraphics{figures/math/simplex.png}
@@ -529,6 +532,7 @@ In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rect
 Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_torus}, the torus $E$ base space $K$ can be implemented as a simplacial complex of two 2-simplexes. We unfold the torus into the two triangles that compose the square; the sections on these triangles are $\tau(triangle id k, \alpha, \beta)$. We also put transition functions on the edges such that $A$ can be glued to $A^\prime$ and $B$ to $B^\prime$ to reconstruct the torus. 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
+\note{HAVE NOT REACHED HERE TO EDIT YET}
 As formulated above, every artist function $A$ has fixed $\nu$ and generates a distinct graphic $\rho$. It is unfeasible to implement $A$ for every single graphic; instead we implement the equivalence class of artists $\{A \in A^\prime: A_{1} \equiv A_{2}\}$ which is $Q:\Gamma(V) \rightarrow \Gamma(H)$. 
 
 %% Well maybe. I think this is where required components comes in. There is some minimal V where if you didn't have those variables you wouldn't call it a scatter plot .... something like xpos,ypos with K just a descrete set.
