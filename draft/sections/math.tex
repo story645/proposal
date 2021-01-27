@@ -9,14 +9,14 @@
     \label{fig:artist_stages}
 \end{figure}
 
-\note{can change this all to 3rd person passive later}\\
+\note{should this be in 3rd person passive?}\\
 Visualization is generally thought of as structure preserving maps from data into graphics, and in this section we formally define that structure and how it is preserved via equivariant maps. We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 
-We introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$.
+We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
 
 \begin{equation}
     \label{eq:artist}
-    \mathscr{A}: \mathscr{E} \rightarrow \mathscr{H}
+    \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
 
 We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
@@ -25,54 +25,47 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 \label{sec:data}
 We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
 
-We model data as the fiber bundle $(E,\,B,\,\pi ,\,F)$, where $E$, $F$, and $K$ are topological spaces that encode 
-\begin{itemize}
-\item the properties of the variables in the fiber $F$ (\ref{sec:data_fiber})
-\item the continuity of the records in the base space $K$ (\ref{sec:data_base})
-\item collections of records $\tau$ (\ref{sec:data_section}). 
-\end{itemize}
+We model data as the fiber bundle $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$, where \dtotal, \dfiber, and \dbase are topological spaces that encode 
+\begin{description}
+\item[\dfiber] the properties of the variables in the fiber (\ref{sec:data_fiber})
+\item[\dbase] the continuity of the records in the base space (\ref{sec:data_base})
+\item[\dsection] collections of records (\ref{sec:data_section}). 
+\end{description}
 
-and $E$ is the total space of data that $F$ lives in. The bundle is the projection map $\pi$
+and \dtotal is the total space of data that \dfiber lives in. The bundle is the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[r, "\pi"] & K
+        \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
 
-that binds the variable space $F$ to the base space $K$. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $E=K\times F$ such that extra structure in the total space $E$ falls out and discussion can be focused on the fiber and base space. 
+that binds the variables \dfiber continuity \dbase. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $\dtotal=\dbase\times \dfiber$ such that extra structure in the total space \dtotal falls out and discussion can be focused on the fiber and base space. 
 
-\subsubsection{Variables: Fiber Space $F$}
+\subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-\note{yes, I know i may need to change this U to like $\mathcal{U}$, spivak uses U}
-The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set $U$ that is the disjoint union of all possible objects of types $\{T_0, \ldots, T_n\} \in DT$ where $DT$ are the data types of the variables in the dataset. He then defines the single variable set $U_\sigma$ 
+The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes are the data types of the variables in the dataset. He then defines the single variable set \fttype 
 \begin{equation}
     \label{eq:data_types}
-\begin{tikzcd}
-    U_{\sigma} \arrow[r] \arrow[d, "\pi_{\sigma}"'] & U \arrow[d, "\pi"] \\
-    C \arrow[r, "\sigma"']                          & \textbf{DT}       
-\end{tikzcd}
+    \begin{tikzcd}
+        \fttype \arrow[r] \arrow[d, "\pi_{\fsection}"'] & \ftotal \arrow[d, "\pi"] \\
+        \fnames \arrow[r, "\fsection"']                          & \ftypes       
+    \end{tikzcd}
 \end{equation}
-which is $U$ restricted to objects of type $T$ bound to variable name $c$. Given $U_{\sigma}$, the fiber for a one variable dataset is
+which is \ftotal restricted to objects of type \ftype bound to variable name \fname. Given \fsection, the fiber for a one variable dataset is
 \begin{equation}
-    F = U_{\sigma(c)} = U_{T} 
+    \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
 \end{equation}
-where $\sigma$ is the schema binding variable name $c$ to its datatype $T$. A dataset with multiple variables has a fiber that is the cartesian cross product of $U_{\sigma}$ applied to all the columns:
+where \fsection is the schema binding variable name \fname to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
 \begin{equation}
-F = U_{T_1}\times \ldots U_{T_i} \ldots\times U_{T_n}
+F = \ftotal_{\ftype_1}\times \ldots \ftotal_{\ftype_i} \ldots\times \ftotal_{\ftype_n}
 \end{equation}
-
 which is equivalent to 
-
 \begin{equation}
-    F= F_{0} \times \ldots \times F_{i}\times\ldots\times F_{n}
+    \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
 
-which allows us to decouple $F$ into its component fibers $F_i$. For every variable
-\begin{equation}
-V_i = (c_i,\, T_i,\, U_{T_i})
-\end{equation} 
-we keep track of its name $c$, type $T$, and values $U_{T}$. 
+which allows us to decouple \dfiber into components $\dfiber_i$. 
 
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -85,82 +78,77 @@ we keep track of its name $c$, type $T$, and values $U_{T}$.
         \caption{}
         \label{fig:fiber_example_cube}
     \end{subfigure}
-    \caption{These two datasets have the same base space $K$, but figure~\ref{fig:fiber_example_plane} has fiber  $F=\mathbb{R}\times\mathbb{R}^+$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\mathbb{R}^{+}\times\mathbb{R}^2$ which is (time, wind=(speed, direction))}
+    \caption{These two datasets have the same base space \dbase, but figure~\ref{fig:fiber_example_plane} has fiber  $\dfiber=\reals\times\reals$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\realsp\times\reals^2$ which is (time, wind=(speed, direction))}
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number of type \texttt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to positive floats $\ftotal_{\texttt{datetime}}= \realsp$. Temperature values are real numbers $\ftotal_{\texttt{float}} = \reals$. The fiber is 
 \begin{equation}
-    F =  \mathbb{R}^{+} \times \mathbb{R} 
+    \ftotal =  \realsp \times \reals 
 \end{equation} 
-where $V_0 = (time,\, \texttt{datetime},\, \mathbb{R}^+)$ and $V_1 = (temperature,\, \texttt{float},\, \mathbb{R})$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \mathbb{R}^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
+where the first component $F_0$ is the set of values specified by $(\fname_0=time,\, \ftype_0=\texttt{datetime},\, \fttype=\mathbb{R}^+)$ and $F_1$ is specified by $(\fname_1=temperature,\, \ftype_1=\texttt{float},\, \fttype=\reals)$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
 \begin{equation}
-    F = \mathbb{R}^{+} \times \mathbb{R}^2
+    \dfiber = \realsp \times \reals^{2}
 \end{equation} 
-such that $V_1 = (wind,\, \texttt{wind},\, \mathbb{R}^{2})$  
+such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \fttype=\reals^{2})$  
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-After specifying the variables $V$ in the dataset, we next describe ways in which we can transform the variables by identifying the monoid actions $M_i$ on the $F_i$. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
+After specifying \dfiber, we next describe the ways in which we can transform the values by identifying the monoid actions \monoid on the \dfiber. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
 
-A monoid \cite{Monoid2021} $M_i$ is a set with an associative binary operator $\ast:M_i \times M_i\rightarrow M_i$. A monoid has an identity element $e\in M_i$ such that $e\ast a= a \ast e = a$ for all $a \in M_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $M_i$ is a set $F_i$ with an action $\bullet: M\times F_i \rightarrow F_i$ with the properties:
+A monoid \cite{Monoid2021} $\monoid_i$ is a set with an associative binary operator $\ast:\monoid_i \times \monoid_i\rightarrow \monoid_i$. A monoid has an identity element $e\in \monoid_i$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
-    \textbf{associativity}\;& \text{for all } f,g \in M_i \text{ and } x\in F_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in F_i, e\in M_i,\,  e\bullet x = x 
+    \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
-As with the fiber $F$, the total monoid space $M$ is the cartesian product
+As with the fiber \dfiber, the total monoid space \monoid is the cartesian product
 \begin{equation}
-M = M_{0} \times \ldots \times M_{i}\times \ldots \times\ldots M_{n}
+\monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
 \end{equation}
-of the monoid $M_{i}$ on each $F_{i}\in F$. We expand our definition of variables 
-\begin{equation}
-        V_i = (c_i,\, T_i,\, F_i\, M_i)
-\end{equation}
-to include the monoid actions that act on $F_i$. 
+of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  $V_0 = (temperature,\, \texttt{float},\, \mathbb{R})$ which is interval data:
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  the fiber $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ which is interval data:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
-    \item monoid operations: $f: x\mapsto x + c_1 $, $g: x\mapsto x + c_2$
+    \item monoid operations: $f: x\mapsto x + \delta_1 $, $g: x\mapsto x + \delta_2  $
     \item monoid action operator composition $\bullet = \circ$
 \end{itemize}
 then the translation monoid actions on temperature satisfy the condition
 \begin{equation}
     \begin{tikzcd}
-        \mathbb{R} \arrow[rd, "(x+c_1)\circ(x+c_2)"] \arrow[d, "x+c_1"'] &            \\
-        \mathbb{R} \arrow[r, "x+c_2"']                                   & \mathbb{R}
+        \reals \arrow[rd, "(x+\delta_1)\circ(x+\delta_2)"] \arrow[d, "x+\delta_2"'] &            \\
+        \reals \arrow[r, "x+\delta_2"']                                   & \reals
     \end{tikzcd}
 \end{equation}
-where $c_1, c_2$ are intervals $x_i-x_j$. 
+where $\delta_1$ and $\delta_2$ are intervals between two temperatures $x$.  
 
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the basespace $K$ without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
+The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
-    \caption{The topological base space $K$ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
+    \caption{The topological base space \dbase encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
     \label{fig:base_space_types}
 \end{figure}
-As illustrated in figure~\ref{fig:base_space_types}, $K$ is akin to an indexing space into $E$ that describes the structure of $E$.  $K$ can have any number of dimensions and be continuous or discrete. 
+As illustrated in figure~\ref{fig:base_space_types}, \dbase is akin to an indexing space into \dtotal that describes the structure of \dtotal.  \dbase can have any number of dimensions and can be continuous or discrete. 
 
 \begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
-    \caption{The base space $E$ is divided into fiber segments $F$. The base space $K$ acts as an index into the records in the fibers.
+    \caption{The base space \dtotal is divided into fiber segments \dfiber. The base space \dbase acts as an index into the records in the fibers.
     \note{this figure might be good all the way up top to lay out the components of fb}}
     \label{fig:base_space_div}
 \end{figure}
 
-Formally $K$ is the quotient space \cite{QuotientSpaceTopology2020} of $E$, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $k \in K$ has a corresponding fiber $F_k$ in $E$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, $E$ is a rectangle divided by vertical fibers $F$, so the minimal $K$ for which there is always a mapping $\pi: F\rightarrow K$ is the line. 
+Formally \dbase is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, \dtotal is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the line. 
 
-As with fibers and monoids, we can decompose the total space into components $\pi:E_i\rightarrow K$ where
+As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
 \begin{equation}
-    \pi:E_1\oplus\ldots\oplus E_i \oplus\ldots \oplus E_n \rightarrow K
+    \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
 \end{equation}
 
-which is a decomposition of $F$. The $K$ remains the same because the connectivity of records 
-does not change just because there are fewer elements in each record.
+which is a decomposition of \dfiber. The \dbase remains the same because the connectivity of records does not change just because there are fewer elements in each record.
 
 \begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
@@ -174,53 +162,53 @@ does not change just because there are fewer elements in each record.
         \caption{}
         \label{fig:base_example_continuous}
     \end{subfigure}
-    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space $E$ is discrete over points $k \in K$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} $E$ lies over the continuous interval $K$, meaning the records in the fiber are sampled from a continuous space. 
+    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space \dtotal is discrete over points $\dbasepoint \in \dbase$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} \dtotal lies over the continuous interval \dbase, meaning the records in the fiber are sampled from a continuous space. 
     \note{revamp figure: F=Plane, k1 = dots, k2=line}}
     \label{fig:base_example}
 \end{figure}
 
-The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time) which is $F=\mathbb{R}\times \mathbb{R}^+$. In figure~\ref{fig:base_example_discrete} the fibers lie over discrete $K$ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval $K$ such that the records are samples from a continuous function defined on $K$.
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase such that the records are samples from a continuous function defined on \dbase.
 
-\subsubsection{Data: Sections $\tau$}
+\subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-While the fiber and base space describe the general structure of all data that lives in the fiber bundle, the sections $\tau: K\rightarrow E$ define the datasets that live in the fiber. We generalize Spivak's section as table $\tau$\cite{spivakSIMPLICIALDATABASES} to any sort of structured dataset such that 
+While the fiber and base space describe the general structure of all data that lives in the fiber bundle, the sections $\dsection: \dbase\rightarrow \dtotal$ define the datasets that live in the fiber. We generalize Spivak's description of the section as a table of records \cite{spivakSIMPLICIALDATABASES} to any sort of structured dataset such that 
 \begin{equation}
     \begin{tikzcd}
-        F \arrow[r, hook] & E \arrow[d, "\pi"']              \\
-                          & K \arrow[u, "\tau"', bend right]
+        \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
+                          & \dbase \arrow[u, "\dsection"', bend right]
     \end{tikzcd}
 \end{equation}
-such that there is $\pi(\tau(k)) = k$ map back to $K$. There can be many sections $\tau$, and the space of global sections is $\Gamma(E)$. For a trivial fiber bundle
+such that there is always a map $\pi(\dsection(\dbasepoint)) = \dbasepoint$. There can be many sections \dsection; the space of global sections is $\Gamma(\dtotal)$. For a trivial fiber bundle, the section is 
 \begin{equation}
     \label{eq:section_return}
-    \tau(k) = (k, (g_{F_{0}}(k), \ldots, g_{F_{n}}(k))
+    \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
 \end{equation}
-where $g: K \rightarrow F$ is the index function into the fiber. Because we can decompose the bundle and the fiber, we can formulate $\tau$ as 
+where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. Because we can decompose the bundle and the fiber, we can formulate $\dsection$ as 
 \begin{align}
-\tau = (\tau_0,\ldots, \tau_i, \dots, \tau_n) 
+\dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
 \end{align}
-where each section $\tau_i$ is a variable or set of variables. 
+where each section $\dsection_i$ is a variable or set of variables. 
 
 \begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
-    \caption{ Fiber (time, temperature) with an interval $K$ basespace. The sections $\tau_1$ and $\tau_2$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\tau_1, \tau_2 \in \Gamma(E)$}
+    \caption{ Fiber (time, temperature) with an interval \dbase basespace. The sections $\dsection_i$ and $\dsection_j$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$}
     \label{fig:data_sections}
 \end{figure}
 
-In the example in figure~\ref{fig:data_sections}, the fiber is $\mathbb{R}^+\times \mathbb{R}$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval $K$. The section $\tau_1$ resolves to a series of monotonically increasing in time records of temperature. Section $\tau_2$ returns a different timeseries of temperature values. Both sections are included in the global set of sections $\tau_1, \tau_2 \in \Gamma(E)$.
+In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of temperature. Section $\dsection_j$ returns a different timeseries of temperature values. Both sections are included in the global set of sections $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$.
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(E)$. All fiber bundles are locally trivial, which means that $E$ restricted over a small enough neighborhood $U \subset K$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(E)$ is the localized section of fibers $\iota^*\tau: U \rightarrow \iota^*E$
+Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(\dtotal)$. All fiber bundles are locally trivial, which means that \dtotal restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\section: U \rightarrow \iota^*\dtotal$
 
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}
-        \iota^*E \arrow[d, "\pi"']           & E \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
-        U \arrow[u, "\iota^*\tau"', bend right] & K \arrow[u, "\tau"', bend right] \arrow[l, "\iota"']
-        \end{tikzcd}
+        \iota^*\dtotal \arrow[d, "\pi"']           & \dtotal \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
+        U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[l, "\iota"']
+    \end{tikzcd}
 \end{equation}
-pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow K$. The localized section is the germ $\xi^*\tau$. The neighborhood of points $k_i$ surrounding the point $k$ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While $E$ is only the records in a fiber $F_k$ over a specific $k$, because the stalk includes the neighborhood $U$ it also includes nearby records. While this can be useful for visual transforms, often the extra needed information can be found in the jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $E^\prime=E+\mathcal{J}(E)$
+pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While \dtotal is only the fiber $\dfiber_k$ over a specific \dbasepoint , the stalk includes nearby records because the sheaf lies over the neighborhood $U$. While this can be useful for visual transforms, often the extra needed information can be found in the smaller jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $\dtotal^\prime=\dtotal+\mathcal{J}(\dtotal)$
 
 
 \subsection{Graphic: $H$}

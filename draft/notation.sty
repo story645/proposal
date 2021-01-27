@@ -7,24 +7,27 @@
 
 
 %% sets
-\cdef{Reals}{\mathbb{R}}
-\cdef{Realspos}{\mathbb{R}^+}
-\cdef{Int}{\mathbb{Z}}
-\cdef{Natural}{\mathbb{N}}
+\cdef{reals}{\mathbb{R}}
+\cdef{realsp}{\mathbb{R}^+}
 
 %% databundle
 \cdef{dtotal}{E}
 \cdef{dfiber}{F}
 \cdef{dbase}{K}
+\cdef{dbasepoint}{\MakeLowercase{\dbase}}
 \cdef{dsection}{\tau}
+
 % fiber
 \cdef{ftotal}{\mathbb{U}}
 \cdef{fsection}{\sigma}
 \cdef{fttype}{\ftotal_{\fsection}}
 \cdef{fnames}{C}
-\cdef{fname}{\lowercase{\fnames}}
+\cdef{fname}{\MakeLowercase{\fnames}}
 \cdef{ftypes}{\textbf{DT}}
 \cdef{ftype}{T}
+
+%monoid 
+\cdef{monoid}{M}
 
 %graphic bundle
 \cdef{gtotal}{H}
