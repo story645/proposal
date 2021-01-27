@@ -2,7 +2,14 @@
 \begin{document}
 
 \section{Topological Artist Model}
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/dar.png}
+    \caption{Visualizaiton is the process of converting data into visual characteristics that are then assembled into a graphic}
+    \label{fig:artist_stages}
+\end{figure}
+
 \note{can change this all to 3rd person passive later}\\
+%% add sentence or two about visualization as structure preserving map
 In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
 
 \begin{equation}
@@ -50,7 +57,7 @@ which is $U$ restricted to objects of type $T$ bound to variable name $c$. Given
 \end{equation}
 where $\sigma$ is the schema binding variable name $c$ to its datatype $T$. A dataset with multiple variables has a fiber that is the cartesian cross product of $U_{\sigma}$ applied to all the columns:
 \begin{equation}
-F = U_{T_1}\times \ldots U{T_i} \ldots\times U_{T_n}
+F = U_{T_1}\times \ldots U_{T_i} \ldots\times U_{T_n}
 \end{equation}
 
 which is equivalent to 
@@ -80,7 +87,7 @@ we keep track of its name $c$, type $T$, and values $U_{T}$.
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number ot type \texttt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number of type \texttt{detetime} which can be resolved to positive floats $U_{\texttt{datetime}}= \mathbb{R}^+$. Temperature values are real numbers $U_{\texttt{float}} = \mathbb{R}$. The fiber is 
 \begin{equation}
     F =  \mathbb{R}^{+} \times \mathbb{R} 
 \end{equation} 
@@ -218,8 +225,9 @@ pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarro
 \label{sec:graphic}  
 We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(H, S, \pi, D)$. As with data, the fiber bundle is for a class of graphics with shared base space $S$ (~\ref{sec:graphic_fiber}) and fiber $D$ (~\ref{sec:graphic_base}) and the sections $\rho$ (~\ref{sec:graphic_section}) encode the fully specified graphics. 
 
-\subsubsection{Abstract Display $D$}
+\subsubsection{Idealized Display $D$}
 \label{sec:graphic_fiber}
+% infinite resolution version of D
 The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a 2D opaque image $D=\mathbb{R}^5$ with elements in $D$ of the form
 \begin{equation}
     d = (x, y, r, g, b)
@@ -250,7 +258,7 @@ In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how elements 
  
 \subsubsection{Renderable Glyph $\rho$}
 \label{sec:graphic_section}
-
+%pick a pixel which is the bounding box
 A section $\rho: S\rightarrow H$ defines a piece of the graphical representation of the data. The physical display coordinates in $D$ are not equivalent to the mathematical coordinates in $S$ such that many points $s \in S$ might map to a single $d\in D$ and many $d$ might go into a visible section of a displayed graphic. Therefore, we define the bounding box $b=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ in the display space $D$ that is a piece of the rendered graphic.  
 
 We inverse map this bounding box $S_b =\rho^{-1}(b)$ into a region $S_b \subset S$  
@@ -269,13 +277,13 @@ to then compute the remaining $(R, G, B)$ components of the bounded display regi
 As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$. The section yields the set of elements $\{d_0, \ldots, d_n\}$ that specify the $(r, g, b)$ values corresponding to the coordinates in $b$. 
 
 \subsection{Artist}
-\label{sec:artist}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/dar.png}
-    \caption{The artist $A$ converts an section of data $\tau$ into a section of visual equivalents $\mu$ that are then composed into a piece of a glyph defined by the graphic section $\rho$
-    \note{might need to label this as E', V, H}}
-    \label{fig:artist_stages}
+    \includegraphics[width=\textwidth]{figures/math/path_of_q}
+
+    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$. \note{maybe change to $\tau, \mu, \rho$ }} 
+    \label{fig:artist_q}
 \end{figure}
+
 
 The artist is the function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture that builds visual elements to pass off to the renderer. The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$ to a graphic that is a section $\rho$ in  $\Gamma(H)$
 \begin{equation}
@@ -295,8 +303,7 @@ with an intermediate fiber bundle $V$ to hold visual representations and stages
 of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions $\xi$, $\nu$ and $Q$ are constructed such that the input can be a single section on $K$ or $S$, which allows the artist to be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
 
 \subsubsection {Visual Fiber Bundle $V$}
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example APT\cite{mackinlayAutomatingDesignGraphical1986} or Vega\cite{satyanarayanDeclarativeInteractionDesign2014}. 
-
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example ggplot \cite{wickhamGgplot2ElegantGraphics2016a}, D3\cite{bostockDataDrivenDocuments2011
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
@@ -312,8 +319,7 @@ The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
-Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.  
-A section $\mu$ of $V$ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\nu_i)$ determines the monoid actions on $\mu_i)$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}. A section $\mu$ of $V$ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\nu_i)$ determines the monoid actions on $\mu_i)$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
@@ -344,14 +350,7 @@ commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$. This equivariance constr
 On the other hand figure~\ref{fig:artist_nu} illustrates a valid $\nu$ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$, $\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)$. For interval scale data, $\nu$ is equivariant under translation monoid actions if $\nu(x + c) = \nu(x) + \nu(c)$. For ratio data, there must be equivalent scaling $ \nu(xc) = \nu(x)\nu(c)$.
 
 \subsubsection{Assembling Marks}
-\note{HAVE NOT REACHED HERE TO EDIT YET}
 \label{sec:artist_q}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/path_of_q}
-    \label{fig:artist_q}
-    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$.}
-    %%maybe change to \tau, \mu, \rho  
-\end{figure}
 
 As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$
 \begin{equation}
