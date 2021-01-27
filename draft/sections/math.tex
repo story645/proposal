@@ -25,14 +25,14 @@ We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic})
 \label{sec:data}
 We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
 
-We model data as the fiber bundle $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$, where \dtotal, \dfiber, and \dbase are topological spaces that encode 
+We model data as the fiber bundle $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$, where \dtotal\, \dfiber\, and \dbase\ are topological spaces that encode 
 \begin{description}
 \item[\dfiber] the properties of the variables in the fiber (\ref{sec:data_fiber})
 \item[\dbase] the continuity of the records in the base space (\ref{sec:data_base})
 \item[\dsection] collections of records (\ref{sec:data_section}). 
 \end{description}
 
-and \dtotal is the total space of data that \dfiber lives in. The bundle is the projection map $\pi$
+and \dtotal\ is the total space of data that \dfiber\ lives in. The bundle is the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -40,11 +40,11 @@ and \dtotal is the total space of data that \dfiber lives in. The bundle is the 
     \end{tikzcd}
 \end{equation}
 
-that binds the variables \dfiber continuity \dbase. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $\dtotal=\dbase\times \dfiber$ such that extra structure in the total space \dtotal falls out and discussion can be focused on the fiber and base space. 
+that binds the variables \dfiber\ continuity \dbase. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $\dtotal=\dbase\times \dfiber$ such that extra structure in the total space \dtotal\ falls out and discussion can be focused on the fiber and base space. 
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes are the data types of the variables in the dataset. He then defines the single variable set \fttype 
+The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -52,11 +52,11 @@ The fiber is a topological space that is the set of possible values of the data;
         \fnames \arrow[r, "\fsection"']                          & \ftypes       
     \end{tikzcd}
 \end{equation}
-which is \ftotal restricted to objects of type \ftype bound to variable name \fname. Given \fsection, the fiber for a one variable dataset is
+which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. Given \fsection, the fiber for a one variable dataset is
 \begin{equation}
     \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
 \end{equation}
-where \fsection is the schema binding variable name \fname to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
+where \fsection\ is the schema binding variable name \fname\ to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
 \begin{equation}
 F = \ftotal_{\ftype_1}\times \ldots \ftotal_{\ftype_i} \ldots\times \ftotal_{\ftype_n}
 \end{equation}
@@ -65,7 +65,7 @@ which is equivalent to
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
 
-which allows us to decouple \dfiber into components $\dfiber_i$. 
+which allows us to decouple \dfiber\ into components $\dfiber_i$. 
 
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -78,7 +78,7 @@ which allows us to decouple \dfiber into components $\dfiber_i$.
         \caption{}
         \label{fig:fiber_example_cube}
     \end{subfigure}
-    \caption{These two datasets have the same base space \dbase, but figure~\ref{fig:fiber_example_plane} has fiber  $\dfiber=\reals\times\reals$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\realsp\times\reals^2$ which is (time, wind=(speed, direction))}
+    \caption{These two datasets have the same base space \dbase\, but figure~\ref{fig:fiber_example_plane} has fiber  $\dfiber=\reals\times\reals$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\realsp\times\reals^2$ which is (time, wind=(speed, direction))}
     \label{fig:data_fiber_example}
 \end{figure}
 
@@ -94,14 +94,14 @@ such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-After specifying \dfiber, we next describe the ways in which we can transform the values by identifying the monoid actions \monoid on the \dfiber. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
+After specifying \dfiber\, we next describe the ways in which we can transform the values by identifying the monoid actions \monoid\ on the \dfiber. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
 
 A monoid \cite{Monoid2021} $\monoid_i$ is a set with an associative binary operator $\ast:\monoid_i \times \monoid_i\rightarrow \monoid_i$. A monoid has an identity element $e\in \monoid_i$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
-As with the fiber \dfiber, the total monoid space \monoid is the cartesian product
+As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
 \begin{equation}
 \monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
 \end{equation}
@@ -125,30 +125,30 @@ where $\delta_1$ and $\delta_2$ are intervals between two temperatures $x$.
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
+The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase\ without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
-    \caption{The topological base space \dbase encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
+    \caption{The topological base space \dbase\ encodes the connectivity of the data space, for example if the data is independent points or a map or on a sphere}
     \label{fig:base_space_types}
 \end{figure}
-As illustrated in figure~\ref{fig:base_space_types}, \dbase is akin to an indexing space into \dtotal that describes the structure of \dtotal.  \dbase can have any number of dimensions and can be continuous or discrete. 
+As illustrated in figure~\ref{fig:base_space_types}, \dbase\ is akin to an indexing space into \dtotal\ that describes the structure of \dtotal.  \dbase\ can have any number of dimensions and can be continuous or discrete. 
 
 \begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
-    \caption{The base space \dtotal is divided into fiber segments \dfiber. The base space \dbase acts as an index into the records in the fibers.
+    \caption{The base space \dtotal\ is divided into fiber segments \dfiber. The base space \dbase\ acts as an index into the records in the fibers.
     \note{this figure might be good all the way up top to lay out the components of fb}}
     \label{fig:base_space_div}
 \end{figure}
 
-Formally \dbase is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, \dtotal is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the line. 
+Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the line. 
 
 As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
 \begin{equation}
     \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
 \end{equation}
 
-which is a decomposition of \dfiber. The \dbase remains the same because the connectivity of records does not change just because there are fewer elements in each record.
+which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
 
 \begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
@@ -162,12 +162,12 @@ which is a decomposition of \dfiber. The \dbase remains the same because the con
         \caption{}
         \label{fig:base_example_continuous}
     \end{subfigure}
-    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space \dtotal is discrete over points $\dbasepoint \in \dbase$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} \dtotal lies over the continuous interval \dbase, meaning the records in the fiber are sampled from a continuous space. 
+    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space \dtotal\ is discrete over points $\dbasepoint \in \dbase$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} \dtotal\ lies over the continuous interval \dbase, meaning the records in the fiber are sampled from a continuous space. 
     \note{revamp figure: F=Plane, k1 = dots, k2=line}}
     \label{fig:base_example}
 \end{figure}
 
-The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase such that the records are samples from a continuous function defined on \dbase.
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase such that the records are samples from a continuous function defined on \dbase.
 
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
@@ -191,15 +191,15 @@ where each section $\dsection_i$ is a variable or set of variables.
 
 \begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
-    \caption{ Fiber (time, temperature) with an interval \dbase basespace. The sections $\dsection_i$ and $\dsection_j$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$}
+    \caption{ Fiber (time, temperature) with an interval \dbase\ basespace. The sections $\dsection_i$ and $\dsection_j$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$}
     \label{fig:data_sections}
 \end{figure}
 
-In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of temperature. Section $\dsection_j$ returns a different timeseries of temperature values. Both sections are included in the global set of sections $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$.
+In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection_j$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$.
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(\dtotal)$. All fiber bundles are locally trivial, which means that \dtotal restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\section: U \rightarrow \iota^*\dtotal$
+Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(\dtotal)$. All fiber bundles are locally trivial, which means that \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
 
 \begin{equation}
     \label{eq:sheaf}
@@ -208,63 +208,59 @@ Often a graphic may need to be updated with live data or support zooming in on a
         U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[l, "\iota"']
     \end{tikzcd}
 \end{equation}
-pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While \dtotal is only the fiber $\dfiber_k$ over a specific \dbasepoint , the stalk includes nearby records because the sheaf lies over the neighborhood $U$. While this can be useful for visual transforms, often the extra needed information can be found in the smaller jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $\dtotal^\prime=\dtotal+\mathcal{J}(\dtotal)$
+pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes nearby records because the sheaf lies over the neighborhood $U$. While this can be useful for visual transforms, often the extra needed information can be found in the smaller jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $\dtotal^\prime=\dtotal+\mathcal{J}(\dtotal)$
 
 
-\subsection{Graphic: $H$}
+\subsection{Graphic: \gtotal}
 \label{sec:graphic}  
-We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(H, S, \pi, D)$. As with data, the fiber bundle is for a class of graphics with shared base space $S$ (~\ref{sec:graphic_fiber}) and fiber $D$ (~\ref{sec:graphic_base}) and the sections $\rho$ (~\ref{sec:graphic_section}) encode the fully specified graphics. 
+We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(\gtotal, \gbase, \pi, \gfiber)$. As with data, the fiber bundle is for a class of graphics with shared base space \gbase (~\ref{sec:graphic_fiber}) and fiber \gfiber (~\ref{sec:graphic_base}) and the sections \gsection (~\ref{sec:graphic_section}) encode a graphic where the visual characteristics are fully specified.
 
-\subsubsection{Idealized Display $D$}
+\subsubsection{Idealized Display \gfiber}
 \label{sec:graphic_fiber}
-% infinite resolution version of D
-The fiber $D$ is specified in terms of the target display space, for example a 2D screen or 3D printer. In this work, we assume a 2D opaque image $D=\mathbb{R}^5$ with elements in $D$ of the form
+The fiber \gfiber\ is an idealized infinite resolution version of the target display space, for example a 2D screen or 3D printer. In this work, we assume a 2D opaque image $\dfiber=\reals^5$ with elements 
 \begin{equation}
-    d = (x, y, r, g, b)
+(x,\, y,\, r,\, g,\, b) \in \gfiber
 \end{equation}
-such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $D=R^{7}$ such that $d=(x, y, z, r, g, b, a)$. The location coordinates $x$ and $y$ are defined in terms of the display, while the $(r,g,b)$ values are filled in via a lookup on $S$. 
+such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $\dfiber=\reals^{7}$ such that $(x, y, z, r, g, b, a) \in \gfiber$ specifies the target display. The location coordinates $x$ and $y$ are defined in terms of the display, while the $(r,g,b)$ values are filled in via a lookup on \gbase. 
 
-\subsubsection{Continuity of the Graphic $S$} 
+\subsubsection{Continuity of the Graphic \gbase} 
 \label{sec:graphic_base}
-An assumption of graphical representations is that they match the continuity of the data\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology $S$ of a graphic may need more dimensions than the data topology $K$ so that the glyph can be defined in $D$. Therefore we define the base space mapping from graphic $S$ to data $K$ 
+An assumption of graphical representations is that they match the continuity of the data\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology \gbase\ of a graphic may need more dimensions than the data topology \dbase\ so that the glyph can be defined in \dfiber. Therefore we define the base space mapping from graphic \gbase to data \dbase 
 \begin{equation}
     \begin{tikzcd}
-        E \arrow[d, "\pi"'] & H \arrow[d, "\pi"'] \\
-        K                   & S \arrow[l, "\xi"']
+        \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
+        \dbase                   & \gbase \arrow[l, "\vindex"']
         \end{tikzcd}
 \end{equation}
 
- as the deformation retraction \cite{RetractionTopology2020} $\xi: S \rightarrow K$ that goes from a region $s \in S_{k}$ to its associated point $k$, such that when $\xi(s) = k$, $\xi^*\tau(s) = \tau(k)$. While dimensions can be added to $S$, it retains the same continuity as $K$.
+ as the deformation retraction \cite{RetractionTopology2020} $\vindex: \gbase \rightarrow \dbase$ that goes from a region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$, such that when $\vindex(\gbasepoint) = \dbasepoint$,\, $\vindex^*\dsection(\gbasepoint) = \dsection(\gbasepoint)$. While dimensions can be added to \gbase, it retains the same continuity as \dbase.
  
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-    \caption{The scatter and line graphic base spaces $S$ are larger than $K$ so that they can encode physical aspects of the glyph, such as shape (a circle) or thickness. The heatmap base $S$ is the same as $K$ because a heatmap is directly mapping the values in the data to the graphic.
-    \note{add $\alpha, \beta$ coordinates}}
+    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The heatmap has the same continuity in the graphic \gbase\ as in the data \dbase. \note{add $\alpha, \beta$ coordinates to figures}}
     \label{fig:graphic_retraction_map}
 \end{figure}
 
-In figure~\ref{fig:graphic_retraction_map} each disk $S_k$ indexes how elements in $D$ are held together to generate a single glyph that is the visual representation of a single point in $F_k$. For the line, the region $\beta$ over a point $\alpha_i$ specifies the thickness of the line in $D$ for the corresponding section on the interval $K$. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
+In figure~\ref{fig:graphic_retraction_map} each disk $\gbase_{\dbasepoint}$ indexes how elements in \gfiber\ are glued together to generate a single glyph that is the visual representation of a single record in $\dfiber_{\dbasepoint}$. For the line, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbase. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
 
  
 \subsubsection{Renderable Glyph $\rho$}
 \label{sec:graphic_section}
 %pick a pixel which is the bounding box
-A section $\rho: S\rightarrow H$ defines a piece of the graphical representation of the data. The physical display coordinates in $D$ are not equivalent to the mathematical coordinates in $S$ such that many points $s \in S$ might map to a single $d\in D$ and many $d$ might go into a visible section of a displayed graphic. Therefore, we define the bounding box $b=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ in the display space $D$ that is a piece of the rendered graphic.  
-
-We inverse map this bounding box $S_b =\rho^{-1}(b)$ into a region $S_b \subset S$  
+A section $\gsection: \gbase\rightarrow \gtotal$ defines a piece of the graphical representation of the data. Evaluated on a single \gbasepoint\, \gsection\ returns a single element in \gfiber\. For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. Integrating over this region on \gbase\
 \begin{align}
-    R_b &= \iint\limits_{S_b} \rho_r(s)ds^{2}\\
-    G_b &= \iint\limits_{S_b} \rho_g(s)ds^{2}\\
-    B_b &= \iint\limits_{S_b} \rho_b(s)ds^{2}
+    r_p &= \iint\limits_{S_p} \rho_r(s)ds^{2}\\
+    g_p &= \iint\limits_{S_p} \rho_g(s)ds^{2}\\
+    b_p &= \iint\limits_{S_p} \rho_b(s)ds^{2}
 \end{align}
-to then compute the remaining $(R, G, B)$ components of the bounded display region $D_b$.
+yields the color of the pixel $p$.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{figures/math/graphic_render.png}
-    \caption{To render a graphic, a region $b$ is selected in the display space. This region is in coordinates $D$ so the inverse mapping $\rho^{-1}(b)$ maps to an equivalent region $S_b \subset S$. We then take the sections $\rho(S_b)$ which are the elements $\{d_0, \ldots, d_n\}$ that make the piece of the graphic in $b$.}
+    \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
-As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$. The section yields the set of elements $\{d_0, \ldots, d_n\}$ that specify the $(r, g, b)$ values corresponding to the coordinates in $b$. 
+As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. \note{probably needs some conclusion}   
 
 \subsection{Artist}
 \label{sec:artist}

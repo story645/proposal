@@ -1,9 +1,8 @@
 \ProvidesPackage{notation}
-\usepackage{xspace}
 
 %% defintion function: \cdef{name}{symbol}
 \newcommand\cdef[2]{%
-    \expandafter\newcommand\csname #1\endcsname{\ensuremath{#2}\xspace}}
+    \expandafter\newcommand\csname #1\endcsname{\ensuremath{#2}}}
 
 
 %% sets
@@ -33,7 +32,10 @@
 \cdef{gtotal}{H}
 \cdef{gfiber}{D}
 \cdef{gbase}{S}
+\cdef{gbasepoint}{\MakeLowercase{\gbase}}
 \cdef{gsection}{\rho}
+\cdef{gx}{\alpha}
+\cdef{gy}{\beta}
 
 %visual bundle
 \cdef{vtotal}{V}
@@ -43,3 +45,4 @@
 \cdef{vartist}{A}
 \cdef{vchannel}{\nu}
 \cdef{vmark}{Q}
+\cdef{vindex}{\xi}
