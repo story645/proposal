@@ -2,15 +2,17 @@
 \begin{document}
 
 \section{Topological Artist Model}
+\label{sec:tam}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/dar.png}
-    \caption{Visualizaiton is the process of converting data into visual characteristics that are then assembled into a graphic}
+    \caption{Visualizaiton is the process of mapping data into visual characteristics that are then assembled into a graphic}
     \label{fig:artist_stages}
 \end{figure}
 
 \note{can change this all to 3rd person passive later}\\
-%% add sentence or two about visualization as structure preserving map
-In this section we introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$. 
+Visualization is generally thought of as structure preserving maps from data into graphics, and in this section we formally define that structure and how it is preserved via equivariant maps. We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
+
+We introduce a mathematical description of the visualization pipeline where artist $\mathscr{A}$ functions transform data space $\mathscr{E}$ to an intermediate representation in a prerendered graphic space $\mathscr{H}$.
 
 \begin{equation}
     \label{eq:artist}
@@ -172,7 +174,7 @@ does not change just because there are fewer elements in each record.
         \caption{}
         \label{fig:base_example_continuous}
     \end{subfigure}
-    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space $E$ is discrete over points $k \in K$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} $E$ lies over the continuous interval $K$, meaning the records in the fiber are sampled from a continous space. 
+    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space $E$ is discrete over points $k \in K$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} $E$ lies over the continuous interval $K$, meaning the records in the fiber are sampled from a continuous space. 
     \note{revamp figure: F=Plane, k1 = dots, k2=line}}
     \label{fig:base_example}
 \end{figure}
@@ -199,7 +201,7 @@ where $g: K \rightarrow F$ is the index function into the fiber. Because we can 
 \end{align}
 where each section $\tau_i$ is a variable or set of variables. 
 
-\begin{figure}[ht!]
+\begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
     \caption{ Fiber (time, temperature) with an interval $K$ basespace. The sections $\tau_1$ and $\tau_2$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\tau_1, \tau_2 \in \Gamma(E)$}
     \label{fig:data_sections}
@@ -277,13 +279,13 @@ to then compute the remaining $(R, G, B)$ components of the bounded display regi
 As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a region $b$ in the output space, inverse map the region into $S_b \subset S$, then take the section $\rho$ over the region $S_b$. The section yields the set of elements $\{d_0, \ldots, d_n\}$ that specify the $(r, g, b)$ values corresponding to the coordinates in $b$. 
 
 \subsection{Artist}
+\label{sec:artist}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
 
     \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$. \note{maybe change to $\tau, \mu, \rho$ }} 
     \label{fig:artist_q}
 \end{figure}
-
 
 The artist is the function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture that builds visual elements to pass off to the renderer. The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$ to a graphic that is a section $\rho$ in  $\Gamma(H)$
 \begin{equation}
@@ -303,7 +305,7 @@ with an intermediate fiber bundle $V$ to hold visual representations and stages
 of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions $\xi$, $\nu$ and $Q$ are constructed such that the input can be a single section on $K$ or $S$, which allows the artist to be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
 
 \subsubsection {Visual Fiber Bundle $V$}
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels,} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example ggplot \cite{wickhamGgplot2ElegantGraphics2016a}, D3\cite{bostockDataDrivenDocuments2011
+The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example ggplot \cite{wickhamGgplot2ElegantGraphics2016a} or D3\cite{bostockDataDrivenDocuments2011}.
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
