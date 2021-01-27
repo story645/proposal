@@ -1,0 +1,42 @@
+\ProvidesPackage{notation}
+\usepackage{xspace}
+
+%% defintion function: \cdef{name}{symbol}
+\newcommand\cdef[2]{%
+    \expandafter\newcommand\csname #1\endcsname{\ensuremath{#2}\xspace}}
+
+
+%% sets
+\cdef{Reals}{\mathbb{R}}
+\cdef{Realspos}{\mathbb{R}^+}
+\cdef{Int}{\mathbb{Z}}
+\cdef{Natural}{\mathbb{N}}
+
+%% databundle
+\cdef{dtotal}{E}
+\cdef{dfiber}{F}
+\cdef{dbase}{K}
+\cdef{dsection}{\tau}
+% fiber
+\cdef{ftotal}{\mathbb{U}}
+\cdef{fsection}{\sigma}
+\cdef{fttype}{\ftotal_{\fsection}}
+\cdef{fnames}{C}
+\cdef{fname}{\lowercase{\fnames}}
+\cdef{ftypes}{\textbf{DT}}
+\cdef{ftype}{T}
+
+%graphic bundle
+\cdef{gtotal}{H}
+\cdef{gfiber}{D}
+\cdef{gbase}{S}
+\cdef{gsection}{\rho}
+
+%visual bundle
+\cdef{vtotal}{V}
+\cdef{vfiber}{P}
+\cdef{vsection}{\mu}
+% artist maps
+\cdef{vartist}{A}
+\cdef{vchannel}{\nu}
+\cdef{vmark}{Q}
