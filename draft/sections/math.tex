@@ -353,10 +353,8 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
 
 The glyph in figure~\ref{fig:artist_mark_change} has the following characterstics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark is that the action $m=(e, e, e, x+2)$, where e is identity, applied to \vsection\ such that $\vsection^{\prime}=(e,e,e,3)$ has an equivalent action on \gsection that causes $\vmark(\vsection^{\prime})$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
 
-
-\paragraph{Example: Invalid Q}
-\note{DEGENERATE Q - drawing a blank if this is necessry and if so how}
-Check a well defined map $\monoid\times Y \rightarrow Y$.
+\note{DEGENERATE Q - drawing a blank if this is necessry and if so how\\
+Check a well defined map $\monoid\times Y \rightarrow Y$}
 
 To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, \vmark\ is called with all the regions \gbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$:
 \begin{equation}
@@ -374,77 +372,62 @@ such that for every mark there is at least one corresponding section on \dbase.
 
 \subsubsection{Sample Qs}
 %rewrite as alpha/beta 
-In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a simple heatmap. 
-
-\paragraph{Q: scatter plot}\mbox{} \\
+In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
 \label{sec:artist_example_scatter}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/scatter.png}
+    \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
+    }
     \label{fig:artist_scatter}
 \end{figure}
-
-\begin{equation}
-Q(xpos, ypos)(\alpha_{1}, \alpha_{2}) 
-\end{equation}
-
-Given a defaut color of black, $\rho_{RGB} = (0,0,0)$. The position of this swatch of color can be computed relative to the location on the disc $S_{i}$ as shown in figure~\ref{fig:artist_scatter}:
+The scatter plot in figure~\ref{fig:scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
 \begin{align}
-x &= size\bullet \alpha_1 \bullet \cos(\alpha_2) + xpos\\
-y &= size\bullet \alpha_1 \bullet \sin(\alpha_2) + ypos
+x &= size\bullet \alpha \bullet \cos(\beta) + xpos\\
+y &= size\bullet \alpha \bullet \sin(\beta) + ypos
 \end{align}
 
-such that $\rho(s) = (x, y, 0, 0, 0)$ where $s$ is the region in $H$. 
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black.
 
-\paragraph{Q: line plot}\mbox{} \\
 \label{sec:artist_example_line}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line.png}
+    \caption{The line fiber $(time,\, temp)$ is thickend with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a thick line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). \note{this is gonna move once this gets regenerated w/ labels} The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
 
-The line plot shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet discussed in section~\ref{sec:sheaf_stalk}
-(needs the normal to push up/down against the normal)
-
-\begin{equation}
-    Q(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha_1, \alpha_2)
-\end{equation}
-
-where the magnitude of the thickness is 
+The line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet discussed in section~\ref{sec:sheaf_stalk}. The line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the thickness is 
 \begin{equation}
     \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}
 \end{equation}
-such that the components are 
+such that the normal is  
 \begin{equation}
     \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
 \end{equation}
-    
-%% only alpha1 exists on the data side
-which yields components of $\rho(s)$:
+
+which yields components of \gsection
 \begin{align}
- x = xpos(\xi(\alpha_1)) &+ \alpha_2\hat(n_1)(\xi(\alpha_1)) \\
- y = ypos(\xi(\alpha_1)) &+ \alpha_2\hat(n_2)(\xi(\alpha_2)) 
+ x = xpos(\vindex(\alpha)) &+ \beta\hat(n_1)(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ \beta\hat(n_2)(\vindex(\alpha)) 
 \end{align}
 
+where (x,y) look up the position $\vindex(\alpha)$ on the data and then apply thickness $\beta$ at that location. 
 
 \paragraph{Q: heatmap}\mbox{} \\
 \label{sec:artist_example_heatmap}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/heatmap.png}
+    \caption{The only visual parameter a heatmap requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
     \label{fig:artist_heatmap}
 \end{figure}
-The heatmap in figure~\ref{fig:artist_heatmap} 
-\begin{equation}
-Q(xpos, ypos, color)
-\end{equation}
-has in the simple case a direct lookup into $K$ to obtain the $\mu = (x,y,c)$ values that are mapped into 
-(arrays are upside down, x is y, is x) - $\xi$ is about translating indices from data to visual alignment
-\begin{align}
-D_{RGB} &= color(\xi(\alpha_1, \alpha_2))
-D_x & = xpos(\xi(\alpha_1, \alpha_2))
-D_y &= ypos(\xi(\alpha_1, \alpha_2))
-\end{align}
-through $\rho$. 
 
+The heatmap $\vmark(color)$ in figure~\ref{fig:artist_heatmap} is a direct lookup $\vindex:\gbase\rightarrow\dbase$ such that 
+
+\begin{align}
+R &= R(\vindex(\alpha, \beta))\\
+G &= G(\vindex(\alpha, \beta))\\
+B &= B(\vindex(\alpha, \beta))
+\end{align}
+where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ which  generates a distinct graphic \gsection. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data\note{needs citation, maybe friendlys history or acquired codes of meaning}. 
