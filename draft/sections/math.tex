@@ -5,7 +5,8 @@
 \label{sec:tam}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/dar.png}
-    \caption{Visualizaiton is the process of mapping data into visual characteristics that are then assembled into a graphic}
+    \caption{Visualization is equivariant maps between data and visual encoding of the variables and assembly of those encodings into a graphic.
+    \note{not gonna name these bubbles tau, mu, rho, but might keep the same basic structure of different types of data and encodings }}
     \label{fig:artist_stages}
 \end{figure}
 
@@ -21,7 +22,7 @@ We introduce a mathematical description of the visualization pipeline where arti
 
 We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
-\subsection{Data Space}
+\subsection{Data Space\dtotal}
 \label{sec:data}
 We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
 
@@ -244,7 +245,7 @@ An assumption of graphical representations is that they match the continuity of 
 In figure~\ref{fig:graphic_retraction_map} each disk $\gbase_{\dbasepoint}$ indexes how elements in \gfiber\ are glued together to generate a single glyph that is the visual representation of a single record in $\dfiber_{\dbasepoint}$. For the line, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbase. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
 
  
-\subsubsection{Renderable Glyph $\rho$}
+\subsubsection{Renderable Glyph \gsection}
 \label{sec:graphic_section}
 %pick a pixel which is the bounding box
 A section $\gsection: \gbase\rightarrow \gtotal$ defines a piece of the graphical representation of the data. Evaluated on a single \gbasepoint\, \gsection\ returns a single element in \gfiber\. For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. Integrating over this region on \gbase\
@@ -260,40 +261,40 @@ yields the color of the pixel $p$.
     \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
-As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. \note{probably needs some conclusion}   
+As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
 
 \subsection{Artist}
 \label{sec:artist}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
-
-    \caption{The $\nu$ functions convert data $E$ to visual $V$. $Q$ assembles the different types of visual parameters $V_{i}$ into a graphic in $H$. $Q\circ\mu(\xi^{-1}J)$ forms a visual mark by applying $Q$ to a region mapped to connected components $J \subset K$. \note{maybe change to $\tau, \mu, \rho$ }} 
+    \caption{\vchannel\ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_J$ generates a graphical mark.} 
     \label{fig:artist_q}
 \end{figure}
 
-The artist is the function that converts data into graphics; its name is taken from the analogous part of the existing Matplotlib architecture that builds visual elements to pass off to the renderer. The artist is a mapping from $E$ padded with data from $\mathcal{J}(E)$ to a graphic that is a section $\rho$ in  $\Gamma(H)$
+The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\mathcal{J}(\dtotal)$ to a graphic that is a section \gsection\ in  $\Gamma(\gtotal)$
 \begin{equation}
     \label{eq:artist_diagram}
     \begin{tikzcd}
-        E' \arrow[r, "\nu"] \arrow[rd, "\pi"'] & V \arrow[d, "\pi"] & \xi^*V \arrow[r, "Q"] \arrow[d, "\xi^*\pi"'] \arrow[l, "\xi^*"'] & \Gamma(H) \arrow[ld, "\pi"] \\
-                                              & K                  & S \arrow[l, "\xi"']                                              &                    
+        \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \Gamma(\gtotal) \arrow[ld, "\pi"] \\
+                                              & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-with an intermediate fiber bundle $V$ to hold visual representations and stages
+with an intermediate fiber bundle \vtotal\ to hold visual representations and stages
 \begin{enumerate}
-    \item $\xi$ binding the continuity in the graphic to the continuity in the data (~\ref{sec:graphic_base})
-    \item $\nu$ conversion of data into visual characteristics (~\ref{sec:artist_nu})
-    \item $Q$ assembly of visual variables into a glyph (~\ref{sec:artist_q})
+    \item \vindex\ binding the continuity in the graphic to the continuity in the data (~\ref{sec:graphic_base})
+    \item \vchannel\ conversion of data into visual characteristics (~\ref{sec:artist_nu})
+    \item \vmark\ assembly of visual variables into a glyph (~\ref{sec:artist_q})
 \end{enumerate}
  
-of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions $\xi$, $\nu$ and $Q$ are constructed such that the input can be a single section on $K$ or $S$, which allows the artist to be trivially parallelized or formulated as a delayed computer graph or otherwise not need to immediately work on all the data. 
+of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions \vindex\, \vchannel\ and \vmark\ are defined such that they can be evaluated on a single section \dsection, which allows the artist to be implemented such that it does not need all the data. This allows for artists tuned to distributed and streaming data. 
 
-\subsubsection {Visual Fiber Bundle $V$}
-The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber $P$. The fiber space $P$ is defined in terms of the parameters of the visualization specification and the values those parameters resolve to - for example ggplot \cite{wickhamGgplot2ElegantGraphics2016a} or D3\cite{bostockDataDrivenDocuments2011}.
+\subsubsection {Visual Fiber Bundle \vtotal}
+The visual fiber bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber \vfiber. The fiber space \vfiber\ is defined in terms of the parameters of the visualization specification- for example aesthetics  in ggplot \cite{wickhamGgplot2ElegantGraphics2016a}, channels in vega\cite{satyanarayanDeclarativeInteractionDesign2014} or parameters in VTK\cite{hanwellVisualizationToolkitVTK2015} and Matplotlib.
+
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
-     $\bm{\nu_{i}}$                      & $\bm{\mu_{i}}$                                                            & $\bm{codomain(\nu_{i})}$  \\ \hline                                              
+     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i})}$  \\ \hline                                              
     position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
     size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
     shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
@@ -301,39 +302,39 @@ The visual fiber bundle ($V$, $K$, $\pi$, $P$) has section $\mu: V \rightarrow K
     \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
                                 & linestyle                                                        & $\{f_{0}, \ldots, f_{n}\} \times (\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
-    \caption{Some possible components of the fiber $P$ for a visualization implemented in Matplotlib}
+    \caption{Some possible components of the fiber \vfiber\ for a visualization function implemented in Matplotlib}
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
-Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}. A section $\mu$ of $V$ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\nu_i)$ determines the monoid actions on $\mu_i)$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}. A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vsection_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
-    \caption{An equivariant $\nu$ preserves monoid actions. Here $\nu$ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
+    \caption{An equivariant \vchannel preserves monoid actions. Here \vchannel\ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
     \label{fig:artist_nu}
 \end{figure}
-As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers $\nu$ as the set of conversion functions 
+As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ as the set of conversion functions 
 \begin{equation}
     \label{eq:nu_expanded}
-    \{\nu_{0}, \ldots, \nu_{n}\}: \{\tau_{0}, \ldots, \tau_{n}\} \mapsto \{\mu_{0}, \ldots, \mu_{n}\}
+    \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-such that $\nu_i: \tau_i \mapsto \mu_i$ is an equivariant map such that there is a monoid homomorphism from $F_{i}$ to $V_{i}$. A validly constructed $\nu$ is one where the  diagram 
+where $\vchannel_i: \dsection_i \mapsto \vsection_i$ is an equivariant map such that there is a monoid homomorphism from $\dfiber_{i}$ to $vfiber_{i}$. A validly constructed \vchannel\ is one where the  diagram of the monoid transform $m$
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
-    E_i \arrow[r] \arrow[r, "\nu_i"] \arrow[d, "m_e"'] & V_i \arrow[d, "m_v"] \\
-    E_i \arrow[r, "\nu_i"]                           & V_i               
+    \dtotal_i \arrow[r] \arrow[r, "\vchannel_i"] \arrow[d, "m_{\delement}"'] & \vtotal_i \arrow[d, "m_{\velement}"] \\
+    \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-commutes such that $\nu_i(m_e(E_i)) = m_v(\nu_i(E_i))$. This equivariance constraint yields guidance on what makes for an invalid transform. For example, the single value conversion $\nu_{i}(x) = .5$ does not commute under translation  $t(x) = x+2$  
+commutes such that $\vchannel_i(m_{\delement}(\dtotal_i)) = m_{\velement}(\vchannel_i(\dtotal_i))$. This equivariance constraint yields guidance on what makes for an invalid transform. For example, the conversion $\vchannel_{i}(x) = .5$ does not commute under translation monoid action $t(x) = x+2$  
 \begin{align}
-    \nu(t(e + 2)) & \overset{?}{=} \nu(e) + \nu(2)\\
+    \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + \vchannel(2)\\
     .5 &\neq .5 + .5
 \end{align}
 
-On the other hand figure~\ref{fig:artist_nu} illustrates a valid $\nu$ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, $\nu$ must be a monotonic function such that given $e_1, e_2 \in E_{i}$, $\text{ if } e_1 \leq e_2 \text{ then } \nu(e_1) \leq \nu(e_2)$. For interval scale data, $\nu$ is equivariant under translation monoid actions if $\nu(x + c) = \nu(x) + \nu(c)$. For ratio data, there must be equivalent scaling $ \nu(xc) = \nu(x)\nu(c)$.
+On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$.
 
 \subsubsection{Assembling Marks}
 \label{sec:artist_q}
