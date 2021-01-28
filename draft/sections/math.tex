@@ -474,6 +474,9 @@ D_y &= ypos(\xi(\alpha_1, \alpha_2))
 \end{align}
 through $\rho$. 
 
+\subsubsection{Equivalance class of artists}
+\note{HAVE NOT REACHED HERE TO EDIT YET}
+As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ generates a distinct graphic \gsection\. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data\note{needs citation, maybe friendlys history or acquired codes of meaning}. For example, a scatter plot of red circles is one artist, a scatter plot of green squares is another. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. 
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
@@ -514,14 +517,5 @@ One way of encoding the torus in figure~\ref{fig:triangle_torus} while retaining
 \end{figure}
 Another advantages of triangulization is that it provides a way to encode non-trivial structures such as the mobius strip\cite{MobiusStripNLab}. As shown in figure ~\ref{fig:data_base_transition}, one way of making the mobius strip trivial is to seperate it into two spaces $\dtotal_1$ and $\dtotal_2$ and then define transition functions that specify that the edges of $\dtotal_1$ need to be reversed to line up with $\dtotal_2$ such that the sections along the edges meet. As with the torus, the transition functions must preserve monoid commutativity. 
 
-\subsubsection{Visual Idioms: Equivalance class of artists}
-\note{HAVE NOT REACHED HERE TO EDIT YET}
-As formulated above, every artist function $A$ has fixed $\nu$ and generates a distinct graphic $\rho$. It is unfeasible to implement $A$ for every single graphic; instead we implement the equivalence class of artists $\{A \in A^\prime: A_{1} \equiv A_{2}\}$ which is $Q:\Gamma(V) \rightarrow \Gamma(H)$. 
 
-%% Well maybe. I think this is where required components comes in. There is some minimal V where if you didn't have those variables you wouldn't call it a scatter plot .... something like xpos,ypos with K just a descrete set.
-%% so V probably can be any V that contains that sub-bundle
-%% so if bubble plot is not the same as scatter plot, and something where the colors change based on data is not scatter plot then it is the equivalent class of something with that minimal bundle.
-%% But then if you want to include ANYTHING that also maps with X-Y ... then you hit "direct limits" where you limit over all possivle V_big containing V_minimal
-%% You still get a map on some A_minimal -> A_big
-%% If you know how to visualize with more variables .. you can always fix them.
 \end{document}
