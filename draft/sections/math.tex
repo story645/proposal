@@ -111,17 +111,17 @@ of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the 
 Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  the fiber $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ which is interval data:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
-    \item monoid operations: $f: x\mapsto x + \delta_1 $, $g: x\mapsto x + \delta_2  $
+    \item monoid operations: $f: x\mapsto x + 1 $, $g: x\mapsto x + 2  $
     \item monoid action operator composition $\bullet = \circ$
 \end{itemize}
 then the translation monoid actions on temperature satisfy the condition
 \begin{equation}
     \begin{tikzcd}
-        \reals \arrow[rd, "(x+\delta_1)\circ(x+\delta_2)"] \arrow[d, "x+\delta_2"'] &            \\
-        \reals \arrow[r, "x+\delta_2"']                                   & \reals
+        \reals \arrow[rd, "(x+ 1\degree)\circ(x+2\degree)"] \arrow[d, "x+ 1\degree"'] &            \\
+        \reals \arrow[r, "x+ 2\degree"']                                   & \reals
     \end{tikzcd}
 \end{equation}
-where $\delta_1$ and $\delta_2$ are intervals between two temperatures $x$.  
+where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$.  
 
 
 \subsubsection{Continuity: Base Space $K$} 
@@ -477,45 +477,42 @@ through $\rho$.
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
-\note{HAVE NOT REACHED HERE TO EDIT YET}
-
 \begin{figure}[H]
     \includegraphics{figures/math/simplex.png}
     \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) records to all records are connected to at least 3 others}
     \label{fig:triangle_simplex}
 \end{figure}
+One way of expressing the connectivity of records in a dataset is to implement \dbase\ as a simplacial complex, which is a set of simplicies such as those shown in figure~\ref{fig:triangle_simplex}. The advantage of triangulization is that it is general enough to work for more complex topology based visualization methods \cite{heineSurveyTopologybasedMethods2016} while also providing a consistent interface of vertices, edges, and faces for \vindex\ to map into. When triangulated, the simplices encode the continuity in the data
 
-One way to build flexible $\xi$ is to choose a consistent way of representing $K$. In our draft implementation of the data as fiber bundle model, we triangularize $K$ using complexes of the simplicies shown in figure~\ref{fig:triangle_simplex} such that $\xi$ consistently yields some combination of vertexes, edges, and faces. This gives a common data indexing structure on which to build components that could potentially be reused across $Q$.
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|l|l|l|}\hline
+        \textbf{simplex} & \textbf{continuity} & \textbf{\dsection}   \\ \hline
+        vertex  & discrete   & \dsection(\dbasepoint)                  \\ \hline
+        edge    & 1D         & $\dsection(\dbasepoint,\, \alpha)$        \\ \hline
+        face    & 2D         & $\dsection(\dbasepoint,\, \alpha,\, \beta)$\\ \hline
+        \end{tabular}
+        \caption{}
+        \label{tab:triangulization}
+    \end{center}
+\end{table}
 
-By using simplicies, we can then encode the following indexing structure on $\tau$
-\begin{align*}
-    \textbf{vertexes}\;& \tau(k) \text{k= vertex id}\\
-    \textbf{edges}\;& \tau(k,\alpha), \text{k = edge id, $\alpha$ = distance along edge} \\
-    \textbf{faces}\;& \tau(k,\alpha, \beta), \text{k = face id, $\alpha$ = x on face, $\beta$ = y on face}
-\end{align*}
+such that each section is bound to a simplex $\dbasepoint \in \dbase$. As shown in table~\ref{tab:triangulization}, in a 1D continuous spaces each \dsection\ lies distance $\alpha$ along edge \dbasepoint, while in a 2D continuous space each \dsection\ lies at coordinate $\alpha, \beta$ on the face \dbasepoint. This is directly analogous to indexing to express connectivity in N-D arrays, while also natively supporting graphs and trees as they are simplacial complices of nodes and edges. Path connected components are then sections where edges or faces meet. 
 
-which $\xi$ can use as part of its mapping from visual space back to data space. Path connected components are then sections where $\tau(k_{i},1) = \tau(k_{j},0)$ or the edges of the faces align.  
-
-\subparagraph{Example: Mobius Strip}\mbox{}\\
 \begin{figure}[H]
-    \label{fig:data_base_transition}
-    \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
-    \caption{Many non-trivial spaces can be made locally trivial by dividing $E$ into locally trivial subspaces and defining transition functions between the edges on K for how to glue the two subspaces such that the sigmas are continuous.}
-\end{figure}
-
- An example of a non-trivial fiber bundle is a mobius strip\cite{find the citation for why};
-
-In figure ~\ref{fig:data_base_transition}, the mobius strip is cut into two rectangular base spaces over $K=\{e_1, e_2\}$. We define transition functions from the fiber to the fiber along the edges of the rectangles such that we can glue these rectangles together to reform the mobius strip. A constraint we impose on the transition functions is that the monoid actions are commutative
-%monoid action m*f\mapsto delta(mf)= m*delta(f)
-
-\subparagraph{Example: Torus}\mbox{}\\
-\begin{figure}[H]
-    \label{fig:triangle_torus}
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
-    \caption{Representation of the base space $K$ of a toridal total space $E$ as two connected 2-simplices.}
+    \caption{The torus \dtotal is unraveled into a simplacial complex of 2 faces \dbase. Transition functions are defined on the edges of \dbase such that surface can be glued back into the torus.
+    \note{add cross sections a and b to ring and color same as edges in complex}}
+    \label{fig:triangle_torus}
 \end{figure}
+One way of encoding the torus in figure~\ref{fig:triangle_torus} while retaining the continuity of both cross sections $a, b$ is to unravel it into a simplacial complex of two triangles with labeled edges. Transition functions $\delta$ are defined on the edges such that $a$ can be glued to $a^\prime$ and $b$ to $b^\prime$ to reconstruct the torus. This simplacial complex is then used as the base space encoding the continuity of data that lies in the torus. A constraint on the transition functions is that the monoid actions on the fibers on the edges of \dtotal\ are commutative $\monoid*\dfiber\mapsto \delta(\monoid\dfiber)= \monoid*\delta(\dfiber)$
 
-Given data that lies on the toroidal space shown in figure~\ref{fig:triangle_torus}, the torus $E$ base space $K$ can be implemented as a simplacial complex of two 2-simplexes. We unfold the torus into the two triangles that compose the square; the sections on these triangles are $\tau(triangle id k, \alpha, \beta)$. We also put transition functions on the edges such that $A$ can be glued to $A^\prime$ and $B$ to $B^\prime$ to reconstruct the torus. 
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
+    \caption{Many non-trivial spaces can be made locally trivial by dividing \dtotal into locally trivial subspaces and defining transition functions between the edges on \dbase for how to glue the two subspaces such that the \dsection are continuous.}
+    \label{fig:data_base_transition}
+\end{figure}
+Another advantages of triangulization is that it provides a way to encode non-trivial structures such as the mobius strip\cite{MobiusStripNLab}. As shown in figure ~\ref{fig:data_base_transition}, one way of making the mobius strip trivial is to seperate it into two spaces $\dtotal_1$ and $\dtotal_2$ and then define transition functions that specify that the edges of $\dtotal_1$ need to be reversed to line up with $\dtotal_2$ such that the sections along the edges meet. As with the torus, the transition functions must preserve monoid commutativity. 
 
 \subsubsection{Visual Idioms: Equivalance class of artists}
 \note{HAVE NOT REACHED HERE TO EDIT YET}
