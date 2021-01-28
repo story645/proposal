@@ -265,12 +265,6 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into t
 
 \subsection{Artist}
 \label{sec:artist}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/path_of_q}
-    \caption{\vchannel\ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_J$ generates a graphical mark.} 
-    \label{fig:artist_q}
-\end{figure}
-
 The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\mathcal{J}(\dtotal)$ to a graphic that is a section \gsection\ in  $\Gamma(\gtotal)$
 \begin{equation}
     \label{eq:artist_diagram}
@@ -310,12 +304,7 @@ Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Mat
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
-    \caption{An equivariant \vchannel preserves monoid actions. Here \vchannel\ maps the words to the emojis and is constructed such that a permutation of the words is reflected in a permutation of the symbols. \note{will switch to a figure table thing but this is the idea}}
-    \label{fig:artist_nu}
-\end{figure}
-As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ as the set of conversion functions 
+As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ as the set of independent conversion functions 
 \begin{equation}
     \label{eq:nu_expanded}
     \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
@@ -338,68 +327,50 @@ On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapp
 
 \subsubsection{Assembling Marks}
 \label{sec:artist_q}
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/path_of_q}
+    \caption{\vchannel\ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_{\dbasepathpoint}$  generates a graphical mark.} 
+    \label{fig:artist_q}
+\end{figure}
 
-As shown in figure~\ref{fig:artist_q}, $Q$ takes the individual fields in $V$ as input and outputs a single piece of a graphic on $H$. As with $\nu$, the constraint on $Q$ is that for every monoid actions on the input in $V$ there is a corresponding monoid action on the output in $H$
+As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a single glyph. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a glyph. As with \vchannel\, the constraint on \vmark\ is that for every monoid actions on the input \vsection\ there is a corresponding monoid action on the output \gsection. 
+
+Since we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$, we define an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same.   
+
+Lets call the visual encodings $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoids $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
 \begin{equation}
-    Q: \Gamma(V) \rightarrow \Gamma(H)
+\vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
-When $Q: \mu \mapsto \rho$ yields a $\rho$ that maps to the same values in $D$ over all $S_k$, then $M$ can be defined over $\Gamma(H)$ such that a constraint on $Q$ is that it must be equivariant. For example, when $\mu_{i}$ is the color of the glyph, it maps directly to (R,G,B) in D.
+then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. 
+
+
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
+    \caption{These two glyphs are generated by the same \vmark\ function, but differ in the value of the edge thickness parameter $\vsection_i$. A valid \vmark\ is one where a shift in $\vsection_i$ is reflected in the glyph generated by \gsection.}
     \label{fig:artist_mark_change}
 \end{figure}
 
-Many $\mu_{i}$ are graphical parameters that do not apply to the whole glyph, such as edge thickness in figure~\ref{fig:artist_mark_change}. 
-
-%%% rework this sentence
-In these situations, not all  $\rho$ in $\Gamma(H)$ will support these parameters; instead we define an action on the output graphic $Q(\Gamma(V)) \in \Gamma(H)$ since by definition every section $\mu$ will have a corresponding $\rho$.
-
-We then define the constraint on $Q$ such that if $Q$ applied to two sections $\mu, \mu\prime$ generate the same graphic $\rho$, then the output of both sections acted on by the same monoid $m$ must also be the same.    
-
-Lets call the visual encodings $\Gamma(V)=X$ and the graphic $Q(\Gamma(V))=Y$. If $\forall m \in M$ and $\forall \mu, \mu^\prime \in X$, 
-\begin{equation}
-Q(\mu) = Q(\mu^\prime)\implies Q(m\circ\mu) = Q(m\circ\mu^\prime)
-\end{equation}
-then a group action on $Y$ can be defined as $m\circ \rho = \rho^\prime$ where $\rho^\prime=Q(g\circ \mu)$ with $\mu \in Q^{-1}(\rho)$. 
-
-Given  
-\begin{itemize}
-    \item $P = \{xpos, ypos, color, thickness\}$
-    \item $\mu = {0,0,0, 1}$
-    \item  $Q(\mu)=\rho$ generates a piece of the thin circle in figure~\ref{fig:artist_mark_change}
-\end{itemize}
-
-the constraint on $Q$ means that the translation $m=\{e, e, e, x+2\}$ applied to $\mu$ such that $\mu^\prime=\{0,0,0,3\}$ has an equivalent action on $\rho$ that causes $Q(\mu\prime)$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
+The glyph in figure~\ref{fig:artist_mark_change} has the following characterstics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark is that the action $m=(e, e, e, x+2)$, where e is identity, applied to \vsection\ such that $\vsection^{\prime}=(e,e,e,3)$ has an equivalent action on \gsection that causes $\vmark(\vsection^{\prime})$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
 
 
 \paragraph{Example: Invalid Q}
-\textcolor{blue}{Insert some degenerate Q that generates an inconsistent glyph}
+\note{DEGENERATE Q - drawing a blank if this is necessry and if so how}
+Check a well defined map $\monoid\times Y \rightarrow Y$.
 
-
-Check a well defined map $M\times Y \rightarrow Y$.
-
-
-constraint: inputs go to same o
-utput means changes to inputs mean same changes to output
-
-\paragraph{Graphical Marks}
-To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, $Q$ is called with all the regions $s$ that map back to a set of connected components $J \subset K$:
+To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, \vmark\ is called with all the regions \gbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$:
 \begin{equation}
-J = \{j \in K \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=k \text{ and }\gamma(1)=j\}
+\dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
-where the path\cite{ConnectedSpace2020}  $\gamma$ from $k$ to $j$ is a continous function from the interval [0,1].
-
-We define the mark as the graphic generated by $Q(S_j)$
+where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the mark as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
 
 \begin{equation}
     \begin{tikzcd}
-        H \arrow[r, shift left] & S_j \arrow[rr, "\xi(s)", shift left] \arrow[l, "\rho(S_j)"] &  & J_{k} \arrow[ll, "\xi^{-1}(J)"]
+        \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
         \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-
-in terms of $K$ because mark is a semantic term denoting the graphic representation of the data.
+such that for every mark there is at least one corresponding section on \dbase.
 
 \subsubsection{Sample Qs}
 %rewrite as alpha/beta 
@@ -474,9 +445,14 @@ D_y &= ypos(\xi(\alpha_1, \alpha_2))
 \end{align}
 through $\rho$. 
 
-\subsubsection{Equivalance class of artists}
-\note{HAVE NOT REACHED HERE TO EDIT YET}
-As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ generates a distinct graphic \gsection\. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data\note{needs citation, maybe friendlys history or acquired codes of meaning}. For example, a scatter plot of red circles is one artist, a scatter plot of green squares is another. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. 
+
+\subsubsection{Equivalance class of artists $\vartist^{\prime}$}
+As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ which  generates a distinct graphic \gsection. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data\note{needs citation, maybe friendlys history or acquired codes of meaning}. 
+\begin{figure}
+    \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}
+    \label{fig:artist_equivalence}
+\end{figure}
+For example, a scatter plot of red circles is the output of one artist, a scatter plot of green squares the output of another, as are the rest of the graphs in figure~\ref{fig:artist_equivalance}. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. 
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
