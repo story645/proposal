@@ -22,7 +22,7 @@ class Line(mcollections.LineCollection):
         """
         super().__init__(None, *args, **kwargs)
         assert 'edge' in data.FB.K['tables']
-        utils.check_constraints(Line, transforms)
+        utils.check_constraints(Line, transforms.keys())
         utils.validate_transforms(data.FB.F, transforms)
      
         self.data = data

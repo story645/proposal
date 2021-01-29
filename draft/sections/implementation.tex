@@ -1,139 +1,61 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-    
-
-\section{Matplottoy}
-
-We build on the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the other graphical elements of the visualization and the rendering. We first introduce an implementation of scatter, line, and bar charts because they map to the fundemental marks of point, line, and area. We then introduce aggregated bar charts to show how to build more complex graphics.  
-
-Because it is impractical for the user to specify every possible visual parameter, we define a required set of visual variables that must be explicitly specified to generate distinguishable marks. 
-
-
-\subsection{Scatter}
- A scatter plot \cite{friendlyBriefHistoryData2006a,tukeyExploratoryDataAnalysis1977} is a chart type for plotting discrete values against each other. Minimally a scatter plot requires and x or y position, but the other variables in our dataset can be mapped to visual aspects of the scatter graphical mark. 
+%what, why, how
+\section{Prototype Implementation: Matplottoy}
+\label{sec:implementation}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
-    \label{fig:scatter}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/line_1.png}
+    \end{subfigure}
+    \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering.}
+    \label{fig:code_scatter_line}
 \end{figure}
 
-For the scatter plot in figure~\ref{fig:scatter}, we define $Q$ as 
- \begin{equation}
-    Q(\mu_{xpos}, \mu_{ypos}, \mu_{facecolor}, \mu_{s})
-    \label{eq:scatter}
- \end{equation}
+We implemented a proof of concept of the topological model to demonstrate its feasibility. We implemented the artist classes for the scatter, line, and bar plots shown in figure~\ref{fig:code_scatter_line} because scatter and line have different continuities \gbase\ and visual bundles \vtotal\. We built our prototype on top of the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007,hunterArchitectureOpenSource} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the rendering. 
 
-which we implement building on the \mintinline{python}{matplotlib.collections} API:
-%%rewrite that Point is a fully parameterized A  with the transforms dict - callable objects are a way to do tractable currying, can use __call__ same as convert - don't mutate internal state of object 
+To generate figure~\ref{fig:code_scatter_line} in our prototype, we set up a canvas \mintinline{python}{fig} and an axes to draw on \mintinline{python}{ax} and 
+\begin{multicols*}{2}
+\begin{minted}[linenos]{python}
+    fig, ax = plt.subplots()
+    artist = Point(table, transforms)
+    ax.add_artist(artist)
+\end{minted}
+\columnbreak
+\begin{minted}[linenos]{python}
+    fig, ax = plt.subplots()
+    artist = Line(table, transforms)
+    ax.add_artist(artist)
+\end{minted}
+\end{multicols*}
+ and then pass in \dsection=\mintinline{python}{table} and \vchannel=\mintinline{python}{transforms} into equivalence classes \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line}.  
+
+\subsubsection{Artist Class $\vartist^{\prime}$}
+What, why, how>
+We implement the \vartist\ functions that transform data to visual representations as the equivalence class of artists such that the user configure the visual sections \vsection\ as a parameter \mintinline{python}{transforms}
 
 \begin{minted}[linenos]{python}
-    class Point(mcollections.Collection):
-        # this is the visual fiber 
-        required = {'x', 'y'}
-        optional = {'facecolors', 's'} 
+    class ArtistClass(matplotlib.artist.Artist):
         def __init__(self, data, transforms, *args, **kwargs):
-            # check that the constraints on Q can be met  
+            super().__init__(*args, **kwargs)
         def draw(self, renderer, *args, **kwargs):
-            # assemble the glyph
             super().draw(renderer, *args, **kwargs)
-    \end{minted}
-    
-(subject to change). Unlike equation~\ref{eq:scatter}, we pass also pass a reference to the data so that getting the data can be fully curried until absolutely necessary. The \mintinline{python}{*args} and \mintinline{python}{**kwargs} are artifacts of using Matplotlib as a base. We pass in the $\mu$ as the dictionary "transforms" mostly for readability, which is also why we define the visual fiber as class attributes.
-
-Inside the \mintinline{python}{__init__} constructor, is a check if there is a valid mapping between $S$ and $K$.  Line 7-8 check if the user has passed in the required $\mu$ and whether the $\nu$ functions are valid for the input data.
-
-%% semi functional psuedocode - strip down to don't care about broadcasting & simplest form of validation -
-- assume that the $\nu$ are inherently valid - no error checking
-- don't try to exactly encode monoid - is it a key feature you want to encode
-- What is the important bits? 
-
-\begin{minted}[linenos]{python}
-def __init__(self, data, transforms, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    # check that the data you're trying to transform 
-    # has a way to provide vertex data  
-    assert 'vertex' in data.FB.K['tables'] #there is no check here
-    
-    # check that you've given the required parameters
-    utils.check_constraints(Point, transforms.keys())
-    utils.validate_transforms(data.FB.F, transforms)
-
-    self.data = data
-    self.transforms = transforms
 \end{minted}
 
-Lines 9-10 attach the data and transforms to the $Point$ object as a concession to the Matplotlib architecture that seperates drawing from creation. In \mintinline{python}{draw}, the attributes of the graphic are set to the different sections of the visual fiber bundle. 
 
-\begin{minted}[linenos]{python}
-def draw(self, renderer, *args, **kwargs):
-    # use \xi^{-1} because we want to pull forward the data
-    # propogate information of the downselection to do that 
-    # restrict sheaf to subset of data over current view - feedback at draw restriction
-    view = self.data.view('vertex') #resolve to size \xi^{-1}
-    
-    # \nu(\tau)
-    visual = utils.convert_transforms(view, self.transforms)
-        
-    # assembles taus to generate idiom
-    visual['s'] = itertools.repeat(visual.get('s', 0.05))
-    visual['facecolors'] = visual.get('facecolors', "C0")
-    #switch out to a marker 
-    self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
-                    for (x, y, s) 
-                    in zip(visual['x'],visual['y'], visual['s'])] 
-    
-    self.set_facecolors(visual['facecolors'])
-    super().draw(renderer, *args, **kwargs)
-\end{minted}
 
-Line 1 pulls back into the data bundle and returns $\tau = \{\tau_0, \ldots, tau_{n}\}$. Line 3 applies the transforms $\nu$ to $\tau$ to build the visual bundle $V$.  Line 8 sets the abstract segment marks with the visual characteristics. Line 10 passes this information to the renderer, acting like a $rho$. 
 
-The visual fiber bundle is specified as a dictionary $\{\mbox{parameter}: (\mbox{variable}, \nu), \mbox{parameter}:\mbox{value}\}$ 
-\begin{minted}[linenos]{python}
 
-transforms = {'y': ('v2', position.Identity()),       
-              'x': ('v4', position.Identity()),
-              'facecolors': ('v3', color.Categorical(
-                                    {'true':'deeppink', 
-                                     'false':'deepskyblue'})), 
-              's':.01}
-\end{minted}
+As mentioned in section~\ref{sec:artist_equivalance}, it would be impractical to implement graph types as \vartist\ functions where all the visual parameters are specified.  
 
-where the $\nu$ functions are represented as classes so that parameters can be curried. For example, \mintinline{python}{color.Categorical} is a whole set of $\nu$ functions explicitly tuned to specific categorical mappings. A pure functional approach would mean the user would have to write new functions
+\subsubsection{Encoders \vchannel}
+what, why, how?
+\subsubsection{Data \dtotal}
+what, why, how?
 
-\begin{minted}[linenos]{python}
-def color_true_deepink_false_deepink(value):
-    return {'true':'deeppink', 'false':'deepskyblue'}[value]
-
-\end{minted}
-
-for every categorical colormapping, which would be somewhat untenable. An alternative approach could be to partially curry:
-
-\begin{minted}[linenos]{python}
-     'facecolors': ('v3', (color.categorical, {'true':'deeppink', 'false':'deepskyblue'}))
-\end{minted}
-
-but that doesn't allow for as easy reuse? (I should probably actually just switch to this form) The \mintinline{python}{color.categorical} function is implemented as 
-
-%%interface important, not implementation
-\begin{minted}[linenos]{python}
-class Categorical:
-    def __init__(self, mapping):
-        """goal of init is to store parameters that would otherwise be
-        curried higher level function"""
-        assert(mcolors.is_color_like(color) for color in mapping.values())
-        self._mapping = mapping
-
-    def convert(self, value):
-        values = np.atleast_1d(np.array(value, dtype=object))
-        return [mcolors.to_rgba(self._mapping[v]) for v in values]
-
-    def validate(self, mtype):
-        return mtype in ['nominal']
-\end{minted}
-
-where the \mintinline{python}{convert} function converts the input value to the internal normalized form Matplotlib expects. The \mintinline{python}{validate} function checks which monoid actions the transform supports; optimally this method should be replaced by functions that check the properties, for example a \mintinline{python}{is_ordinal} method that checks that monotonicity is preserved. 
-
-%does the data even matter?
+\subsubsection{Case Study: Iris}
 
 \end{document}
