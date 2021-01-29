@@ -22,7 +22,7 @@ We introduce a mathematical description of the visualization pipeline where arti
 
 We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
-\subsection{Data Space\dtotal}
+\subsection{Data Space \dtotal}
 \label{sec:data}
 We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
 
@@ -304,6 +304,11 @@ Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Mat
 
 \subsubsection{Visual Channels}
 \label{sec:artist_nu}
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
+    \caption{In this artis, \vchannel\ maps the strings to the emojis. For \vchannel\ to be equivariant, a shuffle in the words should have an equivalent shuffle in the emojies, and a shuffle in the emojies should have an equivalent shuffle in the words.}
+    \label{fig:artist_nu}
+\end{figure}
 As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ as the set of independent conversion functions 
 \begin{equation}
     \label{eq:nu_expanded}
