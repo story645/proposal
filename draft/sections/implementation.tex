@@ -17,7 +17,8 @@
 
 We implemented a proof of concept of the topological model to demonstrate its feasibility. We implemented the artist classes for the scatter, line, and bar plots shown in figure~\ref{fig:code_scatter_line} because scatter and line have different continuities \gbase\ and visual bundles \vtotal\. We built our prototype on top of the existing Matplotlib architecture \cite{hunterMatplotlib2DGraphics2007,hunterArchitectureOpenSource} so that we can initially focus on the data to graphic transformations and rely on Matplotlib for the rendering. 
 
-To generate figure~\ref{fig:code_scatter_line} in our prototype, we set up a canvas \mintinline{python}{fig} and an axes to draw on \mintinline{python}{ax} and 
+To generate the images in figure~\ref{fig:code_scatter_line}, we use the figure \mintinline{python}{fig}  artist and the axes \mintinline{python}{ax} artist that lies inside the figure as the canvas for our graphic. 
+
 \begin{multicols*}{2}
 \begin{minted}[linenos]{python}
     fig, ax = plt.subplots()
@@ -31,11 +32,12 @@ To generate figure~\ref{fig:code_scatter_line} in our prototype, we set up a can
     ax.add_artist(artist)
 \end{minted}
 \end{multicols*}
- and then pass in \dsection=\mintinline{python}{table} and \vchannel=\mintinline{python}{transforms} into equivalence classes \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line}.  
-
+ We then add to the axes our prototype artist equivalance classes \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line}. We pass in a section of the data \dsection=\mintinline{python}{table} and  paramterize the artist using the \vchannel=\mintinline{python}{transforms} dictionary. 
+ 
 \subsubsection{Artist Class $\vartist^{\prime}$}
 What, why, how>
 We implement the \vartist\ functions that transform data to visual representations as the equivalence class of artists such that the user configure the visual sections \vsection\ as a parameter \mintinline{python}{transforms}
+
 
 \begin{minted}[linenos]{python}
     class ArtistClass(matplotlib.artist.Artist):
