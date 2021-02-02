@@ -17,7 +17,7 @@
 
 To prototype our model, we implemented the artist classes for the scatter and line plots shown in figure~\ref{fig:code_scatter_line} because they differ in every attribute of our artist: different visual channels \vchannel\ that composite to different marks \vmark\ with different continuities \vindex\.  We make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations. 
 
-To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mintinline{python}{fig, ax} artists that will contain the new \mintinline{python}{Point, Line} primative objects we implemented based on our topology model. 
+To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mintinline{python}{fig, ax} artists that will contain the new \mintinline{python}{Point, Line} primitive objects we implemented based on our topology model. 
 
 \begin{multicols*}{2}
 \begin{minted}{python}
@@ -33,18 +33,19 @@ To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mi
 \end{minted}
 \end{multicols*}
 
-We then add the \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \dtotal=\mintinline{data} that is to be plotted and the aesthetic configuration \vchannel=\mintinline{transforms}. We implement the artists as equivalance classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
+We then add the \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \dtotal=\mintinline{python}{data} that is to be plotted and the aesthetic configuration \vchannel=\mintinline{python}{transforms}. We implement the artists as equivalence classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
 
 
  
 \subsubsection{Artist Class $\vartist^{\prime}$}
 What, why, how>
 %q \circ nu (\xi^{-1}\tau(s)) = rho (s)
-The artist is the piece of the matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, the \mintinline{transform} argument is a collection of  visual encoders \vchannel\ and the data bundle \vtotal\ is passed in as \mintinline{data}. By binding both parameters to \vartisteq\ inside \mintinline{__init__}, the \mintinline{draw} method is a fully specified artist \vartist. 
+The artist is the piece of the matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, \mintinline{python}{transform} is a dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \vtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist. 
 \begin{minted}{python}
 class ArtistClass(matplotlib.artist.Artist):
     def __init__(self, data, transforms, *args, **kwargs):
-        # check that constraints are met such that the artist can operate on data with the given transforms
+        # check that constraints are met such that the artist 
+        # can operate on data with the given transforms
         self.data = data 
         self.transforms = transforms
         super().__init__(*args, **kwargs)
@@ -53,8 +54,8 @@ class ArtistClass(matplotlib.artist.Artist):
         # returns K, indexed on fiber then key 
         view = self.data.view() 
         # visual channel encoding applied fiberwise 
-        visual = [nu(view[var]) for var, nu in 
-                    self.transforms]
+        visual = {p: encoder(view.get(f, None)) for 
+                     p, (f, encoder) in self.transforms.items()}
         # reindex from k to s
         # assemble glyph              
         # pass configurations off to the render
@@ -70,10 +71,11 @@ class Point(Collection):
     def draw(self, renderer, *args, **kwargs):
         # query data for a vertex table K
         view = self.data.view('vertex') 
-        visual = [nu(view[var]) for var, nu in self.transforms]
+        visual = {p: encoder(view.get(f, None)) for
+                     p, (f, encoder) in self.transforms.items()}
         # no explicit \xi, k and s have the same indexing
         # construct geometries of the circle glyphs in visual coordinates
-        circles = [circle(center=(x,y), radius=s) for (x, y, s) 
+        circles = [mpath.Path.circle(center=(x,y), radius=s) for (x, y, s) 
                 in zip(visual['x'],visual['y'], visual['s'])] 
         # set attributes of glyphs, these are vectorized 
         # circles and facecolors are lists of the same size
@@ -82,6 +84,7 @@ class Point(Collection):
         # call the renderer that will draw based on properties
         super().draw(renderer, *args, **kwargs)
 \end{minted}
+
 
 \subsubsection{Encoders \vchannel}
 what, why, how?

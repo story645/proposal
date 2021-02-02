@@ -24,29 +24,25 @@ class Point(mcollections.Collection):
         
         # check that the data you're trying to transform 
         # has a way to provide vertex data  
-        assert 'vertex' in data.FB.K['tables']
+        # assert 'vertex' in data.FB.K['tables']
         # check that you've given the required parameters
-        utils.check_constraints(Point, transforms.keys())
-        utils.validate_transforms(data.FB.F, transforms)
+        #utils.check_constraints(Point, transforms.keys())
+        #utils.validate_transforms(data.FB.F, transforms)
 
         self.data = data
         self.transforms = transforms
 
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view('vertex') #resolve to size
-
-        # call tau step
-        visual = utils.convert_transforms(view, self.transforms)
-           
-        # assembles taus to generate idiom
-        # dictionary here in place of visual(parameter) function
-       
-        visual['s'] = itertools.repeat(visual.get('s', 0.05))
-        visual['facecolors'] = visual.get('facecolors', "C0")
-        #switch out to a marker 
-        self._paths = [mpath.Path.circle(center=(x,y), radius=s)  
-                        for (x, y, s) 
-                        in zip(visual['x'],visual['y'], visual['s'])] 
-       
+        # query data for a vertex table K
+        view = self.data.view('vertex') 
+        visual = {p: encoder(view.get(f, None)) for p, (f, encoder) in self.transforms.items()}
+        # no explicit \xi, k and s have the same indexing
+        # construct geometries of the circle glyphs in visual coordinates
+        circles = [mpath.Path.circle(center=(x,y), radius=s) for (x, y, s) 
+                in zip(visual['x'],visual['y'], visual['s'])] 
+        # set attributes of glyphs, these are vectorized 
+        # circles and facecolors are lists of the same size
+        self._paths = circles
         self.set_facecolors(visual['facecolors'])
+        # call the renderer that will draw based on properties
         super().draw(renderer, *args, **kwargs)

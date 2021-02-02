@@ -10,7 +10,7 @@ class Identity:
         return mtype in ['nominal']
         
     @staticmethod
-    def convert(value):
+    def __call__(value):
         values = np.atleast_1d(np.array(value, dtype=object))
         return [mcolors.to_rgba(v) for v in values]
 
@@ -21,7 +21,7 @@ class Categorical:
         assert(mcolors.is_color_like(color) for color in mapping.values())
         self._mapping = mapping
 
-    def convert(self, value):
+    def __call__(self, value):
         values = np.atleast_1d(np.array(value, dtype=object))
         return [mcolors.to_rgba(self._mapping[v]) for v in values]
 
