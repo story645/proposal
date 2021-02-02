@@ -285,6 +285,7 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into t
 
 \subsection{Artist}
 \label{sec:artist}
+%%somewhere in this I need to add q \circ nu (\xi^{-1}\tau(s)) = rho (s)
 %%% line things up such that they're an equivariant maps 
 %%% make a little clearer what E' is 
 The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\mathcal{J}(\dtotal)$ to a graphic that is a section \gsection\ in  $\Gamma(\gtotal)$
@@ -327,7 +328,7 @@ The visual fiber bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection
     shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
     color                       & color, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
     \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
-                                & linestyle                                                        & $\{f_{0}, \ldots, f_{n}\} \times (\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
+                                & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
     \caption{Some possible components of the fiber \vfiber\ for a visualization function implemented in Matplotlib}
     \label{tab:mpl_visual_variable_fiber}
