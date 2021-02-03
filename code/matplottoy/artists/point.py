@@ -32,16 +32,18 @@ class Point(mcollections.Collection):
         self.data = data
         self.transforms = transforms
 
-    def draw(self, renderer, *args, **kwargs):
-        # query data for a vertex table K
-        view = self.data.view('vertex') 
-        visual = {p: encoder(view.get(f, None)) for p, (f, encoder) in self.transforms.items()}
-        # no explicit \xi, k and s have the same indexing
+    def assemble(self, visual):
         # construct geometries of the circle glyphs in visual coordinates
         self._paths = [mpath.Path.circle(center=(x,y), radius=s) for (x, y, s) 
                 in zip(visual['x'],visual['y'], visual['s'])] 
         # set attributes of glyphs, these are vectorized 
         # circles and facecolors are lists of the same size
         self.set_facecolors(visual['facecolors'])
+        
+    def draw(self, renderer, *args, **kwargs):
+        # query data for a vertex table K
+        view = self.data.view('vertex') 
+        visual = {p: encoder(view.get(f, None)) for p, (f, encoder) in self.transforms.items()}
+        self.assemble(visual)
         # call the renderer that will draw based on properties
         super().draw(renderer, *args, **kwargs)

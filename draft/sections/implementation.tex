@@ -47,7 +47,7 @@ class ArtistClass(matplotlib.artist.Artist):
         super().__init__(*args, **kwargs)
 
     def assemble(self, visual):
-        # set the properties of each glyph
+        # set the properties of the graphic
 
     def draw(self, renderer, *args, **kwargs):
         # returns K, indexed on fiber then key 
@@ -56,52 +56,62 @@ class ArtistClass(matplotlib.artist.Artist):
         visual = {p: encoder(view.get(f, None)) for 
                      p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
-        # pass configurations off to the render
+        # pass configurations off to the renderer
         super().draw(renderer, *args, **kwargs)
 \end{minted}
 
-The data is fetched in section \dsection\ via a \mintinline{python}{view} method n the data because the input to the artist is a section on \dtotal. The return view object has a \mintinline{python}{get} method to support querying for components that are not in \dfiber\, which we exploit to support parameters in the visual fiber that are not bound to fiber components in \dfiber. The \vchannel\ functions are then applied to the data to generate the \vsection=\mintinline{python}{visual} input to \vmark. An explicit \vindex\ is not implemented since that would mean copying a single \vsection on \dbasepoint to all the associated \gbasepoint, as illustrated in figure~\ref{fig:graphic_retraction_map}, and that is unnecessary overhead for these scatter and line plots. In \vmarkd=\mintinline{python}{assemble} the artist generates instructions for the render by setting  the attributes that are related to the graphic. These are the settings that would have to be serialized in order to recreate a static version of the graphic. The \vchannel\ functions could be evaluated in this function to avoid passing over \dbase twice. The last step in the artist function is handing itself off to the renderer. 
+The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The return view object has a \mintinline{python}{get} method to support querying for components that are not in \dfiber\, which we exploit to support parameters in the visual fiber that are not bound to fiber components in \dfiber. The \vchannel\ functions are then applied to the data to generate the \vsection=\mintinline{python}{visual} input to \vmark. An explicit \vindex\ is not implemented since that would mean copying a single \vsection on \dbasepoint to all the associated \gbasepoint, as illustrated in figure~\ref{fig:graphic_retraction_map}, and that is unnecessary overhead for these scatter and line plots. In \vmarkd=\mintinline{python}{assemble} the artist generates instructions for the render by setting  the attributes that are related to the graphic. These are the settings that would have to be serialized in order to recreate a static version of the graphic. Although \mintinline{python}{assemble} could be implemented outside the class such that it returns an object the artist could then parse to set attributes, the attributes are directly set here to reduce indirection. The \vchannel\ functions could be evaluated in this function to avoid passing over \dbase twice but are not done so here to demonstrate the seperability of \vchannel\ and \vmarkd\. The last step in the artist function is handing itself off to the renderer. 
 
-The \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of simple glyphs. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. 
+The \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. 
 \begin{minted}{python}
 class Point(mcollections.Collection):
-    ## init as described above
+    def __init__(self, data, transforms, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data = data
+        self.transforms = transforms
+
+    def assemble(self, visual):
+        # construct geometries of the circle marks in visual coordinates
+        self._paths = [mpath.Path.circle(center=(x,y), radius=s) 
+                       for (x, y, s) in zip(visual['x'],visual['y'], visual['s'])] 
+        # set attributes of marks, these are vectorized 
+        # circles and facecolors are lists of the same size
+        self.set_facecolors(visual['facecolors'])
+        
     def draw(self, renderer, *args, **kwargs):
         # query data for a vertex table K
         view = self.data.view('vertex') 
-        visual = {p: encoder(view.get(f, None)) for
+        visual = {p: encoder(view.get(f, None)) for 
                      p, (f, encoder) in self.transforms.items()}
-        # no explicit  S->K since they have the same indexing
-        # construct geometries of the circle glyphs in visual coordinates
-        self._paths = [mpath.Path.circle(center=(x,y), radius=s) for (x, y, s) 
-                in zip(visual['x'],visual['y'], visual['s'])] 
-        # set attributes of glyphs, these are vectorized 
-        # circles and facecolors are lists of the same size
-        self.set_facecolors(visual['facecolors'])
+        self.assemble(visual)
         # call the renderer that will draw based on properties
         super().draw(renderer, *args, **kwargs)
+   
 \end{minted} 
-The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices, as described in section~\ref{sec:triangulization}; even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$ such that all the data on one vertex maps to one marker. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, meaning that the values cannot change after the method is called in draw until a new call in draw.
+The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices, as described in section~\ref{sec:triangulization}; even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$ such that all the data on one vertex maps to one marker. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, meaning that the values cannot change after the method is called in draw until a new call in draw. This table is converted to a table of visual variables. It is then passed into \mintinline{python}{assemble}, where it is used to individually construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. Since \mintinline{python}{view} returns a \dsection\, all these operations could be applied on a section on one \dbasepoint\ or a subset of \dbase.
 
-This table is converted to a table of visual variables; it is then used to individually construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. Since \mintinline{python}{view} returns a \desection\, all these operations could be applied on one element in the data or multiple. \note{this might be better suited for discussion/future work} We could also rewrite the base \vmark\ such that \mintinline{python}{draw} acts on only one point on \dbase\ or even \gbase\, but for small datasets it is more efficient to vectorize these operations. 
-
-The only difference between the \mintinline{python}{Point} and \mintinline{python}{Line} objects is in the \mintinline{python}{view} and in the \vmark\ section because line has different continuity from scatter.
+The only difference between the \mintinline{python}{Point} and \mintinline{python}{Line} objects is in the \mintinline{python}{view} and \mintinline{python}{assemble} function because line has different continuity from scatter and is represented by a different type of graphical mark. 
 
 \begin{minted}{python}
 class Line(mcollections.LineCollection):
-    def draw(self, renderer, *args, **kwargs):
-        view = self.data.view('edge')
-        visual = {p: encoder(view.get(f, None)) for 
-                      p, (f, encoder) in self.transforms.items()}
-        # glyph assembly, where the glyph is a line
+    def assemble(self, visual):
+        #assemble line marks as set of segments 
         segments = [np.vstack((vx, vy)).T for vx, vy 
                     in zip(visual['x'], visual['y'])]
         self.set_segments(segments)
         self.set_color(visual['color'])
-
+        
+    def draw(self, renderer, *args, **kwargs):
+        # query data source for edge table
+        view = self.data.view('edge')
+        visual = {p: encoder(view.get(f, None)) for 
+                     p, (f, encoder) in self.transforms.items()}
+        self.assemble(visual)
         super().draw(renderer, *args, **kwargs)
+
+
 \end{minted}
-In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. This information is converted into visual variables that are then composed into colored line segments. 
+In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual data. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments and then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
 
 \subsubsection{Encoders \vchannel}
 what, why, how?
