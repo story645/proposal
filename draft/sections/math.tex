@@ -291,9 +291,17 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into t
 The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\mathcal{J}(\dtotal)$ to a graphic that is a section \gsection\ in  $\Gamma(\gtotal)$
 %%% \Gamma is total
 %%% H is point wise -
-%%% this map means we cna do this pointwise 
+%%% this map means we can do this pointwise 
 %%% explain the arrows, chase through here
-%%% new disagram w/ section 
+%%% new disagram w/ section?
+% so you aren't passing around \tau
+% thos maps make sense for \tau(k)\in E -> V
+% and then you have \mu(k) 
+% and then when you are in \xi*V .... well the arrow goes the WONG way so you didn't just pass \mu(k) inot \xi*V
+% so if you want to go from \xi*V to H via Q you need to do it over a PARTICULAR s
+% thats what I mean by Q (in this diagram) hiding a choice of s. 
+% and then IF you pick an s ...... its is just fine. because it returns \rho(s)
+% so types match \rho(s) is in D
 
 \begin{equation}
     \label{eq:artist_diagram}

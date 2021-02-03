@@ -21,9 +21,9 @@ class Line(mcollections.LineCollection):
         transforms
         """
         super().__init__(None, *args, **kwargs)
-        assert 'edge' in data.FB.K['tables']
-        utils.check_constraints(Line, transforms)
-        utils.validate_transforms(data.FB.F, transforms)
+        #assert 'edge' in data.FB.K['tables']
+        #utils.check_constraints(Line, transforms)
+        #utils.validate_transforms(data.FB.F, transforms)
      
         self.data = data
         self.transforms = transforms
@@ -31,14 +31,11 @@ class Line(mcollections.LineCollection):
     def draw(self, renderer, *args, **kwargs):
       
         view = self.data.view('edge')
-        visual = utils.convert_transforms(view, self.transforms)
-        # dictionary here in place of visual(parameter) function
-        if 'color' not in visual:
-            visual['color'] = "C0"
-
+        visual = {p: encoder(view.get(f, None)) for 
+                      p, (f, encoder) in self.transforms.items()}
+    
         segments = [np.vstack((vx, vy)).T for vx, vy 
                     in zip(visual['x'], visual['y'])]
-
         self.set_segments(segments)
         self.set_color(visual['color'])
 
