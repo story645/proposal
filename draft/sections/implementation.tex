@@ -111,10 +111,42 @@ class Line(mcollections.LineCollection):
 
 
 \end{minted}
-In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual data. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments and then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
+In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments and then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
 
 \subsubsection{Encoders \vchannel}
-what, why, how?
+As mentioned above, the encoding dictionary is specified by the visual fiber component, the corresponding data fiber component, and the mapping function. The visual parameter serves as the dictionary key because the visual representation is constructed from the encoding applied to the data  $\vsection = \vchannel \circ \dsection$. For the scatter plot, the mappings for the visual fiber components $\vfiber=(x,y, facecolors, s)$ are defined as
+\begin{minted}{python}
+cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
+transforms = {'y': ('v2', lambda x: x),       
+              'x': ('v4', lambda x: x),
+             'facecolors': ('v3', cmap), 
+             's':(None ,lambda _: itertools.repeat(.02))}
+\end{minted}
+where the position \textit{(x,y)} \vchannel\ transformers are identity functions. The size \textit{s} transformer is not acting on a component of \dfiber\, instead it is a \vchannel\ that returns a constant value. While size could be embedded inside the \mintinline{python}{assembly} function, it is added to the transformers to illustrate user configured visual parameters that could either be constant or mapped to a component in \dfiber. The identity and constant \vchannels\ are explicitly implemented here to demonstrate their implicit role in the visual pipeline, but they could be optimized away. More complex encoders can be implemented as callable classes, such as 
+\begin{minted}{python}
+class Categorical:
+    def __init__(self, mapping):
+        # check that the conversion is to valid colors
+        assert(mcolors.is_color_like(color) for color in mapping.values())
+        self._mapping = mapping
+
+    def __call__(self, value):
+        # convert value to a color
+        return [mcolors.to_rgba(self._mapping[v]) for v in values]
+\end{minted}
+
+where \mintinline{python}{__init__} can validate that the output of the \vchannel\ is a valid element of the \vfiber\ component the \vchannel\ function is targeting. Creating a callable class also provides a simple way to swap out the specific (data, value) mapping without having to reimplement the validation or conversion logic. 
+
+The check for equivariance can be implemented trivially such that it is independent of data or encoder.
+\begin{minted}{python}
+def is_nominal(values, encoder):
+    m1 = list(zip(values, encoder(values)))
+    random.shuffle(values)
+    m2 = list(zip(values, encoder(values)))
+    return sorted(m1) == sorted(m2)
+\end{minted}
+In this example, \mintinline{python}{is_nominal} checks for equivariance of permutation group actions by applying the encoder to a set of values, shuffling values, and checking that (value, encoding) pairs remain the same. \note{not sure where/how these checks should be incorporated, maybe as part of transform dict?}
+
 \subsubsection{Data \dtotal}
 what, why, how?
 

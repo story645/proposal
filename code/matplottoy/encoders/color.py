@@ -25,6 +25,4 @@ class Categorical:
         values = np.atleast_1d(np.array(value, dtype=object))
         return [mcolors.to_rgba(self._mapping[v]) for v in values]
 
-    def validate(self, mtype):
-        return mtype in ['nominal']
 
