@@ -100,10 +100,10 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
                                 'range': ['red', 'green', 'orange', 'blue']}
                     })
 
-    def __init__(self, num_verts=4, num_samples=1000):
+    def __init__(self, num_edges=4, num_samples=1000):
         """which simplex am I on and distance""" 
         # define the k and distance 
-        self.keys = range(num_verts)
+        self.keys = range(num_)
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
         # concession to this is a half generlized representation of 
@@ -166,75 +166,14 @@ def is_continuous(vertices):
     # intervals along the 1D number line
     return (adj_mat == np.diag(np.diagonal(adj_mat))).all()
 
-class ContinuousLine:
-    FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : {'type:':float, 'monoid':'interval', 'range':[0,4]},
-                      'y': {'type:':float, 'monoid':'interval', 'range':[-1,1]},
-                      'color': {'type':str, 'monoid':'nominal', 
-                                'range': ['red', 'green', 'orange', 'blue']}
-                    })
-                    
-    def __init__(self, edge_table, vertex_table, num_samples=1000):
+class GraphLine:
+    def __init__(self, FB, edge_table, vertex_table, num_samples=1000, connect=False):
+        self.FB = FB
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
-        assert edge_table.keys() == self.FB.F.keys()
-        assert is_continuous(vertex_table)
-        for  (column, functions) in edge_table.items():
-            fiber_set = self.FB.F[column]['range']
-            for f in functions:
-                #check using random point along [0,1]
-                val = f(np.random.random())
-                if self.FB.F[column]['monoid'] == 'nominal':
-                    assert val in fiber_set
-                else:
-                    assert all([min(fiber_set)<=v<=max(fiber_set) 
-                                    for v in np.atleast_1d(val)])
-
-        self.ids = range(len(vertex_table))
-        self.vertices = vertex_table        
-        self.edges = edge_table
-
-
-    def tau(self, k, simplex='edge'):
-        """this function knows that there are functions on the fibers defined in F"""
-        x = self.edges['x'][k](self.distances)
-        y = self.edges['y'][k](self.distances)
-        color = self.edges['color'][k](self.distances) 
-        if simplex=='vertex':
-            color = np.repeat(color, self.num_samples) 
-            return (k, (x, y, color))
-
-        return (k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
-
-    def view(self, simplex='edge'):
-        """walk the edge_vertex table to return the edge value
-        """
-        # contuinity test asserted one source, one sink 
-        # sort here on sources (can also sort on sink)
-        table = defaultdict(list)
-        #since intervals lie along number line and are ordered pair neighbors
-        #sort on start or end should yield ordering
-        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
-            table['index'].append(i)
-            for (name, value) in zip(self.FB.F.keys(), self.tau(i, simplex)[1]):
-                table[name].append(value)
-        
-        if simplex =='vertex':
-            table['index'] = [(k,d) for d in self.distances for k in table['index']]
-            for name in self.FB.F.keys():
-                table[name] = list(itertools.chain.from_iterable(table[name]))
-        return table
-
-class DiscontinousLine:
-    FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : {'type':float, 'monoid':'interval', 'range':[-1,13]},
-                      'y':  {'type':float, 'monoid':'interval', 'range':[-1,4]},
-                      })
-
-    
-    def __init__(self, edge_table, vertex_table, num_samples=2, connect=False):
-        self.num_samples = num_samples
-        self.distances = np.linspace(0,1, num_samples)
+        if connect:
+            assert edge_table.keys() == self.FB.F.keys()
+            assert is_continuous(vertex_table)
         for  (column, functions) in edge_table.items():
             fiber_set = self.FB.F[column]['range']
             for f in functions:
@@ -249,9 +188,7 @@ class DiscontinousLine:
 
     def tau(self, k, simplex='edge'):
         """this function knows that there are functions on the fibers defined in F"""
-        x = self.edges['x'][k](self.distances)
-        y = self.edges['y'][k](self.distances)
-        return (k, (x, y))
+        return(k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
 
     def view(self, simplex='edge'):
         """walk the edge_vertex table to return the edge value

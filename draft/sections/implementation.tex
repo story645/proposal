@@ -15,7 +15,7 @@
     \label{fig:code_scatter_line}
 \end{figure}
 
-To prototype our model, we implemented the artist classes for the scatter and line plots shown in figure~\ref{fig:code_scatter_line} because they differ in every attribute of our artist: different visual channels \vchannel\ that composite to different marks \vmark\ with different continuities \vindex\.  We make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations. 
+To prototype our model, we implemented the artist classes for the scatter and line plots shown in figure~\ref{fig:code_scatter_line} because they differ in every attribute: different visual channels \vchannel\ that composite to different marks \vmark\ with different continuities \vindex\.  We make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations. 
 
 To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mintinline{python}{fig, ax} artists that will contain the new \mintinline{python}{Point, Line} primitive objects we implemented based on our topology model. 
 
@@ -36,6 +36,7 @@ To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mi
 We then add the \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \dtotal=\mintinline{python}{data} that is to be plotted and the aesthetic configuration \vchannel=\mintinline{python}{transforms}. We implement the artists as equivalence classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
  
 \subsection{Artist Class $\vartist^{\prime}$}
+\label{sec:code_artist}
 The artist is the piece of the matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, \mintinline{python}{transform} is a dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist.
 
 \begin{minted}{python}
@@ -80,7 +81,7 @@ class Point(mcollections.Collection):
         
     def draw(self, renderer, *args, **kwargs):
         # query data for a vertex table K
-        view = self.data.view('vertex') 
+        view = self.data.view() 
         visual = {p: encoder(view.get(f, None)) for 
                      p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
@@ -103,7 +104,7 @@ class Line(mcollections.LineCollection):
         
     def draw(self, renderer, *args, **kwargs):
         # query data source for edge table
-        view = self.data.view('edge')
+        view = self.data.view()
         visual = {p: encoder(view.get(f, None)) for 
                      p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
@@ -113,16 +114,17 @@ class Line(mcollections.LineCollection):
 \end{minted}
 In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments and then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
 
-\subsubsection{Encoders \vchannel}
+\subsection{Encoders \vchannel}
+\label{sec:code_channels}
 As mentioned above, the encoding dictionary is specified by the visual fiber component, the corresponding data fiber component, and the mapping function. The visual parameter serves as the dictionary key because the visual representation is constructed from the encoding applied to the data  $\vsection = \vchannel \circ \dsection$. For the scatter plot, the mappings for the visual fiber components $\vfiber=(x,y, facecolors, s)$ are defined as
 \begin{minted}{python}
 cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
-transforms = {'y': ('v2', lambda x: x),       
-              'x': ('v4', lambda x: x),
-             'facecolors': ('v3', cmap), 
+transforms = {'y': ('v1', lambda x: x),       
+              'x': ('v3', lambda x: x),
+             'facecolors': ('v2', cmap), 
              's':(None ,lambda _: itertools.repeat(.02))}
 \end{minted}
-where the position \textit{(x,y)} \vchannel\ transformers are identity functions. The size \textit{s} transformer is not acting on a component of \dfiber\, instead it is a \vchannel\ that returns a constant value. While size could be embedded inside the \mintinline{python}{assembly} function, it is added to the transformers to illustrate user configured visual parameters that could either be constant or mapped to a component in \dfiber. The identity and constant \vchannels\ are explicitly implemented here to demonstrate their implicit role in the visual pipeline, but they could be optimized away. More complex encoders can be implemented as callable classes, such as 
+where the position \textit{(x,y)} \vchannel\ transformers are identity functions. The size \textit{s} transformer is not acting on a component of \dfiber, instead it is a \vchannel\ that returns a constant value. While size could be embedded inside the \mintinline{python}{assembly} function, it is added to the transformers to illustrate user configured visual parameters that could either be constant or mapped to a component in \dfiber. The identity and constant \vchannel\ are explicitly implemented here to demonstrate their implicit role in the visual pipeline, but they could be optimized away. More complex encoders can be implemented as callable classes, such as 
 \begin{minted}{python}
 class Categorical:
     def __init__(self, mapping):
@@ -137,19 +139,157 @@ class Categorical:
 
 where \mintinline{python}{__init__} can validate that the output of the \vchannel\ is a valid element of the \vfiber\ component the \vchannel\ function is targeting. Creating a callable class also provides a simple way to swap out the specific (data, value) mapping without having to reimplement the validation or conversion logic. 
 
-The check for equivariance can be implemented trivially such that it is independent of data or encoder.
+A test for equivariance can be implemented trivially such that it is independent of data or encoder.
 \begin{minted}{python}
-def is_nominal(values, encoder):
+def test_nominal(values, encoder):
     m1 = list(zip(values, encoder(values)))
     random.shuffle(values)
     m2 = list(zip(values, encoder(values)))
-    return sorted(m1) == sorted(m2)
+    assert sorted(m1) == sorted(m2)
 \end{minted}
-In this example, \mintinline{python}{is_nominal} checks for equivariance of permutation group actions by applying the encoder to a set of values, shuffling values, and checking that (value, encoding) pairs remain the same. \note{not sure where/how these checks should be incorporated, maybe as part of transform dict?}
+In this example, \mintinline{python}{is_nominal} checks for equivariance of permutation group actions by applying the encoder to a set of values, shuffling values, and checking that (value, encoding) pairs remain the same. This equivariance test can be implemented as part of the artist or encoder, but for minimal overhead, the equivariant it is implemented as part of the library tests.
 
-\subsubsection{Data \dtotal}
-what, why, how?
+\subsection{Data \dtotal}
+\label{sec:code_data}
+The data input into the \mintinline{pythin}{Artist} will often be a wrapper class around an existing data structure, but must meet the following criteria:
+\begin{enumerate}
+\item specify the fiber components \dfiber\ and connectivity \dbase\
+\item have a \mintinline{view} method that returns an atomic object that encapsulates \dsection\
+\item the view object must have \mintinline{get} method that returns a fiber component
+\end{enumerate}
+To support specifying the fiber bundle, we define an optional \mintinline{python}{FiberBundle} class
 
-\subsubsection{Case Study: Iris}
+\begin{minted}{python}
+class FiberBundle:
+    def __init__(self, base, fiber):
+        """
+        base:  {'tables': ['vertex', 'edge', 'face']}
+        fiber: {'component name': {'type':, 'monoid':,  'range':}}
+        """
+        self.base = base
+        self.fiber = fiber
+
+    def is_section(self, section):
+        """checks if a section is from a given fiber bundle:
+        are values in F, are keys in K"""
+\end{minted}
+
+that asks the user to specify how \dbase is triangulated and the attributes of \dfiber. The \mintinline{python}{assembly} functions expect tables that match the continuity of the graphic; scatter expects a vertex table because it is discontinuous, line expects an edge table because it is 1D continuous. The fiber informs appropriate choice of \vchannel\, therefore it is a dictionary of attributes of the fiber components.  \note{I've basically stripped this out of the artists above so should I just ditch this section?}
+
+To generate the scatter plot in figure~\ref{fig:code_scatter_line}, we fully specify a dataset with random keys and values in a section chosen at random form the corresponding fiber component. The fiberbundle \mintinline{python}{FB} is a class level attribute since all instances of \mintinline{python}{code}{VertexSimplex} come from the same fiberbundle.
+\begin{minted}{python}
+class VertexSimplex: #maybe change name to something else
+    """Fiberbundle is consistent across all sections
+    """
+    FB = FiberBundle({'tables': ['vertex']},  
+            {'v1': {'type': float,'monoid':'interval','range': [0,1]},
+             'v2': {'type': str, 'monoid':'nominal', 'range':['true', 'false']},
+             'v3': {'type': float, 'monoid':'interval', 'range':[2,3]}})
+
+    def __init__(self, sid = 45, size=1000, max_key=10**10):
+        # create random list of keys
+    def tau(self, k):
+        # e1 is sampled from F1, e2 from F2, etc...
+        return (k, (e1, e2, e3, e4))
+
+    def view(self):
+        table = defaultdict(list)
+        for k in self.keys:
+            table['index'] = k
+            # on each iteration, add one (name, value) pair per component
+            for (name, value) in zip(self.FB.fiber.keys(), self.tau(k)[1]):
+                table[name].append(value)
+        return table
+\end{minted}
+The view method returns a dictionary where the key is a fiber component name and the value is a list of values in the fiber component. The table is built one call to \mintinline{python}{tau} at a time, guaranteeing that all the fiber component values are over the same \dbasepoint. Table has a \mintinline{python}{get} method as it is a method on Python dictionaries. In contrast, the line in \mintinline{python}{EdgeSimplex} is defined as the functions \mintinline{python}{_color,_xy} on each edge. 
+
+\begin{minted}{python}
+class EdgeSimplex: 
+    # assign a class level FB attribute
+    def __init__(self, num_edges=4, num_samples=1000): 
+        self.keys = range(num_edge) #edge id
+        # distance along edge
+        self.distances = np.linspace(0,1, num_samples)
+        # half generlized representation of arcs on a circle
+        self.angle_samples = np.linspace(0, 2*np.pi, len(self.keys)+1)
+
+    @staticmethod
+    def _color(edge):
+        colors = ['red','orange', 'green','blue']
+        return colors[edge%len(colors)]
+
+    @staticmethod
+    def _xy(edge, distances, start=0, end=2*np.pi):
+        # start and end are parameterizations b/c really there is 
+        angles = (distances *(end-start)) + start
+        return np.cos(angles), np.sin(angles)
+
+    def tau(self, k): #will fix location on page on revision
+        x, y = self._xy(k, self.distances, 
+                        self.angle_samples[k], self.angle_samples[k+1]) 
+        color = self._color(k) 
+        return (k, (x, y, color))
+
+    def view(self, simplex):
+        table = defaultdict(list)
+        for k in self.keys:
+            table['index'].append(k)
+            # (name, value) pair, value is [x0, ..., xn] for x, y
+            for (name, value) in zip(self.FB.fiber.keys(), self.tau(k, simplex)[1]):
+                table[name].append(value)
+\end{minted}
+Unlike scatter, the line \mintinline{python}{tau} method returns the functions on the edge evaluated on the interval [0,1]. By default these means each \mintinline{python}{tau} returns a list of 1000 x and y points and the associated color. As with scatter, \mintinline{python}{view} builds a table by calling \mintinline{python}{tau} for each \dbasepoint\. Unlike scatter, the line table is a list where each item contains a list of points. This bookkeeping of which data is on an edge is used by the \mintinline{python}{assembly} functions to bind segments to their visual properties. 
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/linec_1.png}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/lined_1.png}
+    \end{subfigure}
+    \caption{Continuous and discontinuous lines as defined by different data models, but generated with the same \vartisteq=\mintinline{python}{artist}}
+    \label{fig:circle_step}
+\end{figure}
+
+The graphics in figure~\ref{fig:circle_step} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source
+
+\begin{minted}{python}
+class GraphLine:
+    def __init__(self, FB, edge_table, vertex_table, num_samples=1000, connect=False):
+        #s set args as attributes and generate distance
+        if connect: # test connectivity if edges are continuous
+            assert edge_table.keys() == self.FB.F.keys()
+            assert is_continuous(vertex_table)
+
+    def tau(self, k, simplex='edge'):
+        # evaluates functions defined in edge table
+        return(k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
+
+    def view(self, simplex='edge'):
+        """walk the edge_vertex table to return the edge function
+        """
+        table = defaultdict(list)
+        #sort since intervals lie along number line and are ordered pair neighbors
+        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
+            table['index'].append(i)
+            # same as view for line, returns nested list
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i, simplex)[1]):
+                table[name].append(value)
+        return table
+\end{minted}
+where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples 
+\begin{minted}{python}
+simplex.GraphLine(FB, edge_table, vertex_table, connect=True)
+\end{minted}
+while the stair chart is discontinuous and only needs to be evaluated at the edges of the interval 
+\begin{minted}{python}
+simplex.GraphLine(FB, edge_table, vertex_table, num_samples=2, connect=False)
+\end{minted}
+such that one advantage of this model is it helps differentiate graphics that have different artists from graphics that have the same artist but make different assumptions about the source data. 
+
+
+
+
+\subsection{Case Study: Iris}
 
 \end{document}
