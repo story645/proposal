@@ -40,8 +40,8 @@ def convert_transforms(view, transforms, exclude=None):
         else:
             (var, tau) = value
             if isinstance(var, (str, bytes )):
-                visual[param] = tau.convert(view[var])
+                visual[param] = tau(view[var])
             else:
-                visual[param] = [tau.convert(view[v]) for v in var]
+                visual[param] = [tau(view[v]) for v in var]
 
     return visual

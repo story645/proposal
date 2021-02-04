@@ -290,6 +290,163 @@ such that one advantage of this model is it helps differentiate graphics that ha
 
 
 
-\subsection{Case Study: Iris}
+\subsection{Case Study: Penguins}
+For this case study, we use the Palmer Penguins dataset\cite{gormanEcologicalSexualDimorphism2014, horstPalmerpenguinsPalmerArchipelago2020} since it is multivariate and has a varying number of penguins. We use a version of the data packaged as a pandas dataframe\cite{nakhaeeMcnakhaeePalmerpenguins2021, jeff_reback_2020_3715232} since that is a very commonly used Python labled data structure. The wrapper is very thin since here there is explicitly only one section.
+\begin{minted}{python}
+class DataFrameSection:
+    def __init__(self, dataframe):
+        self._tau = dataframe.iloc
+        self._view = dataframe
+    def view(self):
+        return self._view
+\end{minted}
+The pandas indexer is a key valued set of discrete vertices, so there is no need to repackage for triangulation. As with the previous examples, there is no need to implement an explicit \mintinline{python}{get} method since the \mintinline{python}{dataframe} object has a get method. 
 
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_v.png}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_h.png}
+    \end{subfigure}
+    \caption{Frequency of Penguin types visualized as discrete bars. }
+    \label{fig:code_bar_simple}
+\end{figure}
+The bar charts in figure~\ref{fig:code_bar_simple} are generated with a \mintinline{python}{Bar} artist. The have the same required \vfiber\ components of (position, length). In \mintinline{pyton}{__init__} of \mintinline{python}{Bar} an additional parameter is set, \texttt{orientation} which only applies holistically to the graphic and never to individual data parameters. Explicitly differentiate between parameters in \vtotal\ and ones that are only in \vmarkd\ is another way this model allows for cleaner separation of roles in the code. 
+
+\begin{minted}{python}
+class Bar(mcollections.Collection):
+    def __init__(self, data, transforms, *args, **kwargs):
+        # parameter of the graphic
+        self.orientation = kwargs.pop('orientation', 'v')
+
+        super().__init__(*args, **kwargs)
+        self.data = data
+        self.transforms = transforms
+
+    @staticmethod    
+    def _make_bars(orientation, position, width, floor, length):
+        if orientation in {'vertical', 'v'}:
+            xval, xoff, yval, yoff = position, width, floor, length
+        elif orientation in {'horizontal', 'h'}:
+            xval, xoff, yval, yoff = floor, length, position, width
+        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+
+    
+    def assemble(self, visual):
+        #set some defaults
+        visual['width'] = visual.get('width', itertools.repeat(0.8))
+        visual['floor'] = visual.get('floor', itertools.repeat(0))
+        visual['facecolors'] = visual.get('facecolors', 'C0')
+        #build bar glyphs based on graphic parameter
+        verts = self._make_bars(self.orientation, visual['position'], 
+                   visual['width'], visual['floor'], visual['length'])
+        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
+        self.set_edgecolors('k')
+        self.set_facecolors(visual['facecolors'])
+        
+    def draw(self, renderer, *args, **kwargs):
+        view = self.data.view()
+        visual = utils.convert_transforms(view, self.transforms)  
+        self.assemble(visual)
+        super().draw(renderer, *args, **kwargs)
+        return      
+\end{minted}
+The \mintinline{python}{draw} method identical to the ones above, but here the visual transformations are factored out into a separate function. The \mintinline{python}{assemble} function sets some defaults, constructs bars, and sets their edge color to black. The \mintinline{python}{_make_bars} function is somewhat factored out because this is an operation that may be used by other bar making functions that may not be able to make use of bars assemble or draw. 
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_stacked.png}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_grouped.png}
+    \end{subfigure}
+    \caption{Penguin count disaggregated by island and species}
+    \label{fig:code_bar_multi}
+\end{figure}
+
+For example, the \mintinline{python}{MultiBar} artist that makes figure~\ref{fig:code_bar_multi} reuses \mintinline{python}{_make_bars} but does not reuse the assemble function because the composition of elements forces fundemental differences in glyph construction. As demonstrated in the \mintinline{python}{init}, the composite bar chart has orientation and whether it is stacked or not. While the stacked bar chart and the grouped bar chart could be seperate artists, as demonstrated they share so much overlapping code that it is far less redundant to implement them together.  \note{looking at the mess that is this code, I'm a) not convinced these should be combined b) no longer convinced this provides anything over just bar if it isn't rewritten to use bar more}
+
+\begin{minted}{python}
+class MultiBar(mcollections.Collection):
+    def __init__(self, data, transforms, *args, **kwargs):
+        #set the orientation of the graphic  
+        self.orientation = kwargs.pop('orientation', 'v')
+        # set how the bar glyphs are put together to create the graphic
+        self.stacked = kwargs.pop('stacked', False)     
+        # rest is same as other artist __init__s
+
+        #this needs to be factored out but just want to finish now
+        self.width = kwargs.pop('width', .8)
+       
+    def assemble(self, visual, view):
+        (groups, gencoder) = self.transforms['length']
+        ngroups = len(np.atleast_1d(groups))
+        visual['floor'] = visual.get('floor', np.empty(len(view[groups[0]])))
+        visual['facecolors'] = visual.get('facecolors', 'C0')
+        # make equal width stacked columns 
+        if 'width' not in visual and self.stacked:
+            visual['width'] = itertools.repeat(self.width)
+
+        # make equal with groups
+        if not self.stacked:
+            visual['width'] = itertools.repeat(self.width/ngroups)
+            offset = (np.arange(ngroups) /ngroups) * self.width
+        else:
+            offset = itertools.repeat(0)
+        
+        # make the bars and arrange them 
+        verts = []
+        for group, off in zip(groups, offset):
+            verts.extend(Bar._make_bars(self.orientation, visual['position'] + off, 
+                          visual['width'], visual['floor'], view[group]))
+            if self.stacked: #add stacked bar to previous bar
+                visual['floor'] += view[group]
+          
+        # convert lengths after all calculations are made and reorient if needed
+        # here or in transform machinery?
+        if self.orientation in {'v', 'vertical'}:
+            tverts = [[(x, gencoder(y)) for (x, y) in vert] 
+                            for vert in verts]
+        elif self.orientation in {'h', 'horizontal'}:
+            tverts = [[(gencoder(x), y) for (x, y) in vert] 
+                            for vert in verts]
+        self._paths = [mpath.Path(xy, closed=True) for xy in tverts]
+        #flatted columns of colors to match list of bars
+        self.set_facecolor(list(itertools.chain.from_iterable(visual['facecolors'])))
+        self.set_edgecolors('k')
+        
+    def draw(self, renderer, *args, **kwargs):
+        view = self.data.view()
+        #exclude converting the group visual length, special cased in assemble
+        visual = utils.convert_transforms(view, self.transforms, exclude=['length'])
+        # pass in view because nu is not distributable so may need to apply it 
+        # after visual assembly
+        self.assemble(visual, view)
+        super().draw(renderer, *args, **kwargs)
+        return      
+\end{minted}
+
+In the \mintinline{python}{__draw__}, a utility function is used for conversions, but the length transforms are held until after assembly because the length is computed by adding the current length to the previous and many transforms are not distributable such that $\nu(x_0 + x_1 + x_2) = \nu(x_0) + \nu(x_1) + \nu(x_2)$. Inside \mintinline{python}{assemble}, the glyphs are either shifted vertically (\texttt{stacked}) or horizontally (\texttt{grouped}) such that the positions are recorded and added to with the next group. This function allows multiple columns to be mapped to a visual parameter, but it must be equal numbers of columns
+\begin{minted}{python}
+{'position': ('island', lambda x: {'Biscoe':0, 'Dream':1, 'Torgersen':2}[x]),
+ 'length':(['Adelie', 'Chinstrap', 'Gentoo'], lambda x: x),
+ 'facecolors': (['Adelie_s', 'Chinstrap_s', 'Gentoo_s'], 
+        color.Categorical({'Adelie':'#FF8C00',
+                           'Gentoo':'#159090', 
+                           'Chinstrap':'#A034F0'}))}
+\end{minted}
+such as in this example where for each column contributing to a segment of the bar there is a corresponding column of colors for this segment. The reason the multibar can work with such a trasnformer is because it is relying on the data model to do most of the bookkeeping of which values get mapped to which bars. This also yields a much simpler function call to the artist
+
+\begin{minted}{python}
+fig, ax = plt.subplots()
+artist = bar.MultiBar(table, trans, orientation='h', stacked=True)
+ax.add_artist(artist)
+\end{minted}
+
+where \mintinline{python}{trans} is the same dictionary for both stacked and grouped version, as is the \mintinline{python}{DataFrameSection} object \mintinline{python}{table}. The only difference between the two versions is the \texttt{stacked} flag, and the only difference between figures~\ref{fig:code_bar_simple} is the \texttt{orientation} argument. By decomposing the architecture into data, visual encoding, and assembly steps, we are able to build components that are more flexible and also more self contained than the existing code base. 
+
+
+\note{This API may want to be redesigned such that there's a way to clearly couple the columns when doing multindex broadcasting}
 \end{document}

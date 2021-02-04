@@ -1,6 +1,15 @@
 from matplottoy.data.simplex import FiberBundle
 from matplottoy.encoders import mtypes
 
+class DataFrame:
+    def __init__(self, dataframe):
+        self._tau = dataframe.iloc
+        self._view = dataframe
+
+    def view(self, simplex="vertex"):
+        return self._view
+    
+    
 class Iris:
     FB = FiberBundle({'tables': ['vertex']},
                      {'species': mtypes.Nominal({'setosa', 'versicolor', 'virginica'}),
