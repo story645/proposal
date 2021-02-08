@@ -7,29 +7,24 @@
 \end{figure}
 
 
-\subsection{what is the problem we're trying to solve}
-% build better viz libaries
-%formally define what constraints on libraries are
-% make something seperable and scalable
-
 
 \begin{figure}
-    \begin{subfigure}{.20\textwidth}
+    \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
         \caption{}
         \label{fig:intro_dpa}
     \end{subfigure}
-    \begin{subfigure}{.20\textwidth}
+    \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_bar.png}
         \caption{}
         \label{fig:intro_dpb}
     \end{subfigure}
-    \begin{subfigure}{.20\textwidth}
+    \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_country.png}
         \caption{}
         \label{fig:intro_dbc}
     \end{subfigure}
-    \begin{subfigure}{.20\textwidth}
+    \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_heat.png}
         \caption{}
         \label{fig:intro_dbd}
@@ -39,13 +34,23 @@
 \end{figure}
 
 
+\subsection{what is the problem we're trying to solve}
+% build better viz libaries
+%formally define what constraints on libraries are
+% make something seperable and scalable
 
-This work is motivated by a rearchitecture of the Matplotlib visualization library that aims to disentangle the transformation from data to visualization. 
+
+
+\subsection{what are we doing}
+constraints: toplogy of dataset + structure on the variables
+implementation: be fully feature
+we can haz compose the things into larger structure. \& has framwework to do larger things w/ algebraic formalizations.
+
 
 
 \subsection{What even is a data visualization library?}
 
-
+Intuitively, data visualizations are drawings where elements of the figure are mapped 
 For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are not scatter plots or line plots or really maps, but are clearly identifiable as data visualizations because there are some properties of the original data they preserve. 
 
 
@@ -58,12 +63,8 @@ Mackinlay, expressiveness...Tufte lie principal\cite{mackinlayAutomatingDesignGr
 
 
 
-\subsection{what are we doing}
-constraints: toplogy of dataset + structure on the variables
-implementation: be fully feature
-we can haz compose the things into larger structure. \& has framwework to do larger things w/ algebraic formalizations.
 
-\subsection{ What are the the basic requirements of a visualization library?}
+
 Acquired codes of meaning, dubois
 
 
@@ -149,7 +150,17 @@ Throughout this form we will be using the following conventions to discuss data:
 % visual variables are sparkly
 
 
-\subsection{contribution of this work is}
+\subsection{contribution}
  % topological model (abstractions for continuity, formal definition of structure preservation as monoidal action equivarance)
  % prototype
+
+\begin{enumerate}
+    \item fiber bundle representation of data and graphics
+    \item formalization of variable type structure preservation as monoid action equivariant maps between fibers 
+    \item formalization of continuity preservation as equivariant map between base space
+    \item algebraic sum for composition of graphics
+    \item functional approach to force seperation of scope and concerns
+    \item prototype  
+\end{enumerate}
+
 \end{document}
