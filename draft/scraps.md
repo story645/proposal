@@ -435,6 +435,7 @@ functor
 * types: variables measurement groups are  with visual encoding groups
 * topology: visual idioms preserve the topology/connectivity of the dat
 
+# Math
 
 We propose that the mapping of a precise subset of data to a visual idiom ($I$) can be encapsulated in a class of functors called artists.
 Gluing keys along a base space

@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+    node distance = 5mm and 7mm,
+      start chain = going right,
+ disc/.style = {shape=cylinder, draw, shape aspect=0.3,
+                shape border rotate=90,
+                text width=17mm, align=center, font=\linespread{0.8}\selectfont},
+  mdl/.style = {shape=ellipse, aspect=2.2, draw},
+  alg/.style = {draw, align=center, font=\linespread{0.8}\selectfont}
+                    ]
+    \begin{scope}[every node/.append style={on chain, join=by -Stealth}]
+\node (n1) [disc, minimum width=3cm] {Dataset};
+\node (n2) [alg]  {Invariant};
+\node (n4) [disc, minimum width=3cm] {Components};
+    \end{scope}
+\node(n5)[above right=of n4, xshift=2cm, inner sep=0pt] {\includegraphics[width=.2\textwidth]{catquant}};
+\node(n6)[below right=of n4, xshift=2cm, inner sep=0pt] {\includegraphics[width=.2\textwidth]{quantquant.png}};
+
+\draw[->] (n4) -- (n5);
+\draw[->] (n4) -- (n6);
+\end{tikzpicture}

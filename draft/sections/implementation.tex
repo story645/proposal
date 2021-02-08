@@ -168,10 +168,6 @@ class FiberBundle:
         """
         self.base = base
         self.fiber = fiber
-
-    def is_section(self, section):
-        """checks if a section is from a given fiber bundle:
-        are values in F, are keys in K"""
 \end{minted}
 
 that asks the user to specify how \dbase is triangulated and the attributes of \dfiber. The \mintinline{python}{assembly} functions expect tables that match the continuity of the graphic; scatter expects a vertex table because it is discontinuous, line expects an edge table because it is 1D continuous. The fiber informs appropriate choice of \vchannel\, therefore it is a dictionary of attributes of the fiber components.  \note{I've basically stripped this out of the artists above so should I just ditch this section?}

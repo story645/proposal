@@ -37,10 +37,10 @@
          - [x] \nu examples w/ scales + visual variables
          -[x] q example?
     - [] full draft of section (w/ actual figures)
-- [] implementation 
-    - [] scatter 
-    - [] line
-    - [] bar + multibar
+- [x] implementation 
+    - [x] scatter 
+    - [x] line
+    - [x] bar + multibar
 - []  background/intro
    - [] visual basics: bertin/munzner/carpendale
    - [] math framework: gog

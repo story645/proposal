@@ -3,15 +3,59 @@
 \section{Introduction}
 \label{sec:introduction}
 \begin{figure}
-    \includegraphics[width=.5\textwidth]{figures/intro/viz_same.png}
-    \caption[]{Implicit in visualization is the assumption that these three representations of data are equivalent, specifically that the measurements within a variable and relations of the measurements of each variable are preserved. }
-    \label{fig:viz_same}
-    %% change up image to dubois or bertin or 
-    
+   
 \end{figure}
 
-\subsection{Thesis statement}
-We define a visualization as a transform from data to graphic that preserves the topology of the data and faithfully map the properties of the measurement type. In fig~\ref{fig:viz_same}, we implicitly assume that the translation from table to heatmap has preserved the order of observations (the rows) and that the perceptually uniform sequential colormap has been applied such that the ordering relation on floats matches the ordering on the colormap (darker colors map to larger numbers). We also make this assumption about color in the scatter map, and that the translation to size and position on screen also respect the ordering on floats. In this work, we propose to mathematically describe the transform of data to visual space such that we can make explicit the implicit topology and types visualizations preserve. We then propose a new architecture for the Python visualization library Matplotlib \cite{hunterMatplotlib2DGraphics2007} based on these descriptions because the Matplolib artist layer is analogous to the transforms. 
+
+\subsection{what is the problem we're trying to solve}
+% build better viz libaries
+%formally define what constraints on libraries are
+% make something seperable and scalable
+
+
+\begin{figure}
+    \begin{subfigure}{.20\textwidth}
+        \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
+        \caption{}
+        \label{fig:intro_dpa}
+    \end{subfigure}
+    \begin{subfigure}{.20\textwidth}
+        \includegraphics[width=1\textwidth]{figures/intro/du_bois_bar.png}
+        \caption{}
+        \label{fig:intro_dpb}
+    \end{subfigure}
+    \begin{subfigure}{.20\textwidth}
+        \includegraphics[width=1\textwidth]{figures/intro/du_bois_country.png}
+        \caption{}
+        \label{fig:intro_dbc}
+    \end{subfigure}
+    \begin{subfigure}{.20\textwidth}
+        \includegraphics[width=1\textwidth]{figures/intro/du_bois_heat.png}
+        \caption{}
+        \label{fig:intro_dbd}
+    \end{subfigure}
+    \caption{Du Bois' data portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018} of post reconstruction Black American life exemplify that the fundemental characteristics of data visualization is that the visual elements vary in proportion to the source data. In figure~\ref{fig:intro_dpa}, the length of each segment maps to population; in figure~\ref{fig:intro_dpb}, the bar charts are intersected to show the number of property owners and how much they own in a given year; in figure~\ref{fig:intro_dpc} the countries are scaled to population size; and figure~\ref{fig:intro_dpd} is a treemap where the area of the rectangle is representative of the number of businesses in each field. The images here are from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900, duboisGeorgiaNegroCity1900,duboisSeriesStatisticalCharts,duboisSeriesStatisticalChartsa}}
+    \label{fig:intro_dubois}
+\end{figure}
+
+
+
+This work is motivated by a rearchitecture of the Matplotlib visualization library that aims to disentangle the transformation from data to visualization. 
+
+
+\subsection{What even is a data visualization library?}
+
+
+For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are not scatter plots or line plots or really maps, but are clearly identifiable as data visualizations because there are some properties of the original data they preserve. 
+
+
+
+Mackinlay, expressiveness...Tufte lie principal\cite{mackinlayAutomatingDesignGraphical1986}
+
+
+
+"The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
+
 
 
 \subsection{what are we doing}
@@ -23,7 +67,6 @@ we can haz compose the things into larger structure. \& has framwework to do lar
 Acquired codes of meaning, dubois
 
 
-"The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
 
 
 
@@ -98,5 +141,15 @@ Throughout this form we will be using the following conventions to discuss data:
     \item[value]  
 \end{description}
 
+\subsection{how does this tackle the problem? what does it leave on the table?}
+% build on butler, gog
+% differ from ggplot (d3, vega), vtk, imageJ
+%% lets get on the same page about words
+% data is topology + variables
+% visual variables are sparkly
 
+
+\subsection{contribution of this work is}
+ % topological model (abstractions for continuity, formal definition of structure preservation as monoidal action equivarance)
+ % prototype
 \end{document}
