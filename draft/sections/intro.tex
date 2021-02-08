@@ -29,7 +29,7 @@
         \caption{}
         \label{fig:intro_dbd}
     \end{subfigure}
-    \caption{Du Bois' data portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018} of post reconstruction Black American life exemplify that the fundemental characteristics of data visualization is that the visual elements vary in proportion to the source data. In figure~\ref{fig:intro_dpa}, the length of each segment maps to population; in figure~\ref{fig:intro_dpb}, the bar charts are intersected to show the number of property owners and how much they own in a given year; in figure~\ref{fig:intro_dpc} the countries are scaled to population size; and figure~\ref{fig:intro_dpd} is a treemap where the area of the rectangle is representative of the number of businesses in each field. The images here are from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900, duboisGeorgiaNegroCity1900,duboisSeriesStatisticalCharts,duboisSeriesStatisticalChartsa}}
+    \caption{Du Bois' data portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018} of post reconstruction Black American life exemplify that the fundemental characteristics of data visualization is that the visual elements vary in proportion to the source data. In figure~\ref{fig:intro_dpa}, the length of each segment maps to population; in figure~\ref{fig:intro_dpb}, the bar charts are intersected to show the number of property owners and how much they own in a given year; in figure~\ref{fig:intro_dpc} the countries are scaled to population size; and figure~\ref{fig:intro_dpd} is a treemap where the area of the rectangle is representative of the number of businesses in each field. The images here are from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900,duboisGeorgiaNegroNegro1900, duboisSeriesStatisticalCharts, duboisSeriesStatisticalChartsa}}
     \label{fig:intro_dubois}
 \end{figure}
 
@@ -49,29 +49,19 @@ we can haz compose the things into larger structure. \& has framwework to do lar
 
 
 \subsection{What even is a data visualization library?}
+Data visualizations originated as maps of places and stars \cite{friendlyBriefHistoryData2008}; direct graphical representations of physical items in space. While often decorative, to be useful these visualizations at least somewhat had to preserve some notion of relative distance between the objects being graphed. Byrne et al. deconstruct  visualizations as having either graphic or figurative components; graphic representations are maps from data values to visual encodings, while figurative representations have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are mostly graphic representations where quantitative variables are mapped to glyph segment length or area. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from. 
 
-Intuitively, data visualizations are drawings where elements of the figure are mapped 
-For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are not scatter plots or line plots or really maps, but are clearly identifiable as data visualizations because there are some properties of the original data they preserve. 
-
-
-
-Mackinlay, expressiveness...Tufte lie principal\cite{mackinlayAutomatingDesignGraphical1986}
+Mackinlay expressive/exp
 
 
-
-"The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
-
-
-
-
-
-Acquired codes of meaning, dubois
 
 
 
 
 
 \section{Not all data are tables}
+
+"The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
 
 Tables, images (Lev), graphs (network X)
 
@@ -143,16 +133,14 @@ Throughout this form we will be using the following conventions to discuss data:
 \end{description}
 
 \subsection{how does this tackle the problem? what does it leave on the table?}
-% build on butler, gog
-% differ from ggplot (d3, vega), vtk, imageJ
-%% lets get on the same page about words
-% data is topology + variables
-% visual variables are sparkly
+\begin{itemize}
+    \item butler's topological formulation
+    \item GoG's mathematics of visualizations
+    \item vtk's qausi topological
+\end{itemize}
 
 
 \subsection{contribution}
- % topological model (abstractions for continuity, formal definition of structure preservation as monoidal action equivarance)
- % prototype
 
 \begin{enumerate}
     \item fiber bundle representation of data and graphics
