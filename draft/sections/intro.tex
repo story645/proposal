@@ -49,15 +49,14 @@ we can haz compose the things into larger structure. \& has framwework to do lar
 
 
 \subsection{What even is a data visualization library?}
- Byrne et al. describe visualizations as having graphic and figurative components; graphic representations are maps from data values to visual encodings, while figurative representations have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are mostly graphic representations where quantitative variables are mapped to glyph segment length or area. Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from in figure~\ref{fig:intro_dbc}. 
+ Byrne et al. describe visualizations as having graphic and figurative components; graphic representations are maps from data values to visual encodings, while figurative representations have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. For example, the Du Bois data portraits in figure~\ref{fig:intro_dubois} are mostly graphic representations where quantitative variables are mapped to glyph segment length or area. Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from in figure~\ref{fig:intro_dbc}. So given graphics by definition have an underlying data 
 
 
 
  Data visualizations originated as maps of places and stars \cite{friendlyBriefHistoryData2008}; direct graphical representations of physical items in space. While often decorative, to be useful these visualizations at least somewhat had to preserve some notion of relative distance between the objects being graphed, which Tufte termed the Lie principal\cite{tufteVisualDisplayQuantitative2001}. 
 
  
-Mackinlay expressive/exp
-
+Mackinlay defines two criteria for 
 
 
 
@@ -126,9 +125,16 @@ Throughout this form we will be using the following conventions to discuss data:
 
 \subsection{how does this tackle the problem? what does it leave on the table?}
 \begin{itemize}
-    \item butler's topological formulation
+
     \item GoG's mathematics of visualizations
+    This book focuses instead on rules for constructing graphs mathematically
+and then representing them as graphics aesthetically.
+The title of this book also recalls Bertin’s Semiology of Graphics (1967),
+the first and most influential structural theory of statistical graphics. Bertin’s
+work has pervaded our thinking. Semiology deals with signs. Although Bertin
+put his signs on paper, his work applies as well to virtual space.
     \item vtk's qausi topological
+    \item butler's topological formulation
 \end{itemize}
 
 \subsection{How do other visualization libraries tackle this?}
