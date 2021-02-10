@@ -2,12 +2,9 @@
 \begin{document}
 \section{Introduction}
 \label{sec:introduction}
-\begin{figure}
-   
-\end{figure}
+In data visualization it is assumed the graphical representation of data match the properties of the data, and in this work we propose that the mathematical notion of equivariance formalizes this expectation. We meld the infoviz communities interest in heterogenous often discrete datasets with the scientific visualization communities emphasis on continuous and sometimes topologically complex datasets. To demonstrate the practical value of our model, we propose a model driven re-architecture of the artist layer of the Python visualization library Matplotlib. In addition to providing a way to ensure the library preserves structure, we propose a functional approach to  improve modularity, maintainability, and point to ways in which the library could better support concurrency and interactivity.
 
-
-
+\section{Background}
 \begin{figure}
     \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
@@ -33,26 +30,11 @@
     \label{fig:intro_dubois}
 \end{figure}
 
-In data visualization it is assumed the graphical representation of data match the properties of the data, and in this work we propose that the mathematical notion of equivariance formalizes this expectation. We meld the infoviz communities interest in heterogenous often discrete datasets with the scientific visualization communities emphasis on continuous and sometimes topologically complex datasets. To demonstrate the practical value of our model, we propose a model driven re-architecture of the artist layer of the Python visualization library Matplotlib. In addition to providing a way to ensure the library preserves structure, we propose a functional approach to  improve modularity, maintainability, and point to ways in which the library could better support concurrency and interactivity. 
-
-\subsection{Background}
-This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation, and the design appied on an idealized space is what throughout this paper we will refer to as graphics \cite{mackinlayAutomatingDesignGraphical1986}. Mackinlay  proposes that a visualization tool can be evaluated by its expressiveness and effectiveness; A visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a}. Mackinlay's definition of expressiveness is formalized at the variable level, for example that ordinal variables must map to ordinal positions. He uses a scatter chart for discrete data states that a line chart must have continuous data, but does not describe how to prove this. 
+This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation, and the design evaluated on an idealized space is what throughout this paper we will refer to as graphics \cite{mackinlayAutomatingDesignGraphical1986}. Mackinlay  proposes that a visualization tool can be evaluated by its expressiveness and effectiveness; A visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a}. Mackinlay's definition of expressiveness is formalized at the variable level, for example that ordinal variables must map to ordinal positions. He uses a scatter chart for discrete data states that a line chart must have continuous data, but does not describe how to prove this. 
 While Mackinlay is strictly focusing on the graphical components of a visualization, Byrne et al. propose that visualizations also have figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic nominal and numerical properties of the data are preserved in the graph. Tufte specifies that visual representations must be in proportion to the quantitative data being represented for a chart to be faithful and that there should be no extra information in the graphic or figurative elements of the graph, but otherwise his notion of graphic integrity is heavily context dependent\cite{tufteVisualDisplayQuantitative2001}. As is Norman's Naturalness Principal, which states that visualizations are more understandable  when the properties of the representation match the properties of the information being represented\cite{norman_things_smart}. Bertin takes it as a given that data properties match visual properties, so much so that Munzner argues it is inherently built into his classification system \cite{munznerVisualizationAnalysisDesign2014}. In this work, we propose that this property matching can be formally defined as equivariant maps from data to graphic representation. 
 
 
 
-\begin{figure}[h!]
-%%remake properly at some point
-\includegraphics[width=\textwidth]{figures/intro/flowchart.png} 
-\caption{To go from a dataset to a visualization, the data is subset based on a set of constraints (the invariant). The resulting subset becomes the components that are visualized, but the choice of visualization is dependent on the type and structure of the component variables.}
-\label{fig:flowchart}
-\end{figure}
-
-Given a dataset, we need to decide what subset of the data to visualize. Bertin describes the set of constraints used to subset the data as the \textit{invariant}. Formally, the \textit{invariant} is the set of shared characteristics of the data being visualized. When these constraints are applied to the dataset, the resulting subset is what will become the \textit{components} of the visualization \cite{bertinSemiologyGraphicsDiagrams2011a}. 
-%%rework this statement for french labor data
-%%In figure~\ref{fig:iris_scatter}, the \textit{invariant} common to all the data being visualized is "sepal length", "petal length", and "species" and the \textit{components} are the measurements of these variables. 
-As shown in figure~\ref{fig:flowchart}, the final step in creating a visualization is choosing how to encode the
-components using retinal (visual) variables.
  
 
 \subsubsection{Retinal (Visual) Variables}
@@ -118,6 +100,18 @@ put his signs on paper, his work applies as well to virtual space.
 \end{itemize}
 
 \subsection{How do other visualization libraries tackle this?}
+begin{figure}[h!]
+%%remake properly at some point
+\includegraphics[width=\textwidth]{figures/intro/flowchart.png} 
+\caption{To go from a dataset to a visualization, the data is subset based on a set of constraints (the invariant). The resulting subset becomes the components that are visualized, but the choice of visualization is dependent on the type and structure of the component variables.}
+\label{fig:flowchart}
+\end{figure}
+
+Given a dataset, we need to decide what subset of the data to visualize. Bertin describes the set of constraints used to subset the data as the \textit{invariant}. Formally, the \textit{invariant} is the set of shared characteristics of the data being visualized. When these constraints are applied to the dataset, the resulting subset is what will become the \textit{components} of the visualization \cite{bertinSemiologyGraphicsDiagrams2011a}. 
+%%rework this statement for french labor data
+%%In figure~\ref{fig:iris_scatter}, the \textit{invariant} common to all the data being visualized is "sepal length", "petal length", and "species" and the \textit{components} are the measurements of these variables. 
+As shown in figure~\ref{fig:flowchart}, the final step in creating a visualization is choosing how to encode the
+components using retinal (visual) variables.
 matplotlib arch paper, excel/matlab arch, 
 vtk \& ggplot (compare/contrast, we're blending these things) 
 
