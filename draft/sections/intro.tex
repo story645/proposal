@@ -1,7 +1,7 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 \section{Introduction}
-\label{sec:introduction}
+\label{sec:intro}
 In data visualization it is assumed the graphical representation of data match the properties of the data, and in this work we propose that the mathematical notion of equivariance formalizes this expectation. We meld the infoviz communities interest in heterogenous often discrete datasets with the scientific visualization communities emphasis on continuous and sometimes topologically complex datasets. To demonstrate the practical value of our model, we propose a model driven re-architecture of the artist layer of the Python visualization library Matplotlib. In addition to providing a way to ensure the library preserves structure, we propose a functional approach to  improve modularity, maintainability, and point to ways in which the library could better support concurrency and interactivity.
 
 \section{Background}
@@ -32,7 +32,6 @@ In data visualization it is assumed the graphical representation of data match t
 
 This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. Byrne et al. propose that visualizations have graphic representations that are mappings from data to visuals and figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic and numerical properties of the data are preserved in the graph. Tufte specifies that visual representations must be in proportion to the quantitative data being represented for a chart to be faithful and that there should be no extra information in the graphic or figurative elements of the graph, but otherwise his notion of graphic integrity is heavily context dependent\cite{tufteVisualDisplayQuantitative2001}. As is Norman's Naturalness Principal, which states that visualizations are more understandable  when the properties of the representation match the properties of the information being represented\cite{norman_things_smart}. Bertin takes it as a given that data properties match visual properties, so much so that Munzner argues it is inherently built into his classification system \cite{munznerVisualizationAnalysisDesign2014} which is displayed in figure~\ref{fig:intro_retinal_variables}.
 
-\label{sec:intro_visual_variables}
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{figures/intro/retinal_variables.png}
 \caption{Retinal variables are a codification of how position, size, shape, color and texture are used to illustrate variations in the components of a visualization. The best to show column describes which types of information can be expressed in the corresponding visual encoding. This tabular form of Bertin's retinal variables is from Understanding Graphics \cite{malamedInformationDisplayTips2010} who reproduced it from \textit{Making Maps: A Visual Guide to Map Design for GIS} 
@@ -40,99 +39,35 @@ This work aims to develop a model of visualization such that a tool built using 
 \label{fig:intro_retinal_variables}
 \end{figure}
 
-As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tools effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}. Mackinlay's definition of expressiveness is formalized at the visual encoding level, which as shown in figure~\ref{fig:intro_retinal_variables} refers to the components of a graphic such as the color or position of a glyph. Bertin first classified these graphic components as retinal variables and discussed which types of data they can express \cite{bertinIIPropertiesGraphic2011} and how they are composited on point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. Mackinlay does not provide a generalized criteria for plot types, instead embedding the requirements that scatter be discrete and line continuous within the definition of the charts. 
+As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tools effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}. Mackinlay's definition of expressiveness is formalized at the visual encoding level, which as shown in figure~\ref{fig:intro_retinal_variables} refers to the components of a graphic such as the color or position of a glyph. Bertin first classified these graphic components as retinal variables and discussed which types of data they can express \cite{bertinIIPropertiesGraphic2011} and how they are composited on point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Marks can be generalized to glyphs, which are graphical objects that convey one or more attributes of the data entity mapped to it\cite{ware2019information}. Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. Mackinlay does not provide a generalized criteria for plot types, instead embedding the requirements within the definition of the charts. 
 
 
+\subsection{Data}
+\label{sec:intro_data}
+Tory and Möller propose that assumptions about the structure of data are built into the visual algorithms that display that information \cite{toryRethinkingVisualizationHighLevel2004}. Specifically they note that discrete and continuous data and their attributes form a discipline independent design space \cite{pousmanCasualInformation2007}. 
 
-\subsection{Not all data are tables}
-
-Mackinlay was primarily concerned with visualizing relational data of the type found in databases. as do the tools for which Mackinlay's APT (A Presentation Tool) serves as the basis. These tools include grammar of graphics \cite{wilkinsonGrammarGraphics2005} and its derivatives ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. In contrast, tools such as ImageJ\cite{schneiderNIHImageImageJ2012} and the ImagePlot\cite{studiesCulturevisImageplot2021}macro were designed with images in mind. For more flexibility, vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as  MayaVi\cite{ramachandranMayaVi2011} support all sorts of data types. These tools are not domain specific, as they are used for scientific, information, and even artistic visualizations \cite{pousmanCasualInformation2007}; therefore Tory and Möller
-
-
-\begin{figure}
+\begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
     \caption{One way to describe data is by the connectivity of the points in the dataset. A database for example is often discrete unconnected points, while an image is an implicitely connected 2D grid. This image is from the Data Representation chapter of the MayaVi 4.7.2 documentation.\cite{DataRepresentationMayavi}}
     \label{fig:intro_data_format}
 \end{figure}
 
-As shown in figure~\ref{fig:intro_data_format}, one method of generalizing data 
 
+As shown in figure~\ref{fig:intro_data_format}, there are many types of continuity in data. A database typically consists of unconnected records, while an image is an implicit 2D grid and a network is some sort of explicitly connected graph. In this work we will refer to the points of the dataset as \textit{records} to indicate that a point can be a vector. Each \textit{component} of the record is a single object, such as a temperature, a color, or an image. The way in which these records are connected is the \textit{connectivity}, \textit{continuity}, or more generally \textit{topology}. 
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/intro/munzner_datatypes}
+   \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's \textit{Visualization Analysis and Design} \cite{munznerVisualizationAnalysisDesign2014}}
+   \label{fig:intro_munzner_datatypes}
+   \end{figure}
 
+Often this topology has metadata associated with it, as shown in figure~\ref{fig:intro_munzner_datatypes}. Munzner denotes this metadata as \textit{keys} that can be used to locate the record, and further to locate the specific \textit{value} \cite{munznerChDataAbstraction}. In figure~\ref{fig:intro_munzner_datatypes} tables have keys identifying the row and column and sometimes also the depth, while maps have a location key. We propose that information rich keys such as location are additional components of the record, and that instead there are coordinate free structural keys that identify the location of the record within a dataset of any continuity. 
 
+In this work, we extend Butler's topology driven representation of visualization data \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler proposes that fiber bundles are a good model for visualization data because it allows for encoding the connectivity seperately from the records and supports discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing the components of the record, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like discription of the data in the fiber bundle. We then propose criteria on expressivity that take into account both the components and the continuity of the data. 
 
-
-Tory and Moller propose that 
-
-
-
-"The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
-
-
-\subsection{Data Type and Structure}
-%% mention tidy/spivak first, set up that we use variable, record, key/index notation
-%% define continuity in the math, connectivity in the data
-%% topological spaces are frame in terms of continuity
-% the implementation of $K$ embeds the connectivity
-\label{sec:intro_data_structure}
-\begin{figure}[h!]
- \includegraphics[width=\textwidth]{figures/intro/munzner_datatypes}
-\caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's \textit{Visualization Analysis and Design} \cite{munznerVisualizationAnalysisDesign2014}}
-\label{fig:munzner_datatypes}
-\end{figure}
-
-As shown in figure~\ref{fig:flowchart}, there are multiple ways to translate data into pictures. A map is always an option, except when the observations do not have associated coordinates in a physical plane. Tamara Munzner provides a way to distinguish between these datasets using $\{key, value\}$ designations \cite{munznerVisualizationAnalysisDesign2014}. Munzner defines \textit{values} as measurements of interest in the dataset, analogous to dependent variables in statistics. She defines \textit{keys} as indexes that can be used to look up values, analogous to independent variables in statistics and dimensions in computer science. Figure~\ref{fig:munzner_datatypes} illustrates how these keys are used to look up variables in a dataset: 
-\begin{itemize}
-	\item map: keys are the coordinates of the points
-	\item table: row index, database primary key
-	\item data cube: row, column, etc. (.e.g. $i,j,k$) index
-\end{itemize}
-
-Expanding on Munzner's key and value semantics, in many datasets the keys are discrete variables like time or geophysical locations sampled from a continuous curve, surface, or field. While these observations are discrete samples from the continuous space, often the continuous (functional) characteristic\cite{ramsayFunctionalDataAnalysis2006a,mullerFunctionalVarianceProcesses2006a} of the observational space is also of interest. Besides quantitative discrete, quantitative continuous, or categorical measurement type considerations, the choice of visualization is also influenced by the measurement being on an interval, ratio, nominal, or categorical scale. 
-
-Throughout this form we will be using the following conventions to discuss data:
-
-\begin{description}
-    \item[component]
-    \item[index]  
-    \item[record]
-    \item[value]  
-\end{description}
-
-\subsection{how does this tackle the problem? what does it leave on the table?}
-Most visualization tools are designed around some notion of the structure of the data being visualized. For example Grammer of Graphics asusmes ythat 
-
+\subsection{Tools}
+\label{sec:intro_data_tools}
  
-Tables, images (Lev), graphs (network X)
-
-\begin{itemize}
-
-    \item GoG's mathematics of visualizations
-    This book focuses instead on rules for constructing graphs mathematically
-and then representing them as graphics aesthetically.
-The title of this book also recalls Bertin’s Semiology of Graphics (1967),
-the first and most influential structural theory of statistical graphics. Bertin’s
-work has pervaded our thinking. Semiology deals with signs. Although Bertin
-put his signs on paper, his work applies as well to virtual space.
-    \item vtk's qausi topological
-    \item butler's topological formulation
-\end{itemize}
-
-\subsection{How do other visualization libraries tackle this?}
-\begin{figure}[h!]
-%%remake properly at some point
-\includegraphics[width=\textwidth]{figures/intro/flowchart.png} 
-\caption{To go from a dataset to a visualization, the data is subset based on a set of constraints (the invariant). The resulting subset becomes the components that are visualized, but the choice of visualization is dependent on the type and structure of the component variables.}
-\label{fig:flowchart}
-\end{figure}
-
-Given a dataset, we need to decide what subset of the data to visualize. Bertin describes the set of constraints used to subset the data as the \textit{invariant}. Formally, the \textit{invariant} is the set of shared characteristics of the data being visualized. When these constraints are applied to the dataset, the resulting subset is what will become the \textit{components} of the visualization \cite{bertinSemiologyGraphicsDiagrams2011a}. 
-%%rework this statement for french labor data
-%%In figure~\ref{fig:iris_scatter}, the \textit{invariant} common to all the data being visualized is "sepal length", "petal length", and "species" and the \textit{components} are the measurements of these variables. 
-As shown in figure~\ref{fig:flowchart}, the final step in creating a visualization is choosing how to encode the
-components using retinal (visual) variables.
-matplotlib arch paper, excel/matlab arch, 
-vtk \& ggplot (compare/contrast, we're blending these things) 
-
+A motivator for this work is that currently Matplotlib carries implicit assumptions about data continuity in how each function interfaces with the input data. This work proposes a unified internal representation that encodes connectivity in a common interface. Matplotlib aims to natively support data of varying connectivities, so tools primarily concerned with visualizing relational data of the type found in databases are insufficient models. Many of these tools are built on top of Wilkenson's Grammar of Graphics \cite{wilkinsonGrammarGraphics2005} which itself incorporates Mackinlay's  A Presentation Tool (APT) display algebra; GoG derivative include ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. While many of these tools support images, the first class data container is a table like object of discrete records. Tools that primarily support images are also insufficient. For example ImageJ\cite{schneiderNIHImageImageJ2012} and the ImagePlot\cite{studiesCulturevisImageplot2021}macro have some support for visualizing non image components of a complex data set, but mostly in service to the image being visualized. Plugins exist, but must work around the everything is an image data model\cite{WritingPlugins}. There are also visualization tools that do not carry implicit assumptions about structure, for example vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011}. \note{Not totally positive but I think VTK is deeply coupled to the renderer and that's why we're not using it as a model, but not positive and this is literally what Marc worked on...}
 
 
 \subsection{contribution}
