@@ -5,7 +5,7 @@
 In data visualization it is assumed the graphical representation of data match the properties of the data, and in this work we propose that the mathematical notion of equivariance formalizes this expectation. We meld the infoviz communities interest in heterogenous often discrete datasets with the scientific visualization communities emphasis on continuous and sometimes topologically complex datasets. To demonstrate the practical value of our model, we propose a model driven re-architecture of the artist layer of the Python visualization library Matplotlib. In addition to providing a way to ensure the library preserves structure, we propose a functional approach to  improve modularity, maintainability, and point to ways in which the library could better support concurrency and interactivity.
 
 \section{Background}
-\begin{figure}
+\begin{figure}[H]
     \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
         \caption{}
@@ -30,11 +30,8 @@ In data visualization it is assumed the graphical representation of data match t
     \label{fig:intro_dubois}
 \end{figure}
 
-This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation, and the design evaluated on an idealized space is what throughout this paper we will refer to as graphics \cite{mackinlayAutomatingDesignGraphical1986}. Mackinlay  proposes that a visualization tool can be evaluated by its expressiveness and effectiveness; A visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a}. Mackinlay's definition of expressiveness is formalized at the variable level, for example that ordinal variables must map to ordinal positions. He uses a scatter chart for discrete data states that a line chart must have continuous data, but does not describe how to prove this. 
+This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation, and the design evaluated on an idealized space is what throughout this paper we will refer to as graphics \cite{mackinlayAutomatingDesignGraphical1986}. Mackinlay  proposes that a visualization tool can be evaluated by its expressiveness and effectiveness; A visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a}. Mackinlay's definition of expressiveness is formalized at the component level, for example that ordinal values must map to ordinal positions. He uses a scatter chart for discrete data and states that a line chart must have continuous data, but does not describe how to prove this. 
 While Mackinlay is strictly focusing on the graphical components of a visualization, Byrne et al. propose that visualizations also have figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic nominal and numerical properties of the data are preserved in the graph. Tufte specifies that visual representations must be in proportion to the quantitative data being represented for a chart to be faithful and that there should be no extra information in the graphic or figurative elements of the graph, but otherwise his notion of graphic integrity is heavily context dependent\cite{tufteVisualDisplayQuantitative2001}. As is Norman's Naturalness Principal, which states that visualizations are more understandable  when the properties of the representation match the properties of the information being represented\cite{norman_things_smart}. Bertin takes it as a given that data properties match visual properties, so much so that Munzner argues it is inherently built into his classification system \cite{munznerVisualizationAnalysisDesign2014}. In this work, we propose that this property matching can be formally defined as equivariant maps from data to graphic representation. 
-
-
-
  
 
 \subsubsection{Retinal (Visual) Variables}
@@ -45,14 +42,17 @@ While Mackinlay is strictly focusing on the graphical components of a visualizat
 \cite{krygierMakingMapsVisual2005}}
 \label{fig:retinal_variables}
 \end{figure}
-
-Figure~\ref{fig:retinal_variables} illustrates common guidelines for encoding \textit{components}, derived from what Bertin terms a retinal variable and most other visualization theorists call visual variables \cite{bertin_semiology_2011,krygier_making_2005,chambers_graphical_1983,wilkinson_grammar_2005,munzner_visualization_2014}. The columns of figure~\ref{fig:retinal_variables} correspond to the type of observation: discrete points, continuous events (e.g. a timeseries), two dimensional continuous events (e.g. a vector map). The rows of figure~\ref{fig:retinal_variables} describe ways to visualize variations in the \textit{components}; generally, quantitative components are represented by retinal variables that change quantitatively and categorical components are represented by retinal variables that vary qualitatively. In figure~\ref{fig:iris_scatter}, the hue of the marker is used to encode differentiation in species and the position of the marker is used to show variation in petal length and sepal length. The retinal variables suggest that any single visualization is limited to encoding at most about 8 or 9 components. Retinal variables provide guidelines for encoding \textit{components}, but the choice of graph is based on the type and structure of the data. 
+Figure~\ref{fig:retinal_variables} illustrates common guidelines for encoding \textit{components} of the data as components of the graphics. Bertin names these graphic components retinal variables; they are also called visual variables \cite{bertin_semiology_2011,krygier_making_2005,chambers_graphical_1983,wilkinson_grammar_2005,munzner_visualization_2014} or visual characteristics\cite{carpendaleVisualRepresentationSemiology}. The columns of figure~\ref{fig:retinal_variables} correspond to the type of observation: discrete points, continuous events (e.g. a timeseries), two dimensional continuous events (e.g. a vector map). The rows of figure~\ref{fig:retinal_variables} describe ways to visualize variations in the \textit{components}; generally, quantitative components are represented by retinal variables that change quantitatively and categorical components are represented by retinal variables that vary qualitatively. In figure~\ref{fig:iris_scatter}, the hue of the marker is used to encode differentiation in species and the position of the marker is used to show variation in petal length and sepal length. The retinal variables suggest that any single visualization is limited to encoding at most about 8 or 9 components. Retinal variables provide guidelines for encoding \textit{components}, but the choice of graph is based on the type and structure of the data. 
 
 \section{Not all data are tables}
 
+
+Tory and Moller 
+
+
+
 "The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
 
-Tables, images (Lev), graphs (network X)
 
 set up: dubois
 \subsubsection{Data Type and Structure}
@@ -79,13 +79,18 @@ Expanding on Munzner's key and value semantics, in many datasets the keys are di
 Throughout this form we will be using the following conventions to discuss data:
 
 \begin{description}
-    \item[variable]
+    \item[component]
     \item[index]  
     \item[record]
     \item[value]  
 \end{description}
 
 \subsection{how does this tackle the problem? what does it leave on the table?}
+Most visualization tools are designed around some notion of the structure of the data being visualized. For example Grammer of Graphics asusmes ythat 
+
+ 
+Tables, images (Lev), graphs (network X)
+
 \begin{itemize}
 
     \item GoG's mathematics of visualizations
