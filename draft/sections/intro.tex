@@ -26,7 +26,7 @@ In data visualization it is assumed the graphical representation of data match t
         \caption{}
         \label{fig:intro_dbd}
     \end{subfigure}
-    \caption{Du Bois' data portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018} of post reconstruction Black American life exemplify that the fundemental characteristics of data visualization is that the visual elements vary in proportion to the source data. In figure~\ref{fig:intro_dpa}, the length of each segment maps to population; in figure~\ref{fig:intro_dpb}, the bar charts are intersected to show the number of property owners and how much they own in a given year; in figure~\ref{fig:intro_dpc} the countries are scaled to population size; and figure~\ref{fig:intro_dpd} is a treemap where the area of the rectangle is representative of the number of businesses in each field. The images here are from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900,duboisGeorgiaNegroNegro1900, duboisSeriesStatisticalCharts, duboisSeriesStatisticalChartsa}}
+    \caption{Du Bois' data portraits\cite{duboiscenterattheuniversityofmassachusettsBoisDataPortraits2018} of post reconstruction Black American life exemplify that the fundemental characteristics of data visualization is that the visual elements vary in proportion to the source data. In figure~\ref{fig:intro_dpa}, the length of each segment maps to population; in figure~\ref{fig:intro_dpb}, the bar charts are intersected to show the number of property owners and how much they own in a given year; in figure~\ref{fig:intro_dbc} the countries are scaled to population size; and figure~\ref{fig:intro_dbd} is a treemap where the area of the rectangle is representative of the number of businesses in each field. The images here are from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900,duboisGeorgiaNegroNegro1900, duboisSeriesStatisticalCharts, duboisSeriesStatisticalChartsa}}
     \label{fig:intro_dubois}
 \end{figure}
 
@@ -40,25 +40,35 @@ This work aims to develop a model of visualization such that a tool built using 
 \label{fig:intro_retinal_variables}
 \end{figure}
 
-As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tools effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}. Mackinlay's definition of expressiveness is formalized at the visual encoding level, which as shown in figure~\ref{fig:intro_retinal_variables} refers to the components of a graphic such as the color or position of a glyph. Bertin first classified these graphic components as retinal variables and discussed which types of data they can express \cite{bertinIIPropertiesGraphic2011} and how they are composited on point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. 
+As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tools effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}. Mackinlay's definition of expressiveness is formalized at the visual encoding level, which as shown in figure~\ref{fig:intro_retinal_variables} refers to the components of a graphic such as the color or position of a glyph. Bertin first classified these graphic components as retinal variables and discussed which types of data they can express \cite{bertinIIPropertiesGraphic2011} and how they are composited on point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. Mackinlay does not provide a generalized criteria for plot types, instead embedding the requirements that scatter be discrete and line continuous within the definition of the charts. 
+
+
+
+\subsection{Not all data are tables}
+
+Mackinlay was primarily concerned with visualizing relational data of the type found in databases. as do the tools for which Mackinlay's APT (A Presentation Tool) serves as the basis. These tools include grammar of graphics \cite{wilkinsonGrammarGraphics2005} and its derivatives ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. In contrast, tools such as ImageJ\cite{schneiderNIHImageImageJ2012} and the ImagePlot\cite{studiesCulturevisImageplot2021}macro were designed with images in mind. For more flexibility, vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as  MayaVi\cite{ramachandranMayaVi2011} support all sorts of data types. These tools are not domain specific, as they are used for scientific, information, and even artistic visualizations \cite{pousmanCasualInformation2007}; therefore Tory and Möller
+
+
+\begin{figure}
+    \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
+    \caption{One way to describe data is by the connectivity of the points in the dataset. A database for example is often discrete unconnected points, while an image is an implicitely connected 2D grid. This image is from the Data Representation chapter of the MayaVi 4.7.2 documentation.\cite{DataRepresentationMayavi}}
+    \label{fig:intro_data_format}
+\end{figure}
+
+As shown in figure~\ref{fig:intro_data_format}, one method of generalizing data 
 
 
 
 
 
-
-\section{Not all data are tables}
-
-
-Tory and Moller 
+Tory and Moller propose that 
 
 
 
 "The boundary between scientific visualization and infovis has been explored by Tory and Moller [37] who note ways that discrete and continuous data and the attribute types form a design space that contains both infovis and scientific visualization." \cite{pousmanCasualInformation2007}
 
 
-set up: dubois
-\subsubsection{Data Type and Structure}
+\subsection{Data Type and Structure}
 %% mention tidy/spivak first, set up that we use variable, record, key/index notation
 %% define continuity in the math, connectivity in the data
 %% topological spaces are frame in terms of continuity
@@ -108,7 +118,7 @@ put his signs on paper, his work applies as well to virtual space.
 \end{itemize}
 
 \subsection{How do other visualization libraries tackle this?}
-begin{figure}[h!]
+\begin{figure}[h!]
 %%remake properly at some point
 \includegraphics[width=\textwidth]{figures/intro/flowchart.png} 
 \caption{To go from a dataset to a visualization, the data is subset based on a set of constraints (the invariant). The resulting subset becomes the components that are visualized, but the choice of visualization is dependent on the type and structure of the component variables.}
