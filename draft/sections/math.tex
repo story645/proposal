@@ -279,7 +279,7 @@ yields the color of the pixel $p$.
     \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
-As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
+As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $\gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
 
 %% pdf/svg/etc are different ways of implementing rhos
 
