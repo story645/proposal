@@ -3,24 +3,40 @@
 \begin{document}
 \section{Discussion}
 
+%"This chapter steps back from the details and considers the larger issues that have been raised. In particular, it considers how this research helps to accomplish the motivating goal of this dissertation, which is the development of computer-based graphical communication." - Mackinlay
+"We have a unified mathematical description of understanding visualization.  Lots of people have worked on this and each has identified and described important aspects, but each has specialized in some way and it is not clear how to align them.  We can understand all of the prior work via our framework that pulls from {established math}"
+that way you make clear what your contribution is, gives you a context to bring up all of the citations, a frame to contrast them, and then a nice lead into the math
+ "we validate the framework by using it to re-design artist and data access layer of Maptlotlib, a general purpose visualization tool"
+
 \subsection{What have we done}
-presented mathematical framework w/ topological models for the things we have done. 
+This work contributes a mathematical description of the transformation from data to visual representation. Combining Butler's fiber bundle model of data with Spivaks formalism of data schemas provides a way of decoupling topology from variability such that the model can support a very large variety of datasets, including discrete relational tables, multivariate high resolution spatio temporal datasets, and complex networks. Modeling the graphic as a fiber bundle provides a way to seperate the target display space from the topology of the graphic. By decomposing the mapping from data to visual representation as encoding \vchannel, assembly \vmark, and a mapping between data and graphic topologies \vindex and formalizing what equivariance each stage needs to preserved, we can derive constraints that visualization library authors could embed in their code to guaranteee visualizations that are equivariant transforms of the input data. While Mackinlay defined the visual encodings as equivariant maps, a new contribution is the generalization of topology preservation as an equivariant map from graphic space to data space. 
+
+
+
  \begin{itemize}
-    \item fiberbundle -> continuity + variables
-    \item fiberbundle -> graphic continuity + display abstraction
-    \item formalizing equivariance on both sides 
+    \item Munzner glyph I can has parallisim
+    \item formalizing equivariance on both sides
+    \item supports multivariate components/encoders 
     \item prototype for scatter, line, bar
     \item simple composition into multibar
     \item commonly used container - dataframe
  \end{itemize}
 
 \subsection{What are the limitations?}
+%%%An interesting control problem will be how to keep the text and graphics consistent. If the rendering exchanges the horizontal and vertical axes of a bar chart, the text must also exchange its references to the axes.
 \begin{itemize}
 \item is at arc level
+\item is at one dataset level - needs invariants/composites
+\item static (what happens with interactive - but this is just update )
 \item is compose(encodes) and ggplot is plot(encodes, glyph)
-\item can't handle figerative/semantic equivariance (this actually could be done as extension of fber)
+\item can't handle figerative/semantic equivariance (this actually could maybe be done as extension of fber)
+\item explicitely does not care about effectiveness - is domain specific 
 \item is only developed against Matplotlib
 \item is written against AGG/SVG
+\item layout
+\item text
+\item same as APT, is at gd level so cannot control render 
+\item keeping all data in sync if transform is changed in one place (so on multi composed graphs, changing x on does it propopgate - part of Bertin invariance)
 \end{itemize}
 \subsection{What else needs to be implemented?}
 \begin{itemize}
@@ -38,7 +54,6 @@ presented mathematical framework w/ topological models for the things we have do
     \item proof of concept 3rd party user-facing library with a biology partner
     \item academic paper about building visualization tools on top of the core architecture
 \end{itemize}
-
 Other things that may or may not play a big role would be working out the details of the S->K interaction for dashboards. By this I particularly mean when S is a composite object spanning all the figures shown in the dashboard and a component of K may have different compoents of S mapping into it slicing it in different ways.
 \subsection{What are the lessons learned?}
 
