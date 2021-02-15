@@ -10,7 +10,7 @@
     \label{fig:artist_stages}
 \end{figure}
 
-can express continuous functions & not just discrete points
+can express continuous functions \& not just discrete points
 Visualization is generally thought of as structure preserving maps from data into graphics, and in this section we formally define that structure and how it is preserved via equivariant maps. We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 
 We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
@@ -338,7 +338,7 @@ The visual fiber bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection
 
 Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}. A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vsection_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
-\subsubsection{Visual Channels}
+\subsubsection{Visual Channels \vchannel}
 \label{sec:artist_nu}
 %% equivariant maps 
 \begin{figure}
@@ -367,7 +367,7 @@ commutes such that $\vchannel_i(m_{\delement}(\dtotal_i)) = m_{\velement}(\vchan
 
 On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$.
 
-\subsubsection{Assembling Marks}
+\subsubsection{Assembling Glyphs \vmark}
 \label{sec:artist_q}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
@@ -395,8 +395,6 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
 
 The glyph in figure~\ref{fig:artist_mark_change} has the following characterstics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark is that the action $m=(e, e, e, x+2)$, where e is identity, applied to \vsection\ such that $\vsection^{\prime}=(e,e,e,3)$ has an equivalent action on \gsection that causes $\vmark(\vsection^{\prime})$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
 
-\note{DEGENERATE Q - drawing a blank if this is necessry and if so how\\
-Check a well defined map $\monoid\times Y \rightarrow Y$}
 
 To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, \vmark\ is called with all the regions \gbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$:
 \begin{equation}
@@ -412,12 +410,10 @@ where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepat
 \end{equation}
 such that for every mark there is at least one corresponding section on \dbase.
 
-\subsubsection{Sample Qs}
-%rewrite as alpha/beta 
+\subsubsection{Sample Glyphs \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
-\label{sec:artist_example_scatter}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/scatter.png}
+    \includegraphics[width=.75\textwidth]{figures/math/scatter.png}
     \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
     \label{fig:artist_scatter}
@@ -429,10 +425,8 @@ y &= size\bullet \alpha \bullet \sin(\beta) + ypos
 \end{align}
 
 such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black.
-
-\label{sec:artist_example_line}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/line.png}
+    \includegraphics[width=.75\textwidth]{figures/math/line.png}
     \caption{The line fiber $(time,\, temp)$ is thickend with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a thick line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). \note{this is gonna move once this gets regenerated w/ labels} The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
@@ -454,10 +448,9 @@ which yields components of \gsection
 
 where (x,y) look up the position $\vindex(\alpha)$ on the data and then apply thickness $\beta$ at that location. 
 
-\paragraph{Q: heatmap}\mbox{} \\
-\label{sec:artist_example_heatmap}
+
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/heatmap.png}
+    \includegraphics[width=.75\textwidth]{figures/math/heatmap.png}
     \caption{The only visual parameter a heatmap requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
     \label{fig:artist_heatmap}
 \end{figure}
@@ -471,10 +464,16 @@ B &= B(\vindex(\alpha, \beta))
 \end{align}
 where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
-\subsubsection{+ union}
+\subsubsection{Composition of Artists: +}
 \begin{figure}
-    \caption{components of axes + glyphs }
+    \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
+    \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
+    \label{fig:artist_plus}
 \end{figure}
+In this paper we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, in figure~\ref{fig:artist_plus} the scatter plot $\dtotal_1$ and the line plot $\dtotal_2$ have different \dbase that are mapped to seperate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There are situations where $\dbase_2 \hookrightarrow \dbase_1$ that underpin more complex, especially interactive, visualizations; these cases require defining a more complex addition operator that is out of scope for this work. 
+
+
+
 disjoin union of fibers so we can have an axes/real figure, - diagram operator w/o overplotting, library won't auto stack, have to bake that into data, haskell data/depth, 
 hover, mouse over curve, picked a point selecting a little k, + operator/disjoint union in different k, same D
 %% but what if it;s supposed to be Bertin invariant? will do w/ inclusion of K
@@ -482,8 +481,9 @@ hover, mouse over curve, picked a point selecting a little k, + operator/disjoin
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
-As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ which  generates a distinct graphic \gsection. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data\note{needs citation, maybe friendlys history or acquired codes of meaning}. 
-\begin{figure}
+As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ which  generates a distinct graphic \gsection. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type. 
+
+\begin{figure}[H]
     \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}
     \label{fig:artist_equivalence}
 \end{figure}
