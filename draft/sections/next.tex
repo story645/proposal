@@ -14,11 +14,10 @@ The toy prototype built using this model validates that is usable for a general 
 
 \subsection{What are the limitations?}
 %%%An interesting control problem will be how to keep the text and graphics consistent. If the rendering exchanges the horizontal and vertical axes of a bar chart, the text must also exchange its references to the axes.
+So far this model has only been worked out for a single data set tied to a primitive mark, but it should be extensible to compositing datasets and complex glyphs. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. Since it is a purely mathematical framework, this model does not have a way to model or check for semantic equivariance of figurative representations, but this could be an avenue of research for machine learning researchers. 
+
 \begin{itemize}
-\item is at arc level
-\item is at one dataset level - needs invariants/composites
-\item static (what happens with interactive - but this is just update )
-\item is compose(encodes) and ggplot is plot(encodes, glyph)
+
 \item can't handle figerative/semantic equivariance (this actually could maybe be done as extension of fber)
 \item explicitely does not care about effectiveness - is domain specific 
 \item is only developed against Matplotlib
@@ -31,6 +30,7 @@ The toy prototype built using this model validates that is usable for a general 
 
 \subsection{What else needs to be implemented?}
 \begin{itemize}
+    \item is compose(encodes) and ggplot is plot(encodes, glyph)
     \item heatmaps/ proof of concept of face simplex
     \item composition algebra
     \item boxplot - multiglyph composition
