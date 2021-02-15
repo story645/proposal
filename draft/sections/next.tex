@@ -13,22 +13,12 @@ This work generalizes previous research constraining visual encodings from data 
 The toy prototype built using this model validates that is usable for a general purpose visualization tool since it can be iteratively integrated into the existing architecture rather than starting from scratch/ Factoring out glyph formation into assembly functions allows for much more clarity in how the glyphs differ. This prototype demonstrates that this framework can generate the fundemental marks, point (scatter plot), line (line chart), and area (bar chart). Furthermore, the grouped and stacked bar examples demonstrate that this model supports composition of glyphs into more complex graphics. These composite examples also rely on the fiber bundles section base book keeping to keep track of which components contribute to the attributes of the glyph. Implementing this example using a Pandas dataframe demonstrates the ease of incorporating existing widely used data containers rather than requiring users to conform to one stands.  
 
 \subsection{What are the limitations?}
-%%%An interesting control problem will be how to keep the text and graphics consistent. If the rendering exchanges the horizontal and vertical axes of a bar chart, the text must also exchange its references to the axes.
-So far this model has only been worked out for a single data set tied to a primitive mark, but it should be extensible to compositing datasets and complex glyphs. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. Since it is a purely mathematical framework, this model does not have a way to model or check for semantic equivariance of figurative representations, but this could be an avenue of research for machine learning researchers. 
 
-\begin{itemize}
+So far this model has only been worked out for a single data set tied to a primitive mark, but it should be extensible to compositing datasets and complex glyphs. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated form parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it currently does not have a way to evaluate the semantic accuracy of the figurative representation. This model also does not currently factor in effectiveness, but potentially effectiveness criteria could be incorporated into a scheme for assigning encoders and assembling glyphs. This model and the associated prototype is deeply tied to Matplotlib's existing architecture. While the model is expected to generalize to other libraries, such as those built on Mackinlay's APT framework, this has not been worked through. Even though the model is designed to be backend independent, it has only really been tested against the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as opengl\cite{CarsonOpenGL1997}.
 
-\item can't handle figerative/semantic equivariance (this actually could maybe be done as extension of fber)
-\item explicitely does not care about effectiveness - is domain specific 
-\item is only developed against Matplotlib
-\item is written against AGG/SVG
-\item layout
-\item text
-\item same as APT, is at gd level so cannot control render 
-\item keeping all data in sync if transform is changed in one place (so on multi composed graphs, changing x on does it propopgate - part of Bertin invariance)
-\end{itemize}
-
+=
 \subsection{What else needs to be implemented?}
+%%%An interesting control problem will be how to keep the text and graphics consistent. If the rendering exchanges the horizontal and vertical axes of a bar chart, the text must also exchange its references to the axes.
 \begin{itemize}
     \item is compose(encodes) and ggplot is plot(encodes, glyph)
     \item heatmaps/ proof of concept of face simplex
@@ -38,6 +28,9 @@ So far this model has only been worked out for a single data set tied to a primi
     \item interactivity 
     \item concurrent artist
     \item numpy wrapper
+    \item layout
+    \item text
+    \item keeping all data in sync if transform is changed in one place (so on multi composed graphs, changing x on does it propopgate - part of Bertin invariance)
 \end{itemize}
 \begin{itemize}
     \item provisional implementation using new architecture in Matplotlib
