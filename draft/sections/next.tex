@@ -11,35 +11,26 @@ The toy prototype built using this model validates that is usable for a general 
 
 \subsection{Limitations}
 
-So far this model has only been worked out for a single data set tied to a primitive mark, but it should be extensible to compositing datasets and complex glyphs. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated form parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it currently does not have a way to evaluate the semantic accuracy of the figurative representation. This model also does not currently factor in effectiveness, but potentially effectiveness criteria could be incorporated into a scheme for assigning encoders and assembling glyphs. This model and the associated prototype is deeply tied to Matplotlib's existing architecture. While the model is expected to generalize to other libraries, such as those built on Mackinlay's APT framework, this has not been worked through. Even though the model is designed to be backend independent, it has only really been tested against the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}.
+So far this model has only been worked out for a single data set tied to a primitive mark, but it should be extensible to compositing datasets and complex glyphs. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated form parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it currently does not have a way to evaluate the semantic accuracy of the figurative representation. This model also does not currently factor in effectiveness, but potentially effectiveness criteria could be incorporated into a scheme for assigning encoders and assembling glyphs. Also, even though the model is designed to be backend independent, it has only really been tested against the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}.  Because this model has been limited to the graphic design space, it does not address the critical task of laying out the graphics in the image
 
-\subsection{Next Steps}
-While the model and prototype demonstrate that generation of simple marks from the data, there is a lot of work left to develop a model that underpins a minimally viable library. While the model supports simple composition of glyphs by overlaying glyphs at the same position, more work is needed to define an operator where the fiber bundles have shared $\gbase_2 \hookrightarrow \gbase_1$ such that fibers could be pulled back over the subset. This complex operator is necessary for building semantically meaningful components such as axes labels and interactive visualizations that update on shared \gbase, such as brush-linked views\cite{} 
+This model and the associated prototype is deeply tied to Matplotlib's existing architecture. While the model is expected to generalize to other libraries, such as those built on Mackinlay's APT framework, this has not been worked through. In particular, Mackinlay's formulation of graphics as a language with semantic and syntax lends itself a declarative interface\cite{loudenProgrammingLanguagesPrinciples2010}, which Heer and Bostock use to develop a domain specific visualization language that they argue makes it simpler for designers to construct graphics without sacrificing expressivity \cite{heerDeclarative2010}. Similarly, the model presented in this work formulates visualization as equivariant maps from data space to visual space, and is designed such that developers can build software libraries with data and graphic topologies tuned to specific domains. 
 
 
-%%%An interesting control problem will be how to keep the text and graphics consistent. If the rendering exchanges the horizontal and vertical axes of a bar chart, the text must also exchange its references to the axes.
+\subsection{Future Work}
+While the model and prototype demonstrate that generation of simple marks from the data, there is a lot of work left to develop a model that underpins a minimally viable library. Foremost is implementing a data object that encodes data with a 2D continous topology and an artist that can consume data with a 2D topology to visualize the image\cite{toryRethinkingVisualizationHighLevel2004,haber1990visualization,hansen2011visualization} and also encoding a separate heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas} artist that consumes 1D discrete data.  A second important proof of concept artist is a boxplot\cite{wickham40YearsBoxplots2011} because it is a graphic that assumes computation on the data side and the glyph is built from semantically defined components and a list of outliers.
+
+The model supports simple composition of glyphs by overlaying glyphs at the same position, but more work is needed to define an operator where the fiber bundles have shared $\gbase_2 \hookrightarrow \gbase_1$ such that fibers could be pulled back over the subset. This complex operator is necessary for building semantically meaningful components such as interactive visualizations that update on shared \gbase, such as brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991} and verifying constraints in multiple view systems \cite{hullmanKeeping2018}. The models simple addition supports axes as standalone artists with overlapping visual position encoding, but the complex operator would allow for keeping labels consistent with text when for example the horizontal and vertical positions of the data are changed. In summary, the proposed scope of work for the dissertation is
 \begin{itemize}
-    \item is compose(encodes) and ggplot is plot(encodes, glyph)
-    \item heatmaps/ proof of concept of face simplex
-    \item composition algebra
-    \item boxplot - multiglyph composition
-    \item debatable: non-trivial bundle like data on mobius backend
-    \item interactivity 
-    \item concurrent artist
-    \item numpy wrapper
-    \item layout
-    \item text
-    \item keeping all data in sync if transform is changed in one place (so on multi composed graphs, changing x on does it propopgate - part of Bertin invariance)
+    \item expansion of the mathematical framework to include complex addition
+    \item mathematical formulation of a graphic with axes labeling
+    \item implementation of data with 2D continuous topology and a compatible artist
+    \item provisional mathematics and implementation of user level composite artists
+    \item proof of concept domain specific user facing library 
 \end{itemize}
-\begin{itemize}
-    \item provisional implementation using new architecture in Matplotlib
-    \item developer-aimed documentation (API + narrative)
-    \item proof of concept 3rd party user-facing library with a biology partner
-    \item academic paper about building visualization tools on top of the core architecture
-\end{itemize}
+Additionally, implementing the complex addition operator would allow for developing a mathematical formalism and prototype of how interactivity would work in this model. Other potential tasks for future work is implementing a data object for a non-trivial fiber bundle and exploiting the models section level formalism to build distributed data source models and concurrent artists. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. While this paper formulates the math in terms of topology and groups, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers}. 
 
-Other things that may or may not play a big role would be working out the details of the S->K interaction for dashboards. By this I particularly mean when S is a composite object spanning all the figures shown in the dashboard and a component of K may have different components of S mapping into it slicing it in different ways.
-\subsection{What are the lessons learned?}
 
+\section{Conclusion}
+Despite the alternative formalism to Mackinlay's APT framework, it is indebted to APT for providing a guideline for issues the model needs to address. As with APT, this works aims to develop a framework on which to build visualization tools. Unlike APT, our model is geared towards balancing the needs of the the scientific and information visualization communities; therefore we present a framework that can describe both how the components of the data are encoded and how the continuity is preserved in the graphic. We hope that this framework can distill the constraints on the data to graphic mapping such that it can be used to improve the architecture of a heavily used visualization tool and allow developers to more easily build domain specific tools. 
 \end{document}
 
