@@ -10,13 +10,7 @@
     \label{fig:artist_stages}
 \end{figure}
 
-%% whats the right model/abstraction for a visualization library? 
-%% why? the role this math is serving - static type checking/ reflection
-%% tracking/automatically inferring
-%% bookend w/ how this math does the why 
-%% if we deleted this, what would we lose? 
-%% can express continuous functions & not just discrete points
-\note{should this be in 3rd person passive?}\\
+can express continuous functions & not just discrete points
 Visualization is generally thought of as structure preserving maps from data into graphics, and in this section we formally define that structure and how it is preserved via equivariant maps. We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 
 We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
