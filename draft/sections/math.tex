@@ -365,7 +365,7 @@ commutes such that $\vchannel_i(m_{\delement}(\dtotal_i)) = m_{\velement}(\vchan
     .5 &\neq .5 + .5
 \end{align}
 
-On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$.
+On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$.
 
 \subsubsection{Assembling Glyphs \vmark}
 \label{sec:artist_q}
@@ -464,6 +464,18 @@ B &= B(\vindex(\alpha, \beta))
 \end{align}
 where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
+\subsubsection{Assembly factory \vmarkd}
+\begin{figure}
+    \includegraphics[width=.75\textwidth]{figures/math/q_hat.png}
+    \caption{The pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint. Because the \vsection\ is the same, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent set of \gbasepoint\ associated to that \dbasepoint}
+    \label{fig:artist_q_hat}
+\end{figure}
+As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase. Because $\vpreimg\ subset \gbase$ such that many \gbasepoint\ go to one \dbasepoint, by definition of the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$. This means that the fiber \vtotal is copied over the preimage in \vpreimg. Given a section \vsectionpull\ pulled back from \vsection\ on $\pi:\vtotal\rightarrow\dbase$ and $\gbasepoint \in \vpreimg$, then the section $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ is the image of $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. This is illustrated in figure~\ref{fig:artist_q_hat}, where a \vsection\ over \dbasepath\ is copied over all  $\vindex(\gbasepoint) = \dbasepoint$. 
+
+When \vmark\ maps sections $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull, then $\vmark(\vsectionpull) = \gsection$ depends on \gbasepoint. This means that $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$, but since \vsectionpull\ is constant on \vpreimg, we can define a function $\vmarkd(\vsection(k))(s) \coloneqq \vmark((\vsectionpull)(\gbasepoint))$ where $\vpreimg = \dbasepoint$. 
+
+In fact, \vmarkd\ is a map from visual to graphic $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The advantage of \vmarkd\ is that \gbase is part of the rendering stage of the pipeline and therefore hidden from the Matplotlib artists and therefore there is no direct way to construct a true \vmark. 
+
 \subsubsection{Composition of Artists: +}
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
@@ -471,12 +483,6 @@ where \vindex\ may do some translating to a convention expected by \vmark\, for 
     \label{fig:artist_plus}
 \end{figure}
 In this paper we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, in figure~\ref{fig:artist_plus} the scatter plot $\dtotal_1$ and the line plot $\dtotal_2$ have different \dbase that are mapped to seperate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There are situations where $\dbase_2 \hookrightarrow \dbase_1$ that underpin more complex, especially interactive, visualizations; these cases require defining a more complex addition operator that is out of scope for this work. 
-
-
-
-disjoin union of fibers so we can have an axes/real figure, - diagram operator w/o overplotting, library won't auto stack, have to bake that into data, haskell data/depth, 
-hover, mouse over curve, picked a point selecting a little k, + operator/disjoint union in different k, same D
-%% but what if it;s supposed to be Bertin invariant? will do w/ inclusion of K
 
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
