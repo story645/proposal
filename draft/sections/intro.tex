@@ -53,8 +53,10 @@ Tory and Möller propose that assumptions about the structure of data are built 
     \label{fig:intro_data_format}
 \end{figure}
 
-
+\begin{mdframed}[roundcorner=10pt, frametitle=Notation, frametitlerule=true, frametitlebackgroundcolor=gray!10]
 As shown in figure~\ref{fig:intro_data_format}, there are many types of continuity in data. A database typically consists of unconnected records, while an image is an implicit 2D grid and a network is some sort of explicitly connected graph. In this work we will refer to the points of the dataset as \textit{records} to indicate that a point can be a vector. Each \textit{component} of the record is a single object, such as a temperature, a color, or an image. The way in which these records are connected is the \textit{connectivity}, \textit{continuity}, or more generally \textit{topology}. 
+\end{mdframed}
+
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/intro/munzner_datatypes}
    \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's \textit{Visualization Analysis and Design} \cite{munznerVisualizationAnalysisDesign2014}}

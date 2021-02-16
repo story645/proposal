@@ -10,8 +10,14 @@
     \label{fig:artist_stages}
 \end{figure}
 
-can express continuous functions \& not just discrete points
-Visualization is generally thought of as structure preserving maps from data into graphics, and in this section we formally define that structure and how it is preserved via equivariant maps. We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
+As discussed in the introduction, visualization is generally thought of as structure preserving maps from data into graphic representation. In order to formalize this statement, we capture the connectivity of the records with topolology and the structure on the components of the records with the monoidal actions on the sets those values belong to. 
+
+In this section we formally define that structure and how it is preserved via equivariant maps tha can express discrete and continuous topology. 
+
+We can then specify that a faithful visual mapping is structure preserving, and apply these constraints to visualizations we may want to develop or implement. 
+
+
+We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 
 We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
 
