@@ -4,33 +4,18 @@
 \section{Topological Artist Model}
 \label{sec:tam}
 
-
-As discussed in the introduction, visualization is generally defined as structure preserving maps from data into graphic representation. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. 
-
-
-We model the data, visual characteristic, and graphic stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
-
-We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
-
+As discussed in the introduction, visualization is generally defined as structure preserving maps from data to graphic representation. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. We introduce the notion of an artist $\mathscr{\vartist}$ as a structure preserving map from data $\mathscr{\dtotal}$ to $\mathscr{\gtotal}$
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
 
-We first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
+We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. To explain which structure the artist is preserving, we first describe how we model data(\ref{sec:data}), graphics(\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
+\note{xi should maybe be moved down to artist but is more readable in graphics}
 
 \subsection{Data Space \dtotal}
 \label{sec:data}
-We build on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989} because fiber bundles are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data_structure}.
-
-We model data as the fiber bundle $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$, where \dtotal\, \dfiber\, and \dbase\ are topological spaces that encode 
-\begin{description}
-\item[\dfiber] the properties of the variables in the fiber (\ref{sec:data_fiber})
-\item[\dbase] the continuity of the records in the base space (\ref{sec:data_base})
-\item[\dsection] collections of records (\ref{sec:data_section}). 
-\end{description}
-
-and \dtotal\ is the total space of data that \dfiber\ lives in. The bundle is the projection map $\pi$
+Building on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989},  fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -38,12 +23,18 @@ and \dtotal\ is the total space of data that \dfiber\ lives in. The bundle is th
     \end{tikzcd}
 \end{equation}
 
-that binds the variables \dfiber\ continuity \dbase. The fiber bundles mentioned in this work are assumed to be trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified, because the trivial bundle is $\dtotal=\dbase\times \dfiber$ such that extra structure in the total space \dtotal\ falls out and discussion can be focused on the fiber and base space. 
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. We use fiber bundles as the data model because they are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data}. The fiber bundle models 
+\begin{description}
+\item[\dfiber] properties of data component types (\ref{sec:data_fiber})
+\item[\dbase] continuity of records (\ref{sec:data_base})
+\item[\dsection] collections of records (\ref{sec:data_section}). 
+\end{description}
+where \dtotal\ is the space of all possible datasets with these components and continuity. The fiber bundles mentioned in this work are assumed to be \note{locally} trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified. We assume \note{local} triviality to dispenses with extra structure on $\dtotal$ and focus on the fiber and base space. 
+\note{(and can do so b/c all bundles are locally trivial)}
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-%%% so we can do units, static + dynamic type checking, so that we can tak about variables 
-The fiber is a topological space that is the set of possible values of the data; the values themselves can be any dimension and type and have any continuity. We use Spivak's description of simplicial database schemas \cite{spivakSIMPLICIALDATABASES} as the basis of our fiber space because he binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
