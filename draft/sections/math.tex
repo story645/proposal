@@ -3,18 +3,12 @@
 
 \section{Topological Artist Model}
 \label{sec:tam}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/dar.png}
-    \caption{Visualization is equivariant maps between data and visual encoding of the variables and assembly of those encodings into a graphic.
-    \note{not gonna name these bubbles tau, mu, rho, but might keep the same basic structure of different types of data and encodings }}
-    \label{fig:artist_stages}
-\end{figure}
 
 
 As discussed in the introduction, visualization is generally defined as structure preserving maps from data into graphic representation. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. 
 
 
-We model the data, visual characteristic, and graphic stages of visualization, shown in figure~\ref{fig:artist_stages}, as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
+We model the data, visual characteristic, and graphic stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 
 We introduce a mathematical description of the visualization pipeline where artist $\mathscr{\vartist}$ functions transform data space $\mathscr{\dtotal}$ to an intermediate representation in a prerendered graphic space $\mathscr{\gtotal}$.
 
