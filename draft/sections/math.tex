@@ -85,7 +85,7 @@ such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \
 \label{sec:data_monoid}
 Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define as the action of a monoid on the component. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
 
-A monoid \cite{Monoid2021} $\monoid_i$ is a set with an associative binary operator $\ast:\monoid_i \times \monoid_i\rightarrow \monoid_i$. A monoid has an identity element $e\in \monoid_i$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
+A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
@@ -96,7 +96,7 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given  the fiber $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ which is interval data:
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given the interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
     \item monoid operations: $f: x\mapsto x + 1 $, $g: x\mapsto x + 2  $
@@ -109,14 +109,23 @@ then the translation monoid actions on temperature satisfy the condition
         \reals \arrow[r, "x+ 2\degree"']                                   & \reals
     \end{tikzcd}
 \end{equation}
-where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$.  
+where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$. 
 
+While many component types will be one of the measurement scale types, we generalize to monoids specifically for the case of partially ordered set. Given a set $W=\{mist, \, drizzle, \, rain \}$, then the map $f: W\rightarrow W$ defined by 
+\begin{enumerate}
+    \item $f(rain) = drizzle$,
+    \item  $f(drizzle) = mist$ 
+    \item $f(mist) = mist$
+\end{enumerate}
+is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. 
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-% scatter and line, heatmap express the continuity of the data, deeply implicit in every visualization system but equivariance of continuity of the records, explicit  topplogy/structure preserving - contuinity is the topology   
+The base space \dbase\ is way to represent the connectivity of the records.  This is currently assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records. Instead, this model can explicitly check if the visualization topology is equivalent to the 
 
-The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase\ without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
+Representing the data as a fiber bundle, allows one to express the continuity one assumes between observations. For instance if we want to consider data in a time series, with time implicitly a continuous variable, we could express the base space as a topological line. If we had cyclical data, then the base space could be represented as a circle. If the each observation was indpenedent then the data could be represented as discrete points
+
+The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase\ without making assumptions as to what that continuity is. 
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
