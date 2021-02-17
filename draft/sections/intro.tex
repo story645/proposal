@@ -9,9 +9,26 @@
     \label{fig:intro_artist_stages}
 \end{figure}
 
- This work presents a mathematical description of how data is transformed into graphic representations, as shown in ref~\ref{fig:intro_artist_stages}. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool. 
+ This work is motivated by a need for a visualization library that developers could build complex, domain specific tools tuned to the semantics and structure carried in domain specific data. The core architecture also needs to be robust to the big data needs of many visualization practitioners, and therefore support distributed and streaming data needs. To support both exploratory and confirmatory visualization\cite{tukeyWeNeedBoth1980}, this tool needs to support 2D and 3D,  static, dynamic and interactive visualizations. Specifically, this work was driven by a rearchiture the Python visualization library Matplotlib\cite{hunterMatplotlib2DGraphics2007} to meet modern data visualization needs. We aim to take advantage of developments in software design, data structures, and visualization to improve the consistency, composibility, and discoverability of the API. 
+
+ This work presents a mathematical description of how data is transformed into graphic representations, as shown in ref~\ref{fig:intro_artist_stages}. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool.
+ 
 
 \section{Background}
+Visual algorithms that display information are designed such that structure of data is assumed according to Tory and Möller  \cite{toryRethinkingVisualizationHighLevel2004}. Specifically they note that discrete and continuous data and their attributes form a discipline independent design space \cite{pousmanCasualInformation2007}. This idea can be seen in modern general purpose visualization architecture,  where many libraries are either defined around specific data structures or make implicit assumptions about the data or the types of visualizations they will support. In proposing a new architecture, we contrast the trade offs libraries make, describe different types of data continuity, and discuss metrics by which a visualization library is traditionally evaluated. 
+
+\subsection{Tools}
+\label{sec:intro_data_tools}
+The library driving this rearchitecture, Matplotlib, aims to be flexible enough that developers can build domain specific libraries on top of it. To preserve this flexibility, Matplotlib enforces minimal constraints on what sorts of data the user is allowed to input and supports very many visual algorithms, from primative marks to computationally complex visualizations. Instead of enforcing constraints at the API level, Matplotlib carries implicit assumptions about data continuity in how each function interfaces with the input data. This has lead to poor API consistency and brittle code as every visual algorithm has a very different point of view on how the data is structured. 
+
+A commonly cited alternative is the family of tools built on top of Wilkenson's Grammar of Graphics (GoG) \cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. This framework is very popular in the data visualization community their declarative interface \cite{heerDeclarative2010} which allows end users to describe the visualization they are trying to create. It is also the wrong abstraction layer since the grammer exposes specific ways to compose parts together to build a chart, but not ways to build new parts\cite{wongsuphasawatNavigatingWideWorld2021}.
+
+A different class of user facing tools are those that support images, such as ImageJ\cite{schneiderNIHImageImageJ2012}. These tools mostly have some support for visualizing non image components of a complex data set, but mostly in service to the image being visualized. These tools are ill suited for general purpose library developers as the architure is to build plugins into the existing system \cite{WritingPlugins} rather than domain specific tools that are built on top. Even the digital humanties oriented macro ImagePlot\cite{studiesCulturevisImageplot2021}, which supoorts some non-image aggregate reporting charts, is still built around image data as the primary input. 
+
+There are also visualization tools designed around scientifically complex data that support explicit description of the data, such as vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011} and extensions such as ParaView\cite{ahrens2005paraview}. These libraries, generally speaking, are architectured more as graphics libraries than visualization libraries, meaning they lack a clear distinction between the graphic construction and the rendering of that graphic. This is very close to the existing Matplotlib architecture, where the data, visual encoding, and rendering are jumbled in ways that make it hard to figure out what the code is doing. We are proposing a functional framework instead in large part to clearly encapsulate these seperate responsibilities of a visualization tool. In turn, this should make it easier to reuse components in the building of new tools. 
+
+\subsection{Visualization}
+
 \begin{figure}[H]
     \begin{subfigure}{.24\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
@@ -53,7 +70,6 @@ Mackinlay's expressiveness criteria is well defined for the visual variables, su
 
 \subsection{Data}
 \label{sec:intro_data}
-Tory and Möller propose that assumptions about the structure of data are built into the visual algorithms that display that information \cite{toryRethinkingVisualizationHighLevel2004}. Specifically they note that discrete and continuous data and their attributes form a discipline independent design space \cite{pousmanCasualInformation2007}. 
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
@@ -76,12 +92,17 @@ Often this topology has metadata associated with it, as shown in figure~\ref{fig
 
 In this work, we extend Butler's topology driven representation of visualization data \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler proposes that fiber bundles are a good model for visualization data because it allows for encoding the connectivity seperately from the records and supports discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing the components of the record, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like discription of the data in the fiber bundle. We then propose criteria on expressivity that take into account both the components and the continuity of the data. 
 
-\subsection{Tools}
-\label{sec:intro_data_tools}
- 
-A motivator for this work is that currently Matplotlib carries implicit assumptions about data continuity in how each function interfaces with the input data. This work proposes a unified internal representation that encodes connectivity in a common interface. Matplotlib aims to natively support data of varying connectivities, so tools primarily concerned with visualizing relational data of the type found in databases are insufficient models. Many of these tools are built on top of Wilkenson's Grammar of Graphics \cite{wilkinsonGrammarGraphics2005} which itself incorporates Mackinlay's  A Presentation Tool (APT) display algebra; GoG derivative include ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. While many of these tools support images, the first class data container is a table like object of discrete records. Tools that primarily support images are also insufficient. For example ImageJ\cite{schneiderNIHImageImageJ2012} and the ImagePlot\cite{studiesCulturevisImageplot2021}macro have some support for visualizing non image components of a complex data set, but mostly in service to the image being visualized. Plugins exist, but must work around the everything is an image data model\cite{WritingPlugins}. There are also visualization tools that do not carry implicit assumptions about structure, for example vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011}. \note{Not totally positive but I think VTK is deeply coupled to the renderer and that's why we're not using it as a model, but not positive and this is literally what Marc worked on...}
 
 
 \subsection{contribution}
-The contribition of this work is a model we call the topological artist model (TAM) in which data and graphics can be viewed as sections of fiber bundles. This model allows for (1) decomposing the translation of data fields (variables) into visual channels via an equivariant map on the fibers and (2) a topology-preserving map of the base spaces that translates the dataset connectivity into graphical elements. Furthermore, this model supports an algebraic sum operation such that more complex visualizations can be built from simple ones. To demonstrate the practical value of the model, we built a prototype where we represent the topological base spaces using triangulation, make use of programming types for the fiber, and build on Matplotlib's existing infrastructure for the rendering. 
+The contribition of this work is 
+
+\begin{enumerate}
+    \item functional paradigm visualization tool architecture
+    \item translating dataset connectivity into graphical objects via topology-preserving maps
+    \item defining transforms from data into graphical components as monoidal action equivariant maps
+    \item a model of data and graphics as fiber bundles that decouples components from connectivity
+    \item an algebraic sum operation such that more complex visualizations can be built from simple ones 
+    \item prototype where we represent the topological base spaces using triangulation, make use of programming types for the fiber, and build on Matplotlib's existing infrastructure for the rendering 
+\end{enumerate}
 \end{document}
