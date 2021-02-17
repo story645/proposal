@@ -88,9 +88,10 @@ We propose that the Du Bois in figure~\ref{fig:intro_dubois} are representative 
 \label{fig:intro_retinal_variables}
 \end{figure}
 
-The visual properties were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, who also described the types of data that paired with the visual properties shown in figure~\ref{fig:intro_retinal_variables}. It is at this encoding level that Mackinlay formalized expressiveness as a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. These visual encodings are composited into the point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Marks can be generalized to glyphs, which are graphical objects that convey one or more attributes of the data entity mapped to it\cite{ware2019information, munznerVisualizationAnalysisDesign2014}. As retinal variables and marks are the building blocks of most visualizations, they must be fully expressible in a framework for building visualization tools.   
+The visual properties were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, who also described the types of data that paired with the visual properties shown in figure~\ref{fig:intro_retinal_variables}. It is at this encoding level that Mackinlay formalized expressiveness as a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. These visual encodings are composited into the point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Marks can be generalized to glyphs, which are graphical objects that convey one or more attributes of the data entity mapped to it\cite{ware2019information, munznerVisualizationAnalysisDesign2014}. As retinal variables and marks are the building blocks of most visualizations, they must be fully expressible in a framework for building visualization tools. By building visualization concepts into the core architecture, developers can incorporate assessments of the visualization,  such as as quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmann2014algebraic} of visualizations with respect to graphical encoding choices.  
 
-\subsection{contribution}
+\subsection{Contribution}
+\note{should I mention the categorical framework here too?}
 This work presents a mathematical model of the transformation from data to graphic representation and a proof of concept implementation. Specifically, this work contributes
 
 \begin{enumerate}
@@ -98,6 +99,7 @@ This work presents a mathematical model of the transformation from data to graph
     \item topology-preserving maps from data to graphic 
     \item monoidal action equivariant maps from component to visual variable 
     \item algebraic sum such that more complex visualizations can be built from simple ones 
-    \item prototype built on Matplotlib's existing infrastructure for the rendering 
+    \item prototype built on Matplotlib's infrastructure
 \end{enumerate}
+In contrast to the algebraic basis for visualization design proposed by Kindlmann and Scheideggar\cite{kindlmann2014algebraic} or Mackinlay's APT framework, we are proposing a topological framework for building tools to build visualizations. We defer judgement of expressivity and effectiveness to developers building domain specific tools, but provide them the framework to do so. 
 \end{document}
