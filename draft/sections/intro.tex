@@ -27,9 +27,11 @@ A different class of user facing tools are those that support images, such as Im
 
 There are also visualization tools designed around scientifically complex data that support explicit description of the data, such as vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011} and extensions such as ParaView\cite{ahrens2005paraview}. These libraries, generally speaking, are architectured more as graphics libraries than visualization libraries, meaning they lack a clear distinction between the graphic construction and the rendering of that graphic. This is very close to the existing Matplotlib architecture, where the data, visual encoding, and rendering are jumbled in ways that make it hard to figure out what the code is doing. We are proposing a functional framework instead in large part to clearly encapsulate these separate responsibilities of a visualization tool. In turn, this should make it easier to reuse components in the building of new tools. 
 
+\note{Add somehow: Software Design Patterns for Information Visualization (heer, agrawala)}
+
 \subsection{Data}
 \label{sec:intro_data}
-In this work, we extend Butler's topology driven representation of visualization data \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler proposes that fiber bundles are a good model for visualization data because it allows for encoding the continuity of the data separately from the types of variables in the data. Fiber bundles are flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing the variables, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle.
+As mentioned, one of the drivers of this work was to facilitate building libraries that could natively support domain specific data containers. Fiber bundles are one such way model to model containers, as Butler proposes because they encode the continuity of the data separately from the types of variables and are flexible enough to support discrete and ND continuous datasets \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Since Butler's model lacks a robust way of describing the variables, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle.
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
@@ -40,15 +42,16 @@ As shown in figure~\ref{fig:intro_data_format}, there are many types of connecti
 
 \begin{mdframed}[roundcorner=10pt, frametitle= definitions, frametitlerule=true, frametitlebackgroundcolor=gray!10]
 \begin{definition}
-    \item[records] points, observations, entries 
-    \item[components] variables, attributes, fields 
-    \item[connectivity] how the records are connected to each other
+    \item[\textbf{records}] points, observations, entries 
+    \item[\textbf{components}] variables, attributes, fields 
+    \item[\textbf{connectivity}] how the records are connected to each other
 \end{definition}
 \end{mdframed}
 
 Often this topology has metadata associated with it, describing for example when or where the measurement was taken. Building on the idea of metadata as \textit{keys} and their associated \textit{value} proposed by Munzner \cite{munznerChDataAbstraction}, we propose that information rich metadata are part of the components and instead the values are keyed on coordinate free structural ids. In contrast to Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model allows for renaming all the metadata, for example changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
 
 \subsection{Visualization}
+A visualization tool produces a graphical design and an image rendered based on that design, as described by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. He defines the graphical design as the set of encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. In addition to the graphic representations, Byrne et al. describe how visualizations have figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tool's effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}.
 
 \begin{figure}[H]
     \begin{subfigure}{.24\textwidth}
@@ -75,7 +78,8 @@ Often this topology has metadata associated with it, describing for example when
     \label{fig:intro_dubois}
 \end{figure}
 
-This work aims to develop a model of visualization such that a tool built using this model could support visualizations as varied as those of Du Bois in figure~\ref{fig:intro_dubois}; to do so, we first discuss the criteria by which a visualization is evaluated. Byrne et al. propose that visualizations have graphic representations that are mappings from data to visuals and figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic and numerical properties of the data are preserved in the graph. Tufte specifies that visual representations must be in proportion to the quantitative data being represented for a chart to be faithful and that there should be no extra information in the graphic or figurative elements of the graph, but otherwise his notion of graphic integrity is heavily context dependent\cite{tufteVisualDisplayQuantitative2001}. As is Norman's Naturalness Principal, which states that visualizations are more understandable  when the properties of the representation match the properties of the information being represented\cite{norman_things_smart}. Bertin takes it as a given that data properties match visual properties, so much so that Munzner argues it is inherently built into his classification system \cite{munznerVisualizationAnalysisDesign2014} which is displayed in figure~\ref{fig:intro_retinal_variables}.
+We propose that the Du Bois in figure~\ref{fig:intro_dubois} are representative of the expressivity a core architecture should allow a downstream library to express. This is because while the Du Bois figures are not the common scatter, bar, or line plot \cite{friendlyBriefHistoryData2008}, they conform to the constraint that a visualization is a mapping from data to visuals. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic and numerical properties of the data are preserved in the graph. The visual representations in the Du Bois figures are in proportion to the quantitative data being represented, so the a chart is faithful according to Tufte's Lie Principal\cite{tufteVisualDisplayQuantitative2001}. The properties of the representation match the properties of the information being represented, so they are fairly understandable according to Norman's Naturalness Principal\cite{norman_things_smart}. As with the Du Bois data portraits, it is fundemental that any architecture tool we build ensures that the data properties match the visual properties. 
+
 
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{figures/intro/retinal_variables.png}
@@ -84,23 +88,16 @@ This work aims to develop a model of visualization such that a tool built using 
 \label{fig:intro_retinal_variables}
 \end{figure}
 
-As described by Mackinlay, a visualization tool produces a graphical design and an image rendered based on that design. He defines the graphical design as the set encoding relations from data to visual representation\cite{mackinlayAutomatingDesignGraphical1986}, and the design rendered in an idealized abstract space is what throughout this paper we will refer to as a graphic. Mackinlay  proposes that a visualization tool's expressiveness is a measure of how much of the structure of the data the tool encodes, while the tools effectiveness describes how much design choices are made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}. Mackinlay's definition of expressiveness is formalized at the visual encoding level, which as shown in figure~\ref{fig:intro_retinal_variables} refers to the components of a graphic such as the color or position of a glyph. Bertin first classified these graphic components as retinal variables and discussed which types of data they can express \cite{bertinIIPropertiesGraphic2011} and how they are composited on point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Marks can be generalized to glyphs, which are graphical objects that convey one or more attributes of the data entity mapped to it\cite{ware2019information, munznerVisualizationAnalysisDesign2014}. 
-
-Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. Mackinlay does not provide a generalized criteria for plot types, instead embedding the requirements within the definition of the charts. 
-
-
-
-
+The visual properties were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, who also described the types of data that paired with the visual properties shown in figure~\ref{fig:intro_retinal_variables}. It is at this encoding level that Mackinlay formalized expressiveness as a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. These visual encodings are composited into the point, line, and area graphical marks, as shown in figure~\ref{fig:intro_retinal_variables} correspond. Marks can be generalized to glyphs, which are graphical objects that convey one or more attributes of the data entity mapped to it\cite{ware2019information, munznerVisualizationAnalysisDesign2014}. As retinal variables and marks are the building blocks of most visualizations, they must be fully expressible in a framework for building visualization tools.   
 
 \subsection{contribution}
-The contribition of this work is 
+This work presents a mathematical model of the transformation from data to graphic representation and a proof of concept implementation. Specifically, this work contributes
 
 \begin{enumerate}
-    \item functional paradigm visualization tool architecture
-    \item translating dataset connectivity into graphical objects via topology-preserving maps
-    \item defining transforms from data into graphical components as monoidal action equivariant maps
-    \item a model of data and graphics as fiber bundles that decouples components from connectivity
-    \item an algebraic sum operation such that more complex visualizations can be built from simple ones 
-    \item prototype where we represent the topological base spaces using triangulation, make use of programming types for the fiber, and build on Matplotlib's existing infrastructure for the rendering 
+    \item a functional oriented visualization tool architecture
+    \item topology-preserving maps from data to graphic 
+    \item monoidal action equivariant maps from component to visual variable 
+    \item algebraic sum such that more complex visualizations can be built from simple ones 
+    \item prototype built on Matplotlib's existing infrastructure for the rendering 
 \end{enumerate}
 \end{document}
