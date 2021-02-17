@@ -15,7 +15,7 @@ We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermed
 
 \subsection{Data Space \dtotal}
 \label{sec:data}
-Building on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989},  fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
+Building on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -121,11 +121,7 @@ is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse s
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The base space \dbase\ is way to represent the connectivity of the records.  This is currently assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records. Instead, this model can explicitly check if the visualization topology is equivalent to the 
-
-Representing the data as a fiber bundle, allows one to express the continuity one assumes between observations. For instance if we want to consider data in a time series, with time implicitly a continuous variable, we could express the base space as a topological line. If we had cyclical data, then the base space could be represented as a circle. If the each observation was indpenedent then the data could be represented as discrete points
-
-The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase\ without making assumptions as to what that continuity is. 
+The base space \dbase\ is way to express the connectivity of the records.  This is assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data. . 
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
@@ -170,20 +166,19 @@ The datasets in figure~\ref{fig:base_example} have the same fiber of (temperatur
 
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-%% how do we represent data
-While the fiber and base space describe the general structure of all data that lives in the fiber bundle, the sections $\dsection: \dbase\rightarrow \dtotal$ define the datasets that live in the fiber. We generalize Spivak's description of the section as a table of records \cite{spivakSIMPLICIALDATABASES} to any sort of structured dataset such that 
+A section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle is a set of records. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. In general, for any fiber bundle, there is always a map
 \begin{equation}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
                           & \dbase \arrow[u, "\dsection"', bend right]
     \end{tikzcd}
 \end{equation}
-such that there is always a map $\pi(\dsection(\dbasepoint)) = \dbasepoint$. There can be many sections \dsection; the space of global sections is $\Gamma(\dtotal)$. For a trivial fiber bundle, the section is 
+ such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. There can be many sections \dsection\ and the space of all global sections is $\Gamma(\dtotal)$. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
 \begin{equation}
     \label{eq:section_return}
     \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
 \end{equation}
-where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. Because we can decompose the bundle and the fiber, we can formulate $\dsection$ as 
+where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. Because we can decompose the bundle and the fiber, we can formulate $\dsection$ as 
 \begin{align}
 \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
 \end{align}
@@ -195,14 +190,14 @@ where each section $\dsection_i$ is a variable or set of variables.
     \label{fig:data_sections}
 \end{figure}
 
-In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection_j$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$.
+In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection_j$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection_i, \dsection_j \in \Gamma(\dtotal)$.
 
 %% here are some of our real data structures and here is how it works: dataframe, movies, etc...
 %% all the same, special versions of fiber bundles
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-Often a graphic may need to be updated with live data or support zooming in on a segement of the dataset; to support working with a subset of data, we can use the sheaf $\mathcal{O}(\dtotal)$. All fiber bundles are locally trivial, which means that \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
+To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist. This facilitates interactions such as zooming or updating the graphic based on zooming data. \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
 
 \begin{equation}
     \label{eq:sheaf}
@@ -211,8 +206,9 @@ Often a graphic may need to be updated with live data or support zooming in on a
         U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[l, "\iota"']
     \end{tikzcd}
 \end{equation}
-pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes nearby records because the sheaf lies over the neighborhood $U$. While this can be useful for visual transforms, often the extra needed information can be found in the smaller jet bundle $\mathcal{J}$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016}. For example, line thickness requires the derivative of the given position to be rendered, which can be found in $\dtotal^\prime=\dtotal+\mathcal{J}(\dtotal)$
+pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. 
 
+While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes the local behavior of the section at \dbasepoint\ which can include information about nearby records. In practice, often the only information needed from the stalk is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. 
 
 \subsection{Graphic: \gtotal}
 \label{sec:graphic}  
