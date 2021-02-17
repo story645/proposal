@@ -41,11 +41,11 @@ As mentioned, one of the drivers of this work was to facilitate building librari
 As shown in figure~\ref{fig:intro_data_format}, there are many types of connectivity. A database typically consists of unconnected records, while an image is an implicit 2D grid and a network is some sort of explicitly connected graph.  In this work we will refer to the points of the dataset as \textit{records} to indicate that a point can be a vector of heterogenous elements. Each \textit{component} of the record is a single object, such as a temperature measurement, a color value, or an image. We also generalize \textit{component} to mean all objects in the dataset of a given type, such as all temperatures or colors or images. The way in which these records are connected is the \textit{connectivity}, \textit{continuity}, or more generally \textit{topology}.
 
 \begin{mdframed}[roundcorner=10pt, frametitle= definitions, frametitlerule=true, frametitlebackgroundcolor=gray!10]
-\begin{definition}
-    \item[\textbf{records}] points, observations, entries 
-    \item[\textbf{components}] variables, attributes, fields 
-    \item[\textbf{connectivity}] how the records are connected to each other
-\end{definition}
+    \begin{description}
+        \item[\textbf{records}] points, observations, entries 
+        \item[\textbf{components}] variables, attributes, fields 
+        \item[\textbf{connectivity}] how the records are connected to each other
+    \end{description}
 \end{mdframed}
 
 Often this topology has metadata associated with it, describing for example when or where the measurement was taken. Building on the idea of metadata as \textit{keys} and their associated \textit{value} proposed by Munzner \cite{munznerChDataAbstraction}, we propose that information rich metadata are part of the components and instead the values are keyed on coordinate free structural ids. In contrast to Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model allows for renaming all the metadata, for example changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.

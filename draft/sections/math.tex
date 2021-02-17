@@ -276,7 +276,7 @@ The artist is the function that converts data into graphics; its name is taken f
         \end{tikzcd}
 \end{equation}
 
-which due to using the jet is point wise such that the input can be $\dsection(\dbasepoint)$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ converts the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \dbase$ then pulls back the visual bundle \votal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
+which due to using the jet is point wise such that the input can be $\dsection(\dbasepoint)$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ converts the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
 
 
 
@@ -373,7 +373,7 @@ where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepat
 \end{equation}
 such that for every mark there is at least one corresponding section on \dbase. We define a glyph as a composite of multiple \vmark\, in keeping with Munzner's definition of the glyph as an object with internal structure arising from multiple marks\cite{munznerVisualizationAnalysisDesign2014}.  
 
-\subsubsection{Sample Graphics \vmark}
+\subsubsection{Assembly \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/scatter.png}
@@ -414,11 +414,11 @@ where (x,y) look up the position $\vindex(\alpha)$ on the data and then apply th
 
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/heatmap.png}
-    \caption{The only visual parameter a heatmap requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
+    \caption{The only visual parameter a image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
     \label{fig:artist_heatmap}
 \end{figure}
 
-The heatmap $\vmark(color)$ in figure~\ref{fig:artist_heatmap} is a direct lookup $\vindex:\gbase\rightarrow\dbase$ such that 
+The image $\vmark(color)$ in figure~\ref{fig:artist_heatmap} is a direct lookup $\vindex:\gbase\rightarrow\dbase$ such that 
 
 \begin{align}
 R &= R(\vindex(\alpha, \beta))\\
@@ -428,16 +428,18 @@ B &= B(\vindex(\alpha, \beta))
 where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
-\begin{figure}
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib, because the rendering is tightly interlaced with the graphical design; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+\begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/q_hat.png}
     \caption{The pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint. Because the \vsection\ is the same, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent set of \gbasepoint\ associated to that \dbasepoint}
     \label{fig:artist_q_hat}
 \end{figure}
-As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase. Because $\vpreimg\ subset \gbase$ such that many \gbasepoint\ go to one \dbasepoint, by definition of the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$. This means that the fiber \vtotal is copied over the preimage in \vpreimg. Given a section \vsectionpull\ pulled back from \vsection\ on $\pi:\vtotal\rightarrow\dbase$ and $\gbasepoint \in \vpreimg$, then the section $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ is the image of $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. This is illustrated in figure~\ref{fig:artist_q_hat}, where a \vsection\ over \dbasepath\ is copied over all  $\vindex(\gbasepoint) = \dbasepoint$. 
+ 
+The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$ copies the visual fiber \vtotal over the preimage in \vpreimg. This is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber over \dbase\ is copied repeatedly to become the 2D fiber with identical components over \gbase. Given a section \vsectionpull\ pulled back from \vsection\ on $\pi:\vtotal\rightarrow\dbase$ and a point $\gbasepoint \in \vpreimg$ in the preimage of \dbasepoint\, the pulled back section $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ is the image $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
 
-When \vmark\ maps sections $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull, then $\vmark(\vsectionpull) = \gsection$ depends on \gbasepoint. This means that $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$, but since \vsectionpull\ is constant on \vpreimg, we can define a function $\vmarkd(\vsection(k))(s) \coloneqq \vmark((\vsectionpull)(\gbasepoint))$ where $\vpreimg = \dbasepoint$. 
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull then $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$. Since  $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ and \vsectionpull\ is constant on \vpreimg, we can define a \vmark\ factory function $\vmarkd(\vsection(k))(s) \coloneqq \vmark((\vsectionpull)(\gbasepoint))$ where $\vpreimg = \dbasepoint$. 
 
-In fact, \vmarkd\ is a map from visual to graphic $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The advantage of \vmarkd\ is that \gbase is part of the rendering stage of the pipeline and therefore hidden from the Matplotlib artists and therefore there is no direct way to construct a true \vmark. 
+Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visua space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline. 
 
 \subsubsection{Composition of Artists: +}
 \begin{figure}
@@ -445,18 +447,19 @@ In fact, \vmarkd\ is a map from visual to graphic $\vmarkd:\Gamma(\vtotal) \righ
     \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
     \label{fig:artist_plus}
 \end{figure}
-In this paper we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, in figure~\ref{fig:artist_plus} the scatter plot $\dtotal_1$ and the line plot $\dtotal_2$ have different \dbase that are mapped to seperate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There are situations where $\dbase_2 \hookrightarrow \dbase_1$ that underpin more complex, especially interactive, visualizations; these cases require defining a more complex addition operator that is out of scope for this work. 
+To build graphics that are the composites of multiple artists, we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, in figure~\ref{fig:artist_plus} the scatter plot $\dtotal_1$ and the line plot $\dtotal_2$ have different \dbase that are mapped to separate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There are situations where $\dbase_2 \hookrightarrow \dbase_1$ that underpin more complex, especially interactive, visualizations; these cases require defining a more complex addition operator that is out of scope for this work. 
 
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
-As formulated above, every artist function \vartist\ has fixed \vchannel\ and \vmark\ which  generates a distinct graphic \gsection. It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type. 
+It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$ which is essentially an artist where the \vchannel\ functions have not yet been input. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type. 
 
 \begin{figure}[H]
     \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}
     \label{fig:artist_equivalence}
 \end{figure}
-For example, a scatter plot of red circles is the output of one artist, a scatter plot of green squares the output of another, as are the rest of the graphs in figure~\ref{fig:artist_equivalance}. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. 
+
+For example, a scatter plot of red circles is the output of one artist, a scatter plot of green squares the output of another, as shown in figure~\ref{fig:artist_equivalance}. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. The criteria for equivalence class membership serves as the basis for evaluating invariance\cite{kindlmann2014algebraic}. 
 
 \subsection{Making the fiber bundle computable}
 \label{sec:triangulization}
@@ -473,15 +476,15 @@ One way of expressing the connectivity of records in a dataset is to implement \
         \begin{tabular}{|l|l|l|}\hline
         \textbf{simplex} & \textbf{continuity} & \textbf{\dsection}   \\ \hline
         vertex  & discrete   & \dsection(\dbasepoint)                  \\ \hline
-        edge    & 1D         & $\dsection(\dbasepoint,\, \alpha)$        \\ \hline
-        face    & 2D         & $\dsection(\dbasepoint,\, \alpha,\, \beta)$\\ \hline
+        edge    & 1D         & \dsection(\dbasepoint,\, \dx)        \\ \hline
+        face    & 2D         & \dsection(\dbasepoint,\, \dx,\, \dy)\\ \hline
         \end{tabular}
         \caption{}
         \label{tab:triangulization}
     \end{center}
 \end{table}
 
-such that each section is bound to a simplex $\dbasepoint \in \dbase$. As shown in table~\ref{tab:triangulization}, in a 1D continuous spaces each \dsection\ lies distance $\alpha$ along edge \dbasepoint, while in a 2D continuous space each \dsection\ lies at coordinate $\alpha, \beta$ on the face \dbasepoint. This is directly analogous to indexing to express connectivity in N-D arrays, while also natively supporting graphs and trees as they are simplacial complices of nodes and edges. Path connected components are then sections where edges or faces meet. 
+such that each section is bound to a simplex $\dbasepoint \in \dbase$. As shown in table~\ref{tab:triangulization}, in a 1D continuous spaces each \dsection\ lies distance \dx\ along edge \dbasepoint, while in a 2D continuous space each \dsection\ lies at coordinate \dx,\dy on the face \dbasepoint. This is directly analogous to indexing to express connectivity in N-D arrays, while also natively supporting graphs and trees as they are simplacial complices of nodes and edges. Path connected components are then sections where edges or faces meet. 
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
@@ -489,13 +492,13 @@ such that each section is bound to a simplex $\dbasepoint \in \dbase$. As shown 
     \note{add cross sections a and b to ring and color same as edges in complex}}
     \label{fig:triangle_torus}
 \end{figure}
-One way of encoding the torus in figure~\ref{fig:triangle_torus} while retaining the continuity of both cross sections $a, b$ is to unravel it into a simplacial complex of two triangles with labeled edges. Transition functions $\delta$ are defined on the edges such that $a$ can be glued to $a^\prime$ and $b$ to $b^\prime$ to reconstruct the torus. This simplacial complex is then used as the base space encoding the continuity of data that lies in the torus. A constraint on the transition functions is that the monoid actions on the fibers on the edges of \dtotal\ are commutative $\monoid*\dfiber\mapsto \delta(\monoid\dfiber)= \monoid*\delta(\dfiber)$
+An advantage of fiber bundles is the ability to encode data continuity that is more complex than points, a line or a plane. For example, the tori in figure~\ref{fig:triangle_torus} can be unraveled into a simplacial complex of two triangles with labeled edges. Transition functions $\delta$ are defined on the edges such that $a$ can be glued to $a^\prime$ and $b$ to $b^\prime$ to reconstruct the torus. This simplacial complex is then used as the base space encoding the continuity of data that lies in the torus. A constraint on the transition functions is that the monoid actions on the fibers on the edges of \dtotal\ are commutative $\monoid*\dfiber\mapsto \delta(\monoid\dfiber)= \monoid*\delta(\dfiber)$
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/transition_functions.png}
     \caption{Many non-trivial spaces can be made locally trivial by dividing \dtotal into locally trivial subspaces and defining transition functions between the edges on \dbase for how to glue the two subspaces such that the \dsection are continuous.}
     \label{fig:data_base_transition}
 \end{figure}
-Another advantages of triangulization is that it provides a way to encode non-trivial structures such as the mobius strip\cite{MobiusStripNLab}. As shown in figure ~\ref{fig:data_base_transition}, one way of making the mobius strip trivial is to seperate it into two spaces $\dtotal_1$ and $\dtotal_2$ and then define transition functions that specify that the edges of $\dtotal_1$ need to be reversed to line up with $\dtotal_2$ such that the sections along the edges meet. As with the torus, the transition functions must preserve monoid commutativity. 
+Another advantages of triangulization is that it provides a way to encode non-trivial structures such as the mobius strip\cite{MobiusStripNLab}. As shown in figure ~\ref{fig:data_base_transition}, one way of making the mobius strip trivial is to seperate it into two spaces $\dtotal_1$ and $\dtotal_2$ and then define transition functions that specify that the edges of $\dtotal_1$ need to be reversed to line up with $\dtotal_2$ such that the sections along the edges meet. As with the torus, the transition functions must preserve monoid commutativity. While we generally do not deal with complex or non-trivial bundles, the ability to implement them native to the model allows for a great deal of expressivity in encoding data. This is especially important when developing a tool that needs to be general enough to support any number of very domain specific types of data.
 
 \end{document}
