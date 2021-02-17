@@ -11,7 +11,7 @@
 
  This work is motivated by a need for a visualization library that developers could build complex, domain specific tools tuned to the semantics and structure carried in domain specific data. The core architecture also needs to be robust to the big data needs of many visualization practitioners, and therefore support distributed and streaming data needs. To support both exploratory and confirmatory visualization\cite{tukeyWeNeedBoth1980}, this tool needs to support 2D and 3D,  static, dynamic and interactive visualizations. Specifically, this work was driven by a rearchiture the Python visualization library Matplotlib\cite{hunterMatplotlib2DGraphics2007} to meet modern data visualization needs. We aim to take advantage of developments in software design, data structures, and visualization to improve the consistency, composibility, and discoverability of the API. 
 
- This work presents a mathematical description of how data is transformed into graphic representations, as shown in ref~\ref{fig:intro_artist_stages}. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool.
+ This work presents a mathematical description of how data is transformed into graphic representations, as shown in figure~\ref{fig:intro_artist_stages}. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool.
  
 
 \section{Background}
@@ -23,9 +23,30 @@ The library driving this rearchitecture, Matplotlib, aims to be flexible enough 
 
 A commonly cited alternative is the family of tools built on top of Wilkenson's Grammar of Graphics (GoG) \cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. This framework is very popular in the data visualization community their declarative interface \cite{heerDeclarative2010} which allows end users to describe the visualization they are trying to create. It is also the wrong abstraction layer since the grammer exposes specific ways to compose parts together to build a chart, but not ways to build new parts\cite{wongsuphasawatNavigatingWideWorld2021}.
 
-A different class of user facing tools are those that support images, such as ImageJ\cite{schneiderNIHImageImageJ2012}. These tools mostly have some support for visualizing non image components of a complex data set, but mostly in service to the image being visualized. These tools are ill suited for general purpose library developers as the architure is to build plugins into the existing system \cite{WritingPlugins} rather than domain specific tools that are built on top. Even the digital humanties oriented macro ImagePlot\cite{studiesCulturevisImageplot2021}, which supoorts some non-image aggregate reporting charts, is still built around image data as the primary input. 
+A different class of user facing tools are those that support images, such as ImageJ\cite{schneiderNIHImageImageJ2012}. These tools mostly have some support for visualizing non image components of a complex data set, but mostly in service to the image being visualized. These tools are ill suited for general purpose library developers as the architecture is to build plugins into the existing system \cite{WritingPlugins} rather than domain specific tools that are built on top. Even the digital humanities oriented macro ImagePlot\cite{studiesCulturevisImageplot2021}, which supports some non-image aggregate reporting charts, is still built around image data as the primary input. 
 
-There are also visualization tools designed around scientifically complex data that support explicit description of the data, such as vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011} and extensions such as ParaView\cite{ahrens2005paraview}. These libraries, generally speaking, are architectured more as graphics libraries than visualization libraries, meaning they lack a clear distinction between the graphic construction and the rendering of that graphic. This is very close to the existing Matplotlib architecture, where the data, visual encoding, and rendering are jumbled in ways that make it hard to figure out what the code is doing. We are proposing a functional framework instead in large part to clearly encapsulate these seperate responsibilities of a visualization tool. In turn, this should make it easier to reuse components in the building of new tools. 
+There are also visualization tools designed around scientifically complex data that support explicit description of the data, such as vtk\cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk} and its derivatives such as MayaVi\cite{ramachandranMayaVi2011} and extensions such as ParaView\cite{ahrens2005paraview}. These libraries, generally speaking, are architectured more as graphics libraries than visualization libraries, meaning they lack a clear distinction between the graphic construction and the rendering of that graphic. This is very close to the existing Matplotlib architecture, where the data, visual encoding, and rendering are jumbled in ways that make it hard to figure out what the code is doing. We are proposing a functional framework instead in large part to clearly encapsulate these separate responsibilities of a visualization tool. In turn, this should make it easier to reuse components in the building of new tools. 
+
+\subsection{Data}
+\label{sec:intro_data}
+In this work, we extend Butler's topology driven representation of visualization data \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler proposes that fiber bundles are a good model for visualization data because it allows for encoding the continuity of the data separately from the types of variables in the data. Fiber bundles are flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing the variables, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle.
+
+\begin{figure}[H]
+    \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
+    \caption{One way to describe data is by the connectivity of the points in the dataset. A database for example is often discrete unconnected points, while an image is an implicitely connected 2D grid. This image is from the Data Representation chapter of the MayaVi 4.7.2 documentation.\cite{DataRepresentationMayavi}}
+    \label{fig:intro_data_format}
+\end{figure}
+As shown in figure~\ref{fig:intro_data_format}, there are many types of connectivity. A database typically consists of unconnected records, while an image is an implicit 2D grid and a network is some sort of explicitly connected graph.  In this work we will refer to the points of the dataset as \textit{records} to indicate that a point can be a vector of heterogenous elements. Each \textit{component} of the record is a single object, such as a temperature measurement, a color value, or an image. We also generalize \textit{component} to mean all objects in the dataset of a given type, such as all temperatures or colors or images. The way in which these records are connected is the \textit{connectivity}, \textit{continuity}, or more generally \textit{topology}.
+
+\begin{mdframed}[roundcorner=10pt, frametitle= definitions, frametitlerule=true, frametitlebackgroundcolor=gray!10]
+\begin{definition}
+    \item[records] points, observations, entries 
+    \item[components] variables, attributes, fields 
+    \item[connectivity] how the records are connected to each other
+\end{definition}
+\end{mdframed}
+
+Often this topology has metadata associated with it, describing for example when or where the measurement was taken. Building on the idea of metadata as \textit{keys} and their associated \textit{value} proposed by Munzner \cite{munznerChDataAbstraction}, we propose that information rich metadata are part of the components and instead the values are keyed on coordinate free structural ids. In contrast to Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model allows for renaming all the metadata, for example changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
 
 \subsection{Visualization}
 
@@ -68,29 +89,6 @@ As described by Mackinlay, a visualization tool produces a graphical design and 
 Mackinlay's expressiveness criteria is well defined for the visual variables, such that he suggests the viability of a strict encoding relation that is a homomorphic mapping which preserves some binary operator from one domain to another \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987}. We expand on this suggestion by proposing that monoid action equivariance is a strict condition of building valid encoders. Mackinlay does not provide a generalized criteria for plot types, instead embedding the requirements within the definition of the charts. 
 
 
-\subsection{Data}
-\label{sec:intro_data}
-
-\begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
-    \caption{One way to describe data is by the connectivity of the points in the dataset. A database for example is often discrete unconnected points, while an image is an implicitely connected 2D grid. This image is from the Data Representation chapter of the MayaVi 4.7.2 documentation.\cite{DataRepresentationMayavi}}
-    \label{fig:intro_data_format}
-\end{figure}
-As shown in figure~\ref{fig:intro_data_format}, there are many types of continuity in data. A database typically consists of unconnected records, while an image is an implicit 2D grid and a network is some sort of explicitly connected graph.
-
-\begin{mdframed}[roundcorner=10pt, frametitle= definitions, frametitlerule=true, frametitlebackgroundcolor=gray!10]
- In this work we will refer to the points of the dataset as \textit{records} to indicate that a point can be a vector of heterogenous elements. Each \textit{component} of the record is a single object, such as a temperature, a color, or image. We also generalize \textit{component} to mean all objects in the dataset of a given type, such as all temperatures or colors or images. The way in which these records are connected is the \textit{connectivity}, \textit{continuity}, or more generally \textit{topology}. 
-\end{mdframed}
-
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/intro/munzner_datatypes}
-   \caption{Keys are unique lookup values used to find individual observations in the dataset. Keys are positional references, and can be coordinates on a map or unique values such as a primary key in a database or a (time, latitude, longitude) index in a data cube. Image modified from a diagram from Munzner's \textit{Visualization Analysis and Design} \cite{munznerVisualizationAnalysisDesign2014}}
-   \label{fig:intro_munzner_datatypes}
-\end{figure}
-
-Often this topology has metadata associated with it, as shown in figure~\ref{fig:intro_munzner_datatypes}. Munzner denotes this metadata as \textit{keys} that can be used to locate the record, and further to locate the specific \textit{value} \cite{munznerChDataAbstraction}. In figure~\ref{fig:intro_munzner_datatypes} tables have keys identifying the row and column and sometimes also the depth, while maps have a location key. We propose that information rich keys such as location are additional components of the record, and that instead there are coordinate free structural keys that identify the location of the record within a dataset of any continuity. 
-
-In this work, we extend Butler's topology driven representation of visualization data \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler proposes that fiber bundles are a good model for visualization data because it allows for encoding the connectivity seperately from the records and supports discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing the components of the record, we fold in Spivak's Simplacial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like discription of the data in the fiber bundle. We then propose criteria on expressivity that take into account both the components and the continuity of the data. 
 
 
 
