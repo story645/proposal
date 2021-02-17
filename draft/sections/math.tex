@@ -29,8 +29,7 @@ that binds the components of the data in \dfiber\ to the continuity represented 
 \item[\dbase] continuity of records (\ref{sec:data_base})
 \item[\dsection] collections of records (\ref{sec:data_section}). 
 \end{description}
-where \dtotal\ is the space of all possible datasets with these components and continuity. The fiber bundles mentioned in this work are assumed to be \note{locally} trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, unless otherwise specified. We assume \note{local} triviality to dispenses with extra structure on $\dtotal$ and focus on the fiber and base space. 
-\note{(and can do so b/c all bundles are locally trivial)}
+where \dtotal\ is the space of all possible datasets with these components and continuity. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on $\dtotal$ and focus on the fiber and base spaces. 
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
@@ -84,8 +83,7 @@ such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-%% pin down the structure we're trying to preserve, this is what we mean by equivarance, most general useful formalism is a monoid, most specifically, more commonly it's a group but sometimes it's a mpnoid
-After specifying \dfiber\, we next describe the ways in which we can transform the values by identifying the monoid actions \monoid\ on the \dfiber. We use monoids as the abstraction because they encode composibilty, which maps well to the data transformation process in a software library \cite{yorgeyMonoidsThemeVariations}. 
+Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define as the action of a monoid on the component. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
 
 A monoid \cite{Monoid2021} $\monoid_i$ is a set with an associative binary operator $\ast:\monoid_i \times \monoid_i\rightarrow \monoid_i$. A monoid has an identity element $e\in \monoid_i$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid_i$. A left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
@@ -117,6 +115,7 @@ where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
 % scatter and line, heatmap express the continuity of the data, deeply implicit in every visualization system but equivariance of continuity of the records, explicit  topplogy/structure preserving - contuinity is the topology   
+
 The advantage of fiber bundles is they provide a way to encode the continuity in a dataset as the base space \dbase\ without making assumptions as to what that continuity is. In turn this representation of continuity can then be used to keep track of how the data fits together, for example if a visualization of a very large dataset calls for parallelization.  
 
 \begin{figure}[H]
