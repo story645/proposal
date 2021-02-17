@@ -265,23 +265,8 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space
 
 \subsection{Artist}
 \label{sec:artist}
-%%somewhere in this I need to add q \circ nu (\xi^{-1}\tau(s)) = rho (s)
-%%% line things up such that they're an equivariant maps 
-%%% make a little clearer what E' is 
-The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\mathcal{J}(\dtotal)$ to a graphic that is a section \gsection\ in  $\Gamma(\gtotal)$
-%%% \Gamma is total
-%%% H is point wise -
-%%% this map means we can do this pointwise 
-%%% explain the arrows, chase through here
-%%% new disagram w/ section?
-% so you aren't passing around \tau
-% thos maps make sense for \tau(k)\in E -> V
-% and then you have \mu(k) 
-% and then when you are in \xi*V .... well the arrow goes the WONG way so you didn't just pass \mu(k) inot \xi*V
-% so if you want to go from \xi*V to H via Q you need to do it over a PARTICULAR s
-% thats what I mean by Q (in this diagram) hiding a choice of s. 
-% and then IF you pick an s ...... its is just fine. because it returns \rho(s)
-% so types match \rho(s) is in D
+
+The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\dtotal^{\prime}=\mathcal{J}(\dtotal)$ to a graphic that is a section $\gsection \in \Gamma(\gtotal)$
 
 \begin{equation}
     \label{eq:artist_diagram}
@@ -290,22 +275,14 @@ The artist is the function that converts data into graphics; its name is taken f
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-%%% Q \circ \xi  \nu = \rho, and nu is on tau, and sections are weaker 
-with an intermediate fiber bundle \vtotal\ to hold visual representations and stages
-\begin{enumerate}
-    \item \vindex\ binding the continuity in the graphic to the continuity in the data (~\ref{sec:graphic_base})
-    \item \vchannel\ conversion of data into visual characteristics (~\ref{sec:artist_nu})
-    \item \vmark\ assembly of visual variables into a glyph (~\ref{sec:artist_q})
-\end{enumerate}
- 
-of the visual transformation illustrated in figure~\ref{fig:artist_stages}. The functions \vindex\, \vchannel\ and \vmark\ are defined such that they can be evaluated on a single section \dsection, which allows the artist to be implemented such that it does not need all the data. This allows for artists tuned to distributed and streaming data. 
+
+which due to using the jet is point wise such that the input can be $\dsection(\dbasepoint)$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ converts the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \dbase$ then pulls back the visual bundle \votal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
+
+
+
 
 \subsubsection {Visual Fiber Bundle \vtotal}
-%% structure preserving on the visual side/target space, visualization library 
-%% equivariant, latent space of visual parameters, intermediate 
-%% don't formally need, let it more cleanly pin down the the fiber equivarance , expresisng the concept that is already in literature, 
-
-The visual fiber bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable \cite{bertinIIPropertiesGraphic2011,munznerMarksChannels} in fiber \vfiber. The fiber space \vfiber\ is defined in terms of the parameters of the visualization specification- for example aesthetics  in ggplot \cite{wickhamGgplot2ElegantGraphics2016a}, channels in vega\cite{satyanarayanDeclarativeInteractionDesign2014} or parameters in VTK\cite{hanwellVisualizationToolkitVTK2015} and Matplotlib.
+We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to composite into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
@@ -322,9 +299,9 @@ The visual fiber bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
-Table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}. A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vsection_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+ A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vsection_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
-\subsubsection{Visual Channels \vchannel}
+\subsubsection{Visual Encoders \vchannel}
 \label{sec:artist_nu}
 %% equivariant maps 
 \begin{figure}
@@ -337,7 +314,7 @@ As introduced in section~\ref{sec:intro_visual_variables}, there are many ways t
     \label{eq:nu_expanded}
     \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-where $\vchannel_i: \dsection_i \mapsto \vsection_i$ is an equivariant map such that there is a monoid homomorphism from $\dfiber_{i}$ to $vfiber_{i}$. A validly constructed \vchannel\ is one where the  diagram of the monoid transform $m$
+where $\vchannel_i: \dsection_i \mapsto \vsection_i$ is an equivariant map such that there is a monoid homomorphism from $\dfiber_{i}$ to $vfiber_{i}$. As mentioned in section~\ref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components. A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
@@ -351,17 +328,17 @@ commutes such that $\vchannel_i(m_{\delement}(\dtotal_i)) = m_{\velement}(\vchan
     .5 &\neq .5 + .5
 \end{align}
 
-On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$.
+On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$. These constraints can be embedded into our artist such that the \vchannel\ functions are equivariant; they also provide guidance on constructing new equivariant \vchannel\ functions. 
 
-\subsubsection{Assembling Glyphs \vmark}
+\subsubsection{Graphic Assembler \vmark}
 \label{sec:artist_q}
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/path_of_q}
-    \caption{\vchannel\ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_{\dbasepathpoint}$  generates a graphical mark.} 
+    \caption{\vchannel\ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_{\dbasepathpoint}$  generates a part of a graphic, for example the point graphical mark.} 
     \label{fig:artist_q}
 \end{figure}
 
-As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a single glyph. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a glyph. As with \vchannel\, the constraint on \vmark\ is that for every monoid actions on the input \vsection\ there is a corresponding monoid action on the output \gsection. 
+As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is a corresponding monoid action on the output \gsection. 
 
 Since we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$, we define an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same.   
 
@@ -382,7 +359,7 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
 The glyph in figure~\ref{fig:artist_mark_change} has the following characterstics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark is that the action $m=(e, e, e, x+2)$, where e is identity, applied to \vsection\ such that $\vsection^{\prime}=(e,e,e,3)$ has an equivalent action on \gsection that causes $\vmark(\vsection^{\prime})$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
 
 
-To output a mark  \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology}, \vmark\ is called with all the regions \gbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$:
+We can describe a mark \cite{bertinIIPropertiesGraphic2011,carpendaleVisualRepresentationSemiology} as \vmark\ with input of all the regions \gbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$:
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
@@ -394,9 +371,9 @@ where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepat
         \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-such that for every mark there is at least one corresponding section on \dbase.
+such that for every mark there is at least one corresponding section on \dbase. We define a glyph as a composite of multiple \vmark\, in keeping with Munzner's definition of the glyph as an object with internal structure arising from multiple marks\cite{munznerVisualizationAnalysisDesign2014}.  
 
-\subsubsection{Sample Glyphs \vmark}
+\subsubsection{Sample Graphics \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/scatter.png}
