@@ -23,13 +23,9 @@ Building on Butler's proposal of using fiber bundles as a common data representa
     \end{tikzcd}
 \end{equation}
 
-that binds the components of the data in \dfiber\ to the continuity represented in \dbase. We use fiber bundles as the data model because they are mathematical structures that are flexible enough express all the types of data described in section~\ref{sec:intro_data}. The fiber bundle models 
-\begin{description}
-\item[\dfiber] properties of data component types (\ref{sec:data_fiber})
-\item[\dbase] continuity of records (\ref{sec:data_base})
-\item[\dsection] collections of records (\ref{sec:data_section}). 
-\end{description}
-where \dtotal\ is the space of all possible datasets with these components and continuity. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on $\dtotal$ and focus on the fiber and base spaces. 
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\ref{sec:data_fiber}), the continuity of records \dbase\ (\ref{sec:data_base}), the collections of records \dsection\ (\ref{sec:data_section}), and the space \dtotal\ of all possible datasets with these components and continuity. 
+
+By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity. We use fiber bundles as the data model because they are inclusive enough to express all the types of data described in section~\ref{sec:intro_data}. 
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
@@ -71,15 +67,15 @@ which allows us to decouple \dfiber\ into components $\dfiber_i$.
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree C temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to positive floats $\ftotal_{\texttt{datetime}}= \realsp$. Temperature values are real numbers $\ftotal_{\texttt{float}} = \reals$. The fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
 \begin{equation}
-    \ftotal =  \realsp \times \reals 
+    \ftotal =  \reals \times \realsp 
 \end{equation} 
-where the first component $F_0$ is the set of values specified by $(\fname_0=time,\, \ftype_0=\texttt{datetime},\, \fttype=\mathbb{R}^+)$ and $F_1$ is specified by $(\fname_1=temperature,\, \ftype_1=\texttt{float},\, \fttype=\reals)$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
+where the first component $F_0$ is the set of values specified by $(\fname_0=time,\, \ftype_0=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname_1=temperature,\, \ftype_1=\texttt{float},\, \fttype=\realsp)$ and is the set of values $\fttype=\realsp$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
 \begin{equation}
     \dfiber = \realsp \times \reals^{2}
 \end{equation} 
-such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \fttype=\reals^{2})$  
+such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
@@ -117,11 +113,11 @@ While many component types will be one of the measurement scale types, we genera
     \item  $f(drizzle) = mist$ 
     \item $f(mist) = mist$
 \end{enumerate}
-is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. 
+is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. 
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The base space \dbase\ is way to express the connectivity of the records.  This is assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data. . 
+The base space \dbase\ is way to express the connectivity of the records.  This is assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data.  
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
@@ -162,11 +158,11 @@ which is a decomposition of \dfiber. The \dbase\ remains the same because the co
     \label{fig:base_example}
 \end{figure}
 
-The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase such that the records are samples from a continuous function defined on \dbase.
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase such that the records are samples from a continuous function defined on \dbase. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. This in turn allows for building algorithms that can work with distributed or streaming data, since it has a common data access interface with a promise that the data exists. 
 
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-A section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle is a set of records. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. In general, for any fiber bundle, there is always a map
+A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. In general, for any fiber bundle, there is always a map
 \begin{equation}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
@@ -192,12 +188,11 @@ where each section $\dsection_i$ is a variable or set of variables.
 
 In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection_j$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection_i, \dsection_j \in \Gamma(\dtotal)$.
 
-%% here are some of our real data structures and here is how it works: dataframe, movies, etc...
-%% all the same, special versions of fiber bundles
+The section can be any instance of a data container, for example a numpy array\cite{harris2020array}, a pandas series or dataframe\cite{jeff_reback_2020_3715232}, or an xarray\cite{hoyer2017xarray}. A univariate numpy array that stores an image is a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. A series could store the values of $\dsection_i$ and a second series could be  $dsection_j$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys. An instance of an xarray would also be a \dsection\, for example if the data is a temperature field than the \dbase\ could be a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. As with the dataframe, the semantic index labels are considered components and the indicies are instead assumed to be random. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. The section can remain curried until render since the model is functional, in keeping with dasks compute graph architecture. Our model provides a common interface to these widely used data containers without sacrificing the semantic structure embedded in each container.
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist. This facilitates interactions such as zooming or updating the graphic based on zooming data. \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
+To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist. \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
 
 \begin{equation}
     \label{eq:sheaf}
@@ -208,7 +203,8 @@ To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dt
 \end{equation}
 pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. 
 
-While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes the local behavior of the section at \dbasepoint\ which can include information about nearby records. In practice, often the only information needed from the stalk is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. 
+While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes the local behavior of the section at \dbasepoint\ which can include information about nearby records. In practice, often the only information needed from the stalk is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. The sheaf facilitates interactions such as zooming or updating the graphic based on zooming data; the jet ensures that the artist only needs a single record on \dbasepoint\ to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
+
 
 \subsection{Graphic: \gtotal}
 \label{sec:graphic}  
