@@ -212,24 +212,24 @@ While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the st
 
 \subsection{Graphic: \gtotal}
 \label{sec:graphic}  
-We can separate the structure of the graphic from the properties of the output format by modeling the space of graphics as a fiber bundle  $(\gtotal, \gbase, \pi, \gfiber)$. As with data, the fiber bundle is for a class of graphics with shared base space \gbase (~\ref{sec:graphic_fiber}) and fiber \gfiber (~\ref{sec:graphic_base}) and the sections \gsection (~\ref{sec:graphic_section}) encode a graphic where the visual characteristics are fully specified.
+We introduce a graphic bundle to hold the essential information necessary to render a graphical design constructed by the artist. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$. The graphic bundle \gtotal\ consists of a base \gbase (~\ref{sec:graphic_fiber}) that is a thickened form of \dbase\, 
+a fiber \gfiber (~\ref{sec:graphic_base}) that is an idealized display space, and sections \gsection (~\ref{sec:graphic_section}) that encode a graphic where the visual characteristics are fully specified.
 
 \subsubsection{Idealized Display \gfiber}
 \label{sec:graphic_fiber}
-%% bookends sentences
-%% first we need a  target output abstraction 
-%% this allows us to w/ some level of detail specify a target display
-The fiber \gfiber\ is an idealized infinite resolution version of the target display space, for example a 2D screen or 3D printer. In this work, we assume a 2D opaque image $\dfiber=\reals^5$ with elements 
+To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. 
+
+In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
 \begin{equation}
 (x,\, y,\, r,\, g,\, b) \in \gfiber
 \end{equation}
-such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $\dfiber=\reals^{7}$ such that $(x, y, z, r, g, b, a) \in \gfiber$ specifies the target display. 
-
+such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $\gfiber=\reals^{7}$ such that $(x, y, z, r, g, b, a) \in \gfiber$ specifies the target display. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
 
 \subsubsection{Continuity of the Graphic \gbase} 
 \label{sec:graphic_base}
-%% structure preservation on the graphics side 
-An assumption of graphical representations is that they match the continuity of the data\cite{tufteVisualDisplayQuantitative2001,friendlyBriefHistoryData2008}, but the underlying topology \gbase\ of a graphic may need more dimensions than the data topology \dbase\ so that the glyph can be defined in \dfiber. Therefore we define the base space mapping from graphic \gbase to data \dbase 
+Since we propose that data topology \dbase\ is by some measure preserved in the graphic, we introduce a graphic topology \gbase to encode the carried over structure. These topologies are not always identical because the underlying topology \gbase\ of a graphic may need more dimensions than the data topology \dbase\. In a typical 2D display (ignoring depth), visible elements need to have 2D extent so that for example a scatter marker has an area greater than 0 or a line is not infinitely thin. 
+
+Since \dbase\ with fewer than two dimensions need to be thickened, we define the mapping from graphic \gbase\ to data \dbase 
 \begin{equation}
     \begin{tikzcd}
         \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
@@ -245,29 +245,27 @@ An assumption of graphical representations is that they match the continuity of 
     \label{fig:graphic_retraction_map}
 \end{figure}
 
-In figure~\ref{fig:graphic_retraction_map} each disk $\gbase_{\dbasepoint}$ indexes how elements in \gfiber\ are glued together to generate a single glyph that is the visual representation of a single record in $\dfiber_{\dbasepoint}$. For the line, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbase. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed. 
+When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed in \gbase. The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. 
 
- 
 \subsubsection{Renderering \gsection}
 \label{sec:graphic_section}
-% couple nu + Q , visual encodings 
-% pick a pixel which is the bounding box
-A section $\gsection: \gbase\rightarrow \gtotal$ defines a piece of the graphical representation of the data. Evaluated on a single \gbasepoint\, \gsection\ returns a single element in \gfiber\. For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. Integrating over this region on \gbase\
-\begin{align}
-    r_p &= \iint\limits_{S_p} \rho_r(s)ds^{2}\\
-    g_p &= \iint\limits_{S_p} \rho_g(s)ds^{2}\\
-    b_p &= \iint\limits_{S_p} \rho_b(s)ds^{2}
-\end{align}
-yields the color of the pixel $p$.
-
 \begin{figure}
     \includegraphics[width=\textwidth]{figures/math/graphic_render.png}
     \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
-As shown in figure~\ref{fig:graphic_rho_lookup}, the output space queries into the graphic bundle to render the image. We select a pixel $p$ in the output space, inverse map the region of the pixel into $\gbase_p \subset \gbase$, then compute the section $\gsection$ over the region $\gbase_p$. The section yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
 
-%% pdf/svg/etc are different ways of implementing rhos
+This section describes how we go from a graphical design to a rendered image, where the graphical design is the section $\gsection: \gbase \rightarrow \gtotal$. It is sufficient to sketch out how an arbitrary pixel would be renderer, where a pixel $p$ in a real display corresponds to a region $\gbase_p$ in the idealized display. To determine the color of the pixel, we aggregate the color values over the region via integration. 
+
+For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. To compute the color, we integrate on $\gbase_p$
+
+\begin{align}
+    r_p &= \iint\limits_{S_p} \rho_r(s)ds^{2}\\
+    g_p &= \iint\limits_{S_p} \rho_g(s)ds^{2}\\
+    b_p &= \iint\limits_{S_p} \rho_b(s)ds^{2}
+\end{align}
+
+As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space is selected and inverse mapped into the corresponding region $\gbase_p \subset \gbase$. This triggers a lookup of the $\gsection$ over the region $\gbase_p$, which yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. In general, \gsection\ is an abstraction of rendering specifications, for example PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997} or rendering engines such as cairo\cite{CairographicsOrg} and AGG\cite{AntiGrainGeometry}. Implementation of \gsection\ is out of scope for this work.  
 
 \subsection{Artist}
 \label{sec:artist}
