@@ -1,31 +1,29 @@
 from collections import defaultdict
+from dataclasses import dataclass
 import itertools
-
 import numpy as np
-
 from matplottoy.encoders import mtypes
  
- 
+@dataclass
 class FiberBundle:
-    def __init__(self, K, F):
-        """
-        Parameters
-        ----------
-        K: dict
-            attributes of the base space of the fiber bundle, 
-            describes domain of base space + the type of simplexs
-            on the base space
-            {'tables': []}
+    """
+    Attributes
+    ----------
+    K: dict
+        attributes of the base space of the fiber bundle, 
+        describes domain of base space + the type of simplexs
+        on the base space
+        {'tables': []}
 
-        F: dict
-            the fiber, which is the space of all possible observations 
-            type is used here to describe the space 
-            {variable name: type}
+    F: dict
+        the fiber, which is the space of all possible observations 
+        type is used here to describe the space 
+        {variable name: type}
 
-            # rework as ('field name': (type, monoid action))
-        """
-        self.K = K 
-        self.F = F
+    # rework as ('field name': (type, monoid action))
+    """
+    K:dict 
+    F:dict
         # should maybe be folded into K
         # add check for consistency
 

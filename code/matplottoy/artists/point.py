@@ -20,15 +20,13 @@ class Point(mcollections.Collection):
         data: sections of the fiber bundle
         transforms
         """
-        super().__init__(*args, **kwargs)
-        
         # check that the data you're trying to transform 
         # has a way to provide vertex data  
         # assert 'vertex' in data.FB.K['tables']
         # check that you've given the required parameters
         #utils.check_constraints(Point, transforms.keys())
         #utils.validate_transforms(data.FB.F, transforms)
-
+        super().__init__(*args, **kwargs)
         self.data = data
         self.transforms = transforms
 
@@ -42,8 +40,8 @@ class Point(mcollections.Collection):
         
     def draw(self, renderer, *args, **kwargs):
         # query data for a vertex table K
-        view = self.data.view('vertex') 
-        visual = {p: encoder(view.get(f, None)) for p, (f, encoder) in self.transforms.items()}
+        view = self.data.view(self.axes) 
+        visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         # call the renderer that will draw based on properties
         super().draw(renderer, *args, **kwargs)

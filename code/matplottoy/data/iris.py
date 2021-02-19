@@ -6,7 +6,7 @@ class DataFrame:
         self._tau = dataframe.iloc
         self._view = dataframe
 
-    def view(self, simplex="vertex"):
+    def view(self, axes):
         return self._view
     
     

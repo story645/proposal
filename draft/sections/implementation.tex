@@ -10,7 +10,7 @@
     \begin{subfigure}{0.5\textwidth}
         \includegraphics[width=\textwidth]{figures/code/line_1.png}
     \end{subfigure}
-    \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering.}
+    \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering. \note{update with bar}}
     \label{fig:code_scatter_line}
 \end{figure}
 
@@ -38,8 +38,9 @@ We then add the \mintinline{python}{Point} and \mintinline{python}{Line} artist 
 \label{sec:code_artist}
 The artist is the piece of the matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, \mintinline{python}{transform} is a dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist.
 
-\begin{minted}{python}
+\begin{minted}[escapeinsize=||]{python}
 class ArtistClass(matplotlib.artist.Artist):
+    |\label{code:artist}|
     def __init__(self, data, transforms, *args, **kwargs):
         # properties that are specific to the graphic but not the channels
         self.data = data 
@@ -51,25 +52,23 @@ class ArtistClass(matplotlib.artist.Artist):
 
     def draw(self, renderer, *args, **kwargs):
         # returns K, indexed on fiber then key 
-        view = self.data.view() 
+        # is passed the 
+        view = self.data.view(self.axes) 
         # visual channel encoding applied fiberwise 
-        visual = {p: encoder(view[f] if f is not None else None) for 
-                     p, (f, encoder) in self.transforms.items()}
+        visual = {p: encoder(view[f] if f is not None else None) 
+                     for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         # pass configurations off to the renderer
         super().draw(renderer, *args, **kwargs)
 \end{minted}
 
-The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The return view object has a \mintinline{python}{get} method to support querying for components that are not in \dfiber\, which we exploit to support parameters in the visual fiber that are not bound to fiber components in \dfiber. The \vchannel\ functions are then applied to the data to generate the \vsection=\mintinline{python}{visual} input to \vmark. An explicit \vindex\ is not implemented since that would mean copying a single \vsection on \dbasepoint to all the associated \gbasepoint, as illustrated in figure~\ref{fig:graphic_retraction_map}, and that is unnecessary overhead for these scatter and line plots. In \vmarkd=\mintinline{python}{assemble} the artist generates instructions for the render by setting  the attributes that are related to the graphic. These are the settings that would have to be serialized in order to recreate a static version of the graphic. Although \mintinline{python}{assemble} could be implemented outside the class such that it returns an object the artist could then parse to set attributes, the attributes are directly set here to reduce indirection. The \vchannel\ functions could be evaluated in this function to avoid passing over \dbase twice but are not done so here to demonstrate the seperability of \vchannel\ and \vmarkd\. The last step in the artist function is handing itself off to the renderer. 
+The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that we can use to query back into data to select a subset as discussed in section~\ref{sec:data_sheaf_stalk}. The \vchannel\ functions are then applied to the data to generate the visual section \vsection\ that here is the object \mintinline{python}{visual}. We allow for fixed visual parameter, such as setting a constant color for all sections, via setting in \mintinline{python}{None} as the data fiber \dfiber\ name in the \mintinline{python}{transform} dictionary. 
 
-The \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. 
+The visual object is then passed into the \mintinline{python}{assembly} function that is \vmarkd. This assembly function is responsible for generating a representation of the glyph such that it could be serialized to recreate a static version of the graphic. Although \mintinline{python}{assemble} could be implemented outside the class such that it returns an object the artist could then parse to set attributes, the attributes are directly set here to reduce indirection. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemnted in Matplotlib. 
+
+The \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. We only show the \mintinline{python}{assembly} function here because the \mintinline{python}{__init__, draw} are identical the prototype artist shown in \ref{code:artist}. 
 \begin{minted}{python}
-class Point(mcollections.Collection):
-    def __init__(self, data, transforms, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.data = data
-        self.transforms = transforms
-
+class Point(mcollections.Collection):=
     def assemble(self, visual):
         # construct geometries of the circle marks in visual coordinates
         self._paths = [mpath.Path.circle(center=(x,y), radius=s) 
@@ -78,19 +77,12 @@ class Point(mcollections.Collection):
         # circles and facecolors are lists of the same size
         self.set_facecolors(visual['facecolors'])
         
-    def draw(self, renderer, *args, **kwargs):
-        # query data for a vertex table K
-        view = self.data.view() 
-        visual = {p: encoder(view.get(f, None)) for 
-                     p, (f, encoder) in self.transforms.items()}
-        self.assemble(visual)
-        # call the renderer that will draw based on properties
-        super().draw(renderer, *args, **kwargs)
-   
 \end{minted} 
-The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices, as described in section~\ref{sec:triangulization}; even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$ such that all the data on one vertex maps to one marker. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, meaning that the values cannot change after the method is called in draw until a new call in draw. This table is converted to a table of visual variables. It is then passed into \mintinline{python}{assemble}, where it is used to individually construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. Since \mintinline{python}{view} returns a \dsection\, all these operations could be applied on a section on one \dbasepoint\ or a subset of \dbase.
+The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices, as described in section~\ref{sec:triangulization}. Even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$. This means that all the data on one vertex maps to one glyph. To ensure the integrity of the section, \mintinline{python}{view} must be atomic. This means that the values cannot change after the method is called in draw until a new call in draw. We put this constraint on the return of the \mintedinline{python}{view} method so that we do not risk race conditions. Using triangulization provides a common interface to the data, one we will reuse for all the artists presented here. 
 
-The only difference between the \mintinline{python}{Point} and \mintinline{python}{Line} objects is in the \mintinline{python}{view} and \mintinline{python}{assemble} function because line has different continuity from scatter and is represented by a different type of graphical mark. 
+This table is converted to a table of visual variables and is then passed into \mintinline{python}{assemble}. In  \mintinline{python}{assemble}, the \vsection\ is used to individually construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. This is done via the \mintinline{python}{Path.circle} object. As mentioned in sections ~\ref{sec:data_sheaf_stalk} and \ref{sec:artist_q}, this assembly function could as easily be implemented such that it was fed one $\dsection(\dbasepoint)$ at a time. 
+
+The main difference between the \mintinline{python}{Point} and \mintinline{python}{Line} objects is in th3 \mintinline{python}{assemble} function because line has different continuity from scatter and is represented by a different type of graphical mark. 
 
 \begin{minted}{python}
 class Line(mcollections.LineCollection):
@@ -100,18 +92,57 @@ class Line(mcollections.LineCollection):
                     in zip(visual['x'], visual['y'])]
         self.set_segments(segments)
         self.set_color(visual['color'])
+\end{minted}
+In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments, where each segement is the array generated by \mintinline{python}{np.vstack((vx, vy))}. Then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_v.png}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/bar_h.png}
+    \end{subfigure}
+    \caption{Frequency of Penguin types visualized as discrete bars. }
+    \label{fig:code_bar_simple}
+\end{figure}
+The bar charts in figure~\ref{fig:code_bar_simple} are generated with a \mintinline{python}{Bar} artist. The have the same required \vfiber\ components of (position, length). In \mintinline{pyton}{__init__} of \mintinline{python}{Bar} an additional parameter is set, \texttt{orientation} which controls whether the bars are arranged vertically or horizontally and only applies holistically to the graphic and never to individual data parameters. This highlights another advantage of this model, that it encourages explicit differentiation between parameters in \vtotal\ and graphic parameters that specify \vmarkd\.
+
+\begin{minted}{python}
+class Bar(mcollections.Collection):
+    def __init__(self, data, transforms, orientation, *args, **kwargs):
+        # parameter of the graphic
+        self.orientation = orientation 
+        super().__init__(*args, **kwargs)
+        self.data = data
+        self.transforms = transforms
+    
+    def assemble(self, visual):
+        #set some defaults
+        visual.setdefault('width', itertools.repeat(0.8))
+        visual.setdefault('floor', itertools.repeat(0))
+        visual.setdefault('facecolors', 'C0')
+        #build bar glyphs based on graphic parameter
+        if self.orientation in {'vertical', 'v'}:
+            order = ['position', 'width', 'floor', 'length']
+        elif self.orientation in {'horizontal', 'h'}:
+            order = ['floor', 'length', 'position', 'width']
+        
+        verts = [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(*[visual[k] for k in order])]
+
+        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
+        self.set_edgecolors('k')
+        self.set_facecolors(visual['facecolors'])
         
     def draw(self, renderer, *args, **kwargs):
-        # query data source for edge table
-        view = self.data.view()
-        visual = {p: encoder(view.get(f, None)) for 
-                     p, (f, encoder) in self.transforms.items()}
+        view = self.data.view(self.axes)
+        visual = utils.convert_transforms(view, self.transforms)  
         self.assemble(visual)
         super().draw(renderer, *args, **kwargs)
 
-
 \end{minted}
-In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments and then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
+The \mintinline{python}{draw} method is the same as the one in the artist example~\ref{code:artist}, but here the visual transformations are factored out into a separate function. This is because in bar we support a rudimentary version of the complex \plus operator such that we can specify multiple components to map to the same visual encoding without requiring th components to be individually specified in the \mintinline{python}{transforms} dictionary. The implementation of this support is slightly more complicated than the simple case, but not in a way that is useful for understanding the framework. The \mintinline{python}{assemble} function constructs bars and sets their edge color to black. Defaults are provided for 'width' and 'floor' to make this function more reusable. Typically the defaults are used for the type of chart shown in figure~\ref{fig:code_bar_simple}, but these visual variables are often set when building composite versions of this chart type as discussed in section~\ref{sec:code_case_study}. 
+
 
 \subsection{Encoders \vchannel}
 \label{sec:code_channels}
@@ -124,6 +155,7 @@ transforms = {'y': ('v1', lambda x: x),
              's':(None ,lambda _: itertools.repeat(.02))}
 \end{minted}
 where the position \textit{(x,y)} \vchannel\ transformers are identity functions. The size \textit{s} transformer is not acting on a component of \dfiber, instead it is a \vchannel\ that returns a constant value. While size could be embedded inside the \mintinline{python}{assembly} function, it is added to the transformers to illustrate user configured visual parameters that could either be constant or mapped to a component in \dfiber. The identity and constant \vchannel\ are explicitly implemented here to demonstrate their implicit role in the visual pipeline, but they could be optimized away. More complex encoders can be implemented as callable classes, such as 
+
 \begin{minted}{python}
 class Categorical:
     def __init__(self, mapping):
@@ -136,9 +168,7 @@ class Categorical:
         return [mcolors.to_rgba(self._mapping[v]) for v in values]
 \end{minted}
 
-where \mintinline{python}{__init__} can validate that the output of the \vchannel\ is a valid element of the \vfiber\ component the \vchannel\ function is targeting. Creating a callable class also provides a simple way to swap out the specific (data, value) mapping without having to reimplement the validation or conversion logic. 
-
-A test for equivariance can be implemented trivially such that it is independent of data or encoder.
+where \mintinline{python}{__init__} can validate that the output of the \vchannel\ is a valid element of the \vfiber\ component the \vchannel\ function is targeting. Creating a callable class also provides a simple way to swap out the specific (data, value) mapping without having to reimplement the validation or conversion logic. A test for equivariance can be implemented trivially such that it is independent of data or encoder.
 \begin{minted}{python}
 def test_nominal(values, encoder):
     m1 = list(zip(values, encoder(values)))
@@ -150,26 +180,22 @@ In this example, \mintinline{python}{is_nominal} checks for equivariance of perm
 
 \subsection{Data \dtotal}
 \label{sec:code_data}
-The data input into the \mintinline{pythin}{Artist} will often be a wrapper class around an existing data structure, but must meet the following criteria:
-\begin{enumerate}
-\item specify the fiber components \dfiber\ and connectivity \dbase\
-\item have a \mintinline{view} method that returns an atomic object that encapsulates \dsection\
-\item the view object must have \mintinline{get} method that returns a fiber component
-\end{enumerate}
-To support specifying the fiber bundle, we define an optional \mintinline{python}{FiberBundle} class
+The data input into the \mintinline{pythin}{Artist} will often be a wrapper class around an existing data structure. This wrapper object must specify the fiber components \dfiber\ and connectivity \dbase\ and have a \mintinline{view} method that returns an atomic object that encapsulates \dsection\. The object returned by the view must be key valued pairs of \mintinline{python}|{component name : component section}| where each section is a component as defined in equation~\ref{eq:data_section_decompose}. To support specifying the fiber bundle, we define a \mintinline{python}{FiberBundle} data class\cite{DataclassesDataClasses}
 
 \begin{minted}{python}
+@dataclass
 class FiberBundle:
-    def __init__(self, base, fiber):
-        """
-        base:  {'tables': ['vertex', 'edge', 'face']}
-        fiber: {'component name': {'type':, 'monoid':,  'range':}}
-        """
-        self.base = base
-        self.fiber = fiber
+"""
+Attributes
+----------
+K: {'tables': []}
+F: {variable name: {'type': type, 'moniod', 'range': []}}
+"""
+    K: dict 
+    F: dict
 \end{minted}
 
-that asks the user to specify how \dbase is triangulated and the attributes of \dfiber. The \mintinline{python}{assembly} functions expect tables that match the continuity of the graphic; scatter expects a vertex table because it is discontinuous, line expects an edge table because it is 1D continuous. The fiber informs appropriate choice of \vchannel\, therefore it is a dictionary of attributes of the fiber components.  \note{I've basically stripped this out of the artists above so should I just ditch this section?}
+that asks the user to specify how \dbase is triangulated and the attributes of \dfiber. Python dataclasses are a good abstraction for the fiber bundle class because the \mintinline{python}{FiberBundle} class only stores data. The \dbase\ is specified as tables because the \mintinline{python}{assembly} functions expect tables that match the continuity of the graphic; scatter expects a vertex table because it is discontinuous, line expects an edge table because it is 1D continuous. The fiber informs appropriate choice of \vchannel\, therefore it is a dictionary of attributes of the fiber components. 
 
 To generate the scatter plot in figure~\ref{fig:code_scatter_line}, we fully specify a dataset with random keys and values in a section chosen at random form the corresponding fiber component. The fiberbundle \mintinline{python}{FB} is a class level attribute since all instances of \mintinline{python}{code}{VertexSimplex} come from the same fiberbundle.
 \begin{minted}{python}
@@ -187,7 +213,7 @@ class VertexSimplex: #maybe change name to something else
         # e1 is sampled from F1, e2 from F2, etc...
         return (k, (e1, e2, e3, e4))
 
-    def view(self):
+    def view(self, axes):
         table = defaultdict(list)
         for k in self.keys:
             table['index'] = k
@@ -225,7 +251,7 @@ class EdgeSimplex:
         color = self._color(k) 
         return (k, (x, y, color))
 
-    def view(self, simplex):
+    def view(self, axes):
         table = defaultdict(list)
         for k in self.keys:
             table['index'].append(k)
@@ -256,11 +282,11 @@ class GraphLine:
             assert edge_table.keys() == self.FB.F.keys()
             assert is_continuous(vertex_table)
 
-    def tau(self, k, simplex='edge'):
+    def tau(self, k):
         # evaluates functions defined in edge table
         return(k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
 
-    def view(self, simplex='edge'):
+    def view(self, axes):
         """walk the edge_vertex table to return the edge function
         """
         table = defaultdict(list)
@@ -283,8 +309,6 @@ simplex.GraphLine(FB, edge_table, vertex_table, num_samples=2, connect=False)
 such that one advantage of this model is it helps differentiate graphics that have different artists from graphics that have the same artist but make different assumptions about the source data. 
 
 
-
-
 \subsection{Case Study: Penguins}
 For this case study, we use the Palmer Penguins dataset\cite{gormanEcologicalSexualDimorphism2014, horstPalmerpenguinsPalmerArchipelago2020} since it is multivariate and has a varying number of penguins. We use a version of the data packaged as a pandas dataframe\cite{nakhaeeMcnakhaeePalmerpenguins2021, jeff_reback_2020_3715232} since that is a very commonly used Python labled data structure. The wrapper is very thin since here there is explicitly only one section.
 \begin{minted}{python}
@@ -292,63 +316,10 @@ class DataFrameSection:
     def __init__(self, dataframe):
         self._tau = dataframe.iloc
         self._view = dataframe
-    def view(self):
+    def view(self, axes):
         return self._view
 \end{minted}
-The pandas indexer is a key valued set of discrete vertices, so there is no need to repackage for triangulation. As with the previous examples, there is no need to implement an explicit \mintinline{python}{get} method since the \mintinline{python}{dataframe} object has a get method. 
-
-\begin{figure}[H]
-    \begin{subfigure}{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/code/bar_v.png}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/code/bar_h.png}
-    \end{subfigure}
-    \caption{Frequency of Penguin types visualized as discrete bars. }
-    \label{fig:code_bar_simple}
-\end{figure}
-The bar charts in figure~\ref{fig:code_bar_simple} are generated with a \mintinline{python}{Bar} artist. The have the same required \vfiber\ components of (position, length). In \mintinline{pyton}{__init__} of \mintinline{python}{Bar} an additional parameter is set, \texttt{orientation} which only applies holistically to the graphic and never to individual data parameters. Explicitly differentiate between parameters in \vtotal\ and ones that are only in \vmarkd\ is another way this model allows for cleaner separation of roles in the code. 
-
-\begin{minted}{python}
-class Bar(mcollections.Collection):
-    def __init__(self, data, transforms, *args, **kwargs):
-        # parameter of the graphic
-        self.orientation = kwargs.pop('orientation', 'v')
-
-        super().__init__(*args, **kwargs)
-        self.data = data
-        self.transforms = transforms
-
-    @staticmethod    
-    def _make_bars(orientation, position, width, floor, length):
-        if orientation in {'vertical', 'v'}:
-            xval, xoff, yval, yoff = position, width, floor, length
-        elif orientation in {'horizontal', 'h'}:
-            xval, xoff, yval, yoff = floor, length, position, width
-        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-
-    
-    def assemble(self, visual):
-        #set some defaults
-        visual['width'] = visual.get('width', itertools.repeat(0.8))
-        visual['floor'] = visual.get('floor', itertools.repeat(0))
-        visual['facecolors'] = visual.get('facecolors', 'C0')
-        #build bar glyphs based on graphic parameter
-        verts = self._make_bars(self.orientation, visual['position'], 
-                   visual['width'], visual['floor'], visual['length'])
-        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
-        self.set_edgecolors('k')
-        self.set_facecolors(visual['facecolors'])
-        
-    def draw(self, renderer, *args, **kwargs):
-        view = self.data.view()
-        visual = utils.convert_transforms(view, self.transforms)  
-        self.assemble(visual)
-        super().draw(renderer, *args, **kwargs)
-        return      
-\end{minted}
-The \mintinline{python}{draw} method identical to the ones above, but here the visual transformations are factored out into a separate function. The \mintinline{python}{assemble} function sets some defaults, constructs bars, and sets their edge color to black. The \mintinline{python}{_make_bars} function is somewhat factored out because this is an operation that may be used by other bar making functions that may not be able to make use of bars assemble or draw. 
+The pandas indexer is a key valued set of discrete vertices, so there is no need to repackage for triangulation. 
 
 \begin{figure}[H]
     \begin{subfigure}{0.5\textwidth}
@@ -444,22 +415,22 @@ where \mintinline{python}{trans} is the same dictionary for both stacked and gro
 
 
 \subsection{Summary}
-In general, the way in which we implement the artist is as follows: 
+In general, the way in which we implemented the artist is as follows: 
 \begin{description}
-    \item[\textbf{\vchannel}] encoder functions, can be \mintinline{python}{Encoder.__call__} method
-    \item[\textbf{\vtotal}]  \mintinline{python}|{parameter:(variable, encoder)}| curried until {Artist.draw}
+    \item[\textbf{\vchannel}] encoder function converting data to library normalized form, can also be \mintinline{python}{Encoder.__call__} method
+    \item[\textbf{\vsection}]  dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| curried until {Artist.draw}
     \item[\textbf{\vartisteq}] objects that take in as input \dtotal\ and \vtotal\, for example \mintinline{python}{Point}, \mintinline{python}{Line}, \mintinline{python}{bar}
-    \item[\textbf{\vartist}] \mintinline{python}{Artist.draw}, which is \vartisteq\ parameterized by \vtotal
-   
-    \item[\textbf{\vmarkd}] \mintinline{python}{Artist.assemble(visual)}  
+    \item[\textbf{\vartist}] \mintinline{python}{Artist.draw} method which is \vartisteq\ parameterized by \vtotal
+    \item[\textbf{\vmarkd}] \mintinline{python}{Artist.assemble(visual)} method that arranges components of \vtotal\ into glyphs  
 \end{description}
 
 with the data representation implemented as 
 \begin{description}
-    \item[\textbf{\dtotal}]
-    \item[\textbf{\dfiber}]
-    \item[\textbf{\d}]  
+    \item[\textbf{\dtotal}] object with \mintinline{python}{view} method 
+    \item[\textbf{\dfiber}] named components of the data and their types
+    \item[\textbf{\dbase}] determines how the data is bound together when returned by view  
+    \item[\textbf{\dsection}] \mintinline{python}{Data.view()} method that returns component sections
 \end{description}    
-
-\note{This API may want to be redesigned such that there's a way to clearly couple the columns when doing multindex broadcasting}
+ 
+While very rough, this API demonstrates that the ideas presented in the math framework are implementable. In choosing a functional approach, if not implementation, we provide a framework for library developers to build reusable encoder \vchannel\ and assembly \vmarkd\. We argue that  if these functions are built such that they are equivariant with respect to monoid actions and the graphic topology is a deformation retraction of the data topology, then the artist by definition will be a structure and property preserving map from data to graphic. 
 \end{document}
