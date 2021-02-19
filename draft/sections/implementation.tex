@@ -1,7 +1,6 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-%what, why, how
 \section{Prototype Implementation: Matplottoy}
 \label{sec:implementation}
 \begin{figure}[H]
@@ -32,8 +31,27 @@ To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mi
     ax.add_artist(artist)
 \end{minted}
 \end{multicols*}
+We then add the \mintinline{python}{Point} and \mintinline{python}{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \mintinline{python}{data} that is to be plotted and the aesthetic configuration \mintinline{python}{transforms}. In general, the way in which we implement the math is described as follows:
+\begin{tabular}
+    \begin{table}{|l|l|l|}
+        \hline
+        \textbf{Math} & \texbf{Code} & \textbf{Examples} \\
+        \textbf{\vartistEQ} & & \\
 
-We then add the \vartisteq=\mintinline{python}{Point} and  \vartisteq=\mintinline{python}{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \dtotal=\mintinline{python}{data} that is to be plotted and the aesthetic configuration \vchannel=\mintinline{python}{transforms}. We implement the artists as equivalence classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
+    \end{table}
+
+\end{tabular}
+
+\begin{mdframed}[roundcorner=10pt, frametitle= topology driven architecture, frametitlerule=true, frametitlebackgroundcolor=gray!10]
+    \begin{description}
+        \item[\textbf{\vartistEQ}] artist objects such as  \mintinline{python}{Point},  \mintinline{python}{Line}, \mintinline{python}{bar}
+        \item[\textbf{\vchannel}] 
+        \item[\textbf{\markd}] 
+        \item[\textbf{\vtotal}] 
+        \item[\textbf{\dtotal}] 
+    \end{description}
+\end{mdframed}
+Implementing \gtotal\ and \gsection\ are out of scope for this prototype because they are part of the rendering process. We do not implement any form of \vindex\ because the scatter, line, and bar plots prototyped here directly broadcast from \dbasepoint to \gbasepoint, unlike for example an image which may need to be rotated. We implement the artists as equivalence classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
  
 \subsection{Artist Class $\vartist^{\prime}$}
 \label{sec:code_artist}
