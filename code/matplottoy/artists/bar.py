@@ -8,7 +8,8 @@ from cycler import cycler
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
-from matplotlib.artist import Artist
+import matplotlib.patches as mpatches
+import matplotlib.artist as martist
 
 from matplottoy.artists import utils
 
@@ -56,12 +57,12 @@ class Bar(mcollections.Collection):
         
     def draw(self, renderer):
         view = self.data.view(self.axes)
-        visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
+        visual = {p: encoder(view[f] if f is not None else None) 
+                  for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         super().draw(renderer)
 
-
-class StackedBar(Artist):
+class StackedBar(mcollections.Collection):
     def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
         """
         Parameters
@@ -85,36 +86,29 @@ class StackedBar(Artist):
         assert ('length' in mtransforms) # this is the criteria for stacked bar
 
     def assemble(self, view):
+        self.children = [] # list of bars to be rendered
         ngroups = len(self.mtransforms['length'][0])
         gtransforms = self.transforms.copy()
-        gtransforms.setdefault('floor', 0)
+        floor = 0
         for gid in range(ngroups):    
             # pull out the specific group transforms
             gtransforms.update({k: (group[gid], encoder) for 
                     (k, (group, encoder)) in self.mtransforms.items()})
-            Bar(self.data, gtransforms, self.orientation)
+            self.children.append(Bar(self.data, gtransforms, self.orientation))
+            print(gtransforms)
+            break
             
-            #gtransforms['floor'] += view[gtransforms['length'][0]]
-        """
-        # convert lengths after all calculations are made
-        # here or in transform machinery?
-        if self.orientation in {'v', 'vertical'}:
-            tverts = [[(x, gencoder(y)) for (x, y) in vert] 
-                            for vert in verts]
-        elif self.orientation in {'h', 'horizontal'}:
-            tverts = [[(gencoder(x), y) for (x, y) in vert] 
-                            for vert in verts]
-        self._paths = [mpath.Path(xy, closed=True) for xy in tverts]
-
-        self.set_facecolor(list(itertools.chain.from_iterable(visual['facecolors'])))
-        self.set_edgecolors('k') 
-        """
+        self._path = list(itertools.chain.from_iterable(c._paths for c in self.children))
         
-    def draw(self, renderer, *args, **kwargs):
-        view = self.data.view('vertex')
-        # all the visual conversion gets pushed to bar
+    def draw(self, renderer):
+        view = self.data.view(self.axes)
+        # all the visual conversion gets pushed to child artists
         self.assemble(view)
-        super().draw(renderer, *args, **kwargs)
+        super().draw(renderer)
+        
+        for artist in self.children:
+            artist.draw(renderer)
+
         
 class MultiBar(mcollections.Collection):
     def __init__(self, data, transforms, *args, **kwargs):
