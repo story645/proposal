@@ -12,7 +12,7 @@ import matplotlib.path as mpath
 from matplottoy.artists import utils
 
 class Bar(mcollections.Collection):
-    def __init__(self, data, transforms, orientation, *args, **kwargs):
+    def __init__(self, data, transforms, orientation='v', *args, **kwargs):
         """
         Parameters
         ----------
@@ -55,11 +55,66 @@ class Bar(mcollections.Collection):
         
     def draw(self, renderer, *args, **kwargs):
         view = self.data.view(self.axes)
-        visual = utils.convert_transforms(view, self.transforms)  
+        visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         super().draw(renderer, *args, **kwargs)
         return
 
+class StackedBar(mcollections.Collection):
+    def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
+        """
+        Parameters
+        ----------
+   
+        orientation: str, optional
+            vertical: bars aligned along x axis, heights on y
+            horizontal: bars aligned along y axis, heights on x
+        **kwargs:
+            kwargs passed through         """
+  
+        #assert 'vertex' in data.FB.K['tables']
+        #utils.check_constraints(MultiBar, transforms)
+        #utils.validate_transforms(data, transforms)
+       
+        super().__init__(*args, **kwargs)
+        self.data = data
+        self.orientation = orientation
+        self.transforms = transforms.copy()
+        self.mtransforms = mtransforms.copy()
+        assert ('length' in mtransforms) # this is the criteria for stacked bar
+
+    def assemble(self, view):
+        ngroups = len(self.mtransforms['length'][0])
+        gtransforms = self.transforms.copy()
+        gtransforms.setdefault('floor', 0)
+        for gid in range(ngroups):    
+            # pull out the specific group transforms
+            gtransforms.update({k: (group[gid], encoder) for 
+                    (k, (group, encoder)) in self.mtransforms.items()})
+            Bar(self.data, gtransforms, self.orientation)
+            
+            #gtransforms['floor'] += view[gtransforms['length'][0]]
+        """
+        # convert lengths after all calculations are made
+        # here or in transform machinery?
+        if self.orientation in {'v', 'vertical'}:
+            tverts = [[(x, gencoder(y)) for (x, y) in vert] 
+                            for vert in verts]
+        elif self.orientation in {'h', 'horizontal'}:
+            tverts = [[(gencoder(x), y) for (x, y) in vert] 
+                            for vert in verts]
+        self._paths = [mpath.Path(xy, closed=True) for xy in tverts]
+
+        self.set_facecolor(list(itertools.chain.from_iterable(visual['facecolors'])))
+        self.set_edgecolors('k') 
+        """
+        
+    def draw(self, renderer, *args, **kwargs):
+        view = self.data.view('vertex')
+        # all the visual conversion gets pushed to bar
+        self.assemble(view)
+        super().draw(renderer, *args, **kwargs)
+        
 class MultiBar(mcollections.Collection):
     def __init__(self, data, transforms, *args, **kwargs):
         """
@@ -105,6 +160,7 @@ class MultiBar(mcollections.Collection):
 
         verts = []
         for group, off in zip(groups, offset):
+            Bar(self.data, self.transforms)
             verts.extend(Bar._make_bars(self.orientation, visual['position'] + off, 
                           visual['width'], visual['floor'], view[group]))
             if self.stacked:
@@ -133,7 +189,6 @@ class MultiBar(mcollections.Collection):
         # may need to happen after the glyphs ar put together
         self.assemble(visual, view)
         
-        super().draw(renderer, *args, **kwargs)
         super().draw(renderer, *args, **kwargs)
         return      
 
