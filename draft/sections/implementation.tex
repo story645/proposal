@@ -31,27 +31,8 @@ To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mi
     ax.add_artist(artist)
 \end{minted}
 \end{multicols*}
-We then add the \mintinline{python}{Point} and \mintinline{python}{Line} artists that construct the scatter and line graphics. The arguments to the artist are the data \mintinline{python}{data} that is to be plotted and the aesthetic configuration \mintinline{python}{transforms}. In general, the way in which we implement the math is described as follows:
-\begin{tabular}
-    \begin{table}{|l|l|l|}
-        \hline
-        \textbf{Math} & \texbf{Code} & \textbf{Examples} \\
-        \textbf{\vartistEQ} & & \\
 
-    \end{table}
-
-\end{tabular}
-
-\begin{mdframed}[roundcorner=10pt, frametitle= topology driven architecture, frametitlerule=true, frametitlebackgroundcolor=gray!10]
-    \begin{description}
-        \item[\textbf{\vartistEQ}] artist objects such as  \mintinline{python}{Point},  \mintinline{python}{Line}, \mintinline{python}{bar}
-        \item[\textbf{\vchannel}] 
-        \item[\textbf{\markd}] 
-        \item[\textbf{\vtotal}] 
-        \item[\textbf{\dtotal}] 
-    \end{description}
-\end{mdframed}
-Implementing \gtotal\ and \gsection\ are out of scope for this prototype because they are part of the rendering process. We do not implement any form of \vindex\ because the scatter, line, and bar plots prototyped here directly broadcast from \dbasepoint to \gbasepoint, unlike for example an image which may need to be rotated. We implement the artists as equivalence classes \vartisteq\ because it would be impractical to implement a new artist for every aesthetic setting, such as one artist for red lines and another for green.
+We then add the \mintinline{python}{Point} and \mintinline{python}{Line} artist that construct the scatter and line graphics. These artists are implemented as the equivalence class \vartisteq\ with the aesthetic configurations factored out into a \mintinline{python}{transforms} dictionary that specifies the visual bundle \vtotal\. The equivalence classes \vartisteq\ map well to Python classes since the functional aspects-\vchannel, \vmarkd, and \vindex - are completely reusable in a consistent composition, while the visual values in \vtotal\ are what change between different artists belonging to the same class \vartisteq. The \mintinline{python}{data} object is an abstraction of a data bundle \dtotal\ with a specified section \tau. Implementing \gtotal\ and \gsection\ are out of scope for this prototype because they are part of the rendering process. We also did not implement any form of \vindex\ because the scatter, line, and bar plots prototyped here directly broadcast from \dbasepoint to \gbasepoint, unlike for example an image which may need to be rotated. 
  
 \subsection{Artist Class $\vartist^{\prime}$}
 \label{sec:code_artist}
@@ -72,7 +53,7 @@ class ArtistClass(matplotlib.artist.Artist):
         # returns K, indexed on fiber then key 
         view = self.data.view() 
         # visual channel encoding applied fiberwise 
-        visual = {p: encoder(view.get(f, None)) for 
+        visual = {p: encoder(view[f] if f is not None else None) for 
                      p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         # pass configurations off to the renderer
@@ -461,6 +442,24 @@ ax.add_artist(artist)
 
 where \mintinline{python}{trans} is the same dictionary for both stacked and grouped version, as is the \mintinline{python}{DataFrameSection} object \mintinline{python}{table}. The only difference between the two versions is the \texttt{stacked} flag, and the only difference between figures~\ref{fig:code_bar_simple} is the \texttt{orientation} argument. By decomposing the architecture into data, visual encoding, and assembly steps, we are able to build components that are more flexible and also more self contained than the existing code base. 
 
+
+\subsection{Summary}
+In general, the way in which we implement the artist is as follows: 
+\begin{description}
+    \item[\textbf{\vchannel}] encoder functions, can be \mintinline{python}{Encoder.__call__} method
+    \item[\textbf{\vtotal}]  \mintinline{python}|{parameter:(variable, encoder)}| curried until {Artist.draw}
+    \item[\textbf{\vartisteq}] objects that take in as input \dtotal\ and \vtotal\, for example \mintinline{python}{Point}, \mintinline{python}{Line}, \mintinline{python}{bar}
+    \item[\textbf{\vartist}] \mintinline{python}{Artist.draw}, which is \vartisteq\ parameterized by \vtotal
+   
+    \item[\textbf{\vmarkd}] \mintinline{python}{Artist.assemble(visual)}  
+\end{description}
+
+with the data representation implemented as 
+\begin{description}
+    \item[\textbf{\dtotal}]
+    \item[\textbf{\dfiber}]
+    \item[\textbf{\d}]  
+\end{description}    
 
 \note{This API may want to be redesigned such that there's a way to clearly couple the columns when doing multindex broadcasting}
 \end{document}
