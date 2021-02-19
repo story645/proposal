@@ -8,6 +8,7 @@ from cycler import cycler
 from matplotlib import rcParams
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
+from matplotlib.artist import Artist
 
 from matplottoy.artists import utils
 
@@ -53,14 +54,14 @@ class Bar(mcollections.Collection):
         self.set_edgecolors('k')
         self.set_facecolors(visual['facecolors'])
         
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
         view = self.data.view(self.axes)
         visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
-        super().draw(renderer, *args, **kwargs)
-        return
+        super().draw(renderer)
 
-class StackedBar(mcollections.Collection):
+
+class StackedBar(Artist):
     def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
         """
         Parameters

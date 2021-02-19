@@ -67,7 +67,7 @@ class VertexSimplex: #maybe change name to something else
         e4 = rng.uniform(*self.FB.F['v4']['range'])
         return (k, (e1, e2, e3, e4))
 
-    def view(self, simplex="vertex"):
+    def view(self, axes=None):
         """"converts data into atomic column order for get method
         # maybe also pass in the columns?
         """
@@ -101,7 +101,7 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
     def __init__(self, num_edges=4, num_samples=1000):
         """which simplex am I on and distance""" 
         # define the k and distance 
-        self.keys = range(num_)
+        self.keys = range(num_edges)
         self.num_samples = num_samples
         self.distances = np.linspace(0,1, num_samples)
         # concession to this is a half generlized representation of 
@@ -126,7 +126,7 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
         return np.cos(angles), np.sin(angles)
 
         
-    def tau(self, k, simplex='edge'):
+    def tau(self, k):
         """arbitrary k, even between vertices, will give back
         an observation, so all functions must target back to vertice 
         table
@@ -137,20 +137,14 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
         #distances along edge are stored as self.distances
         #self.angle_samples
         x, y = self._xy(k, self.distances, self.angle_samples[k], self.angle_samples[k+1]) 
-        color = self._color(k) if simplex=='edge' else np.repeat(self._color(k), self.num_samples) 
-        return (k, (x, y, color))
+        return (k, (x, y, self._color(k)))
 
-    def view(self, simplex):
+    def view(self, axes=None):
         table = defaultdict(list)
         for k in self.keys:
             table['index'].append(k)
-            for (name, value) in zip(self.FB.F.keys(), self.tau(k, simplex)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(k)[-1]):
                 table[name].append(value)
-        
-        if simplex =='vertex':
-            table['index'] = [(e,d) for d in self.distances for e in table['index']]
-            for name in self.FB.F.keys():
-                table[name] = list(itertools.chain.from_iterable(table[name]))
         return table
 
 def is_continuous(vertices):
@@ -184,11 +178,11 @@ class GraphLine:
         self.edges = edge_table
         self.connect = connect
 
-    def tau(self, k, simplex='edge'):
+    def tau(self, k):
         """this function knows that there are functions on the fibers defined in F"""
         return(k, (self.edges[c][k](self.distances) for c in self.FB.F.keys()))
 
-    def view(self, simplex='edge'):
+    def view(self, axes=None):
         """walk the edge_vertex table to return the edge value
         """
         # continuity test asserted one source, one sink 
@@ -198,12 +192,7 @@ class GraphLine:
         #sort on start or end should yield ordering
         for (i, (start, end)) in sorted(zip(self.ids, self.vertices), key=lambda v:v[1][0]):
             table['index'].append(i)
-            for (name, value) in zip(self.FB.F.keys(), self.tau(i, simplex)[1]):
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i)[1]):
                 table[name].append(value)
 
-        if simplex =='vertex':
-            table['index'] = [(k,d) for d in self.distances for k in table['index']]
-            for name in self.FB.F.keys():
-                table[name] = list(itertools.chain.from_iterable(table[name]))
-        
         return table

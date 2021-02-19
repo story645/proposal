@@ -38,10 +38,10 @@ class Point(mcollections.Collection):
         # circles and facecolors are lists of the same size
         self.set_facecolors(visual['facecolors'])
         
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
         # query data for a vertex table K
         view = self.data.view(self.axes) 
         visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         # call the renderer that will draw based on properties
-        super().draw(renderer, *args, **kwargs)
+        super().draw(renderer)

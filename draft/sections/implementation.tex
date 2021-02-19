@@ -50,7 +50,7 @@ class ArtistClass(matplotlib.artist.Artist):
     def assemble(self, visual):
         # set the properties of the graphic
 
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
         # returns K, indexed on fiber then key 
         # is passed the 
         view = self.data.view(self.axes) 
@@ -59,7 +59,7 @@ class ArtistClass(matplotlib.artist.Artist):
                      for p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
         # pass configurations off to the renderer
-        super().draw(renderer, *args, **kwargs)
+        super().draw(renderer)
 \end{minted}
 
 The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that we can use to query back into data to select a subset as discussed in section~\ref{sec:data_sheaf_stalk}. The \vchannel\ functions are then applied to the data to generate the visual section \vsection\ that here is the object \mintinline{python}{visual}. We allow for fixed visual parameter, such as setting a constant color for all sections, via setting in \mintinline{python}{None} as the data fiber \dfiber\ name in the \mintinline{python}{transform} dictionary. 

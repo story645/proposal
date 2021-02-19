@@ -35,11 +35,11 @@ class Line(mcollections.LineCollection):
         self.set_segments(segments)
         self.set_color(visual['color'])
         
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
         # query data source for edge table
         view = self.data.view('edge')
         visual = {p: encoder(view.get(f, None)) for 
                      p, (f, encoder) in self.transforms.items()}
         self.assemble(visual)
-        super().draw(renderer, *args, **kwargs)
+        super().draw(renderer)
 
