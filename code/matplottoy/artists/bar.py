@@ -35,7 +35,7 @@ class Bar(mcollections.Collection):
      
         super().__init__(*args, **kwargs)
         self.data = data
-        self.transforms = transforms
+        self.transforms = transforms.copy()
     
     def assemble(self, visual):
         #set some defaults
@@ -56,8 +56,15 @@ class Bar(mcollections.Collection):
         
     def draw(self, renderer):
         view = self.data.view(self.axes)
-        visual = {p: encoder(view[f] if f is not None else None) 
-                  for p, (f, encoder) in self.transforms.items()}
+        visual = {}
+        for (p, trans) in self.transforms.items():
+            if 'encoder' in trans:
+                visual[p] = trans['encoder'](view[trans['name']])
+            elif 'name' in trans:
+                visual[p] = view[trans['name']]
+            else:
+                visual[p] = trans                              
+                                                
         self.assemble(visual)
         super().draw(renderer)
 
@@ -80,29 +87,26 @@ class StackedBar(martist.Artist):
         self.orientation = orientation
         self.transforms = transforms.copy()
         self.mtransforms = mtransforms.copy()
-        assert ('length' in mtransforms) # this is the criteria for stacked bar
 
     def assemble(self, view):
         self.children = [] # list of bars to be rendered
-        ngroups = len(self.mtransforms['length'][0])
-        gtransforms = self.transforms.copy()
-        floor = 0
-        for gid in range(ngroups):    
+        floor = np.zeros(len(view[self.transforms['position']['name']]))      
+        for group in self.mtransforms:
             # pull out the specific group transforms
-            gtransforms['floor'] = (None, lambda _ : floor)
-            gtransforms.update({k: (group[gid], encoder) for 
-                    (k, (group, encoder)) in self.mtransforms.items()})
+            gtransforms = self.transforms.copy()
+            gtransforms.update(group)
+            gtransforms['floor'] = floor
             bar = Bar(self.data, gtransforms, self.orientation)
             self.children.append(bar)
-            (key, encoder) = self.mtransforms['length']
-            floor += encoder(view[key])
-      
-    
+            floor += view[group['length']['name']]
+            
+            
     def draw(self, renderer):
         view = self.data.view(self.axes)
         # all the visual conversion gets pushed to child artists
-        children = self.assemble(view)
+        self.assemble(view)
         for artist in self.children:
+            print("DRAW")
             artist.draw(renderer)
 
         
