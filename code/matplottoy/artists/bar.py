@@ -50,7 +50,6 @@ class Bar(mcollections.Collection):
         
         verts = [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
                 for (x, xo, y, yo) in zip(*[visual[k] for k in order])]
-
         self._paths = [mpath.Path(xy, closed=True) for xy in verts]
         self.set_edgecolors('k')
         self.set_facecolors(visual['facecolors'])
@@ -62,7 +61,7 @@ class Bar(mcollections.Collection):
         self.assemble(visual)
         super().draw(renderer)
 
-class StackedBar(mcollections.Collection):
+class StackedBar(martist.Artist):
     def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
         """
         Parameters
@@ -72,11 +71,9 @@ class StackedBar(mcollections.Collection):
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
         **kwargs:
-            kwargs passed through         """
-  
-        #assert 'vertex' in data.FB.K['tables']
-        #utils.check_constraints(MultiBar, transforms)
-        #utils.validate_transforms(data, transforms)
+            kwargs passed through         
+        """
+
        
         super().__init__(*args, **kwargs)
         self.data = data
@@ -92,20 +89,19 @@ class StackedBar(mcollections.Collection):
         floor = 0
         for gid in range(ngroups):    
             # pull out the specific group transforms
+            gtransforms['floor'] = (None, lambda _ : floor)
             gtransforms.update({k: (group[gid], encoder) for 
                     (k, (group, encoder)) in self.mtransforms.items()})
-            self.children.append(Bar(self.data, gtransforms, self.orientation))
-            print(gtransforms)
-            break
-            
-        self._path = list(itertools.chain.from_iterable(c._paths for c in self.children))
-        
+            bar = Bar(self.data, gtransforms, self.orientation)
+            self.children.append(bar)
+            (key, encoder) = self.mtransforms['length']
+            floor += encoder(view[key])
+      
+    
     def draw(self, renderer):
         view = self.data.view(self.axes)
         # all the visual conversion gets pushed to child artists
-        self.assemble(view)
-        super().draw(renderer)
-        
+        children = self.assemble(view)
         for artist in self.children:
             artist.draw(renderer)
 
