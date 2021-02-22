@@ -27,7 +27,7 @@ By definition fiber bundles are locally trivial\cite{spanier1989algebraic,Locall
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_{j_0}, \ldots, \ftype_{j_m}\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m}\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -41,7 +41,7 @@ which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \
 \end{equation}
 where \fsection\ is the schema binding variable name \fname\ to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
 \begin{equation}
-F = \ftotal_{\ftype_1}\times \ldots \ftotal_{\ftype_i} \ldots\times \ftotal_{\ftype_n}
+F = \fttype_{(\fname_1)}\times \ldots \fttype_{(\fname_i)} \ldots\times \ftotal_{(\fname_n)}
 \end{equation}
 which is equivalent to 
 \begin{equation}
@@ -68,11 +68,11 @@ For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times
 \begin{equation}
     \ftotal =  \reals \times \realsp 
 \end{equation} 
-where the first component $F_0$ is the set of values specified by $(\fname_0=time,\, \ftype_0=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname_1=temperature,\, \ftype_1=\texttt{float},\, \fttype=\realsp)$ and is the set of values $\fttype=\realsp$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
+where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=temperature,\, \ftype=\texttt{float},\, \fttype=\realsp)$ and is the set of values $\fttype=\realsp$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
 \begin{equation}
     \dfiber = \realsp \times \reals^{2}
 \end{equation} 
-such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
+such that $F_1$ is specified by $(\fname = wind,\, \ftype = \texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
@@ -153,23 +153,23 @@ which is a decomposition of \dfiber. The \dbase\ remains the same because the co
     \label{fig:base_example}
 \end{figure}
 
-The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase\ such that the records are samples from a continuous function defined on \dbase. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. This in turn allows for building visualizations that can work with distributed or streaming data, since it has a common data access interface with a promise that the data exists. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase\ such that the records are samples from a continuous function defined on \dbase. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. This in turn allows for building visualizations that can work with distributed or streaming data, since it has a common data access interface with a promise that the data exists. 
  
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. In general, for any fiber bundle, there is always a map
+A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. For any fiber bundle, there exists a map
 \begin{equation}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
                           & \dbase \arrow[u, "\dsection"', bend right]
     \end{tikzcd}
 \end{equation}
- such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. There can be many sections \dsection\ and the space of all global sections is $\Gamma(\dtotal)$. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
+ such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
 \begin{equation}
     \label{eq:section_return}
     \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
 \end{equation}
-where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. Because we can decompose the bundle and the fiber, we can formulate $\dsection$ as 
+where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. Because we can decompose the bundle and the fiber, we can decompose \dsection\ as 
 \begin{equation}
 \label{eq:data_section_decompose}
 \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
@@ -182,19 +182,23 @@ where each section $\dsection_i$ is a variable or set of variables.
     \label{fig:data_sections}
 \end{figure}
 
-In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection_i$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection_j$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection_i, \dsection_j \in \Gamma(\dtotal)$.
+In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection^{(1)}$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection^{(2)}$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
 
-The section can be any instance of a data container, for example a numpy array\cite{harris2020array}, a pandas series or dataframe\cite{jeff_reback_2020_3715232}, or an xarray\cite{hoyer2017xarray}. A univariate numpy array that stores an image is a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. A series could store the values of $\dsection_i$ and a second series could be  $dsection_j$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys. An instance of an xarray would also be a \dsection\, for example if the data is a temperature field than the \dbase\ could be a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. As with the dataframe, the semantic index labels are considered components and the indicies are instead assumed to be random. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. The section can remain curried until render since the model is functional, in keeping with dasks compute graph architecture. Our model provides a common interface to these widely used data containers without sacrificing the semantic structure embedded in each container.
+The section can be any instance of a data container, for example a numpy array\cite{harris2020array}, a pandas series or dataframe\cite{jeff_reback_2020_3715232}, or an xarray\cite{hoyer2017xarray}. A univariate numpy array that stores an image is a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys. An instance of an xarray would also be a \dsection\, for example if the data is a temperature field than the \dbase\ could be a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. As with the dataframe, the semantic index labels are considered components and the indicies are instead assumed to be random. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  Our model provides a common interface to these widely used data containers without sacrificing the semantic structure embedded in each container.
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist. \dtotal\ restricted over a small enough neighborhood $U \subset \dbase$ is a locally trivial bundle over $U$\cite{LocallyTrivialFibre}. The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
+The section \dsection\ is defined globally on \dbase, including infinite \dbase\ for streaming data and total \dbase\ for chunked data, but often we want as input into the artist \vartist\ a subset of the data. For example sliding window\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} based visualizations of streaming data, or visualizations that support pan and zoom navigation\cite{nekaro}
+
+To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist.
+
+The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
 
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}
-        \iota^*\dtotal \arrow[d, "\pi"']           & \dtotal \arrow[d, "\pi"'] \arrow[l, "\iota^*"']         \\
-        U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[l, "\iota"']
+        \iota^*\dtotal \arrow[d, "\pi"']           & \dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*"']         \\
+        U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[r, "\iota"']
     \end{tikzcd}
 \end{equation}
 pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. 
@@ -237,7 +241,7 @@ Since \dbase\ with fewer than two dimensions need to be thickened, we define the
     \label{fig:graphic_retraction_map}
 \end{figure}
 
-When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed in \gbase. The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. 
+When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed in \gbase. The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
 \subsubsection{Renderering \gsection}
 \label{sec:graphic_section}
