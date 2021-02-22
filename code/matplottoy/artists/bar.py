@@ -1,3 +1,4 @@
+import copy
 from collections import defaultdict
 import itertools
 
@@ -12,6 +13,8 @@ import matplotlib.patches as mpatches
 import matplotlib.artist as martist
 
 from matplottoy.artists import utils
+
+
 
 class Bar(mcollections.Collection):
     def __init__(self, data, transforms, orientation='v', *args, **kwargs):
@@ -35,7 +38,7 @@ class Bar(mcollections.Collection):
      
         super().__init__(*args, **kwargs)
         self.data = data
-        self.transforms = transforms.copy()
+        self.transforms = copy.deepcopy(transforms)
     
     def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k'):
         #set some defaults
@@ -59,13 +62,13 @@ class Bar(mcollections.Collection):
         view = self.data.view(self.axes)
         visual = {}
         for (p, trans) in self.transforms.items():
-            if 'encoder' in trans:
-                visual[p] = trans['encoder'](view[trans['name']])
-            elif 'name' in trans:
-                visual[p] = view[trans['name']]
+            if isinstance(trans, dict):
+                if "name" in trans:
+                    visual[p] =  view[trans['name']]
+                if "encoder" in trans:
+                    visual[p] = trans['encoder'](visual[p])
             else:
-                visual[p] = trans                              
-                                                
+                 visual[p] = trans
         self.assemble(**visual)
         super().draw(renderer)
 
@@ -86,18 +89,17 @@ class StackedBar(martist.Artist):
         super().__init__(*args, **kwargs)
         self.data = data
         self.orientation = orientation
-        self.transforms = transforms.copy()
-        self.mtransforms = mtransforms.copy()
+        self.transforms = copy.deepcopy(transforms)
+        self.mtransforms = copy.deepcopy(mtransforms)
 
     def assemble(self, view):
         self.children = [] # list of bars to be rendered
-        floor = np.zeros(len(view[self.transforms['position']['name']]))      
+        floor = 0
         for group in self.mtransforms:
             # pull out the specific group transforms
-            gtransforms = self.transforms.copy()
-            gtransforms.update(group)
-            gtransforms['floor'] = floor
-            bar = Bar(self.data, gtransforms, self.orientation)
+            group['floor'] = floor
+            group.update(self.transforms)
+            bar = Bar(self.data, group, self.orientation)
             self.children.append(bar)
             floor += view[group['length']['name']]
             
