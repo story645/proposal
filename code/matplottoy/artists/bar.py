@@ -110,7 +110,6 @@ class StackedBar(martist.Artist):
         self.assemble(view)
         #self._transform = self.children[0].get_transform()
         for artist in self.children:
-            print("DRAW")
             artist.draw(renderer, *args, **kwargs)
 
             
@@ -148,5 +147,4 @@ class GroupedBar(martist.Artist):
         self.assemble(view)
         #self._transform = self.children[0].get_transform()
         for artist in self.children:
-            print("DRAW")
             artist.draw(renderer, *args, **kwargs)

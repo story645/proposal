@@ -27,7 +27,7 @@ By definition fiber bundles are locally trivial\cite{spanier1989algebraic,Locall
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_n\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_{j_0}, \ldots, \ftype_{j_m}\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -35,7 +35,7 @@ To formalize the structure of the data components, we use notation introduced by
         \fnames \arrow[r, "\fsection"']                          & \ftypes       
     \end{tikzcd}
 \end{equation}
-which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. Given \fsection, the fiber for a one variable dataset is
+which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. The \fttype\ lookup is by name to specify that every component is distinct, since multiple components can have the same type \ftype. Given \fsection, the fiber for a one variable dataset is
 \begin{equation}
     \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
 \end{equation}
@@ -47,8 +47,7 @@ which is equivalent to
 \begin{equation}
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
-
-which allows us to decouple \dfiber\ into components $\dfiber_i$. 
+which allows us to decouple \dfiber\ into components $\dfiber_i$.
 
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -77,7 +76,7 @@ such that $F_1$ is specified by $(\fname_1 = wind,\, \ftype_1=\texttt{wind},\, \
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define as the action of a monoid on the component. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
+Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the action of a monoid on the component. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
@@ -90,20 +89,20 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given the interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$:
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given an arbitrary interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ with arbitrarily chosen monoid translation actions actions 
 \begin{itemize}
     \item monoid operator addition $\ast = +$
     \item monoid operations: $f: x\mapsto x + 1 $, $g: x\mapsto x + 2  $
     \item monoid action operator composition $\bullet = \circ$
 \end{itemize}
-then the translation monoid actions on temperature satisfy the condition
+By structure preservation, we mean that monoid actions are composable. For the translation actions described above on the temperature fiber, this means that they satisfy the condition
 \begin{equation}
     \begin{tikzcd}
         \reals \arrow[rd, "(x+ 1\degree)\circ(x+2\degree)"] \arrow[d, "x+ 1\degree"'] &            \\
         \reals \arrow[r, "x+ 2\degree"']                                   & \reals
     \end{tikzcd}
 \end{equation}
-where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$. 
+where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$. What this diagram means is that either the fiber could be shifted by 1 (vertical line) then by 2 (horizontal), or the two shifts could be combined such that in this case the fiber is shifted by 3 (diagonal) and these two paths yield the same temperature. 
 
 While many component types will be one of the measurement scale types, we generalize to monoids specifically for the case of partially ordered set. Given a set $W=\{mist, \, drizzle, \, rain \}$, then the map $f: W\rightarrow W$ defined by 
 \begin{enumerate}
@@ -131,13 +130,11 @@ As illustrated in figure~\ref{fig:base_space_types}, \dbase\ is akin to an index
     \label{fig:base_space_div}
 \end{figure}
 
-Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the line. 
-
+Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In figure~\ref{fig:base_space_div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the closed interval $\left[0,1\right]$. 
 As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
 \begin{equation}
     \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
 \end{equation}
-
 which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
 \begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
