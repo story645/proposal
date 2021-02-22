@@ -37,22 +37,23 @@ class Bar(mcollections.Collection):
         self.data = data
         self.transforms = transforms.copy()
     
-    def assemble(self, visual):
+    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k'):
         #set some defaults
-        visual.setdefault('width', itertools.repeat(0.8))
-        visual.setdefault('floor', itertools.repeat(0))
-        visual.setdefault('facecolors', 'C0')
+        width = itertools.repeat(width) if np.isscalar(width) else width
+        floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
+        
+        def make_bars(xval, xoff, yval, yoff):
+             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
         #build bar glyphs based on graphic parameter
         if self.orientation in {'vertical', 'v'}:
-            order = ['position', 'width', 'floor', 'length']
+            verts = make_bars(position, width, floor, length)
         elif self.orientation in {'horizontal', 'h'}:
-            order = ['floor', 'length', 'position', 'width']
+            verts = make_bars(floor, length, position, width)
         
-        verts = [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(*[visual[k] for k in order])]
         self._paths = [mpath.Path(xy, closed=True) for xy in verts]
-        self.set_edgecolors('k')
-        self.set_facecolors(visual['facecolors'])
+        self.set_edgecolors(edgecolors)
+        self.set_facecolors(facecolors)
         
     def draw(self, renderer):
         view = self.data.view(self.axes)
@@ -65,7 +66,7 @@ class Bar(mcollections.Collection):
             else:
                 visual[p] = trans                              
                                                 
-        self.assemble(visual)
+        self.assemble(**visual)
         super().draw(renderer)
 
 class StackedBar(martist.Artist):
