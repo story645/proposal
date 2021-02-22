@@ -40,10 +40,13 @@ class Bar(mcollections.Collection):
         self.data = data
         self.transforms = copy.deepcopy(transforms)
     
-    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k'):
+    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
         #set some defaults
         width = itertools.repeat(width) if np.isscalar(width) else width
         floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
+        
+        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
+        position = position + offset
         
         def make_bars(xval, xoff, yval, yoff):
              return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
@@ -58,7 +61,7 @@ class Bar(mcollections.Collection):
         self.set_edgecolors(edgecolors)
         self.set_facecolors(facecolors)
         
-    def draw(self, renderer):
+    def draw(self, renderer,  *args, **kwargs):
         view = self.data.view(self.axes)
         visual = {}
         for (p, trans) in self.transforms.items():
@@ -70,7 +73,7 @@ class Bar(mcollections.Collection):
             else:
                  visual[p] = trans
         self.assemble(**visual)
-        super().draw(renderer)
+        super().draw(renderer,  *args, **kwargs)
 
 class StackedBar(martist.Artist):
     def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
@@ -80,12 +83,8 @@ class StackedBar(martist.Artist):
    
         orientation: str, optional
             vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x
-        **kwargs:
-            kwargs passed through         
+            horizontal: bars aligned along y axis, heights on x   
         """
-
-       
         super().__init__(*args, **kwargs)
         self.data = data
         self.orientation = orientation
@@ -95,6 +94,7 @@ class StackedBar(martist.Artist):
     def assemble(self, view):
         self.children = [] # list of bars to be rendered
         floor = 0
+  
         for group in self.mtransforms:
             # pull out the specific group transforms
             group['floor'] = floor
@@ -104,89 +104,49 @@ class StackedBar(martist.Artist):
             floor += view[group['length']['name']]
             
             
-    def draw(self, renderer):
+    def draw(self, renderer, *args, **kwargs):
         view = self.data.view(self.axes)
         # all the visual conversion gets pushed to child artists
         self.assemble(view)
+        #self._transform = self.children[0].get_transform()
         for artist in self.children:
             print("DRAW")
-            artist.draw(renderer)
+            artist.draw(renderer, *args, **kwargs)
 
-        
-class MultiBar(mcollections.Collection):
-    def __init__(self, data, transforms, *args, **kwargs):
+            
+class GroupedBar(martist.Artist):
+    def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
         """
         Parameters
         ----------
-        datasource: matplottoy.datasources.DataSource like
-            data object containing data to be plotted
-        stacked: bool, optional
-            True: bar chart is stacked (groups are added)
-            False: bar chart is unstacked (groups are interspersed)
         orientation: str, optional
             vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x
-        **kwargs:
-            kwargs passed through         """
-  
-        #assert 'vertex' in data.FB.K['tables']
-        #utils.check_constraints(MultiBar, transforms)
-        #utils.validate_transforms(data, transforms)
-       
-
-        self.orientation = kwargs.pop('orientation', 'v')
-        self.stacked = kwargs.pop('stacked', False)     
-        self.width = kwargs.pop('width', .8)
-       
+            horizontal: bars aligned along y axis, heights on x   
+        """
         super().__init__(*args, **kwargs)
         self.data = data
-        self.transforms = transforms.copy()
+        self.orientation = orientation
+        self.transforms = copy.deepcopy(transforms)
+        self.mtransforms = copy.deepcopy(mtransforms)
 
-    def assemble(self, visual, view):
-        (groups, gencoder) = self.transforms['length']
-        ngroups = len(np.atleast_1d(groups))
-        visual['floor'] = visual.get('floor', np.empty(len(view[groups[0]])))
-        visual['facecolors'] = visual.get('facecolors', 'C0')
-        if 'width' not in visual and self.stacked:
-            visual['width'] = itertools.repeat(self.width)
-
-        if not self.stacked:
-            visual['width'] = itertools.repeat(self.width/ngroups)
-            offset = (np.arange(ngroups) /ngroups) * self.width
-        else:
-            offset = itertools.repeat(0)
-
-        verts = []
-        for group, off in zip(groups, offset):
-            Bar(self.data, self.transforms)
-            verts.extend(Bar._make_bars(self.orientation, visual['position'] + off, 
-                          visual['width'], visual['floor'], view[group]))
-            if self.stacked:
-                visual['floor'] += view[group]
-          
-        # convert lengths after all calculations are made
-        # here or in transform machinery?
-        if self.orientation in {'v', 'vertical'}:
-            tverts = [[(x, gencoder(y)) for (x, y) in vert] 
-                            for vert in verts]
-        elif self.orientation in {'h', 'horizontal'}:
-            tverts = [[(gencoder(x), y) for (x, y) in vert] 
-                            for vert in verts]
-        self._paths = [mpath.Path(xy, closed=True) for xy in tverts]
-
-        self.set_facecolor(list(itertools.chain.from_iterable(visual['facecolors'])))
-        self.set_edgecolors('k')
+    def assemble(self, view):
+        self.children = [] # list of bars to be rendered
+        ngroups = len(self.mtransforms)
         
-        
-        
+        for gid, group in enumerate(self.mtransforms):
+            group.update(self.transforms)
+            width = group.get('width', .8)
+            group['width'] = width/ngroups
+            group['offset'] = gid/ngroups*width 
+            bar = Bar(self.data, group, self.orientation)     
+            self.children.append(bar)
+            
+            
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view('vertex')
-        #exclude converting the group visual length, special cased in assemble
-        visual = utils.convert_transforms(view, self.transforms, ['length'])
-        # pass in view because there's a visual conversion step that 
-        # may need to happen after the glyphs ar put together
-        self.assemble(visual, view)
-        
-        super().draw(renderer, *args, **kwargs)
-        return      
-
+        view = self.data.view(self.axes)
+        # all the visual conversion gets pushed to child artists
+        self.assemble(view)
+        #self._transform = self.children[0].get_transform()
+        for artist in self.children:
+            print("DRAW")
+            artist.draw(renderer, *args, **kwargs)
