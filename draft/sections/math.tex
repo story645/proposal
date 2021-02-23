@@ -157,7 +157,7 @@ The datasets in figure~\ref{fig:base_example} have the same fiber of (temperatur
  
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record at a given key in \dbase. For any fiber bundle, there exists a map
+A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record \delement\ at a given key in \dbase. For any fiber bundle, there exists a map
 \begin{equation}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
@@ -174,7 +174,7 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. This
 \label{eq:data_section_decompose}
 \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
 \end{equation}
-where each section $\dsection_i$ is a variable or set of variables. 
+where each section $\dsection_i$ is a variable or set of variables. This allows for accessing the data component wise rather than just as sections on \dbase.
 
 \begin{figure}[H]
     \includegraphics[width=.5\linewidth]{figures/math/fiberbundle.png}
@@ -188,22 +188,19 @@ The section can be any instance of a data container, for example a numpy array\c
 
 \subsubsection{Sheaf and Stalk}
 \label{sec:data_sheaf_stalk}
-The section \dsection\ is defined globally on \dbase, including infinite \dbase\ for streaming data and total \dbase\ for chunked data, but often we want as input into the artist \vartist\ a subset of the data. For example sliding window\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} based visualizations of streaming data, or visualizations that support pan and zoom navigation\cite{nekaro}
+The section \dsection\ is defined globally on \dbase, including infinite \dbase\ for streaming data and total \dbase\ for chunked data, but often we want as input into the artist \vartist\ a subset of the data. For example sliding window\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} based visualizations of streaming data, or visualizations that support pan and zoom navigation\cite{NekrasovskiEvaluationPanZoom2006}. To make these types of visualizations, mathematical objects called sheafs provide a way to construct a \dsection\ on a subset of \dbase. 
 
-To support working with a subset of data, we can take the sheaf $\mathcal{O}(\dtotal)$ as input into the artist.
-
-The sheaf $O(\dtotal)$ is the localized section of fibers $\iota^*\dsection: U \rightarrow \iota^*\dtotal$
-
+As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}
-        \iota^*\dtotal \arrow[d, "\pi"']           & \dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*"']         \\
-        U \arrow[u, "\iota^*\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right] \arrow[r, "\iota"']
+        \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
+        U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
     \end{tikzcd}
 \end{equation}
-pulled back over the neighborhood $U$ via the inclusion map $\iota: U \rightarrow \dbase$. The localized section is the germ $\xi^*\dsection$. The neighborhood of points $\dbasepoint_i$ surrounding the point \dbasepoint\ the sheaf lies over is the stalk $\mathcal{F}_b$ \cite{StalkSheaf2019,spanier1989algebraic}. 
+such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. Restriction maps on the sheaf define how to glue together these localized sections $\iota^*\dsection$ into larger sections\cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018} over the subset of \dbase\ requested by the visualization.
 
-While \dtotal\ is only the fiber $\dfiber_k$ over a specific \dbasepoint, the stalk includes the local behavior of the section at \dbasepoint\ which can include information about nearby records. In practice, often the only information needed from the stalk is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. The sheaf facilitates interactions such as zooming or updating the graphic based on zooming data; the jet ensures that the artist only needs a single record on \dbasepoint\ to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
+Another use for the sheaf is to provide access to all the records over the space on which the sheaf $\mathcal{O}(\dtotal)$ is defined. The artist \vartist\ could not generate any visualization that needed more information than was in a single record, such as a line plot, if it took as input \dsection, because $\dsection:\dbasepoint \mapsto \delement$ only knows about the record it returns. While taking  $\mathcal{O}(\dtotal)$ as input would solve this issue, in practice, often the only information \vartist\ needs is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. The sheaf facilitates interactions such as zooming or updating the graphic based on zooming data; the jet ensures that the artist only needs a single record on \dbasepoint\ extended with derivatives to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
 
 
 \subsection{Graphic: \gtotal}
