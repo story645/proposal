@@ -27,7 +27,7 @@ By definition fiber bundles are locally trivial\cite{spanier1989algebraic,Locall
 
 \subsubsection{Variables: Fiber Space \dfiber}
 \label{sec:data_fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m}\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -41,7 +41,7 @@ which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \
 \end{equation}
 where \fsection\ is the schema binding variable name \fname\ to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
 \begin{equation}
-F = \fttype_{(\fname_1)}\times \ldots \fttype_{(\fname_i)} \ldots\times \ftotal_{(\fname_n)}
+F = \ftotal_{\fsection(\fname_{1})}\times \ldots \ftotal_{\fsection(\fname_{i})} \ldots\times \ftotal_{\fsection(\fname_{n})}
 \end{equation}
 which is equivalent to 
 \begin{equation}
@@ -210,9 +210,7 @@ a fiber \gfiber (~\ref{sec:graphic_base}) that is an idealized display space, an
 
 \subsubsection{Idealized Display \gfiber}
 \label{sec:graphic_fiber}
-To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. 
-
-In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
+To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
 \begin{equation}
 (x,\, y,\, r,\, g,\, b) \in \gfiber
 \end{equation}
@@ -220,25 +218,26 @@ such that a rendered graphic only consists of 2D position and color. To support 
 
 \subsubsection{Continuity of the Graphic \gbase} 
 \label{sec:graphic_base}
-Since we propose that data topology \dbase\ is by some measure preserved in the graphic, we introduce a graphic topology \gbase to encode the carried over structure. These topologies are not always identical because the underlying topology \gbase\ of a graphic may need more dimensions than the data topology \dbase\. In a typical 2D display (ignoring depth), visible elements need to have 2D extent so that for example a scatter marker has an area greater than 0 or a line is not infinitely thin. 
+Just as the \dbase\ encodes the connectivity of the records in the data, we propose an equivalent \gbase\ that encodes the connectivity of the rendered elements of the graphic. For some visualizations, \dbase may be lower dimension than \gbase. For example, in a typical 2D display (ignoring depth), a point that is 0D in \dbase cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the pixels that visually represent the point. This thickening is often not necessary when the dimensionality of \dbase\ matches the dimensionality of the target space, for example if \dbase is 2D and the display is a 2D screen. We introduce \gbase\ to thicken \dbase\ in a way which preserves the structure of \dbase. 
 
-Since \dbase\ with fewer than two dimensions need to be thickened, we define the mapping from graphic \gbase\ to data \dbase 
+Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopology2020} of \gbase\ so that \dbase\ and \gbase\ have the same homotopy. The surjective map $\vindex: \gbase \rightarrow \dbase$ 
 \begin{equation}
     \begin{tikzcd}
         \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
         \dbase                   & \gbase \arrow[l, "\vindex"']
-        \end{tikzcd}
+    \end{tikzcd}
 \end{equation}
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. 
 
- as the deformation retraction \cite{RetractionTopology2020} $\vindex: \gbase \rightarrow \dbase$ that goes from a region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$, such that when $\vindex(\gbasepoint) = \dbasepoint$,\, $\vindex^*\dsection(\gbasepoint) = \dsection(\gbasepoint)$. While dimensions can be added to \gbase, it retains the same continuity as \dbase.
- 
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The heatmap has the same continuity in the graphic \gbase\ as in the data \dbase. \note{add $\alpha, \beta$ coordinates to figures}}
+    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase. \note{add $\alpha, \beta$ coordinates to figures}}
     \label{fig:graphic_retraction_map}
 \end{figure}
 
-When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The heatmap has the same continuity in data space and graphic space such that no extra dimensions are needed in \gbase. The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
+When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The image has the same dimensions in data space and graphic space such that no extra dimensions are needed in \gbase. 
+
+The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
 \subsubsection{Renderering \gsection}
 \label{sec:graphic_section}
@@ -248,7 +247,7 @@ When \dbase\ is discrete points and the graphic is a scatter plot, each point $\
     \label{fig:graphic_rho_lookup}
 \end{figure}
 
-This section describes how we go from a graphical design to a rendered image, where the graphical design is the section $\gsection: \gbase \rightarrow \gtotal$. It is sufficient to sketch out how an arbitrary pixel would be renderer, where a pixel $p$ in a real display corresponds to a region $\gbase_p$ in the idealized display. To determine the color of the pixel, we aggregate the color values over the region via integration. 
+This section describes how we go from a graphic in an idealized prerender space to a rendered image, where the graphic is the section $\gsection: \gbase \rightarrow \gtotal$. It is sufficient to sketch out how an arbitrary pixel would be rendered, where a pixel $p$ in a real display corresponds to a region $\gbase_p$ in the idealized display. To determine the color of the pixel, we aggregate the color values over the region via integration. 
 
 For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. To compute the color, we integrate on $\gbase_p$
 
