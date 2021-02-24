@@ -250,8 +250,7 @@ The artist is the function that converts data into graphics; its name is taken f
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
-
-Usually \vartist can usually map into graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the data bundle padded with the jet bundle $\dtotal^{\prime} = \dtotal + \mathcal{J}^{2}(\dtotal)$. Specifically, \vartist is the map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
+Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the data bundle padded with the jet bundle $\dtotal^{\prime} = \dtotal + \mathcal{J}^{2}(\dtotal)$. Specifically, \vartist is the map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
 
 \begin{equation}
     \label{eq:artist_diagram}
@@ -260,7 +259,8 @@ Usually \vartist can usually map into graphical elements solely with the data in
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-where the input can be point wise $\dsecton(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
+where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
+
 
 
 \subsubsection {Visual Fiber Bundle \vtotal}
@@ -281,7 +281,9 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
- A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vsection_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+ A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vfiber_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+
+ 
 
 \subsubsection{Visual Encoders \vchannel}
 \label{sec:artist_nu}
@@ -291,12 +293,14 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
     \caption{In this artis, \vchannel\ maps the strings to the emojis. For \vchannel\ to be equivariant, a shuffle in the words should have an equivalent shuffle in the emojies, and a shuffle in the emojies should have an equivalent shuffle in the words.}
     \label{fig:artist_nu}
 \end{figure}
-As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ as the set of independent conversion functions 
+As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ 
 \begin{equation}
     \label{eq:nu_expanded}
     \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-where $\vchannel_i: \dsection_i \mapsto \vsection_i$ is an equivariant map such that there is a monoid homomorphism from $\dfiber_{i}$ to $vfiber_{i}$. As mentioned in section~\ref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components. A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$
+as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in section~\ref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components.  
+
+A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$
 \begin{equation}
     \label{eq:nu_categorical}
 \begin{tikzcd}
@@ -320,7 +324,7 @@ On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapp
     \label{fig:artist_q}
 \end{figure}
 
-As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is a corresponding monoid action on the output \gsection. 
+As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
 
 Since we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$, we define an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same.   
 
@@ -336,7 +340,7 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
     \label{fig:artist_mark_change}
 \end{figure}
 
-The glyph in figure~\ref{fig:artist_mark_change} has the following characterstics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark is that the action $m=(e, e, e, x+2)$, where e is identity, applied to \vsection\ such that $\vsection^{\prime}=(e,e,e,3)$ has an equivalent action on \gsection that causes $\vmark(\vsection^{\prime})$ to be equivalent to the thicker circle in figure~\ref{fig:artist_mark_change}.
+The glyph in figure~\ref{fig:artist_mark_change} has the following characteristics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection causes $\vmark(\vsection^{\prime})$ to be the thicker circle in figure~\ref{fig:artist_mark_change}.
  
 
  We can formally describe a glyph as \vmark\, with the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
@@ -420,14 +424,8 @@ Given the equivalence between \vsection\ and \vsectionpull\ defined above, the r
 
 Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visua space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline.
 
-\subsubsection{Sheaf and Stalk}
-\label{sec:data_sheaf_stalk}
-\note{move to artost}
-Another use for the sheaf is to provide access to all the records over the space on which the sheaf $\mathcal{O}(\dtotal)$ is defined. The artist \vartist\ could not generate any visualization that needed more information than was in a single record, such as a line plot, if it took as input \dsection, because $\dsection:\dbasepoint \mapsto \delement$ only knows about the record it returns. 
-The data bundle \dtotal\ is defined globally on \dbase, but often we want as
-
- To make these types of visualizations, mathematical objects called sheafs provide a way to construct a \dsection\ on a subset of \dbase. 
-
+\subsubsection{Sheaf}
+\label{sec:artist_sheaf_stalk}
 As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
 \begin{equation}
     \label{eq:sheaf}
@@ -438,10 +436,7 @@ As part of the definition of local triviality, there is an open neighborhood $U\
 \end{equation}
 such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. Restriction maps on the sheaf define how to glue together these localized sections $\iota^*\dsection$ into larger sections\cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018} over the subset of \dbase\ requested by the visualization.
 
- 
-
-The sheaf facilitates visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.; the jet ensures that the artist only needs a single record on \dbasepoint\ extended with derivatives to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
-
+The sheaf facilitates visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.;
 
 
 \subsubsection{Composition of Artists: +}
@@ -454,7 +449,7 @@ To build graphics that are the composites of multiple artists, we define a simpl
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
-It is impractical to implement an artist for every single graphic; instead we implement the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$ which is essentially an artist where the \vchannel\ functions have not yet been input. Equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\, but act on different sections \vsection. To further simplify implementation, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type. 
+It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work. As a first pass for implementation purposes, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type.
 
 \begin{figure}[H]
     \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}

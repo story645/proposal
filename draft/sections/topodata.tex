@@ -1,4 +1,29 @@
-%%pull out cause not helping
+\subsection{Making the fiber bundle computable}
+\label{sec:triangulization}
+\begin{figure}[H]
+    \includegraphics{figures/math/simplex.png}
+    \caption{Simplices can encode the connectivity of the data, from fully disconnected (0 simplex) records to all records are connected to at least 3 others}
+    \label{fig:triangle_simplex}
+\end{figure}
+%%big data
+One way of expressing the connectivity of records in a dataset is to implement \dbase\ as a simplacial complex, which is a set of simplicies such as those shown in figure~\ref{fig:triangle_simplex}. The advantage of triangulization is that it is general enough to work for more complex topology based visualization methods \cite{heineSurveyTopologybasedMethods2016} while also providing a consistent interface of vertices, edges, and faces for \vindex\ to map into. When triangulated, the simplices encode the continuity in the data
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|l|l|l|}\hline
+        \textbf{simplex} & \textbf{continuity} & \textbf{\dsection}   \\ \hline
+        vertex  & discrete   & \dsection(\dbasepoint)                  \\ \hline
+        edge    & 1D         & \dsection(\dbasepoint,\, \dx)        \\ \hline
+        face    & 2D         & \dsection(\dbasepoint,\, \dx,\, \dy)\\ \hline
+        \end{tabular}
+        \caption{}
+        \label{tab:triangulization}
+    \end{center}
+\end{table}
+
+such that each section is bound to a simplex $\dbasepoint \in \dbase$. As shown in table~\ref{tab:triangulization}, in a 1D continuous spaces each \dsection\ lies distance \dx\ along edge \dbasepoint, while in a 2D continuous space each \dsection\ lies at coordinate \dx,\dy on the face \dbasepoint. This is directly analogous to indexing to express connectivity in N-D arrays, while also natively supporting graphs and trees as they are simplacial complices of nodes and edges. Path connected components are then sections where edges or faces meet. 
+
+In general simplacial complexes, in these prototypes we implement graphs. 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/triangle_torus.png}
     \caption{The torus \dtotal is unraveled into a simplacial complex of 2 faces \dbase. Transition functions are defined on the edges of \dbase such that surface can be glued back into the torus.
