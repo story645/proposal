@@ -186,22 +186,6 @@ In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temper
 
 The section can be any instance of a data container, for example a numpy array\cite{harris2020array}, a pandas series or dataframe\cite{jeff_reback_2020_3715232}, or an xarray\cite{hoyer2017xarray}. A univariate numpy array that stores an image is a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys. An instance of an xarray would also be a \dsection\, for example if the data is a temperature field than the \dbase\ could be a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. As with the dataframe, the semantic index labels are considered components and the indicies are instead assumed to be random. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  Our model provides a common interface to these widely used data containers without sacrificing the semantic structure embedded in each container.
 
-\subsubsection{Sheaf and Stalk}
-\label{sec:data_sheaf_stalk}
-The section \dsection\ is defined globally on \dbase, including infinite \dbase\ for streaming data and total \dbase\ for chunked data, but often we want as input into the artist \vartist\ a subset of the data. For example sliding window\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} based visualizations of streaming data, or visualizations that support pan and zoom navigation\cite{NekrasovskiEvaluationPanZoom2006}. To make these types of visualizations, mathematical objects called sheafs provide a way to construct a \dsection\ on a subset of \dbase. 
-
-As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
-\begin{equation}
-    \label{eq:sheaf}
-    \begin{tikzcd}
-        \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
-        U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
-    \end{tikzcd}
-\end{equation}
-such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. Restriction maps on the sheaf define how to glue together these localized sections $\iota^*\dsection$ into larger sections\cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018} over the subset of \dbase\ requested by the visualization.
-
-Another use for the sheaf is to provide access to all the records over the space on which the sheaf $\mathcal{O}(\dtotal)$ is defined. The artist \vartist\ could not generate any visualization that needed more information than was in a single record, such as a line plot, if it took as input \dsection, because $\dsection:\dbasepoint \mapsto \delement$ only knows about the record it returns. While taking  $\mathcal{O}(\dtotal)$ as input would solve this issue, in practice, often the only information \vartist\ needs is some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives. The sheaf facilitates interactions such as zooming or updating the graphic based on zooming data; the jet ensures that the artist only needs a single record on \dbasepoint\ extended with derivatives to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
-
 
 \subsection{Graphic: \gtotal}
 \label{sec:graphic}  
@@ -262,7 +246,12 @@ As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space
 \subsection{Artist}
 \label{sec:artist}
 
-The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The artist \vartist\ is a mapping from \dtotal\ padded with data from $\dtotal^{\prime}=\mathcal{J}(\dtotal)$ to a graphic that is a section $\gsection \in \Gamma(\gtotal)$
+The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The topological artist \vartist\  is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+\begin{equation}
+    \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+\end{equation}
+
+Usually \vartist can usually map into graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the data bundle padded with the jet bundle $\dtotal^{\prime} = \dtotal + \mathcal{J}^{2}(\dtotal)$. Specifically, \vartist is the map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
 
 \begin{equation}
     \label{eq:artist_diagram}
@@ -271,10 +260,7 @@ The artist is the function that converts data into graphics; its name is taken f
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-
-which due to using the jet is point wise such that the input can be $\dsection(\dbasepoint)$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ converts the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
-
-
+where the input can be point wise $\dsecton(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
 
 
 \subsubsection {Visual Fiber Bundle \vtotal}
@@ -343,8 +329,6 @@ Lets call the visual encodings $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamm
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
 then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. 
-
-
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
@@ -434,7 +418,31 @@ The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many g
 
 Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull then $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$. Since  $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ and \vsectionpull\ is constant on \vpreimg, we can define a \vmark\ factory function $\vmarkd(\vsection(k))(s) \coloneqq \vmark((\vsectionpull)(\gbasepoint))$ where $\vpreimg = \dbasepoint$. 
 
-Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visua space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline. 
+Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visua space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline.
+
+\subsubsection{Sheaf and Stalk}
+\label{sec:data_sheaf_stalk}
+\note{move to artost}
+Another use for the sheaf is to provide access to all the records over the space on which the sheaf $\mathcal{O}(\dtotal)$ is defined. The artist \vartist\ could not generate any visualization that needed more information than was in a single record, such as a line plot, if it took as input \dsection, because $\dsection:\dbasepoint \mapsto \delement$ only knows about the record it returns. 
+The data bundle \dtotal\ is defined globally on \dbase, but often we want as
+
+ To make these types of visualizations, mathematical objects called sheafs provide a way to construct a \dsection\ on a subset of \dbase. 
+
+As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
+\begin{equation}
+    \label{eq:sheaf}
+    \begin{tikzcd}
+        \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
+        U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
+    \end{tikzcd}
+\end{equation}
+such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. Restriction maps on the sheaf define how to glue together these localized sections $\iota^*\dsection$ into larger sections\cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018} over the subset of \dbase\ requested by the visualization.
+
+ 
+
+The sheaf facilitates visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.; the jet ensures that the artist only needs a single record on \dbasepoint\ extended with derivatives to render a piece of a graphic. This allows for the creation of highly concurrent and possibly distributed artists. 
+
+
 
 \subsubsection{Composition of Artists: +}
 \begin{figure}
