@@ -93,7 +93,8 @@ class StackedBar(martist.Artist):
         self.transforms = copy.deepcopy(transforms)
         self.mtransforms = copy.deepcopy(mtransforms)
 
-    def assemble(self, view):
+    def assemble(self):
+        view = self.data.view(self.axes)
         self.children = [] # list of bars to be rendered
         floor = 0
   
@@ -107,9 +108,9 @@ class StackedBar(martist.Artist):
             
             
     def draw(self, renderer, *args, **kwargs):
-        view = self.data.view(self.axes)
+
         # all the visual conversion gets pushed to child artists
-        self.assemble(view)
+        self.assemble()
         #self._transform = self.children[0].get_transform()
         for artist in self.children:
             artist.draw(renderer, *args, **kwargs)
@@ -130,13 +131,13 @@ class GroupedBar(martist.Artist):
         self.transforms = copy.deepcopy(transforms)
         self.mtransforms = copy.deepcopy(mtransforms)
 
-    def assemble(self, view):
+    def assemble(self):
         self.children = [] # list of bars to be rendered
         ngroups = len(self.mtransforms)
         
         for gid, group in enumerate(self.mtransforms):
             group.update(self.transforms)
-            width = group.get('width', .8)
+            width = group.get('width',6)
             group['width'] = width/ngroups
             group['offset'] = gid/ngroups*width 
             bar = Bar(self.data, group, self.orientation, transform=self.axes.transData)     
@@ -146,7 +147,7 @@ class GroupedBar(martist.Artist):
     def draw(self, renderer, *args, **kwargs):
         view = self.data.view(self.axes)
         # all the visual conversion gets pushed to child artists
-        self.assemble(view)
+        self.assemble()
         #self._transform = self.children[0].get_transform()
         for artist in self.children:
             artist.draw(renderer, *args, **kwargs)
