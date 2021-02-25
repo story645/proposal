@@ -30,18 +30,20 @@ class Point(mcollections.Collection):
         self.data = data
         self.transforms = transforms
 
-    def assemble(self, visual):
+    def assemble(self, x, y, s, facecolors='C0' ):
         # construct geometries of the circle glyphs in visual coordinates
-        self._paths = [mpath.Path.circle(center=(x,y), radius=s) for (x, y, s) 
-                in zip(visual['x'],visual['y'], visual['s'])] 
+        self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
+                       for (xi, yi, si) in zip(x, y, s)] 
         # set attributes of glyphs, these are vectorized 
         # circles and facecolors are lists of the same size
-        self.set_facecolors(visual['facecolors'])
+        self.set_facecolors(facecolors)
         
     def draw(self, renderer):
         # query data for a vertex table K
         view = self.data.view(self.axes) 
-        visual = {p: encoder(view[f] if f is not None else None) for p, (f, encoder) in self.transforms.items()}
-        self.assemble(visual)
+        visual = {p: t['encoder'](view[t['name']] 
+                  if t['name'] in self.data.FB.F else t['name']) 
+                  for p, t in self.transforms.items()}
+        self.assemble(**visual)
         # call the renderer that will draw based on properties
         super().draw(renderer)

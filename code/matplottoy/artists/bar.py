@@ -64,14 +64,16 @@ class Bar(mcollections.Collection):
     def draw(self, renderer,  *args, **kwargs):
         view = self.data.view(self.axes)
         visual = {}
-        for (p, trans) in self.transforms.items():
-            if isinstance(trans, dict):
-                if "name" in trans:
-                    visual[p] =  view[trans['name']]
-                if "encoder" in trans:
-                    visual[p] = trans['encoder'](visual[p])
+        for (p, t) in self.transforms.items():
+            if isinstance(t, dict):
+                if t['name'] in self.data.FB.F and 'encoder' in t:
+                    visual[p] = t['encoder'](view[t['name']])
+                elif 'encoder' in t:
+                    visual[p] = t['encoder'](t['name'])
+                elif t['name'] in self.data.FB.F:
+                    visual[p] = view[t['name']]
             else:
-                 visual[p] = trans
+                 visual[p] = t
         self.assemble(**visual)
         super().draw(renderer,  *args, **kwargs)
 

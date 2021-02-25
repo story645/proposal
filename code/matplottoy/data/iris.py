@@ -3,6 +3,8 @@ from matplottoy.encoders import mtypes
 
 class DataFrame:
     def __init__(self, dataframe):
+        self.FB = FiberBundle(K = {'tables':['vertex']},
+                              F = dict(dataframe.dtypes))
         self._tau = dataframe.iloc
         self._view = dataframe
 

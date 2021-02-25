@@ -28,18 +28,18 @@ class Line(mcollections.LineCollection):
         self.data = data
         self.transforms = transforms
 
-    def assemble(self, visual):
+    def assemble(self, x, y, color='C0'):
         #assemble line marks as set of segments 
         segments = [np.vstack((vx, vy)).T for vx, vy 
-                    in zip(visual['x'], visual['y'])]
+                    in zip(x, y)]
         self.set_segments(segments)
-        self.set_color(visual['color'])
+        self.set_color(color)
         
     def draw(self, renderer):
         # query data source for edge table
         view = self.data.view('edge')
-        visual = {p: encoder(view.get(f, None)) for 
-                     p, (f, encoder) in self.transforms.items()}
-        self.assemble(visual)
+        visual = {p: encoder(view[f] if f in self.data.FB.F else f) 
+                     for p, (f, encoder) in self.transforms.items()}
+        self.assemble(**visual)
         super().draw(renderer)
 
