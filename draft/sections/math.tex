@@ -4,11 +4,17 @@
 \section{Topological Artist Model}
 \label{sec:tam}
 
-As discussed in the introduction, visualization is generally defined as structure preserving maps from data to graphic representation. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. We introduce the notion of an artist $\mathscr{\vartist}$ as a structure preserving map from data $\mathscr{\dtotal}$ to $\mathscr{\gtotal}$
+As discussed in the introduction, visualization is generally defined as structure preserving maps from data to graphic representation. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. 
+We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
+that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}. Monoid actions are a set of operations and are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are symmetric 
+\begin{equation}
+\mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
+\end{equation}
+such that applying a monoid $m \in \monoid$ transformation to the input $\delement \in \mathscr{\dtotal}$ to $\mathscr{\vartist}$ is equivalent to applying a monoid $\varphi(\monoid) \in \monoid^{\prime}$ to the output of the artist $\vartist(\delement) \in \mathscr{\gtotal}$.
 
 We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. To explain which structure the artist is preserving, we first describe how we model data (\ref{sec:data}), graphics (\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
@@ -72,7 +78,7 @@ where the first component $F_0$ is the set of values specified by $(\fname=time,
 \begin{equation}
     \dfiber = \realsp \times \reals^{2}
 \end{equation} 
-such that $F_1$ is specified by $(\fname = wind,\, \ftype = \texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
+such that $F_1$ is specified by $(\fname = wind,\, \ftype = \texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data_fiber_example}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
@@ -110,11 +116,11 @@ While many component types will be one of the measurement scale types, we genera
     \item  $f(drizzle) = mist$ 
     \item $f(mist) = mist$
 \end{enumerate}
-is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. 
+is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. We propose equivariance of monoid actions individually on the fiber to visual component maps and on the graphic as a whole.
 
 \subsubsection{Continuity: Base Space $K$} 
 \label{sec:data_base}
-The base space \dbase\ is way to express the connectivity of the records.  This is assumed in the choice of visualization, for example a line plot implies 1D continuous data and a scatter plot implies discrete records, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data.  
+The base space \dbase\ is way to express how the records in \dtotal\ are connected to each other, for example if they are discrete points or if they lie in a 2D continous surface. Connectivity type is assumed in the choice of visualization, for example a line plot implies 1D continuous data, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data.  
 
 \begin{figure}[H]
     \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
@@ -153,11 +159,11 @@ which is a decomposition of \dfiber. The \dbase\ remains the same because the co
     \label{fig:base_example}
 \end{figure}
 
-The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase\ such that the records are samples from a continuous function defined on \dbase. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. This in turn allows for building visualizations that can work with distributed or streaming data, since it has a common data access interface with a promise that the data exists. 
+The datasets in figure~\ref{fig:base_example} have the same fiber of (temperature, time). In figure~\ref{fig:base_example_discrete} the fibers lie over discrete \dbase\ such that the records in the datasets in the fiber bundles are discrete. The same fiber in figure~\ref{fig:base_example_continuous} lies over a continuous interval \dbase\ such that the records are samples from a continuous function defined on \dbase. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
  
 \subsubsection{Data: Sections \dsection}
 \label{sec:data_section}
-A set of records is a section $\dsection: \dbase\rightarrow \dtotal$ of the fiber bundle. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record \delement\ at a given key in \dbase. For any fiber bundle, there exists a map
+The section $\dsection: \dbase\rightarrow \dtotal$ is what ties together the base space \dbase\ with the fiber \dfiber. A section is a function that takes as input location $\dbasepoint \in \dbase$ and returns a record $\delement \in \dtotal$. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record \delement\ at a given key in \dbase. For any fiber bundle, there exists a map
 \begin{equation}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
@@ -184,7 +190,12 @@ where each section $\dsection_i$ is a variable or set of variables. This allows 
 
 In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection^{(1)}$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection^{(2)}$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
 
-The section can be any instance of a data container, for example a numpy array\cite{harris2020array}, a pandas series or dataframe\cite{jeff_reback_2020_3715232}, or an xarray\cite{hoyer2017xarray}. A univariate numpy array that stores an image is a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys. An instance of an xarray would also be a \dsection\, for example if the data is a temperature field than the \dbase\ could be a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. As with the dataframe, the semantic index labels are considered components and the indicies are instead assumed to be random. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  Our model provides a common interface to these widely used data containers without sacrificing the semantic structure embedded in each container.
+
+This model provides a common interface to widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a univariate numpy array\cite{harris2020array} that stores an image. This could be a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. Instead of an image, the numpy array could also store a 2D discrete table. The fiber would not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
+
+There are also many types of labeled containers that can richly be described in this framework because of the fiber. For example, a pandas series which stores a labeled list, or a dataframe\cite{jeff_reback_2020_3715232} which stores a relational table. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is always assumed to be random keys.
+
+Where this model particularly shines are N dimensional labeled data structures. For example, an xarray\cite{hoyer2017xarray} data that stores temperature field could have a \dbase\ that is a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  
 
 
 \subsection{Graphic: \gtotal}
@@ -241,16 +252,20 @@ For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, 
     b_p &= \iint\limits_{S_p} \rho_b(s)ds^{2}
 \end{align}
 
-As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space is selected and inverse mapped into the corresponding region $\gbase_p \subset \gbase$. This triggers a lookup of the $\gsection$ over the region $\gbase_p$, which yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. In general, \gsection\ is an abstraction of rendering specifications, for example PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997} or rendering engines such as cairo\cite{CairographicsOrg} and AGG\cite{AntiGrainGeometry}. Implementation of \gsection\ is out of scope for this work.  
+As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space is selected and inverse mapped into the corresponding region $\gbase_p \subset \gbase$. This triggers a lookup of the $\gsection$ over the region $\gbase_p$, which yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
+
+In general, \gsection\ is an abstraction of rendering. In very broad strokes \gsection\  can be a specification such as PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997}. Alternatively, \gsection can be a rendering engine such as cairo\cite{CairographicsOrg} or AGG\cite{AntiGrainGeometry}. Implementation of \gsection\ is out of scope for this work,
 
 \subsection{Artist}
 \label{sec:artist}
-
-The artist is the function that converts data into graphics; its name is taken from the analogous part of Matplotlib\cite{hunterArchitectureOpenSource} that builds visual elements to pass off to the renderer. The topological artist \vartist\  is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+We propose that the transformation from data to visual representation can be described as a structure preserving map from one topological space to another. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements to pass off to the renderer. The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
-Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the data bundle padded with the jet bundle $\dtotal^{\prime} = \dtotal + \mathcal{J}^{2}(\dtotal)$. Specifically, \vartist is the map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
+Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the data bundle padded with the jet bundle $\dtotal^{\prime} = \dtotal + \mathcal{J}^{2}(\dtotal)$. 
+
+
+Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
 
 \begin{equation}
     \label{eq:artist_diagram}
@@ -259,12 +274,10 @@ Sheafs are a mathematical object with restriction maps that define how to glue \
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artists allows us to specify what are the responsibilities of each function in a fully constrained way. In turn, this allows for building reusable components at each stage of the transformation. 
-
-
+where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. 
 
 \subsubsection {Visual Fiber Bundle \vtotal}
-We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to composite into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
+We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to assemble into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
@@ -293,7 +306,7 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
     \caption{In this artis, \vchannel\ maps the strings to the emojis. For \vchannel\ to be equivariant, a shuffle in the words should have an equivalent shuffle in the emojies, and a shuffle in the emojies should have an equivalent shuffle in the words.}
     \label{fig:artist_nu}
 \end{figure}
-As introduced in section~\ref{sec:intro_visual_variables}, there are many ways to encode data visually. We define the visual transformers \vchannel\ 
+As introduced in section~\ref{sec:intro_viz}, there are many ways to visually represent data components. We define the visual transformers \vchannel\ 
 \begin{equation}
     \label{eq:nu_expanded}
     \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
@@ -308,13 +321,30 @@ A validly constructed \vchannel\ is one where the diagram of the monoid transfor
     \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-commutes such that $\vchannel_i(m_{\delement}(\dtotal_i)) = m_{\velement}(\vchannel_i(\dtotal_i))$. This equivariance constraint yields guidance on what makes for an invalid transform. For example, the conversion $\vchannel_{i}(x) = .5$ does not commute under translation monoid action $t(x) = x+2$  
+commutes such that 
+\begin{equation}
+\vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\velement})(\vchannel_i(\dtotal_i))\end{equation} 
+
+This equivariance constraint yields guidance on what makes for an invalid transform. For example, given a visual fiber of the same type as the data fiber $\dfiber=\vfiber$, the transform $\vchannel_{i}(x) = .5$ does not commute under translation monoid action $t(x) = x+2$  
 \begin{align}
     \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + \vchannel(2)\\
     .5 &\neq .5 + .5
 \end{align}
 
-On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$, $\text{ if } delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$. For interval scale data, \vchannel\ is equivariant under translation monoid actions if $\vchannel (x + c) = \vchannel(x) + \vchannel(c)$. For ratio data, there must be equivalent scaling $ \vchannel(xc) = \vchannel(x)\vchannel(c)$. These constraints can be embedded into our artist such that the \vchannel\ functions are equivariant; they also provide guidance on constructing new equivariant \vchannel\ functions. 
+On the other hand figure~\ref{fig:artist_nu} illustrates a valid \vchannel\ mapping from \textbf{Strings} to symbols. The group action on these sets is permutation, so shuffling the words must have an equivalent shuffle of the symbols they are mapped to. Continuing with the assumption that $\dfiber=\vfiber$, we can describe the constraints on the other Steven's measurment group types. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$ 
+\begin{equation}
+\text{ if } delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)
+\end{equation}
+the visual encodings must also have some sort of ordering. For interval scale data, \vchannel\ is equivariant under translation monoid actions if 
+\begin{equation}
+\vchannel (x + c) = \vchannel(x) + \vchannel(c)
+\end{equation}
+while for ratio data, there must be equivalent scaling 
+\begin{equation}
+\vchannel(xc) = \vchannel(x)\vchannel(c) 
+\end{equation}
+
+The assumption $\dfiber=\vfiber$ is made here so that we could omit  $\varphi: \monoid\rightarrow\monoid^{\prime}$ maps that convert the monoid action on \dfiber\ to the equivalent action on \vfiber. As shown in table~\ref{tab:mpl_visual_variable_fiber} though, it is not uncommon for data and visual variables to resolve to the same types. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions are equivariant; they also provide guidance on constructing new equivariant \vchannel\ functions. 
 
 \subsubsection{Graphic Assembler \vmark}
 \label{sec:artist_q}
@@ -328,7 +358,22 @@ As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines th
 
 Since we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$, we define an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same.   
 
-Lets call the visual encodings $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoids $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
+We can formally describe a glyph as \vmark\, with the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
+\begin{equation}
+\dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
+\end{equation}
+where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
+\begin{equation}
+    \begin{tikzcd}
+        \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
+        \end{tikzcd}
+    \label{eq:mark}
+\end{equation}
+such that for every glyph there is at least one corresponding section on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs
+
+
+
+$\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoids $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
 \begin{equation}
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
@@ -340,21 +385,9 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
     \label{fig:artist_mark_change}
 \end{figure}
 
-The glyph in figure~\ref{fig:artist_mark_change} has the following characteristics \vfiber specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection causes $\vmark(\vsection^{\prime})$ to be the thicker circle in figure~\ref{fig:artist_mark_change}.
+The glyph in figure~\ref{fig:artist_mark_change} has the following characteristics \vfiber\ specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection causes $\vmark(\vsection^{\prime})$ to be the thicker circle in figure~\ref{fig:artist_mark_change}.
  
-
- We can formally describe a glyph as \vmark\, with the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
-\begin{equation}
-\dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
-\end{equation}
-where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
-\begin{equation}
-    \begin{tikzcd}
-        \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
-        \end{tikzcd}
-    \label{eq:mark}
-\end{equation}
-such that for every glyph there is at least one corresponding section on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs. 
+. 
 
 \subsubsection{Assembly \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
@@ -426,7 +459,7 @@ Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ gene
 
 \subsubsection{Sheaf}
 \label{sec:artist_sheaf_stalk}
-The restriction maps of a sheaf describe how local \dsections can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
+The restriction maps of a sheaf describe how local \dsection can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}
