@@ -356,9 +356,7 @@ The assumption $\dfiber=\vfiber$ is made here so that we could omit  $\varphi: \
 
 As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
 
-Since we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$, we define an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same.   
-
-We can formally describe a glyph as \vmark\, with the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
+While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
@@ -369,11 +367,12 @@ where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepat
         \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-such that for every glyph there is at least one corresponding section on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs
+such that for every glyph there is at least one corresponding section on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
 
 
+It is on sections of these glyphs that we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same. While it may seem intuitive that visualizations that generate the same glyph should consistently generate the same glyph given the same input, we formalize this constraint such that it can be specified as part of the implementation of \vmark. 
 
-$\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoids $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
+Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoids $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
 \begin{equation}
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
@@ -386,11 +385,10 @@ then a group action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pri
 \end{figure}
 
 The glyph in figure~\ref{fig:artist_mark_change} has the following characteristics \vfiber\ specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection causes $\vmark(\vsection^{\prime})$ to be the thicker circle in figure~\ref{fig:artist_mark_change}.
- 
-. 
+  
 
 \subsubsection{Assembly \vmark}
-In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and a heatmap. 
+In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/scatter.png}
     \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
@@ -410,7 +408,7 @@ such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) blac
     \label{fig:artist_line}
 \end{figure}
 
-The line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet discussed in section~\ref{sec:sheaf_stalk}. The line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the thickness is 
+The line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet. The line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the thickness is 
 \begin{equation}
     \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}
 \end{equation}
@@ -421,12 +419,11 @@ such that the normal is
 
 which yields components of \gsection
 \begin{align}
- x = xpos(\vindex(\alpha)) &+ \beta\hat(n_1)(\vindex(\alpha)) \\
- y = ypos(\vindex(\alpha)) &+ \beta\hat(n_2)(\vindex(\alpha)) 
+ x = xpos(\vindex(\alpha)) &+ \beta\hat{n_1}(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ \beta\hat{n_2}(\vindex(\alpha)) 
 \end{align}
 
-where (x,y) look up the position $\vindex(\alpha)$ on the data and then apply thickness $\beta$ at that location. 
-
+where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, we also look up the the derivatives $\hat{n_1}, \hat{n_2}$  which are then multiplied by data to specify the thickness. 
 
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/heatmap.png}
@@ -444,18 +441,28 @@ B &= B(\vindex(\alpha, \beta))
 where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib, because the rendering is tightly interlaced with the graphical design; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
 \begin{figure}[H]
     \includegraphics[width=.75\textwidth]{figures/math/q_hat.png}
     \caption{The pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint. Because the \vsection\ is the same, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent set of \gbasepoint\ associated to that \dbasepoint}
     \label{fig:artist_q_hat}
 \end{figure}
  
-The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$ copies the visual fiber \vtotal over the preimage in \vpreimg. This is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber over \dbase\ is copied repeatedly to become the 2D fiber with identical components over \gbase. Given a section \vsectionpull\ pulled back from \vsection\ on $\pi:\vtotal\rightarrow\dbase$ and a point $\gbasepoint \in \vpreimg$ in the preimage of \dbasepoint\, the pulled back section $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ is the image $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
+The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$ copies the visual fiber \vtotal over the preimage in \vpreimg. 
 
-Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull then $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$. Since  $\vsectionpull(s) = \vindex^*(\vsection(\dbasepoint))$ and \vsectionpull\ is constant on \vpreimg, we can define a \vmark\ factory function $\vmarkd(\vsection(k))(s) \coloneqq \vmark((\vsectionpull)(\gbasepoint))$ where $\vpreimg = \dbasepoint$. 
+This is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase.  All the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\ are in the preimage \vpreimg.  Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
 
-Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visua space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline.
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections  into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then 
+\begin{equation}
+    $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$
+\end{equation}
+the graphic section \rho\ evaluated on a visual region \gbasepoint\ is defined as the assembly function \vmark\ with input pulled back visual section \vsectionpull\ also evaluated on \gbasepoint. Since the pulled back visual section \vsectionpull\ is the visual section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+\begin{equation}
+\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\end{equation} 
+where the assembly function \vmarkd\ that takes as input the visual section on data \vsection\ is defined to be the assembly function \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gspace. 
+
+Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline.
 
 \subsubsection{Sheaf}
 \label{sec:artist_sheaf_stalk}
@@ -480,12 +487,13 @@ To build graphics that are the composites of multiple artists, we define a simpl
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
-It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work. As a first pass for implementation purposes, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type.
+It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work. 
 
+As a first pass for implementation purposes, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type.
 \begin{figure}[H]
     \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}
     \label{fig:artist_equivalence}
 \end{figure}
 
-For example, a scatter plot of red circles is the output of one artist, a scatter plot of green squares the output of another, as shown in figure~\ref{fig:artist_equivalance}. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. The criteria for equivalence class membership serves as the basis for evaluating invariance\cite{kindlmann2014algebraic}. 
+For example, a scatter plot of red circles is the output of one artist, a scatter plot of green squares the output of another, as shown in figure~\ref{fig:artist_equivalence}. These two artists are equivalent since their only difference is in the literal visual encodings (color, shape). Shape and color could also be defined in \vmark\, but the position must come from the fiber $\vfiber=(xpos,ypos)$ since fundementally a scatter plot is the plotting of one position against another\cite{friendlyBriefHistoryData2008}. We also use this criteria to identify derivative types, for example the bubble chart\cite{tufteVisualDisplayQuantitative2001} is a type of scatter where by definition the glyph size is mapped from the data. The criteria for equivalence class membership serves as the basis for evaluating invariance\cite{kindlmann2014algebraic}. 
 \end{document}
