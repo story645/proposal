@@ -10,11 +10,11 @@ We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map 
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}. Monoid actions are a set of operations and are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are symmetric 
+that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are symmetric 
 \begin{equation}
 \mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
 \end{equation}
-such that applying a monoid $m \in \monoid$ transformation to the input $\delement \in \mathscr{\dtotal}$ to $\mathscr{\vartist}$ is equivalent to applying a monoid $\varphi(\monoid) \in \monoid^{\prime}$ to the output of the artist $\vartist(\delement) \in \mathscr{\gtotal}$.
+such that applying a monoid action $m \in \monoid$ to the input $\delement \in \mathscr{\dtotal}$ to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the output of the artist $\vartist(\delement) \in \mathscr{\gtotal}$.
 
 We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. To explain which structure the artist is preserving, we first describe how we model data (\ref{sec:data}), graphics (\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
 
@@ -70,7 +70,7 @@ which allows us to decouple \dfiber\ into components $\dfiber_i$.
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
+For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree^K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
 \begin{equation}
     \ftotal =  \reals \times \realsp 
 \end{equation} 
@@ -282,7 +282,7 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
-     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i})}$  \\ \hline                                              
+     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i}) \subset \vfiber_{i}}$  \\ \hline                                              
     position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
     size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
     shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
@@ -325,7 +325,7 @@ commutes such that
 \begin{equation}
 \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\velement})(\vchannel_i(\dtotal_i))\end{equation} 
 
-This equivariance constraint yields guidance on what makes for an invalid transform. For example, given a visual fiber of the same type as the data fiber $\dfiber=\vfiber$, the transform $\vchannel_{i}(x) = .5$ does not commute under translation monoid action $t(x) = x+2$  
+This equivariance constraint yields guidance on what makes for an invalid transform. For example, given a visual fiber of the same type as the data fiber $\dfiber_i=\vfiber_i$, the transform $\vchannel_{i}(x) = .5$ does not commute under translation $t(x) = x+2$  
 \begin{align}
     \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + \vchannel(2)\\
     .5 &\neq .5 + .5
@@ -343,8 +343,7 @@ while for ratio data, there must be equivalent scaling
 \begin{equation}
 \vchannel(xc) = \vchannel(x)\vchannel(c) 
 \end{equation}
-
-The assumption $\dfiber=\vfiber$ is made here so that we could omit  $\varphi: \monoid\rightarrow\monoid^{\prime}$ maps that convert the monoid action on \dfiber\ to the equivalent action on \vfiber. As shown in table~\ref{tab:mpl_visual_variable_fiber} though, it is not uncommon for data and visual variables to resolve to the same types. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions are equivariant; they also provide guidance on constructing new equivariant \vchannel\ functions. 
+The assumption $\dfiber_i=\vfiber_i$ is made here so that we could omit  $\varphi: \monoid\rightarrow\monoid^{\prime}$ maps that convert the monoid action on $\dfiber_{i}$ to the equivalent action on $\vfiber_{i}$. As shown in table~\ref{tab:mpl_visual_variable_fiber}, it is not uncommon for data and visual variables to resolve to the same types. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions are equivariant and also provide guidance on constructing new equivariant \vchannel\ functions. 
 
 \subsubsection{Graphic Assembler \vmark}
 \label{sec:artist_q}
@@ -356,7 +355,7 @@ The assumption $\dfiber=\vfiber$ is made here so that we could omit  $\varphi: \
 
 As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
 
-While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
+While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
@@ -448,15 +447,19 @@ The graphic base space \gbase\ is not accessible in many architectures, includin
     \label{fig:artist_q_hat}
 \end{figure}
  
-The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back $\vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber$ copies the visual fiber \vtotal over the preimage in \vpreimg. 
+The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
+\begin{equation}
+    \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
+\end{equation}
+copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
 
-This is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase.  All the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\ are in the preimage \vpreimg.  Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
+This copying is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase. Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
 
 Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections  into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then 
 \begin{equation}
-    $\gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)$
+    \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
 \end{equation}
-the graphic section \rho\ evaluated on a visual region \gbasepoint\ is defined as the assembly function \vmark\ with input pulled back visual section \vsectionpull\ also evaluated on \gbasepoint. Since the pulled back visual section \vsectionpull\ is the visual section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+the graphic section \gsection\ evaluated on a visual region \gbasepoint\ is defined as the assembly function \vmark\ with input pulled back visual section \vsectionpull\ also evaluated on \gbasepoint. Since the pulled back visual section \vsectionpull\ is the visual section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
 \begin{equation}
 \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation} 
