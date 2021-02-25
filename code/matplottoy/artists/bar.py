@@ -99,7 +99,7 @@ class StackedBar(martist.Artist):
             # pull out the specific group transforms
             group['floor'] = floor
             group.update(self.transforms)
-            bar = Bar(self.data, group, self.orientation)
+            bar = Bar(self.data, group, self.orientation, transform=self.axes.transData)
             self.children.append(bar)
             floor += view[group['length']['name']]
             
@@ -137,7 +137,7 @@ class GroupedBar(martist.Artist):
             width = group.get('width', .8)
             group['width'] = width/ngroups
             group['offset'] = gid/ngroups*width 
-            bar = Bar(self.data, group, self.orientation)     
+            bar = Bar(self.data, group, self.orientation, transform=self.axes.transData)     
             self.children.append(bar)
             
             
