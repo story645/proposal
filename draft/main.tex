@@ -4,9 +4,6 @@
 \usepackage[dvipsnames]{xcolor} %text color + lots of names
 \newcommand{\note}[1]{\textcolor{Magenta}{#1}}  
 \usepackage{textcomp} % degree 
-\usepackage{url}% hyperlinks\usepackage{tikz} %diagrams
-\usepackage{breakurl}%clean up url in bibliography
-\usepackage[breaklinks]{hyperref}
 \usepackage{subfiles} % separate files for sections
 \usepackage{minted}
 \setminted[python]{frame=lines,framesep=2mm,baselinestretch=1.2,linenos}
@@ -34,21 +31,22 @@
 \linenumbers %linenumbers for comments
 \usepackage{notation} % notation used in paper 
 \usepackage[backend=bibtex, style=numeric-comp]{biblatex}
-
-
+\usepackage{breakcites}
+\usepackage[colorlinks, breaklinks=true]{hyperref}
+\usepackage[anythingbreaks]{breakurl}
 \bibliography{glasslab_viz}
-%\title{Make whatever equivariant plot you want}
-%\author{Hannah Aizenman}
-%\committee{Dr. Michael Grossberg (Advisor), Dr. Robert Haralick, Dr. Lev Manovich, Dr. Huy Vo}
+\title{Topological Artists}
+\author{Hannah Aizenman}
+\committee{Dr. Michael Grossberg (Advisor), Dr. Robert Haralick, Dr. Lev Manovich, Dr. Huy Vo, Dr. Mark Hanwell(check spelling)}
 %\submitted{}
 \abstract{\subfile{sections/abstract.tex}}
 
 \begin{document}
-%\makefrontmatter
+\makefrontmatter
 \subfile{sections/intro}
 \subfile{sections/math}
 \subfile{sections/implementation.tex}
 \subfile{sections/next.tex}
-\note{Yes, need to figure out how to wrap urls cleanly in bib}
+%\note{Yes, need to figure out how to wrap urls cleanly in bib}
 \printbibliography
 \end{document}
