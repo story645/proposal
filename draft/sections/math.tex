@@ -224,7 +224,7 @@ goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point 
 
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase. \note{add $\alpha, \beta$ coordinates to figures}}
+    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase.}
     \label{fig:graphic_retraction_map}
 \end{figure}
 
@@ -235,8 +235,8 @@ The mapping function \vindex\ provides a way to identify the part of the visual 
 \subsubsection{Renderering \gsection}
 \label{sec:graphic_section}
 \begin{figure}
-    \includegraphics[width=\textwidth]{figures/math/graphic_render.png}
-    \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
+    \includegraphics[width=\textwidth]{figures/math/render.png}
+    \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
 \end{figure}
 
