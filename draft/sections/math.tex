@@ -123,14 +123,14 @@ is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse s
 The base space \dbase\ is way to express how the records in \dtotal\ are connected to each other, for example if they are discrete points or if they lie in a 2D continous surface. Connectivity type is assumed in the choice of visualization, for example a line plot implies 1D continuous data, but an explicit representation allows for verifying that the topology of the graphic representation is equivalent to the topology of the data.  
 
 \begin{figure}[H]
-    \includegraphics[width=.5\textwidth]{figures/math/k_different_types.png}
+    \includegraphics[width=1\textwidth]{figures/math/k_different_types.png}
     \caption{The topological base space \dbase\ encodes the connectivity of the data space, for example if the data is independent points or on a plane or a sphere}
     \label{fig:base_space_types}
 \end{figure}
 As illustrated in figure~\ref{fig:base_space_types}, \dbase\ is akin to an indexing space into \dtotal\ that describes the structure of \dtotal.  \dbase\ can have any number of dimensions and can be continuous or discrete. 
 
 \begin{figure}[H]
-    \includegraphics[width=.5\linewidth]{figures/math/k_qspace.png}
+    \includegraphics[width=\linewidth]{figures/math/k_qspace.png}
     \caption{The base space \dtotal\ is divided into fiber segments \dfiber. The base space \dbase\ acts as an index into the records in the fibers.}
     \label{fig:base_space_div}
 \end{figure}
@@ -144,7 +144,6 @@ which is a decomposition of \dfiber. The \dbase\ remains the same because the co
 \begin{figure}[ht!]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
-        %% add box around neighboring P and Map
         \caption{}
         \label{fig:base_example_discrete}
     \end{subfigure}
@@ -153,7 +152,7 @@ which is a decomposition of \dfiber. The \dbase\ remains the same because the co
         \caption{}
         \label{fig:base_example_continuous}
     \end{subfigure}
-    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_line} the total space \dtotal\ is discrete over points $\dbasepoint \in \dbase$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_plane} \dtotal\ lies over the continuous interval \dbase, meaning the records in the fiber are sampled from a continuous space.} 
+    \caption{These two datasets have the same (time, temperature) fiber. In figure~\ref{fig:base_example_discrete} the total space \dtotal\ is discrete over points $\dbasepoint \in \dbase$, meaning the records in the fiber are also discrete. In figure~\ref{fig:base_example_continuous} \dtotal\ lies over the continuous interval \dbase, meaning the records in the fiber are sampled from a continuous space.} 
     \label{fig:base_example}
 \end{figure}
 
