@@ -90,14 +90,16 @@ The measure of how much of the structure of the data the graphic encodes is a co
 One example of highly expressive visualizations are the data portraits by Du Bois shown in figure~\ref{fig:intro_dubois}. While the Du Bois charts are different from the usual scatter, line, and plot charts, they conform to the constraint that a graphic is a structure preserving map from data to visual representation. Figure~\ref{fig:intro_dpa} is semantically similar to a bar chart in that the lengths of the segments are mapped to the values, but in this chart the segments are stacked together. Figure~\ref{fig:intro_dpb} is a multicolored line chart where the color shifts are at periods of political significance. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic and numerical properties of the data are preserved in the graph. Figure~\ref{fig:intro_dpd} is simply a treemap\cite{heerTourVisualizationZoo2010} with space between the marks. Since the Du Bois data portraits meet the criteria of a faithful visual representation, we propose a mathematical framework and implementation that allows us to express the Du Bois charts and common chart types with equal fidelity. 
 
 \subsection{Contribution}
-This work presents a mathematical model of the transformation from data to graphic representation and a proof of concept implementation. Specifically, this work contributes
+This work presents a mathematical model of the transformation from data to graphic representation and a proof of concept implementation. Specifically, the contributions of this work are 
 
 \begin{enumerate}
-    \item a functional oriented visualization tool architecture
-    \item topology-preserving maps from data to graphic 
-    \item monoidal action equivariant maps from component to visual variable 
-    \item algebraic sum such that more complex visualizations can be built from simple ones 
-    \item prototype built on Matplotlib's infrastructure
+    \item a formal description of the topology preserving relationship between data and graphic via continuous maps
+    \item a formal description of the property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+    \item abstraction of data as a fiber bundle with schema like fibers to encode components and topology 
+    \item algebraic sum operator such that more complex visualizations can be built from simple ones 
+    \item a functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
+    \item a prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
 \end{enumerate}
+
 In contrast to mathematical models of visualization that aim to evaluate visualization design, we propose a topological framework for building tools to build visualizations. We defer judgement of expressivity and effectiveness to developers building domain specific tools, but provide them the framework to do so. 
 \end{document}
