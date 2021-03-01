@@ -141,7 +141,7 @@ As with fibers and monoids, we can decompose the total space into components $\p
     \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
 \end{equation}
 which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record.
-\begin{figure}[ht!]
+\begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
         \caption{}
@@ -221,7 +221,7 @@ Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopolo
 \end{equation}
 goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. 
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
     \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase.}
     \label{fig:graphic_retraction_map}
@@ -233,7 +233,7 @@ The mapping function \vindex\ provides a way to identify the part of the visual 
 
 \subsubsection{Renderering \gsection}
 \label{sec:graphic_section}
-\begin{figure}
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/render.png}
     \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
     \label{fig:graphic_rho_lookup}
@@ -422,7 +422,7 @@ which yields components of \gsection\
 where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, we also look up the the derivatives $\hat{n_1}, \hat{n_2}$  which are then multiplied by data to specify the thickness. 
 
 \begin{figure}[H]
-    \includegraphics[width=.75\textwidth]{figures/math/image.png}
+    \includegraphics[width=\textwidth]{figures/math/image.png}
     \caption{The only visual parameter a image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
     \label{fig:artist_heatmap}
 \end{figure}
@@ -434,7 +434,7 @@ R &= R(\vindex(\alpha, \beta))\\
 G &= G(\vindex(\alpha, \beta))\\
 B &= B(\vindex(\alpha, \beta))
 \end{align}
-where \vindex\ may do some translating to a convention expected by \vmark\, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
+where \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
 The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
@@ -478,12 +478,12 @@ such that the pulled back $\iota^*\dsection$ only contains records over $U \subs
 
 
 \subsubsection{Composition of Artists: +}
-\begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
-    \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
-    \label{fig:artist_plus}
-\end{figure}
-To build graphics that are the composites of multiple artists, we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, in figure~\ref{fig:artist_plus} the scatter plot $\dtotal_1$ and the line plot $\dtotal_2$ have different \dbase that are mapped to separate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There is a second type of composition where $\dtotal_1$ and $\dtotal_2$ share a base space $\dbase_2 \hookrightarrow \dbase_1$ such that the the artists can be considered to be acting on different components of the same section. This type of composition is important for creating visualizations where elements need to update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. 
+%%\begin{figure}[H]
+%%   \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
+%%  \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
+%%    \label{fig:artist_plus}
+%%\end{figure}
+To build graphics that are the composites of multiple artists, we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, a scatter plot $\dtotal_1$ and a line plot $\dtotal_2$ have different \dbase that are mapped to separate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There is a second type of composition where $\dtotal_1$ and $\dtotal_2$ share a base space $\dbase_2 \hookrightarrow \dbase_1$ such that the the artists can be considered to be acting on different components of the same section. This type of composition is important for creating visualizations where elements need to update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. 
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
