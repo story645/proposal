@@ -386,8 +386,8 @@ The glyph in figure~\ref{fig:artist_mark_change} has the following characteristi
 \subsubsection{Assembly \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
-    \includegraphics[width=.75\textwidth]{figures/math/scatter.png}
-    \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
+    \includegraphics[width=1\textwidth]{figures/math/scatter.png}
+    \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
     \label{fig:artist_scatter}
 \end{figure}
@@ -399,8 +399,8 @@ y &= size\bullet \alpha \bullet \sin(\beta) + ypos
 
 such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black.
 \begin{figure}[H]
-    \includegraphics[width=.75\textwidth]{figures/math/line.png}
-    \caption{The line fiber $(time,\, temp)$ is thickend with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a thick line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). \note{this is gonna move once this gets regenerated w/ labels} The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
+    \includegraphics[width=\textwidth]{figures/math/line.png}
+    \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
 
@@ -413,7 +413,7 @@ such that the normal is
     \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
 \end{equation}
 
-which yields components of \gsection
+which yields components of \gsection\
 \begin{align}
  x = xpos(\vindex(\alpha)) &+ \beta\hat{n_1}(\vindex(\alpha)) \\
  y = ypos(\vindex(\alpha)) &+ \beta\hat{n_2}(\vindex(\alpha)) 
@@ -478,7 +478,7 @@ such that the pulled back $\iota^*\dsection$ only contains records over $U \subs
 
 
 \subsubsection{Composition of Artists: +}
-\begin{figure}
+\begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
     \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
     \label{fig:artist_plus}
@@ -487,9 +487,7 @@ To build graphics that are the composites of multiple artists, we define a simpl
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
 \label{sec:artist_equivalance}
-It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work. 
-
-As a first pass for implementation purposes, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type.
+It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work. As a first pass for implementation purposes, we identify a minimal \vfiber\ associated with each $\vartist^{\prime}$ that defines what visual characteristics of the graphic must originate in the data such that the graphic is identifiable as a given chart type.
 %%
 %%\begin{figure}[H]
 %%   \caption{Each of these graphics is generated by a different artist \vartist which is the equivalance class of scatter plots $\vartist^{\prime}$\note{this is gonna be a whole bunch of scatter plots}}
