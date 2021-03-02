@@ -20,7 +20,7 @@ We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermed
 
 \subsection{Data Space \dtotal}
 \label{sec:data}
-Building on Butler's proposal of using fiber bundles as a common data representation format for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
+Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
@@ -33,7 +33,7 @@ By definition fiber bundles are locally trivial\cite{spanier1989algebraic,Locall
 
 \subsubsection{Variables in Fiber Space \dfiber}
 \label{sec:data_fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names and types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. This allows us to describe the components in a schema like way. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -82,7 +82,7 @@ such that $F_1$ is specified by $(\fname = wind,\, \ftype = \texttt{wind},\, \ft
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the action of a monoid on the component. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
+Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the actions of a monoid on the component. In doing so, we specify the properties of the component that must be preserved in a graphic representation. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
@@ -95,20 +95,20 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given an arbitrary interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ with arbitrarily chosen monoid translation actions actions 
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given an arbitrary interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ with with arbitrary monoid translation actions chosen for this example:
 \begin{itemize}
     \item monoid operator addition $\ast = +$
-    \item monoid operations: $f: x\mapsto x + 1 $, $g: x\mapsto x + 2  $
+    \item monoid operations: $f: x\mapsto x + 1\degree C $, $g: x\mapsto x + 2\degree C$
     \item monoid action operator composition $\bullet = \circ$
 \end{itemize}
 By structure preservation, we mean that monoid actions are composable. For the translation actions described above on the temperature fiber, this means that they satisfy the condition
 \begin{equation}
     \begin{tikzcd}
-        \reals \arrow[rd, "(x+ 1\degree)\circ(x+2\degree)"] \arrow[d, "x+ 1\degree"'] &            \\
-        \reals \arrow[r, "x+ 2\degree"']                                   & \reals
+        \reals \arrow[rd, "(x+ 1\degree C)\circ(x+2\degree C)"] \arrow[d, "x+ 1\degree"'] &            \\
+        \reals \arrow[r, "x+ 2\degree C"']                                   & \reals
     \end{tikzcd}
 \end{equation}
-where $1\degree$ and $2\degree$ are valid distances between two temperatures $x$. What this diagram means is that either the fiber could be shifted by 1 (vertical line) then by 2 (horizontal), or the two shifts could be combined such that in this case the fiber is shifted by 3 (diagonal) and these two paths yield the same temperature. 
+where $1\degree C$ and $2\degree C$ are valid distances between two temperatures $x$. What this diagram means is that either the fiber could be shifted by $1 \degree C$ (vertical line) then by $2 \degree C$ (horizontal), or the two shifts could be combined such that in this case the fiber is shifted by $3 \degree C$ (diagonal) and these two paths yield the same temperature. 
 
 While many component types will be one of the measurement scale types, we generalize to monoids specifically for the case of partially ordered set. Given a set $W=\{mist, \, drizzle, \, rain \}$, then the map $f: W\rightarrow W$ defined by 
 \begin{enumerate}
@@ -177,20 +177,21 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber. This
 \label{eq:data_section_decompose}
 \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
 \end{equation}
-where each section $\dsection_i$ is a variable or set of variables. This allows for accessing the data component wise rather than just as sections on \dbase.
+where each section $\dsection_i$ is a variable or set of variables. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
 
 \begin{figure}[H]
     \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
-    \caption{ Fiber (time, temperature) with an interval \dbase\ basespace. The sections $\dsection_i$ and $\dsection_j$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection_1, \dsection_2 \in \Gamma(\dtotal)$}
+    \caption{ Fiber (time, temperature) with an interval \dbase\ basespace. The sections $\dsection^{(1)}$ and $\dsection^{(2)}$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$}
     \label{fig:data_sections}
 \end{figure}
 
 In the example in figure~\ref{fig:data_sections}, the fiber is $(time, \, temperature)$ as described in figure~\ref{fig:data_fiber_example} and the base space is the interval \dbase. The section $\dsection^{(1)}$ resolves to a series of monotonically increasing in time records of (time, temperature) values. Section $\dsection^{(2)}$ returns a different timeseries of (time, temperature) values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
 
 
-This model provides a common interface to widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a univariate numpy array\cite{harris2020array} that stores an image. This could be a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. Instead of an image, the numpy array could also store a 2D discrete table. The fiber would not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
+\subsubsection{Applications to Data Containers}
+This model provides a common formalism for widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a univariate numpy array\cite{harris2020array} that stores an image.  This could be a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. This position information is already implicitely encoded in the array as the index and the resolution of the image being stored.Instead of an image, the numpy array could also store a 2D discrete table. The fiber would not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
 
-There are also many types of labeled containers that can richly be described in this framework because of the fiber. For example, a pandas series which stores a labeled list, or a dataframe\cite{jeff_reback_2020_3715232} which stores a relational table. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is assumed to be data independent references such as hashvalues, virtual memory locations, or random number keys.
+There are also many types of labeled containers that can richly be described in this framework because of the schema like structure of the fiber. For example, a pandas series which stores a labeled list, or a dataframe\cite{jeff_reback_2020_3715232} which stores a relational table. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is assumed to be data independent references such as hashvalues, virtual memory locations, or random number keys.
 
 Where this model particularly shines are N dimensional labeled data structures. For example, an xarray\cite{hoyer2017xarray} data that stores temperature field could have a \dbase\ that is a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  
 
@@ -255,7 +256,7 @@ In general, \gsection\ is an abstraction of rendering. In very broad strokes \gs
 
 \subsection{Artist}
 \label{sec:artist}
-We propose that the transformation from data to visual representation can be described as a structure preserving map from one topological space to another. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements to pass off to the renderer. The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+We propose that the transformation from data to visual representation can be described as a structure preserving map from one topological space to another. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements. The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
@@ -367,7 +368,7 @@ where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepat
         \end{tikzcd}
     \label{eq:mark}
 \end{equation}
-such that for every glyph there is at least one corresponding section on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
+such that for every glyph there is at least one corresponding region on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
 
 
 It is on sections of these glyphs that we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same. While it may seem intuitive that visualizations that generate the same glyph should consistently generate the same glyph given the same input, we formalize this constraint such that it can be specified as part of the implementation of \vmark. 
@@ -396,20 +397,22 @@ In this section we formulate the minimal Q that will generate distinguishable gr
     }
     \label{fig:artist_scatter}
 \end{figure}
-The scatter plot in figure~\ref{fig:scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
+The scatter plot in figure~\ref{fig:artist_scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
 \begin{align}
-x &= size\bullet \alpha \bullet \cos(\beta) + xpos\\
-y &= size\bullet \alpha \bullet \sin(\beta) + ypos
+x &= size *\alpha \cos(\beta) + xpos \\
+y &= size *\alpha \sin(\beta) + ypos
 \end{align}
 
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black.
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in figure~\ref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
+
+
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
 
-The line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_scatter} exemplifies the need for the jet. The line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the thickness is 
+In contrast to the scatter, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. The line also exemplifies the need for the jet since the line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is 
 \begin{equation}
     \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}
 \end{equation}
@@ -420,26 +423,25 @@ such that the normal is
 
 which yields components of \gsection\
 \begin{align}
- x = xpos(\vindex(\alpha)) &+ \beta\hat{n_1}(\vindex(\alpha)) \\
- y = ypos(\vindex(\alpha)) &+ \beta\hat{n_2}(\vindex(\alpha)) 
+ x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
 \end{align}
 
-where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, we also look up the the derivatives $\hat{n_1}, \hat{n_2}$  which are then multiplied by data to specify the thickness. 
+where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, we also look up the the derivatives $\hat{n_1}, \hat{n_2}$  which are then multiplied by a $width$ parameter to specify the thickness. As with the $size$ parameter in scatter, $width$ can be defined in \vmark\ or as a component of \vtotal. 
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/image.png}
-    \caption{The only visual parameter a image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
+    \caption{The only visual parameter an image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
     \label{fig:artist_heatmap}
 \end{figure}
 
-The image $\vmark(color)$ in figure~\ref{fig:artist_heatmap} is a direct lookup $\vindex:\gbase\rightarrow\dbase$ such that 
-
+The image $\vmark(xpos, yposcolor)$ in figure~\ref{fig:artist_heatmap} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. Since \dbase\ is 2D continuous space, the indexing variables $(\alpha, \beta)$ define the distance along the space. This is then used by \vindex\ to map into \dbase\ to lookup the color values 
 \begin{align}
 R &= R(\vindex(\alpha, \beta))\\
 G &= G(\vindex(\alpha, \beta))\\
 B &= B(\vindex(\alpha, \beta))
 \end{align}
-where \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
+that the data values have been mapped into. In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
 The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.

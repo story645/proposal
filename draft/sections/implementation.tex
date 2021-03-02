@@ -13,8 +13,7 @@
     \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering.}
     \label{fig:code_scatter_line}
 \end{figure}
-To prototype our model, we implemented the artist classes for the scatter and line plots shown in figure~\ref{fig:code_scatter_line} because they differ in every attribute: different visual channels \vchannel\ that composite to different marks \vmark\ with different continuities \vindex\.  We make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations. 
-To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mintinline{python}{fig, ax} artists that will contain the new \mintinline{python}{Point, Line} primitive objects we implemented based on our topology model. 
+To prototype our model, we implemented the artist classes for the scatter and line plots shown in figure~\ref{fig:code_scatter_line} because they differ in every attribute: different visual channels \vchannel\ that composite to different marks \vmark\ with different continuities \vindex\.  We make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations. We also exploit the Matplotlib transform stack to transform data coordinates into screen coordinates. To generate the images in figure~\ref{fig:code_scatter_line}, we instantiate \mintinline{python}{fig, ax} artists that will contain the new \mintinline{python}{Point, Line} primitive objects we implemented based on our topology model. 
 
 \begin{multicols*}{2}
 \begin{minted}{python}
@@ -35,7 +34,7 @@ We then add the \mintinline{python}{Point} and \mintinline{python}{Line} artist 
 
 \subsection{Artist Class $\vartist^{\prime}$}
 \label{sec:code_artist}
-The artist is the piece of the matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, \mintinline{python}{transform} is a dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist.
+The artist is the piece of the Matplotlib architecture that constructs an internal representation of the graphic that the render then uses to draw the graphic. In the prototype artist, \mintinline{python}{transform} is a dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist.
 
 \begin{minted}{python}
 class ArtistClass(matplotlib.artist.Artist):
@@ -62,7 +61,7 @@ class ArtistClass(matplotlib.artist.Artist):
 
 The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that we can use to query back into data to select a subset as discussed in section~\ref{sec:artist_sheaf_stalk}. The \vchannel\ functions are then applied to the data to generate the visual section \vsection\ that here is the object \mintinline{python}{visual}. The conversion from data to visual space is simplified here to directly show that it is the encoding \vchannel\ applied to the component. In the full implementation, we allow for fixed visual parameter, such as setting a constant color for all sections, by verifying that the named component is in \dfiber\ before accessing the data. If the data component name is not in \dfiber\, this is interpreted to mean this component is a thickening of \vtotal that could be pulled back to \dtotal\ via an inverse identity \vchannel. 
 
-The components of the visual object, denoted by the Python unpacking convention \mintinline{python}{**visual} are then passed into the \mintinline{python}{assemble} function that is \vmarkd. This assembly function is responsible for generating a representation of the glyph such that it could be serialized to recreate a static version of the graphic. Although \mintinline{python}{assemble} could be implemented outside the class such that it returns an object the artist could then parse to set attributes, the attributes are directly set here to reduce indirection. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemnted in Matplotlib. 
+The components of the visual object, denoted by the Python unpacking convention \mintinline{python}{**visual} are then passed into the \mintinline{python}{assemble} function that is \vmarkd. This assembly function is responsible for generating a representation such that it could be serialized to recreate a static version of the graphic. Although \mintinline{python}{assemble} could be implemented outside the class such that it returns an object the artist could then parse to set attributes, the attributes are directly set here to reduce indirection. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemnted in Matplotlib. 
 
 The \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. We only show the \mintinline{python}{assemble} function here because the \mintinline{python}{__init__, draw} are identical the prototype artist.
 \begin{minted}{python}
@@ -103,7 +102,7 @@ In the \mintinline{python}{Line} artist, \mintinline{python}{view} returns a tab
     \caption{Frequency of Penguin types visualized as discrete bars. }
     \label{fig:code_bar_simple}
 \end{figure}
-The bar charts in figure~\ref{fig:code_bar_simple} are generated with a \mintinline{python}{Bar} artist. The have the same required \vfiber\ components of (position, length), but in \mintinline{python}{__init__} of \mintinline{python}{Bar} an additional parameter is set, \texttt{orientation} which controls whether the bars are arranged vertically or horizontally. This parameter only applies holistically to the graphic and never to individual data parameters, and highlights how the model encourages explicit differentiation between parameters in \vtotal\ and graphic parameters applied directly to \vmarkd. 
+The bar charts in figure~\ref{fig:code_bar_simple} are generated with a \mintinline{python}{Bar} artist. The artist has required visual parameters \vfiber\ of (position, length), and an additional parameter \texttt{orientation} which controls whether the bars are arranged vertically or horizontally. This parameter only applies holistically to the graphic and never to individual data parameters, and highlights how the model encourages explicit differentiation between parameters in \vtotal\ and graphic parameters applied directly to \vmarkd. 
 
 \begin{minted}{python}
 class Bar(mcollections.Collection):
@@ -118,12 +117,14 @@ class Bar(mcollections.Collection):
         self.data = data
         self.transforms = copy.deepcopy(transforms)
 
-    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
+    def assemble(self, position, length, floor=0, width=0.8, 
+                    facecolors='C0', edgecolors='k', offset=0):
         #set some defaults
         width = itertools.repeat(width) if np.isscalar(width) else width
         floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
         
-        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
+        # offset is passed through via assemblers such as multigroup, 
+        # not supposed to be directly tagged to position 
         position = position + offset
         
         def make_bars(xval, xoff, yval, yoff):
@@ -202,7 +203,7 @@ class FiberBundle:
 Attributes
 ----------
 K: {'tables': []}
-F: {variable name: {'type': type, 'moniod', 'range': []}}
+F: {variable name: type}
 """
     K: dict 
     F: dict
@@ -216,9 +217,7 @@ class VertexSimplex: #maybe change name to something else
     """Fiberbundle is consistent across all sections
     """
     FB = FiberBundle({'tables': ['vertex']},  
-            {'v1': {'type': float,'monoid':'interval','range': [0,1]},
-             'v2': {'type': str, 'monoid':'nominal', 'range':['true', 'false']},
-             'v3': {'type': float, 'monoid':'interval', 'range':[2,3]}})
+            {'v1': float, 'v2': str, 'v3': float})
 
     def __init__(self, sid = 45, size=1000, max_key=10**10):
         # create random list of keys
@@ -239,7 +238,10 @@ The view method returns a dictionary where the key is a fiber component name and
 
 \begin{minted}{python}
 class EdgeSimplex: 
-    # assign a class level FB attribute
+    
+        FB = FiberBundle({'tables': ['vertex','edge']},
+                         {'x' : float, 'y':  float, 
+                         'color':mtypes.Color()}})
     def __init__(self, num_edges=4, num_samples=1000): 
         self.keys = range(num_edge) #edge id
         # distance along edge
@@ -427,6 +429,6 @@ Since the only difference between these two glyphs is in the composition of \min
     artistGB = bar.GroupedBar(bt, ts, group_transforms)
     \end{minted}
     
-    but differ in assembly \vmarkd. By decomposing the architecture into data, visual encoding, and assembly steps, we are able to build components that are more flexible and also more self contained than the existing code base. While very rough, this API demonstrates that the ideas presented in the math framework are implementable. In choosing a functional approach, if not implementation, we provide a framework for library developers to build reusable encoder \vchannel\, assembly \vmarkd and artists \vartist. We argue that  if these functions are built such that they are equivariant with respect to monoid actions and the graphic topology is a deformation retraction of the data topology, then the artist by definition will be a structure and property preserving map from data to graphic. 
+    but differ in assembly \vmarkd. By decomposing the architecture into data, visual encoding, and assembly steps, we are able to build components that are more flexible and also more self contained than the existing code base. While very rough, this API demonstrates that the ideas presented in the math framework are implementable. For example, the \mintinline{python}{draw} function that maps most closely to \vartist\ is functional, with state only being necessary for bookkeeping the many inputs that the function requires. In choosing a functional approach, if not implementation, we provide a framework for library developers to build reusable encoder \vchannel\, assembly \vmarkd and artists \vartist. We argue that  if these functions are built such that they are equivariant with respect to monoid actions and the graphic topology is a deformation retraction of the data topology, then the artist by definition will be a structure and property preserving map from data to graphic. 
     
 \end{document}

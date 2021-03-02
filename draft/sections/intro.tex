@@ -47,7 +47,7 @@ As shown in figure~\ref{fig:intro_data_format}, there are many distinct ways of 
     \end{description}
 \end{mdframed}
 
-Often this topology has metadata associated with it, describing for example when or where the measurement was taken. Building on the idea of metadata as \textit{keys} and their associated \textit{values} proposed by Munzner \cite{munznerChDataAbstraction}, we propose that information rich metadata are part of the components and instead the values are keyed on coordinate free structural ids. In contrast to Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
+Often this topology has metadata associated with it, describing for example dependent variables and the independent variables they are dependent on, or information about the structure of the data such as when and where the measurement was taken. Building on the idea of metadata as \textit{keys} and their associated \textit{values} proposed by Munzner \cite{munznerChDataAbstraction}, we propose that information rich metadata are part of the components and instead the values are keyed on coordinate free structural ids. In contrast to Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
 
 \subsection{Visualization}
 \label{sec:intro_viz}
@@ -91,15 +91,13 @@ One example of highly expressive visualizations are the data portraits by Du Boi
 
 \subsection{Contribution}
 This work presents a mathematical model of the transformation from data to graphic representation and a proof of concept implementation. Specifically, the contributions of this work are 
-
 \begin{enumerate}
     \item a formal description of the topology preserving relationship between data and graphic via continuous maps
     \item a formal description of the property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
-    \item abstraction of data as a fiber bundle with schema like fibers to encode components and topology 
+    \item abstraction of data structure using fiber bundles with schema like fibers to encode components and topology 
     \item algebraic sum operator such that more complex visualizations can be built from simple ones 
     \item a functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
     \item a prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
 \end{enumerate}
-
 In contrast to mathematical models of visualization that aim to evaluate visualization design, we propose a topological framework for building tools to build visualizations. We defer judgement of expressivity and effectiveness to developers building domain specific tools, but provide them the framework to do so. 
 \end{document}
