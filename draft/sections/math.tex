@@ -259,7 +259,7 @@ We propose that the transformation from data to visual representation can be des
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
-Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
+Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
 
 
 Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
@@ -291,7 +291,7 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
 
- A section \vsection is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vfiber_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+ A section \vsection\ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vfiber_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
  
 \subsubsection{Visual Encoders \vchannel}
@@ -299,7 +299,7 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
 %% equivariant maps 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
-    \caption{In this artis, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions (which are represented by the colored arrows) are the same on both the \dsection\ input and \vsection\ output sets.}
+    \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions (which are represented by the colored arrows) are the same on both the \dsection\ input and \vsection\ output sets.}
     \label{fig:artist_nu}
 \end{figure}
 As introduced in section~\ref{sec:intro_viz}, there are many ways to visually represent data components. We define the visual transformers \vchannel\ 
@@ -317,13 +317,13 @@ A validly constructed \vchannel\ is one where the diagram of the monoid transfor
     \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-
-In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$; therefore the actions of \monoid\ on  $\dfiber_{i}$ are not the same as the actions of $\moniod^{prime}$ on \vfiber.  This means that an equivariant \vchannel\ must commute
+In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
 \begin{equation}
-\vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))\end{equation} 
-such that $\varphi: m_{\delement} \mapsto m_{\velements}$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi: \monoid \rightarrow \monoid^{\prime}$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore without a loss of generality, we can assume that \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
+\vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
+\end{equation} 
+such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-On example of an equivariant \vchannel\ is illustrated in figure~\ref{fig:artist_nu}, which is a mapping from \textbf{Strings} to symbols. This is also an example of a Steven's nominal measurement set, which is defined as having permutation group actions 
+On example of an equivariant \vchannel\ is illustrated in figure~\ref{fig:artist_nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
 \begin{equation}
     \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
 \end{equation}
@@ -339,13 +339,12 @@ while for ratio data, there must be equivalent scaling
 \begin{equation}
 \vchannel(xc) = \vchannel(x)*c 
 \end{equation}
-
 We therefore can test if a \vchannel\ is equivariant by testing the actions under which is must  commute. For example, we define a transform $\vchannel_{i}(x) = .5$ on interval data. This means it must commute under translation, for example $t(x) = x+2$. Testing this constraint 
 \begin{align}
-    \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + \varphi(2)\\
+    \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
     .5 &\neq .5 + 2
 \end{align}
-we find that the \vchannel\ defined here does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions are equivariant and also provide guidance on constructing new equivariant \vchannel\ functions. 
+we find that the \vchannel\ defined here does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
 
 \subsubsection{Graphic Assembler \vmark}
 \label{sec:artist_q}
@@ -357,7 +356,7 @@ we find that the \vchannel\ defined here does not commute and is therefore inval
 
 As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
 
-While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of connected components $\dbasepath \subset \dbase$ as input:
+While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input:
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
@@ -373,7 +372,7 @@ such that for every glyph there is at least one corresponding section on \dbase.
 
 It is on sections of these glyphs that we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same. While it may seem intuitive that visualizations that generate the same glyph should consistently generate the same glyph given the same input, we formalize this constraint such that it can be specified as part of the implementation of \vmark. 
 
-Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for all monoid actions $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, the output is equivalent 
+Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
 \begin{equation}
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
@@ -464,11 +463,12 @@ Given the equivalence between \vsection\ and \vsectionpull\ defined above, the r
 \end{equation}
 the graphic section \gsection\ evaluated on a visual region \gbasepoint\ is defined as the assembly function \vmark\ with input pulled back visual section \vsectionpull\ also evaluated on \gbasepoint. Since the pulled back visual section \vsectionpull\ is the visual section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
 \begin{equation}
+\label{eq:qhat_q_s}
 \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation} 
 where the assembly function \vmarkd\ that takes as input the visual section on data \vsection\ is defined to be the assembly function \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. 
 
-Factoring out \gbasepoint\, $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ generates a curried \vmark. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing rendering pipeline.
+Factoring out \gbasepoint\ from equation~\ref{eq:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delgate the construction of \gsection\ to a back end such as Matplotlib.
 
 \subsubsection{Sheafs}
 \label{sec:artist_sheaf_stalk}
