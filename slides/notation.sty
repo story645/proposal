@@ -1,0 +1,64 @@
+\ProvidesPackage{notation}
+
+%% defintion function: \cdef{name}{symbol}
+\newcommand\cdef[2]{%
+    \expandafter\newcommand\csname #1\endcsname{\ensuremath{#2}}}
+
+
+%% sets
+\cdef{reals}{\mathbb{R}}
+\cdef{realsp}{\mathbb{R}^+}
+
+%% databundle
+\cdef{dtotal}{E}
+\cdef{dfiber}{F}
+\cdef{delement}{r}
+\cdef{dbase}{K}
+\cdef{dbasepoint}{\MakeLowercase{\dbase}}
+\cdef{dbasepath}{J}
+\cdef{dbasepathpoint}{\MakeLowercase{\dbasepath}}
+\cdef{dsection}{\tau}
+\cdef{dx}{j}
+\cdef{dy}{k}
+
+% fiber
+\cdef{ftotal}{\mathbb{U}}
+\cdef{fsection}{\sigma}
+\cdef{fttype}{\ftotal_{\fsection}}
+\cdef{fnames}{C}
+\cdef{fname}{\MakeLowercase{\fnames}}
+\cdef{ftypes}{\textbf{DT}}
+\cdef{ftype}{T}
+
+%monoid 
+\cdef{monoid}{M}
+
+%graphic bundle
+\cdef{gtotal}{H}
+\cdef{gfiber}{D}
+\cdef{gbase}{S}
+\cdef{gbasepoint}{\MakeLowercase{\gbase}}
+\cdef{gsection}{\rho}
+\cdef{gx}{\alpha}
+\cdef{gy}{\beta}
+
+%visual bundle
+\cdef{vtotal}{V}
+\cdef{vfiber}{P}
+\cdef{velement}{\MakeLowercase{\vtotal}}
+\cdef{vsection}{\mu}
+
+% artist maps
+\cdef{vartist}{A}
+\cdef{vartisteq}{\vartist^{\prime}}
+\cdef{vchannel}{\nu}
+\cdef{vmark}{Q}
+\cdef{vmarkd}{\hat{\vmark}}
+\cdef{vindex}{\xi}
+
+
+%visual pullbacks
+\cdef{vtotalpull}{\vindex^{*}\vtotal}
+\cdef{vfiberpull}{\vfiber^{*}\vsection}
+\cdef{vsectionpull}{\vindex^{*}\vsection}
+\cdef{vpreimg}{\vindex^{-1}(\dbasepoint)}

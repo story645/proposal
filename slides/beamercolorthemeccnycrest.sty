@@ -1,0 +1,74 @@
+% Adapted from beamercolorthemecambridgeuk by Philipp Hennig, 2008.
+% Adapted from beamercolorthemebeetle by Till Tantau
+%
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+
+\mode<presentation>
+
+%% RGB CCNY/CREST template, based on beamercolorthemecambridgeuk
+
+%slide colors
+\definecolor{ccny_purple}{RGB}{93,56,136}
+\definecolor{pale_grey}{RGB}{248,248,248}
+\definecolor{bullet_blue}{RGB}{18,134,185}
+
+%text colors
+\definecolor{cambridgedarkorange}{RGB}{200,78,0}
+\definecolor{cambridgeorange}{RGB}{227,114,34}
+\definecolor{crest_blue}{RGB}{155, 221, 255}
+\definecolor{dark_gray}{RGB}{64,64,64}
+\definecolor{cornerstone}{RGB}{120,128,145}
+
+
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=ccny_purple}
+
+\setbeamercolor{alerted text}{fg = cambridgeorange}
+\setbeamercolor{example text}{fg = ccny_purple}
+
+\setbeamercolor{item projected}{use=item,fg=black,bg = ccny_purple}
+
+\setbeamercolor*{palette primary}{fg=white,bg=pale_grey}
+\setbeamercolor*{palette secondary}{parent=palette primary,use=palette primary,bg=pale_grey}
+\setbeamercolor*{palette tertiary}{parent=palette primary,use=palette primary,fg=white,bg=ccny_purple}
+\setbeamercolor*{palette quaternary}{parent=palette primary,use=palette primary,bg=cambridgeorange}
+
+\setbeamercolor*{block body}{bg=pale_grey, fg =dark_gray}
+\setbeamercolor*{block body example}{bg=pale_grey, fg=dark_gray}
+\setbeamercolor*{block title}{parent=structure,bg=ccny_purple,fg=white}
+\setbeamercolor*{block title example}{bg=ccny_purple,fg= white}
+
+\setbeamercolor*{sidebar}{parent=palette primary}
+
+\setbeamercolor*{palette sidebar primary}{fg=crest_blue}
+\setbeamercolor*{palette sidebar secondary}{fg=black}
+\setbeamercolor*{palette sidebar tertiary}{fg=white}
+\setbeamercolor*{palette sidebar quaternary}{fg=black}
+
+\setbeamercolor{frametitle}{bg=ccny_purple,fg=crest_blue}
+\setbeamercolor{frametitle right}{bg=white}
+\setbeamercolor{framesubtitle}{fg=white}
+\setbeamercolor{title}{bg=white,fg=ccny_purple}
+\setbeamercolor{subtitle}{fg=cambridgedarkorange}
+
+\setbeamercolor{block title}{parent=structure}
+\setbeamercolor{block title example}{parent=example text}
+\setbeamercolor{block body}{}
+\setbeamercolor{block body alerted}{}
+\setbeamercolor{block body example}{}
+
+\setbeamercolor*{titlelike}{parent=structure}
+
+%bullets
+\setbeamertemplate{items}[circle]
+\setbeamercolor*{item}{fg=bullet_blue}
+
+\mode
+<all>
