@@ -2,12 +2,16 @@
 
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{mathrsfs} % math script fonts
-\usepackage{tikz-cd} % commutative diagrams
+\usepackage{tikz}
+\usetikzlibrary{calc} %boxes
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+\usetikzlibrary{cd} % commutative diagrams
 \usepackage{subcaption} % subfigure float captioning
 
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{appendixnumberbeamer} 
 
 \usepackage{notation} % move this later
 
@@ -187,20 +191,18 @@
     \begin{figure}
         \includegraphics[width=1\textwidth]{figures/math/fiberbundle.png}
     \end{figure}
-    a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
+    A fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
     \begin{equation}
         \label{eq:fiber_bundle}
         \begin{tikzcd}[ampersand replacement=\&]
             \dfiber \arrow[r, hook] \& \dtotal \arrow[r, "\pi"] \& \dbase
         \end{tikzcd}
     \end{equation}
+    where \dtotal\ is the total data space, \dfiber\ is the variable space, and \dbase\ encodes the continuity.
 \end{frame}
 
 \begin{frame}{Variables: Fiber}
-    \begin{equation}
-        \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
-    \end{equation}
-    where $\ftotal_{\fsection(\fname)}$ is 
+    Given a space of all possible values \ftotal\
     \begin{equation}
         \label{eq:data_types}
         \begin{tikzcd}[ampersand replacement=\&]
@@ -208,22 +210,26 @@
             \fnames \arrow[r, "\fsection"']                  \& \ftypes       
         \end{tikzcd}
     \end{equation}
+    a fiber component is the restricted space $\ftotal_{\fsection(\fname)}$. 
+    \begin{equation}
+        \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
+    \end{equation}
     \begin{description}
         \item[\ftypes] data types of the variables in the dataset 
         \item[\ftotal] disjoint union of all values of type $\ftype \in \ftypes$ 
-        \item[\fnames] variable names
+        \item[\fnames] variable names, $\fname \in \fnames$
         \item[\fttype] \ftotal\ restricted to the data type of a named variable   
     \end{description}
 \end{frame}
 
-\begin{frame}{Sample Fiber}
+\begin{frame}{Variable types are dimensions of the fiber}
     \begin{figure}[H]
-        \begin{subfigure}{.4\textwidth}
+        \begin{subfigure}{.49\textwidth}
             \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
             \caption{}
             \label{fig:fiber_example_plane}
         \end{subfigure}
-        \begin{subfigure}{.4\textwidth}
+        \begin{subfigure}{.49\textwidth}
             \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
             \caption{}
             \label{fig:fiber_example_cube}
@@ -232,34 +238,35 @@
         \label{fig:data_fiber_example}
     \end{figure}
     \begin{description}
-        \item[\ref{fig:fiber_example_plane}]  $\dfiber=\reals\times\reals$, for example (time, temperature)
-        \item[\ref{fig:fiber_example_cube}]  $\reals\times\realsp\times\reals$, for example  (time, wind=(speed, direction))
+        \item[\ref{fig:fiber_example_plane}]  $\dfiber=\reals\times\reals$, (time, temperature)
+        \item[\ref{fig:fiber_example_cube}]  $\reals\times\realsp\times\reals$, (time, wind=(speed, direction))
     \end{description}
 \end{frame}
 
 
-\begin{frame}{Structure of Components: Monoids}
+\begin{frame}{Structure of Components: Monoid \& Monoid Actions}
 A monoid \monoid\ is a set with
 \begin{description}
     \item[associative binary operator] $\ast:\monoid \times \monoid\rightarrow \monoid$
     \item[identity element] $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. 
 \end{description}
-\end{frame}
-\begin{frame}{Monoid Actions}
-A left monoid action of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
+\pause
+\begin{block}{left monoid action}
+A set \dfiber\ with an action $\bullet: \monoid\times \dfiber \rightarrow \dfiber$ with the properties:
     \begin{align*}
-        \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-        \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
+        \textbf{associativity}\;& \text{for all } f,g \in \monoid \text{ and } x\in \dfiber,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+        \textbf{identity}\;& \text{for all } x\in \dfiber, e\in \monoid,\,  e\bullet x = x 
     \end{align*}
+\end{block}
 \end{frame}
 
-\begin{frame}{Monoid Composition: Permutation}
+\begin{frame}{Monoid Actions: Permutation}
     \begin{figure}
         \includegraphics[width=1\linewidth]{figures/math/monoid_emoji.png}
     \end{figure}
 \end{frame}
 
-\begin{frame}{Monoid Composition: Partial Order}
+\begin{frame}{Why monoids? partial orders}
     \begin{figure}
         \begin{overprint}
             \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/monoid_hasse.png}
@@ -270,10 +277,9 @@ A left monoid action of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet
     \end{figure}
 \end{frame}
 
-\begin{frame}{Continuity: base space}
+\begin{frame}{Data Continuity: Base space}
     \begin{figure}[H]
-    \includegraphics[width=\linewidth]{figures/math/k_qspace.png}
-    \caption{}
+    \includegraphics[height=.5\textheight]{figures/math/k_qspace.png}
     \label{fig:base_space_div}
 \end{figure}
 where the total space can be decomposed into components 
@@ -282,18 +288,25 @@ where the total space can be decomposed into components
 \end{equation}
 \end{frame}
 
-\begin{frame}{Sample: Base Space}
+\begin{frame}{Data connectivity is encoded as the base space}
     \begin{figure}[H]
-        \begin{subfigure}{.4\textwidth}
+        \begin{subfigure}{.49\textwidth}
             \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
+            \caption{}
             \label{fig:base_example_discrete}
         \end{subfigure}
-        \begin{subfigure}{.4\textwidth}
+        \begin{subfigure}{.49\textwidth}
             \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
+            \caption{}
             \label{fig:base_example_continuous}
         \end{subfigure}
+        \caption{}
         \label{fig:base_example}
     \end{figure}
+    \begin{description}
+        \item[\ref{fig:base_example_discrete}] data is discrete 0D points
+        \item[\ref{fig:base_example_continuous}]  data is lies on the 1D continuous interval \dbase\
+    \end{description}
 \end{frame}
 
 \begin{frame}{Values: Section}
@@ -304,18 +317,16 @@ where the total space can be decomposed into components
                               \& \dbase \arrow[u, "\dsection"', bend right]
         \end{tikzcd}
     \end{equation}
-     such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. 
-     
-     The set of all global sections is denoted as $\Gamma(\dtotal)$.
-\end{frame}
-
-\begin{frame}{Record}
-    Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
+     s.t. $\pi(\dsection(\dbasepoint)) = \dbasepoint$.  Set of all global sections is denoted $\Gamma(\dtotal)$.
+     \pause
+     \begin{block}{Record}
+     Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
 \begin{equation}
     \label{eq:section_return}
     \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
 \end{equation}
 where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
+\end{block}
 \end{frame}
 
 \begin{frame}{Sample dataset}
@@ -323,44 +334,175 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
         \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
         \label{fig:data_sections}
     \end{figure}
+    \begin{itemize}
+        \item \dfiber\ is $\reals\times\reals$
+        \item \dbase\ is interval $\left[0,1\right]$
+        \item $\dsection^{(1)}$ is a $sin$ function
+        \item $\dsection^{(2)}$ is a $cos$ function
+        \item $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$
+    \end{itemize}
+  
 \end{frame}
 
 \subsection{Graphics}
 \begin{frame}{Graphic Bundle}
     The graphics bundle is a tuple $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$ defined by the projection map $\pi$
     \begin{equation}
-        \label{eq:fiber_bundle}
         \begin{tikzcd}[ampersand replacement=\&]
-            \gfiber \arrow[r, hook] \& \gtotal \arrow[r, "\pi"] \& \gbase
+            \gfiber \arrow[r, hook] \& \gtotal \arrow[d, "\pi"'] \\
+                              \& \gbase \arrow[u, "\gsection"', bend right]
         \end{tikzcd}
     \end{equation}
+    where \gsection\ is the fully encoded graphic. 
+    \pause
+    \begin{block}{Example: 2D opaque image}
+    The target display is $\gfiber=\reals^5$ with elements 
+    \begin{equation*}
+    (x,\, y,\, r,\, g,\, b) \in \gfiber
+    \end{equation*}
+    returned by \gsection\ such that a graphic has color and 2D position.
+    \end{block}
+
 \end{frame}
-\begin{frame}{Continuity: Base space}
-    The surjective map $\vindex: \gbase \rightarrow \dbase$ 
+\begin{frame}{Graphic Continuity}
+    The surjective map $\vindex: \gbase \rightarrow \dbase$
     \begin{equation}
         \begin{tikzcd}[ampersand replacement=\&]
             \dtotal \arrow[d, "\pi"'] \& \gtotal \arrow[d, "\pi"'] \\
             \dbase                   \& \gbase \arrow[l, "\vindex"']
         \end{tikzcd}
     \end{equation}
-    goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. 
-\end{frame}
-
-\begin{frame}{Sample Display Target: Fiber}
-    Assume a 2D opaque image $\gfiber=\reals^5$ with elements 
-    \begin{equation}
-    (x,\, y,\, r,\, g,\, b) \in \gfiber
-    \end{equation}
-    such that a rendered graphic only has 2D position and color.
-\end{frame}
-
-\begin{frame}{Continuity Retraction Maps}   
+    goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\dbasepoint$ in data space. 
+\pause
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
         \label{fig:graphic_retraction_map}
     \end{figure}
 \end{frame}
 
+\subsection{Artist}
+\begin{frame}{Topological Equivariant Artist Model}
+The topological artist \vartist\ is a monoid equivariant sheaf map 
+\begin{equation}
+    \label{eq:artist_diagram}
+    \begin{tikzcd}[ampersand replacement=\&]
+        \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] \& \vtotal \arrow[d, "\pi"] \& \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] \& \gtotal \arrow[ld, "\pi"] \\
+                                              \& \dbase                  \& \gbase \arrow[l, "\vindex"']                                              \&                    
+        \end{tikzcd}
+\end{equation}
+
+where the artist $\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)$ takes as input $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
+\end{frame}
+
+\begin{frame}{Visual Bundle}
+    The visual bundle is a tuple $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ defined by the projection map $\pi$
+    \begin{equation}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
+                              \& \dbase \arrow[u, "\vsection"', bend right]
+        \end{tikzcd}
+    \end{equation}
+    where \vsection\ is the visual variable encoding\cite{bertinIIPropertiesGraphic2011} of the representation of the data section \dsection. 
+    \begin{block}{Example: position and color}
+        Given an artist with parameters $\{xpos, ypos, color\}$, a sample visual section \vsection\ could be $\{.5, .5, (255, 20,147)\}$
+    \end{block}
+\end{frame}
+
+\begin{frame}{Visual Channel Encoders}
+We define the visual transformers \vchannel\ on components of the data bundle $\dsection_{i}$
+\begin{equation}
+    \label{eq:nu_expanded}
+    \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
+\end{equation}
+as the set of equivariant maps with the constraint 
+\begin{equation}
+    \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
+\end{equation} 
+where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of monoid actions. 
+\end{frame}
+
+\begin{frame}{Example: Nominal Equivariance}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/math/equivariance_nu.png}
+        \caption{The actions on the text data are the same as the actions on the visual representation of that data as emojis.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Visualization Assembly Function}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/math/path_of_q.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Glyph}
+    The glyph is the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$ where the path connected components $\dbasepath \subset \dbase$ are defined 
+    \begin{equation}
+    \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
+    \end{equation}
+    such that the  path $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1] and $\gbase_{\dbasepathpoint}$ is the region
+    \begin{equation}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \gtotal \arrow[r, shift left] \& \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] \& \& \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
+            \end{tikzcd}
+        \label{eq:mark}
+    \end{equation}
+    such that the glyph is differentiable, in keeping with Ziemkiewicz and Kosara's description of a glyph\cite{ziemkiewiczEmbeddingInformationVisualization2009}.
+\end{frame}
+
+\begin{frame}{Visualization Equivariance}
+    If \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, 
+    \begin{equation}
+    \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
+    \end{equation}
+    then the output of both sections acted on by the same monoid $m$ must be the same. 
+    \pause
+    \begin{figure}[H]
+        \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Scatter: $\vmark(xpos, ypos)(\alpha, \beta)$}
+    \begin{figure}[H]
+        \includegraphics[width=1\textwidth]{figures/math/scatter.png}
+    \end{figure}
+    
+    \begin{align*}
+        x &= size *\alpha \cos(\beta) + xpos \\
+        y &= size *\alpha \sin(\beta) + ypos
+    \end{align*}    
+\end{frame}
+
+\begin{frame}{Line: $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ }
+    \begin{figure}[H]
+        \includegraphics[width=1\textwidth]{figures/math/line.png}
+    \end{figure}
+        \begin{equation*}
+            \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2},\; 
+            \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
+        \end{equation*}
+    \begin{align*}
+     x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
+     y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Image $\vmark(xpos, yposcolor)$}
+    \begin{figure}[H]
+        \includegraphics[width=1\textwidth]{figures/math/image.png}
+    \end{figure}
+    \begin{align*}
+        R &= R(\vindex(\alpha, \beta))\\
+        G &= G(\vindex(\alpha, \beta))\\
+        B &= B(\vindex(\alpha, \beta))
+    \end{align*}
+\end{frame}
+
+
+\section{References}
+\begin{frame}[allowframebreaks]{References}
+%\printbibliography
+\end{frame}
+\appendix 
 \begin{frame}{Rendering: Define a Pixel}
     \begin{columns}
         \column{0.5\textwidth}
@@ -386,14 +528,6 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
     \end{columns}
 \end{frame}
 
-\subsection{Artist}
-
-
-
-\section{References}
-%\begin{frame}[allowframebreaks]{References}
-%\printbibliography
-%\end{frame}
 
 \end{document}
 
