@@ -1,5 +1,5 @@
-
 \documentclass[xcolor={dvipsnames}, handout]{beamer}
+
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{mathrsfs} % math script fonts
 \usepackage{tikz-cd} % commutative diagrams
@@ -31,7 +31,7 @@
 
 \begin{document}
 
-\title{Topological Artist Model}
+\title{Topological Equivariant Artist Model}
 
 \begin{frame}
 	\titlepage
@@ -43,106 +43,75 @@
 
 \section{Introduction}
 
-\begin{frame}{What do visualization libraries do?}
+\begin{frame}{Visualizations are structure preserving maps}
     \begin{figure}
         \includegraphics[width=1\linewidth]{figures/intro/dar.png}
     \end{figure}
-\end{frame}
-
-\begin{frame}{Why are we doing this?}
-    \begin{enumerate}
-        \item visualization software design patterns are tuned to data structures\cite{HeerSoftware2006}
-        \item visualization types tuned to data structures\cite{toryRethinkingVisualizationHighlevel2004}
-        \item need to build a tool that supports domain specific structures and algorithms
-        \item tool needs to be general purpose enough to support lots of domains
-        \item tools needs to support 2D, 3D, static, dynamic, and interactive viz
-    \end{enumerate}
-\end{frame}
-
-\subsection{Tools}
-\begin{frame}{Everything is a table}
-\begin{columns}
-    \column{0.5\textwidth}
-    \begin{figure}
-        \includegraphics[width=1\textwidth]{figures/intro/grammar_example.png}
-        \caption{Figure 1.5 in Wilkenson's Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}}
-    \end{figure}
-    \column{0.5\textwidth}
-        \begin{enumerate}
-            \item  ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009}, D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014}, altair\cite{vanderplasAltairInteractiveStatistical2018}
-            \item tends to be declarative\cite{heerDeclarative2010} 
-            \item users describe how to compose visual elements \cite{wongsuphasawatNavigatingWideWorld2021}
-        \end{enumerate}
-    \end{columns}
+    The aim of this work is to rearchitecture Matplotlib
+    \pause 
+    to take advantage of developments in software design, data structures, and visualization
     \pause
-    \begin{center}
-        \textbf{TAM: build the visual elements}
-    \end{center}
+    to improve consistency, reusability, and discoverability,
+    \pause
+    so domain specific tool developers can build structure preserving visualization tools.
 \end{frame}
 
-\begin{frame}{Everything is an image}
+\begin{frame}{Visualization component constraints}
+    \begin{description}
+        \item[equivariance] properties of data and visual encoding match
+        \item[continuity] connectivity of data and visual encoding match
+        \item[composibility] structure preserved by individual components is preserved in combined components
+    \end{description}
+\end{frame}
+
+\subsection{Background}
+\begin{frame}{Tools are tuned to the continuity of the date \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}}
     \begin{columns}
-        \column{0.5\textwidth}
+        \column{0.33\textwidth}
+        \begin{figure}
+            \includegraphics[width=1\textwidth]{figures/intro/data_formatting.png}
+            \caption{Based on fig~2.5 in Munzner's VAD\cite{VisualizationAnalysisDesign}}
+        \end{figure}
+    
+        \begin{enumerate}
+            \item ggplot\cite{wickhamGgplot2ElegantGraphics2016a}
+            \item protovis\cite{bostockProtoviz2009}, D3 \cite{bostockDataDrivenDocuments2011}
+            \item vega\cite{satyanarayanDeclarativeInteractionDesign2014}, altair\cite{vanderplasAltairInteractiveStatistical2018}
+        \end{enumerate}
+        \pause
+        \column{0.33\textwidth}
         \begin{figure}
             \includegraphics[width=1\textwidth]{figures/intro/landsat.png}
         \end{figure}
-        \column{0.5\textwidth}
         \begin{enumerate}
-            \item ImageJ\cite{schneiderNIHImageImageJ2012}, ImagePlot\cite{studiesCulturevisImageplot2021}, Napari\cite{nicholas_sofroniew_2021_4533308}
-            \item build plugins into existing system where image is primary input
+            \item ImageJ\cite{schneiderNIHImageImageJ2012}, ImagePlot\cite{studiesCulturevisImageplot2021}\item Napari\cite{nicholas_sofroniew_2021_4533308}
         \end{enumerate}
-    \end{columns}
-    \pause
-    \begin{center}
-        \textbf{TAM: more general than tables and images}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Everything is ?}
-    \begin{columns}
-        \column{0.5\textwidth}
+        \pause
+        \column{0.33\textwidth}
         \begin{figure}
             \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
-            \caption{Image is from the Data Representation chapter of the MayaVi 4.7.2 documentation.\cite{DataRepresentationMayavi}}
+            \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
         \end{figure}
-        \column{0.5\textwidth}
         \begin{enumerate}
-            \item Matplotlib\cite{hunterMatplotlib2DGraphics2007},  VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}, MayaVi\cite{RamachandranMayaVI2011}, ParaView\cite{ahrens2005paraview}, Titan\cite{brianwylieUnifiedToolkitInformation2009}
-            \item each visualization type API is tuned to the data structure
+            \item Matplotlib\cite{hunterMatplotlib2DGraphics2007}, 
+            \item VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}, MayaVi\cite{RamachandranMayaVI2011}, ParaView\cite{ahrens2005paraview}, Titan\cite{brianwylieUnifiedToolkitInformation2009}
         \end{enumerate}
     \end{columns}
-    \pause
-    \begin{center}
-        \textbf{TAM: common data abstraction interface between data and viz }
-    \end{center}
 \end{frame}
 
-\subsection{Data}
-\begin{frame}{Variables \& Topology}
+\begin{frame}{Structure is encoded in variables and continuity}
     \begin{figure}
         \includegraphics[width=1\textwidth]{figures/intro/munzner_datatypes.png}
         \caption{Image is figure 2.8 in Munzner's Visualization Analysis and Design\cite{munznerVisualizationAnalysisDesign2014}}
     \end{figure}
     \begin{description}
-        \item  metadata are \textit{keys} with associated \textit{values} (Munzner \cite{munznerVisualizationAnalysisDesign2014})
-        \item[topology] Fiber bundles can be a common data abstraction (Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989})
-        \item[variables] Fiber as a database schema (Spivak \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES})
+        \item[binding] metadata are structural \textit{keys} with associated \textit{values} (Munzner \cite{munznerVisualizationAnalysisDesign2014})] 
+        \item[continuity] Fiber bundles can be a common data abstraction (Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989})
+        \item[variables] Fibers can hold schema like encodings of variables (Spivak \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES})
     \end{description}
-    \pause
-    \begin{center}
-        \textbf{Tam: variables are \textit{values} and \textit{keys} locate them in topology}
-    \end{center}
 \end{frame}
 
-\subsection{Visualization}
-\begin{frame}{Property Matching}
-    \begin{figure}
-        \includegraphics[width=.7\textwidth]{figures/intro/retinal_variables.png}
-        \caption{This tabular form of Bertin's retinal variables is from Understanding Graphics \cite{malamedInformationDisplayTips2010} who reproduced it from Krygier and Wood's \textit{Making Maps: A Visual Guide to Map Design for GIS}\cite{krygierMakingMapsVisual2005}}
-    \end{figure}
-\end{frame}
-
-\begin{frame}{Evaluating visualizations}
+\begin{frame}{Visualizations are (mostly) evaluated on equivariance}
     \begin{description}
         \item[Expressiveness] structure preserving mappings from data to graphic (Mackinlay \cite{mackinlayAutomatingDesignGraphical1986})
         \item[Effectiveness] design choices made in deference to perceptual saliency \cite (Mackinlay \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014})
@@ -151,84 +120,54 @@
     \end{description}
 \end{frame}
 
-\begin{frame}{Mathematical Frameworks for evaluating visualization}
-    \begin{enumerate}
-        \item APT: visualization has syntax and semantics like a language  (Mackinlay  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987})
-        \item Visualization has functional dependencies that can be represented as graphs (Sugibuchi \cite{sugibuchiFramwork2009}) 
-        \item the semiotics of visualization are commutative in a category theory framework (Vickers \cite{vickersUnderstandingViz2013})
-    \end{enumerate}
-    \pause
-    \begin{center}
-        \textbf{Tam: Framework for building visualizations}
-    \end{center}
+
+\begin{frame}{Models describe composition}
+    \begin{description}
+        \item[language model] APT: syntax and semantics of visualization (Mackinlay  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987})
+        \item[functional dependencies] constrained maps between data and visual representation(Sugibuchi \cite{sugibuchiFramwork2009}) 
+        \item[category theory] the semiotics of visualization are commutative (Vickers \cite{vickersUnderstandingViz2013})
+        \item[algebraic process] data ($\alpha$) and viz ($\omega$) transforms are symmetric (Kindlmann and Scheidegger \cite{kindlmannAlgebraicProcessVisualization2014})
+        \begin{columns}
+            \column{.5\textwidth}
+       
+            \begin{description}
+                \item[D] data 
+                \item[R] representations
+                \item[V] visualizations
+            \end{description}
+            \column{.5\textwidth}
+            \begin{equation*}
+                \begin{tikzcd}[ampersand replacement=\&]
+                    D \arrow[d, "\alpha"'] \arrow[r, "r_1"] \& R \arrow[r, "\nu"]  \& V \arrow[d, "\omega"] \\
+                    D \arrow[r, "r_2"']                     \& R \arrow[r, "\nu"'] \& V                    
+                \end{tikzcd}
+                \end{equation*}
+       
+        \end{columns} 
+     
+    \end{description}
 \end{frame}
 
-\begin{frame}{Visualization is commutative maps}
-    data ($\alpha$) and viz ($\omega$) symmetries (Kindlmann and Scheidegger \cite{kindlmann2014algebraic})
-        \begin{block}{$v\circ r_2 \circ \alpha =\omega\circ v\circ r_1$}
-            \begin{equation*}
-            \begin{tikzcd}[ampersand replacement=\&]
-                D \arrow[d, "\alpha"'] \arrow[r, "r_1"] \& R \arrow[r, "\nu"]  \& V \arrow[d, "\omega"] \\
-                D \arrow[r, "r_2"']                     \& R \arrow[r, "\nu"'] \& V                    
-            \end{tikzcd}
-        \end{equation*}
-    \end{block}
-    \pause
-    \begin{center}
-        \textbf{Tam: Add topology and make it functional}
-    \end{center}
-\end{frame}
-\begin{frame}{So why?}
-    \begin{figure}[H]
-        \begin{subfigure}{.24\textwidth}
-            \includegraphics[width=1\textwidth]{figures/intro/du_bois_spinny.png}
-            \caption{}
-            \label{fig:intro_dpa}
-        \end{subfigure}
-        \begin{subfigure}{.24\textwidth}
-            \includegraphics[width=1\textwidth]{figures/intro/du_bois_line.png}
-            \caption{}
-            \label{fig:intro_dpb}
-        \end{subfigure}
-        \begin{subfigure}{.24\textwidth}
-            \includegraphics[width=1\textwidth]{figures/intro/du_bois_country.png}
-            \caption{}
-            \label{fig:intro_dbc}
-        \end{subfigure}
-        \begin{subfigure}{.24\textwidth}
-            \includegraphics[width=1\textwidth]{figures/intro/du_bois_heat.png}
-            \caption{}
-            \label{fig:intro_dbd}
-        \end{subfigure}
-        \caption{Du Bois' data portraits from the Prints and Photographs collection of the Library of Congress \cite{duboisGeorgiaNegroCity1900,duboisGeorgiaNegroValuation1900, duboisSeriesStatisticalCharts, duboisSeriesStatisticalChartsa}}
-        \label{fig:intro_dubois}
-    \end{figure}
-    \begin{center}
-        \textbf{Framework for building any valid visualization}
-    \end{center}
-\end{frame}
 
 \subsection{Contributions}
 \begin{frame}{Contributions}
-    \begin{enumerate}
-        \item a formal description of the topology preserving relationship between data and graphic via continuous maps
-        \item a formal description of the property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
-        \item abstraction of data structure using fiber bundles with schema like fibers to encode components and topology 
-        \item algebraic sum operator such that more complex visualizations can be built from simple ones 
-        \item a functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
-        \item a prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
-    \end{enumerate}
+    \begin{description}
+        \item[Topological] topology preserving relationship between data and graphic via continuous maps
+        \item[Equivariant] property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+        \item[Artist] functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
+        \item [Model] prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
+    \end{description}
 \end{frame}
 
 \section{Mathematical Framework}
 
-\begin{frame}{Topological Artist Model}
+\begin{frame}{Topological Equivariant Artist Model}
+    The Artist $\mathscr{\vartist}$ is a map from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$
     \begin{equation}
         \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
     \end{equation}
     \pause
-    which is a map from data \dtotal\ to graphic \gtotal\ that carries a homomorphism of monoid actions 
-    \pause 
+     that carries a homomorphism of monoid actions 
     \begin{equation}
     \varphi: \monoid \rightarrow \monoid^{\prime}
     \end{equation}
@@ -237,6 +176,9 @@
     \begin{equation}
     \mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
     \end{equation}
+    \pause 
+    with a deformation retraction from graphic to data space. 
+    \note{some kinda words about the continuity}
 \end{frame}
 
 \subsection{Data Model}
@@ -295,12 +237,6 @@
     \end{description}
 \end{frame}
 
-\begin{frame}{Fiber Components}
-    We can decouple decouple \dfiber\ into components $\dfiber_i$
-    \begin{equation}
-        \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
-    \end{equation}
-\end{frame}
 
 \begin{frame}{Structure of Components: Monoids}
 A monoid \monoid\ is a set with
@@ -324,7 +260,14 @@ A left monoid action of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet
 \end{frame}
 
 \begin{frame}{Monoid Composition: Partial Order}
-    MAKE THIS Hasse Diagram (borrow from theories of composablity)
+    \begin{figure}
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/monoid_hasse.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/math/monoid_monotone.png}
+            \onslide<3>\includegraphics[width=1\linewidth]{figures/math/monoid_maps.png}
+        \end{overprint}
+    \caption{Inspired by definition 1.59 diagram in Spivak and Fong's An Invitation to Applied Category Theory \cite{fongInvitationAppliedCategory2019}}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Continuity: base space}
@@ -383,7 +326,7 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
 \end{frame}
 
 \subsection{Graphics}
-\begin{frame}{Fiber Bundle}
+\begin{frame}{Graphic Bundle}
     The graphics bundle is a tuple $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$ defined by the projection map $\pi$
     \begin{equation}
         \label{eq:fiber_bundle}
@@ -392,8 +335,6 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
         \end{tikzcd}
     \end{equation}
 \end{frame}
-
-
 \begin{frame}{Continuity: Base space}
     The surjective map $\vindex: \gbase \rightarrow \dbase$ 
     \begin{equation}
@@ -445,8 +386,14 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
     \end{columns}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{References}
-\printbibliography
-\end{frame}
+\subsection{Artist}
+
+
+
+\section{References}
+%\begin{frame}[allowframebreaks]{References}
+%\printbibliography
+%\end{frame}
+
 \end{document}
 
