@@ -12,12 +12,19 @@
 \usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{appendixnumberbeamer} 
-
+\usepackage{minted}
+\setminted[python]{fontsize=\scriptsize, 
+                   linenos,
+                   numbersep=8pt,
+                   gobble=0,
+                   frame=lines,
+                   bgcolor=bg,
+                   framesep=3mm} 
 \usepackage{notation} % move this later
 
 \graphicspath{.figures/}
 
-\usepackage[backend=bibtex, style=numeric-comp, doi=false,isbn=false,url=false, giveninits=true]{biblatex}
+\usepackage[backend=bibtex, style=numeric-comp, sorting=none, doi=false,isbn=false,url=false, giveninits=true]{biblatex}
 \bibliography{../draft/glasslab_viz.bib}
 
 \usetheme{ccnycrest}
@@ -74,7 +81,7 @@
         \column{0.33\textwidth}
         \begin{figure}
             \includegraphics[width=1\textwidth]{figures/intro/data_formatting.png}
-            \caption{Based on fig~2.5 in Munzner's VAD\cite{VisualizationAnalysisDesign}}
+            \caption{Based on fig~2.5 in Munzner's VAD\cite{munznerVisualizationAnalysisDesign2014}}
         \end{figure}
     
         \begin{enumerate}
@@ -118,7 +125,7 @@
 \begin{frame}{Visualizations are (mostly) evaluated on equivariance}
     \begin{description}
         \item[Expressiveness] structure preserving mappings from data to graphic (Mackinlay \cite{mackinlayAutomatingDesignGraphical1986})
-        \item[Effectiveness] design choices made in deference to perceptual saliency \cite (Mackinlay \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014})
+        \item[Effectiveness] design choices made in deference to perceptual saliency (Mackinlay \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014})
         \item[Naturalness] easier to understand when properties match (Norman \cite{norman_things_smart})
         \item[Graphical Integrity] graphs show \textbf{only} the data (Tufte \cite{tufteVisualDisplayQuantitative2001})
     \end{description}
@@ -127,7 +134,7 @@
 
 \begin{frame}{Models describe composition}
     \begin{description}
-        \item[language model] APT: syntax and semantics of visualization (Mackinlay  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987})
+        \item[language model] APT, GoG: syntax, semantics, and grammar of graphics (Mackinlay, Wilkenson  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005})
         \item[functional dependencies] constrained maps between data and visual representation(Sugibuchi \cite{sugibuchiFramwork2009}) 
         \item[category theory] the semiotics of visualization are commutative (Vickers \cite{vickersUnderstandingViz2013})
         \item[algebraic process] data ($\alpha$) and viz ($\omega$) transforms are symmetric (Kindlmann and Scheidegger \cite{kindlmannAlgebraicProcessVisualization2014})
@@ -549,12 +556,236 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 
 
 \section{Prototype}
+\subsection{Artist}
+\begin{frame}[fragile]{Artist}
+    \begin{minted}{python}
+        class ArtistClass(matplotlib.artist.Artist):
+            def __init__(self, data, transforms, *args, **kwargs):
+                # properties that are specific to the graphic
+                self.data = data 
+                self.transforms = transforms
+                super().__init__(*args, **kwargs)
+        
+            def assemble(self, **args):
+                # set the properties of the graphic
+        
+            def draw(self, renderer):
+                # returns K, indexed on fiber then key 
+                view = self.data.view(self.axes) 
+                # visual channel encoding applied fiberwise 
+                visual = {p: t['encoder'](view[t['name']])
+                          for p, t in self.transforms.items()}
+                self.assemble(**visual)
+                # pass configurations off to the renderer
+                super().draw(renderer)
+        \end{minted}
+\end{frame}
 
+\begin{frame}[fragile]{Artists: Scatter \& Line}
+\begin{figure}[H]
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\textwidth]{figures/code/line_1.png}
+    \end{subfigure}
+\end{figure}
+\begin{columns}
+\column{,49\textwidth}
+\begin{minted}{python}
+fig, ax = plt.subplots()
+artist = Point(data, transforms)
+ax.add_artist(artist)
+\end{minted}
+\column{.49\textwidth}
+\begin{minted}{python}
+fig, ax = plt.subplots()
+artist = Line(data, transforms)
+ax.add_artist(artist)
+\end{minted}
+\end{columns}
+\end{frame}
 
+\begin{frame}[fragile]{Artists: Scatter \& Line}
+\begin{minted}{python}
+class Point(mcollections.Collection):
+    def assemble(self, x, y, s, facecolors='C0' ):
+        # construct geometries of the circle glyphs in visual coordinates
+        self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
+                    for (xi, yi, si) in zip(x, y, s)] 
+        # set attributes of glyphs, these are vectorized 
+        # circles and facecolors are lists of the same size
+        self.set_facecolors(facecolors)
+\end{minted} 
+    \pause
+\begin{minted}{python}
+class Line(mcollections.LineCollection):
+    def assemble(self, x, y, color='C0'):
+        #assemble line marks as set of segments 
+        segments = [np.vstack((vx, vy)).T for vx, vy in zip(x, y)]
+        self.set_segments(segments)
+        self.set_color(color)
+\end{minted}
+\end{frame}
 
+\begin{frame}[fragile]{Visual Transformations}
+\begin{minted}{python}
+cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
+transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
+                'y': {'name': 'v2', 'encoder': lambda x: x},
+                'facecolors': {'name':'v3', 'encoder': cmap}, 
+                's':{'name': None , 
+                    'encoder': lambda _: itertools.repeat(.02)}}
+\end{minted}
+    \begin{itemize}
+        \item \mintinline{python}{lambda x: x} is identity \vchannel\
+        \item \mintinline{python}|{'name':None}| map into \vfiber\ without corresponding \dsection\
+        \item \mintinline{python}{color.Categorical} is custom \vchannel
+    \end{itemize}
+\end{frame}
 
+\begin{frame}[fragile]{Custom Complex \vchannel}
+\begin{minted}{python}
+class Categorical:
+    def __init__(self, mapping):
+        # check that the conversion is to valid colors
+        assert(mcolors.is_color_like(color) for color in mapping.values())
+        self._mapping = mapping
 
+    def __call__(self, value):
+        # convert value to a color
+        return [mcolors.to_rgba(self._mapping[v]) for v in values]
+\end{minted}
+\pause
+That we can test for action equivariance
+\begin{minted}{python}
+def test_nominal(values, encoder):
+    m1 = list(zip(values, encoder(values)))
+    random.shuffle(values)
+    m2 = list(zip(values, encoder(values)))
+    assert sorted(m1) == sorted(m2)
+\end{minted}
+\end{frame}
+\subsection{Data}
+\begin{frame}[fragile]{Fiber Bundle}
+\begin{minted}{python}
+@dataclass
+class FiberBundle:
+"""
+Attributes
+----------
+K: {'tables': []}
+F: {variable name: type}
+"""
+    K: dict 
+    F: dict
+\end{minted}
+\end{frame}
 
+\begin{frame}[fragile]{Discrete Connectivity}
+\begin{minted}{python}
+class VertexSimplex: #maybe change name to something else
+    """Fiberbundle is consistent across all sections
+    """
+    FB = FiberBundle({'tables': ['vertex']},  
+            {'v1': float, 'v2': str, 'v3': float})
+
+    def __init__(self, sid = 45, size=1000, max_key=10**10):
+        # create random list of keys
+    def tau(self, k):
+        # e1 is sampled from F1, e2 from F2, etc...
+        return (k, (e1, e2, e3, e4))
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{1D Continuous Connectivity}
+\begin{minted}{python}
+class EdgeSimplex: 
+    FB = FiberBundle({'tables': ['vertex','edge']},
+                         {'x' : float, 'y':  float, 
+                         'color':mtypes.Color()}})
+    def __init__(self, num_edges=4, num_samples=1000): 
+        self.keys = range(num_edge) #edge id
+        self.distances = np.linspace(0,1, num_samples)
+        # half generlized representation of arcs on a circle
+        self.angle_samples = np.linspace(0, 2*np.pi, len(self.keys)+1)
+    @staticmethod
+    def _color(edge):
+        return ['red','orange', 'green','blue'][edge%4]
+    @staticmethod
+    def _xy(edge, distances, start=0, end=2*np.pi):
+        # start and end are parameterizations b/c really there is 
+        angles = (distances *(end-start)) + start
+        return np.cos(angles), np.sin(angles)
+    def tau(self, k): #will fix location on page on revision
+        x, y = self._xy(k, self.distances, 
+                        self.angle_samples[k], self.angle_samples[k+1]) 
+        color = self._color(k) 
+        return (k, (x, y, color))
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{View}
+\begin{minted}{python}
+def view(self, axes):
+    table = defaultdict(list)
+    for k in self.keys:
+        table['index'].append(k)
+        for (name, value) in zip(self.FB.fiber.keys(), self.tau(k)[1]):
+            table[name].append(value)
+    return table
+\end{minted}
+\begin{description}
+    \item [\mintinline{python}{VertexSimplex}] (name, value), value is scaler
+    \item [\mintinline{python}{EdgeSimplex}]  (name, value), value is [x0, ..., xn]
+\end{description}
+\end{frame}
+\begin{frame}[fragile]{Same Artist, Different Data Configurations}
+    \begin{figure}[H]
+        \begin{subfigure}{0.49\textwidth}
+            \includegraphics[width=\textwidth]{figures/code/linec_1.png}
+        \end{subfigure}
+        \begin{subfigure}{0.49\textwidth}
+            \includegraphics[width=\textwidth]{figures/code/lined_1.png}
+        \end{subfigure}
+    \end{figure}
+\begin{minted}{Python}
+simplex.GraphLine(FB, edge_table, vertex_table, 
+                      connect=True)
+simplex.GraphLine(FB, edge_table, vertex_table, 
+                      num_samples=2, connect=False)
+\end{minted}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item structure preserving maps from data to visual representation:
+            \begin{itemize}
+                \item data and graphics have equivalent continuity
+                \item properties are equivariant under monoid actions
+            \end{itemize}  
+        \item fiber bundles with a schema are structure rich abstractions of 
+            \begin{itemize}
+                \item topologically complex heterogenous data 
+                \item target display spaces
+            \end{itemize}
+        \item model can be iteratively integrated into existing Matplotlib architecture
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Proposed Dissertation}
+\begin{itemize}
+    \item expansion of the mathematical framework to include worked out simple and complex addition
+    \item formalization of definition of equivalance class \vartisteq
+    \item implementation of artist with explicit \vindex\
+    \item specification of interactive visualization
+    \item mathematical formulation of a graphic with axes labeling
+    \item implementation of new prototype artists that do not inherit from Matplotlib artists
+    \item provisional mathematics and implementation of user level composite artists
+    \item proof of concept domain specific user facing library 
+\end{itemize}
+\end{frame}
 
 \section{References}
 \begin{frame}[allowframebreaks]{References}
@@ -585,7 +816,33 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
         \end{figure}
     \end{columns}
 \end{frame}
+\begin{frame}[fragile]{GraphLine Data Model}
+\begin{minted}{python}
+class GraphLine:
+    def __init__(self, FB, edge_table, vertex_table, num_samples=1000,
+                        connect=False):
+        #set args as attributes and generate distance
+        if connect: # test connectivity if edges are continuous
+            assert edge_table.keys() == self.FB.F.keys()
+            assert is_continuous(vertex_table)
 
+    def tau(self, k):
+        # evaluates functions defined in edge table
+        return(k, (self.edges[c][k](self.distances) 
+                        for c in self.FB.F.keys()))
+
+    def view(self, axes):
+        # walk the edge_vertex table to return the edge function
+        table = defaultdict(list)
+        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), 
+                                            key=lambda v:v[1][0]):
+            table['index'].append(i)
+            # same as view for line, returns nested list
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i)[1]):
+                table[name].append(value)
+        return table
+\end{minted}
+\end{frame}
 
 \end{document}
 

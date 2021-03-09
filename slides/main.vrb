@@ -1,0 +1,26 @@
+\frametitle{GraphLine Data Model}
+\begin{minted}{python}
+class GraphLine:
+    def __init__(self, FB, edge_table, vertex_table, num_samples=1000,
+                        connect=False):
+        #set args as attributes and generate distance
+        if connect: # test connectivity if edges are continuous
+            assert edge_table.keys() == self.FB.F.keys()
+            assert is_continuous(vertex_table)
+
+    def tau(self, k):
+        # evaluates functions defined in edge table
+        return(k, (self.edges[c][k](self.distances)
+                        for c in self.FB.F.keys()))
+
+    def view(self, axes):
+        # walk the edge_vertex table to return the edge function
+        table = defaultdict(list)
+        for (i, (start, end)) in sorted(zip(self.ids, self.vertices),
+                                            key=lambda v:v[1][0]):
+            table['index'].append(i)
+            # same as view for line, returns nested list
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i)[1]):
+                table[name].append(value)
+        return table
+\end{minted}
