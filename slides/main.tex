@@ -344,6 +344,19 @@ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber.
   
 \end{frame}
 
+\begin{frame}{Sheafs}
+    Restriction maps of a sheaf describe how local $\iota^*\dsection$ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}.
+    
+    \begin{equation}
+        \label{eq:sheaf}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             \& \dtotal \arrow[d, "\pi"']                  \\
+            U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] \& \dbase \arrow[u, "\dsection"', bend right]
+        \end{tikzcd}
+    \end{equation}
+    The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$.
+\end{frame}
+
 \subsection{Graphics}
 \begin{frame}{Graphic Bundle}
     The graphics bundle is a tuple $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$ defined by the projection map $\pi$
@@ -497,10 +510,55 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
     \end{align*}
 \end{frame}
 
+\begin{frame}{Assembly Function Factory}
+\begin{figure}[H]
+    \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
+\end{figure}
+\begin{equation}
+\label{eq:qhat_q_s}
+\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\end{equation} 
+such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
+\end{frame}
+
+\begin{frame}{Composition of artists}
+    Given the family of artists $(\dtotal_i: i\in I)$ on the same image
+    \begin{equation}
+        + \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}
+    \end{equation}
+    the + operator defines a simple composition of artists. 
+
+    When artists share a base space 
+    \begin{equation}
+        \dbase_2 \hookrightarrow \dbase_1
+    \end{equation}
+    a composition operator can be defined such that the the artists can be considered to be acting on different components of the same section. 
+\end{frame}
+\begin{frame}{Equivalance class of artists}
+    An approximation of the equivalence class of artists $\vartist^{\prime}$
+    \begin{equation}
+    \vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}
+    \end{equation}
+    roughly treats two artists as equivalent if they 
+    \begin{itemize}
+        \item act on the same visual bundle \vtotal
+        \item have the same assembly function \vmarkd 
+        \item have the same continuity map \vindex 
+    \end{itemize}
+\end{frame}
+
+
+\section{Prototype}
+
+
+
+
+
+
 
 \section{References}
 \begin{frame}[allowframebreaks]{References}
-%\printbibliography
+\printbibliography
 \end{frame}
 \appendix 
 \begin{frame}{Rendering: Define a Pixel}
