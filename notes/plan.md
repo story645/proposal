@@ -42,8 +42,8 @@ V1 April ? (this date will be set by department)
 - [] turn off line numbers?
 ### Dissertation 
 math
-- [] expansion of the mathematical framework for + and complex (^) addition
 - [] formalization of definition of equivalance class \vartisteq
+- [] expansion of the mathematical framework for + and complex (^) addition
 - [] specification of interactive visualization
 - [] mathematical formulation of a graphic with axes labeling
  
@@ -55,7 +55,7 @@ implementation
 
 reach
 - [] exploiting the models section level formalism to build distributed data source models and concurrent artists.
-
+- [] du bois toy library
 
 ## External presentations 
 
