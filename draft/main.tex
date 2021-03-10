@@ -6,7 +6,12 @@
 \usepackage{textcomp} % degree 
 \usepackage{subfiles} % separate files for sections
 \usepackage{minted}
-\setminted[python]{frame=lines,framesep=2mm,baselinestretch=1.2,linenos}
+\setminted[python]{linenos,
+                   numbersep=8pt,
+                   autogobble, 
+                   frame=lines,
+                   bgcolor=bg,
+                   framesep=3mm} 
 \usepackage{array} % array typesetting
 \usepackage{multirow} % col/row spans
 \usepackage{tabulary} % dynamic width tables
@@ -30,8 +35,7 @@
 \usepackage{lineno}
 \linenumbers %linenumbers for comments
 \usepackage{notation} % notation used in paper 
-\usepackage[backend=bibtex, style=numeric-comp, sorting=none]{biblatex}
-%doi=false,isbn=false,url=false, giveninits=true
+\usepackage[backend=bibtex, style=numeric-comp, sorting=none, url=false]{biblatex}
 \usepackage{breakcites}
 \usepackage[colorlinks, breaklinks=true]{hyperref}
 \usepackage[anythingbreaks]{breakurl}
