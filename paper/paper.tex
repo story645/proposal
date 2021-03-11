@@ -149,7 +149,12 @@
 \firstsection{Introduction}
 \maketitle
 The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization, 
-to improve consistency, reusability, and discoverability, so that domain specific tool developers can build structure preserving visualization tools. We present a visualization model that formalizes constraints on componenents of a visualization in terms of equivaraiance, continuity, and composibility. 
+to improve consistency, reusability, and discoverability, so that domain specific tool developers can build structure preserving visualization tools. To enable this rearchitecture, we first present a visualization model that formalizes the structure that a visualization preserves in terms of 
+\begin{enumerate}
+  \item equivaraiance of data and visual properties
+  \item continuity of data and the graphic
+  \item composibility of components developed in ths model
+\end{enumerate}
 
 \section{Background}
 \begin{figure}[tb]
