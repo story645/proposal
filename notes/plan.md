@@ -53,20 +53,21 @@ implementation
 - [] implementation of ^ artist (brush linked parasitic axes)
 - [] proof of concept 3rd party user-facing library with a biology partner that supports at least one type of structured data (for example, phylogentic tree or cryo-electron microscopy image) and one composite visualization.
 
+
 reach
 - [] exploiting the models section level formalism to build distributed data source models and concurrent artists.
 - [] du bois toy library
 
 ## External presentations 
 
-info viz short paper June 13
+info viz short paper June 13 2021
 - [] fleshing out the non-trivial bundle section 
 - [] implementing a data object for a non-trivial fiber bundle
 
 Scipy July 12-July 18
-- []
+- [] status update 
 
-systems paper using this model:
+infoviz 2022: systems paper using this model
 - [] at least 3 high level plotting functions (e.g. plot, scatter, imshow, bar)
 - [] at least 1 computational plotting function (e.g. hist, contour) that works with at least 2 types of data structures (e.g. array, list, dict, analytic function)
 - [] demo of at least 1 complex interactive composite plot using new api (e.g. scatter with regression and parasitic histograms)
