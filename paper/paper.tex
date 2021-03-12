@@ -191,11 +191,71 @@ such that applying a monoid action $m \in \monoid$ to the data $\delement \in \m
 
 We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 \subsection{Data Bundle}
+Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
+\begin{equation}
+    \label{eq:fiber_bundle}
+    \begin{tikzcd}
+        \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
+    \end{tikzcd}
+\end{equation}
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\ref{sec:data_fiber}), the continuity of records \dbase\ (\ref{sec:data_base}), the collections of records \dsection\ (\ref{sec:data_section}), and the space \dtotal\ of all possible datasets with these components and continuity. 
+
+By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity.
+\subsubsection{Fiber: Variables}
+
 \begin{figure}[tb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
-  \includegraphics[width=\columnwidth]{fiberbundle.png}
-  \label{fig:sample}
- \end{figure}
+  \includegraphics[width=\columnwidth]{fiber.png}
+  \caption{These two datasets have the same base space \dbase\ of discrete points, but the square is a visual representation of the fiber space  $\dfiber=\reals\times\reals$, while the cube is a representation of $\dfiber=\reals\times\realsp\times\reals$}
+  \label{fig:data_fiber}
+\end{figure}
+
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+\begin{equation}
+    \label{eq:data_types}
+    \begin{tikzcd}
+        \fttype \arrow[r] \arrow[d, "\pi_{\fsection}"'] & \ftotal \arrow[d, "\pi"] \\
+        \fnames \arrow[r, "\fsection"']                          & \ftypes       
+    \end{tikzcd}
+\end{equation}
+which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. The \fttype\ lookup is by name to specify that every component is distinct, since multiple components can have the same type \ftype. Given \fsection, the fiber for a one variable dataset is
+\begin{equation}
+    \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
+\end{equation}
+where \fsection\ is the schema binding variable name \fname\ to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
+\begin{equation}
+F = \ftotal_{\fsection(\fname_{1})}\times \ldots \ftotal_{\fsection(\fname_{i})} \ldots\times \ftotal_{\fsection(\fname_{n})}
+\end{equation}
+which is equivalent to 
+\begin{equation}
+    \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
+\end{equation}
+which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:data_fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
+\subsubsection{Equivariance of Properties: Monoid Actions}
+
+\begin{figure}[tb]
+  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
+ %% \includegraphics[width=\columnwidth]{}
+  \caption{}
+  \label{fig:data_partial_order}
+\end{figure}
+
+While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. As shown in \autoref{fig:data_partial_order}, a partial ordering allows for multiple values to have the same rank in an ordering. 
+
+A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
+\begin{align*}
+    \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+    \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
+\end{align*}
+As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
+\begin{equation}
+\monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
+\end{equation}
+of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
+
+Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
+
+
 \section{Prototype}
 
 \begin{figure}[tb]
