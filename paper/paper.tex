@@ -57,7 +57,19 @@
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
 %% with other math-related packages, you may want to disable it.
-
+\usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
+\usepackage{mathrsfs} % math script fonts
+\usepackage{tikz}
+\usetikzlibrary{cd} % commutative diagrams
+\usepackage{minted}
+\setminted[python]{fontsize=\scriptsize, 
+                   linenos,
+                   numbersep=8pt,
+                   autogobble, 
+                   frame=lines,
+                   bgcolor=bg,
+                   framesep=3mm} 
+\usepackage{notation} % move this later
 %% In preprint mode you may define your own headline. If not, the default IEEE copyright message will appear in preprint mode.
 %\preprinttext{To appear in IEEE Transactions on Visualization and Computer Graphics.}
 
@@ -158,13 +170,27 @@ The contribution of this work is
 \end{description}
 
 \section{Related Work}
-Most information visualization tools are tuned to data continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of data they encode.  Where GoG and ImageJ type libraries have very consistent APIs for their visualization tools because the data structure is the same, the APIs for visualizations in VTK and Matplotlib are significantly dependent on the structure of the data it expects. This has lead to poor API consistency and brittle code as every visualization type has a very different point of view on how the data is structured. We present a model that has a single core data abstraction for the API consistency benefits, but the abstraction is general t enough to provide a common interface for many different types of visualization.
+Most information visualization tools are tuned to data continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of data they encode.  Where GoG and ImageJ type libraries have very consistent APIs for their visualization tools because the data structure is the same, the APIs for visualizations in VTK and Matplotlib are significantly dependent on the structure of the data it expects. This has lead to poor API consistency and brittle code as every visualization type has a very different point of view on how the data is structured. We present a model that has a single core data abstraction for the API consistency benefits, but the abstraction is general enough to provide a common interface for many different types of visualization.
 
-The structure visualizations are expected to preserve is encoded in the connectivity of the records and in the properties of the variables in the dataset. Fiber bundles were proposed by Butler as one way to encode the continuity of the data separately from the types of variables \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Our model builds on this work because the abstraction of data and flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
+The structure visualizations are expected to preserve is encoded in the connectivity of the records and in the properties of the variables in the dataset. Fiber bundles were proposed by Butler as one way to encode the continuity of the data separately from the types of variables \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Our model builds on this work because the abstraction of data and flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure. 
 Visual representations of data, by definition, reflect something of the underlying structure and semantics\cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. 
-Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. . This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency notion of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
+
+Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency notion of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
 
 \section{Topological Equivariant Artist Model}
+We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
+\begin{equation}
+    \label{eq:artist}
+    \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
+\end{equation}
+that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
+\begin{equation}
+\mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
+\end{equation}
+such that applying a monoid action $m \in \monoid$ to the data $\delement \in \mathscr{\dtotal}$ input to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
+
+We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
+\subsection{Data Bundle}
 \begin{figure}[tb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{fiberbundle.png}
@@ -174,7 +200,7 @@ Models of visualization evaluate this equivariance and how elements built in the
 
 \begin{figure}[tb]
  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
- \includegraphics[width=\columnwidth]{paper-count-w-2015-new}
+ %\includegraphics[width=\columnwidth]{}
  \caption{A visualization of the 1990--2015 data from \autoref{tab:vis_papers}. The image is from \cite{Isenberg:2017:VMC} and is in the public domain.}
  \label{fig:sample}
 \end{figure}
@@ -248,7 +274,7 @@ a grant from XYZ (\# 12345-67890).}
 %\bibliographystyle{abbrv-doi-narrow}
 %\bibliographystyle{abbrv-doi-hyperref}
 %\bibliographystyle{abbrv-doi-hyperref-narrow}
-\bibliography{../draft/glasslab_viz.tex}
+\bibliography{../draft/glasslab_viz.bib}
 
 \end{document}
 
