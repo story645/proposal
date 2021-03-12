@@ -147,23 +147,29 @@
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
 \maketitle
-The work presented in this paper is motivated by a need for a library of visualization components that developers could use to build complex, domain specific tools tuned to the semantics and structure carried in domain specific data. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. The core architecture also needs to be robust to the big data needs of many visualization practitioners, and therefore support distributed and streaming data needs. To support both exploratory and confirmatory visualization\cite{tukeyWeNeedBoth1980}, this tool needs to support 2D and 3D, static, dynamic and interactive visualizations. 
+The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools.
 
-Specifically, this work was driven by a rearchitecture of the Python visualization library Matplotlib\cite{hunterMatplotlib2DGraphics2007} to meet modern data visualization needs. We aim to take advantage of developments in software design, data structures, and visualization to improve the consistency, composibility, and discoverability of the API. We take a functional approach because functional paradigms encourage writing APIs that are flexible, concise and predictable due to the lack of side effects \cite{loudenProgrammingLanguagesPrinciples2010}. Furthermore, by structuring the API in terms of composition of the smallest units of transformation for which we can define correctness, a functional paradigm naturally leads to a library of highly modular components that are composable in such a way that by definition the composition is also correct. This allows us to ensure that domain specific visualizations built on top of these components are also correct without needing knowledge of the domain.
+The contribution of this work is
+\begin{description}
+  \item[Topological] topology preserving relationship between data and graphic via continuous maps
+  \item[Equivariant] property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+  \item[Artist] functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
+  \item [Model] prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
+\end{description}
 
+\section{Related Work}
+Most information visualization tools are tuned to data continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of data they encode.  Where GoG and ImageJ type libraries have very consistent APIs for their visualization tools because the data structure is the same, the APIs for visualizations in VTK and Matplotlib are significantly dependent on the structure of the data it expects. This has lead to poor API consistency and brittle code as every visualization type has a very different point of view on how the data is structured. We present a model that has a single core data abstraction for the API consistency benefits, but the abstraction is general t enough to provide a common interface for many different types of visualization.
 
-In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool.
+The structure visualizations are expected to preserve is encoded in the connectivity of the records and in the properties of the variables in the dataset. Fiber bundles were proposed by Butler as one way to encode the continuity of the data separately from the types of variables \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Our model builds on this work because the abstraction of data and flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure.
+Visual representations of data, by definition, reflect something of the underlying structure and semantics\cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. 
+Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. . This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency notion of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
 
-
-\section{Background}
+\section{Topological Equivariant Artist Model}
 \begin{figure}[tb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{}
   \label{fig:sample}
  \end{figure}
-
-\section{Model}
-
 \section{Prototype}
 
 \begin{figure}[tb]
@@ -243,6 +249,6 @@ a grant from XYZ (\# 12345-67890).}
 %\bibliographystyle{abbrv-doi-hyperref}
 %\bibliographystyle{abbrv-doi-hyperref-narrow}
 
-\bibliography{../draft/glasslab_viz.bib}
+\bibliography{../draft/glasslab_viz.tex}
 \end{document}
 
