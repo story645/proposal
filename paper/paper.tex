@@ -178,6 +178,7 @@ Visual representations of data, by definition, reflect something of the underlyi
 Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency notion of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
 
 \section{Topological Equivariant Artist Model}
+\label{sec:math}
 We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
 \begin{equation}
     \label{eq:artist}
@@ -188,9 +189,9 @@ that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \mon
 \mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
 \end{equation}
 such that applying a monoid action $m \in \monoid$ to the data $\delement \in \mathscr{\dtotal}$ input to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
-
 We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
 \subsection{Data Bundle}
+\label{sec:math:data}
 Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
@@ -201,8 +202,8 @@ Building on Butler's proposal of using fiber bundles as a common data representa
 that binds the components of the data in \dfiber\ to the continuity represented in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\ref{sec:data_fiber}), the continuity of records \dbase\ (\ref{sec:data_base}), the collections of records \dsection\ (\ref{sec:data_section}), and the space \dtotal\ of all possible datasets with these components and continuity. 
 
 By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity.
-\subsubsection{Fiber: Variables}
-
+\subsubsection{Fiber Space: Variables}
+\label{sec:math:data:fiber}
 \begin{figure}[tb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{fiber.png}
@@ -228,10 +229,13 @@ F = \ftotal_{\fsection(\fname_{1})}\times \ldots \ftotal_{\fsection(\fname_{i})}
 \end{equation}
 which is equivalent to 
 \begin{equation}
+    \label{eq:math:data:fiber:decompose}
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
 which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:data_fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
-\subsubsection{Equivariance of Properties: Monoid Actions}
+
+\subsubsection{Equivariance: Monoid Actions}
+\label{sec:math:data:monoid}
 While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. A partial ordering allows for multiple measurement values to have the same rank\cite{fongInvitationAppliedCategory2019}, which is useful for visualizing many types of multi indicator systems\cite{bruggemannRankingPrioritizationMultiindicator2011}. 
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
@@ -245,17 +249,69 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmannAlgebraicProcessVisualization2014} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
-\subsubsection{}
+Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmannAlgebraicProcessVisualization2014} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}.
+
+\subsubsection{Base Space: Continuity}
+\label{sec:math:data:base}
+ The base space \dbase\ is way to express how the records in \dtotal\ are connected to each other, for example if they are discrete points or if they lie in a 2D continous surface. Formally \dbase\ is the quotient space of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. Our model formulates \dbase\ as akin to an indexing space into \dtotal\ that describes the structure of \dtotal.  
+ 
+ \begin{figure}[tb]
+  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
+  \includegraphics[width=\columnwidth]{base.png}
+  \caption{These two datasets have the same fiber space  $\dfiber=\reals\times\reals$, but the left dataset has a discrete continuity while the right is 1D continuous over the interval $\left[0,1\right]$.}
+  \label{fig:data_continuity}
+ \end{figure}
+
+ As illustrated in ~\autoref{fig:data_continuity}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
+ \begin{equation}
+    \label{eq:math:data:base:decompose}
+     \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
+ \end{equation}
+ which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
+
+ \subsection{Section: Values}
+ \label{sec:math:data:section}
+ \begin{figure}[tb]
+  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
+  \includegraphics[width=\columnwidth]{fiberbundle.png}
+  \caption{Each section in the fiber bundle is a unique continuous map from base space to fiber encoding the set of records in the dataset. The two sections, $\dsection^{(1)}$ and $\dsection^{(2)}$, shown here are in the set of global sections $\Gamma(\dtotal)$.}
+  \label{fig:data_section}
+ \end{figure}
+
+ While the projection function $\pi:\dtotal \rightarrow\dbase$ ties together the base space \dbase\ with the fiber \dfiber, a section $\dsection: \dbase\rightarrow \dtotal$ encodes a dataset. A section function takes as input location $\dbasepoint \in \dbase$ and returns a record $\delement \in \dtotal$. For any fiber bundle, there exists a map
+ \begin{equation}
+     \begin{tikzcd}
+         \dfiber \arrow[r, hook] & \dtotal \arrow[d, "\pi"'] \\
+                           & \dbase \arrow[u, "\dsection"', bend right]
+     \end{tikzcd}
+ \end{equation}
+  such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. As illustrated in \autoref{fig:data_section}, the section is a continuous mapping from a location $\dbasepoint \in \dbase$ on the base space to a record $\delement \in \dfiber$ in the fiber. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
+ \begin{equation}
+     \label{eq:section_return}
+     \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
+ \end{equation}
+ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber component. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:base:decompose}, we can decompose \dsection\ as 
+ \begin{equation}
+ \label{eq:math:data:section:decompose}
+ \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
+ \end{equation}
+ where each section $\dsection_i$ is a variable or set of variables. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
+
+ \subsubsection{Sheafs: Gluing Sections }
+ The restriction maps of a sheaf describe how local sections $\iota^{*}\dsection$ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. This puts a continuous structure on local sections, which allows for defining a section over a subset in \dbase. The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over local neighborhood $U$ 
+ \begin{equation}
+     \label{eq:sheaf}
+     \begin{tikzcd}
+         \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
+         U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
+     \end{tikzcd}
+ \end{equation}
+ such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. The glued together  $\iota^*\dsection$  sections over subset \dbase\ map to the graphic generated by \vartist\ for visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.
+ 
 
 \section{Prototype}
 
-\begin{figure}[tb]
- \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
- %\includegraphics[width=\columnwidth]{}
- \caption{A visualization of the 1990--2015 data from \autoref{tab:vis_papers}. The image is from \cite{Isenberg:2017:VMC} and is in the public domain.}
- \label{fig:sample}
-\end{figure}
+
 
 \subsubsection{Ejector Seat Reservation}
 
