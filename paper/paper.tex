@@ -199,9 +199,8 @@ Building on Butler's proposal of using fiber bundles as a common data representa
         \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
-that binds the components of the data in \dfiber\ to the continuity represented in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\ref{sec:data_fiber}), the continuity of records \dbase\ (\ref{sec:data_base}), the collections of records \dsection\ (\ref{sec:data_section}), and the space \dtotal\ of all possible datasets with these components and continuity. 
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity.
 
-By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity.
 \subsubsection{Fiber Space: Variables}
 \label{sec:math:data:fiber}
 \begin{figure}[tb]
@@ -234,7 +233,7 @@ which is equivalent to
 \end{equation}
 which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:data_fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
 
-\subsubsection{Equivariance: Monoid Actions}
+\subsubsection{Equivariant Variable Properties: Monoid Actions}
 \label{sec:math:data:monoid}
 While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. A partial ordering allows for multiple measurement values to have the same rank\cite{fongInvitationAppliedCategory2019}, which is useful for visualizing many types of multi indicator systems\cite{bruggemannRankingPrioritizationMultiindicator2011}. 
 
@@ -269,7 +268,7 @@ Defining the monoid actions on the components serves as the basis for identifyin
  \end{equation}
  which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
 
- \subsection{Section: Values}
+ \subsubsection{Section: Values}
  \label{sec:math:data:section}
  \begin{figure}[tb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
@@ -290,15 +289,15 @@ Defining the monoid actions on the components serves as the basis for identifyin
      \label{eq:section_return}
      \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
  \end{equation}
- where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber component. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:base:decompose}, we can decompose \dsection\ as 
+ where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber component. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:base:decompose}, \dsection\ can be decomposed into components 
  \begin{equation}
  \label{eq:math:data:section:decompose}
  \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
  \end{equation}
- where each section $\dsection_i$ is a variable or set of variables. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
+ where each section $\dsection_i$ maps into a record on a component $\dfiber_i \in \dfiber$. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
 
  \subsubsection{Sheafs: Gluing Sections }
- The restriction maps of a sheaf describe how local sections $\iota^{*}\dsection$ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. This puts a continuous structure on local sections, which allows for defining a section over a subset in \dbase. The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over local neighborhood $U$ 
+ The restriction maps of a sheaf describe how local sections $\iota^{*}\dsection$ over a neighborhood $U$ around \dbasepoint\ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. This puts a continuous structure on local sections, which allows for defining a section over a subset in \dbase. The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ 
  \begin{equation}
      \label{eq:sheaf}
      \begin{tikzcd}
@@ -306,8 +305,66 @@ Defining the monoid actions on the components serves as the basis for identifyin
          U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
      \end{tikzcd}
  \end{equation}
- such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. The glued together  $\iota^*\dsection$  sections over subset \dbase\ map to the graphic generated by \vartist\ for visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.
- 
+ such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. Gluing together $\iota^*\dsection$ sections is necessary for navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}. 
+
+ \subsection{Graphic Bundle}
+ \label{sec:math:graphic}  
+We introduce a graphic bundle to hold the essential information necessary to render a graphical design constructed by the artist. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$
+\begin{equation}
+  \begin{tikzcd}[ampersand replacement=\&]
+      \gfiber \arrow[r, hook] \& \gtotal \arrow[d, "\pi"'] \\
+                        \& \gbase \arrow[u, "\gsection"', bend right]
+  \end{tikzcd}
+\end{equation}
+where \gsection\ is the fully encoded graphic. To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
+\begin{equation}
+(x,\, y,\, r,\, g,\, b) \in \gfiber
+\end{equation}
+such that a rendered graphic only consists of 2D position and color. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
+
+\subsubsection{Equivariant Topology: Graphic Base Space}
+\label{sec:math:graphic:base}
+\begin{figure}[tb]
+  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
+  \includegraphics[width=\columnwidth]{retraction_maps.png}
+  \caption{The 0D scatter \dbasepoint\ and 1D line \dbasepoint\ are thickened into \gbase\ with coordinates $\gbasepoint=(\gx, \gy)$ that are a region in an idealized 2D screen. The image has the same dimension in \gbase\ as in \dbase.}
+  \label{fig:graphic_base}
+ \end{figure}
+
+Just as the \dbase\ encodes the connectivity of the records in the data, we propose an equivalent \gbase\ that encodes the connectivity of the rendered elements of the graphic. Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopology2020} of \gbase\ so that \dbase\ and \gbase\ have the same homotopy. The surjective map $\vindex: \gbase \rightarrow \dbase$ 
+\begin{equation}
+    \begin{tikzcd}
+        \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
+        \dbase                   & \gbase \arrow[l, "\vindex"']
+    \end{tikzcd}
+\end{equation}
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:graphic_base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. 
+
+\subsection{Artist}
+The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+\begin{equation}
+    \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+\end{equation}
+While \vartist\ can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
+
+Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
+\begin{equation}
+    \label{eq:math:artist:diagram}
+    \begin{tikzcd}
+        \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
+                                              & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
+        \end{tikzcd}
+\end{equation}
+where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is  defined by the projection map $\pi$
+\begin{equation}
+    \begin{tikzcd}[ampersand replacement=\&]
+        \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
+                          \& \dbase \arrow[u, "\vsection"', bend right]
+    \end{tikzcd}
+\end{equation}
+where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDiagrams2011a} of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. 
+
+In \autoref{eq:math:artist:diagram}, the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components. The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase. Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal. This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
 
 \section{Prototype}
 
@@ -375,7 +432,7 @@ rebum.
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
 The authors wish to thank A, B, and C. This work was supported in part by
-a grant from XYZ (\# 12345-67890).}
+a grant from Chan Zuckerberg Institute  (\# 12345-67890).}
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}

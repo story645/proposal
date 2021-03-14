@@ -1,15 +1,17 @@
 \documentclass[xcolor={dvipsnames}, handout]{beamer}
 
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
+\usepackage{bm}
 \usepackage{mathrsfs} % math script fonts
 \usepackage{tikz}
 
 \usetikzlibrary{cd} % commutative diagrams
 \usepackage{subcaption} % subfigure float captioning
 
-\usepackage{tabularx}
+\usepackage{tabulary}
 \usepackage{multirow}
 \usepackage{graphicx}
+
 \usepackage{appendixnumberbeamer} 
 \usepackage{minted}
 \setminted[python]{fontsize=\scriptsize, 
@@ -421,7 +423,7 @@ where the artist $\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal
                               \& \dbase \arrow[u, "\vsection"', bend right]
         \end{tikzcd}
     \end{equation}
-    where \vsection\ is the visual variable encoding\cite{bertinIIPropertiesGraphic2011} of the representation of the data section \dsection. 
+    where \vsection\ is the visual variable encoding\cite{bertinIIPropertiesGraphic2011} of the data section \dsection. 
     \begin{block}{Example: position and color}
         Given an artist with parameters $\{xpos, ypos, color\}$, a sample visual section \vsection\ could be $\{.5, .5, (255, 20,147)\}$
     \end{block}
@@ -815,8 +817,21 @@ simplex.GraphLine(FB, edge_table, vertex_table,
         \end{figure}
     \end{columns}
 \end{frame}
-\begin{frame}{\vfiber Parameters}
-    %%%table might be good here
+\begin{frame}{\vfiber\ Components}
+    
+\begin{table}[H]
+    \renewcommand{\arraystretch}{2}
+    \begin{tabulary}{\textwidth}{|l|L|l|}\hline
+     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i}) \subset \vfiber_{i}}$  \\ \hline                                              
+    position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
+    size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
+    shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
+    color                       & color, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
+    \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
+                                & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
+    \end{tabulary}
+    \label{tab:mpl_visual_variable_fiber}
+\end{table}
 \end{frame}
 \begin{frame}[fragile]{GraphLine Data Model}
 \begin{minted}{python}
