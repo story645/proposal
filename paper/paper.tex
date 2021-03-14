@@ -184,7 +184,7 @@ We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map 
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
+that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in \autoref{sec:math:data:monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
 \begin{equation}
 \mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
 \end{equation}
@@ -365,6 +365,58 @@ where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \d
 where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDiagrams2011a} of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. 
 
 In \autoref{eq:math:artist:diagram}, the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components. The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase. Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal. This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
+
+\subsubsection{Equivariant Visual Component Maps}
+\label{sec:math:artist:nu}
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\columnwidth]{equivariance_nu.png}
+  \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions, represented by the colored arrows, are the same on the input \dsection\ and output \vsection\ sets.}
+  \label{fig:math:artist:nu}
+\end{figure}
+ We define the visual transformers \vchannel\ 
+\begin{equation}
+  \label{eq:math:artist:nu}
+  \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
+\end{equation}
+as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. 
+A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes such that 
+\begin{equation}
+  \label{eq:math:artist:nu_commute}
+\begin{tikzcd}
+  \dtotal_i \arrow[r] \arrow[r, "\vchannel_i"] \arrow[d, "m_{\delement}"'] & \vtotal_i \arrow[d, "m_{\velement}"] \\
+  \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
+\end{tikzcd}
+\end{equation}
+In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
+\begin{equation}
+\vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
+\end{equation} 
+such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
+
+One example of an equivariant \vchannel\ is illustrated in \autoref{fig:math:artist:nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
+\begin{equation}
+  \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
+\end{equation}
+such that shuffling the words must have an equivalent shuffle of the symbols they are mapped to. This is illustrated in the identical actions, represented by the colored arrows, on the words and emojis. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$,
+\begin{equation}
+\text{ if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)
+\end{equation}
+the visual encodings must also have some sort of ordering. For interval scale data, \vchannel\ is equivariant under translation monoid actions if 
+\begin{equation}
+\vchannel (x + c) = \vchannel(x) + c
+\end{equation}
+while for ratio data, there must be equivalent scaling\cite{weissteinSimilarityTransformation} 
+\begin{equation}
+\vchannel(xc) = \vchannel(x)*c 
+\end{equation}
+We therefore can test if a \vchannel\ is equivariant by testing the actions under which it must  commute. For example, given a a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
+\begin{align}
+  \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
+  .5 &\neq .5 + 2
+\end{align}
+\vchannel\ does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into the artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
+
 
 \section{Prototype}
 
