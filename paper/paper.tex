@@ -232,15 +232,7 @@ which is equivalent to
 \end{equation}
 which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:data_fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
 \subsubsection{Equivariance of Properties: Monoid Actions}
-
-\begin{figure}[tb]
-  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
-  \includegraphics[width=\columnwidth]{monoid_maps.png}
-  \caption{Monoids support partial ordering, such as the two emojis with tilted mouths being at the same rank above and below emojis with different mouth positions. The monotonic map on the right is a meta ordering of the partial order.  Figure inspired by definition 1.59 diagram in Spivak and Fong's An Invitation to Applied Category Theory \cite{fongInvitationAppliedCategory2019}}
-  \label{fig:data_partial_order}
-\end{figure}
-
-While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. As shown in \autoref{fig:data_partial_order}, a partial ordering allows for multiple values to have the same rank in an ordering. 
+While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. A partial ordering allows for multiple measurement values to have the same rank\cite{fongInvitationAppliedCategory2019}, which is useful for visualizing many types of multi indicator systems\cite{bruggemannRankingPrioritizationMultiindicator2011}. 
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
@@ -253,8 +245,8 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
-
+Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmannAlgebraicProcessVisualization2014} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
+\subsubsection{}
 
 \section{Prototype}
 
