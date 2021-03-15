@@ -133,7 +133,7 @@
 \teaser{
   \centering
   \includegraphics[width=\linewidth]{teaser.png}
-  \caption{this is our model basically...}
+  \caption{Visualizations consist of topologically equivariant maps. There is a set of monoid action equivariant maps from data components to visual components \vchannel\ that are then reduced via \vmark\ into a single graphic, and there is a deformation retraction \vindex\ from graphic continuity to data continuity.}
   \label{fig:teaser}
 }
 
@@ -162,12 +162,12 @@
 The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools.
 
 The contribution of this work is
-\begin{description}
-  \item[Topological] topology preserving relationship between data and graphic via continuous maps
-  \item[Equivariant] property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
-  \item[Artist] functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
-  \item [Model] prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
-\end{description}
+\begin{enumerate}
+  \item topology preserving relationship between data and graphic via continuous maps
+  \item property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+  \item functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
+  \item prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
+\end{enumerate}
 
 \section{Related Work}
 Most information visualization tools are tuned to data continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of data they encode.  Where GoG and ImageJ type libraries have very consistent APIs for their visualization tools because the data structure is the same, the APIs for visualizations in VTK and Matplotlib are significantly dependent on the structure of the data it expects. This has lead to poor API consistency and brittle code as every visualization type has a very different point of view on how the data is structured. We present a model that has a single core data abstraction for the API consistency benefits, but the abstraction is general enough to provide a common interface for many different types of visualization.
@@ -203,11 +203,11 @@ that binds the components of the data in \dfiber\ to the continuity represented 
 
 \subsubsection{Fiber Space: Variables}
 \label{sec:math:data:fiber}
-\begin{figure}[tb]
+\begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{fiber.png}
   \caption{These two datasets have the same base space \dbase\ of discrete points, but the square is a visual representation of the fiber space  $\dfiber=\reals\times\reals$, while the cube is a representation of $\dfiber=\reals\times\realsp\times\reals$}
-  \label{fig:data_fiber}
+  \label{fig:math:data:fiber}
 \end{figure}
 
 To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
@@ -231,7 +231,7 @@ which is equivalent to
     \label{eq:math:data:fiber:decompose}
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
-which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:data_fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
+which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:math:data:fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
 
 \subsubsection{Equivariant Variable Properties: Monoid Actions}
 \label{sec:math:data:monoid}
@@ -254,14 +254,14 @@ Defining the monoid actions on the components serves as the basis for identifyin
 \label{sec:math:data:base}
  The base space \dbase\ is way to express how the records in \dtotal\ are connected to each other, for example if they are discrete points or if they lie in a 2D continous surface. Formally \dbase\ is the quotient space of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. Our model formulates \dbase\ as akin to an indexing space into \dtotal\ that describes the structure of \dtotal.  
  
- \begin{figure}[tb]
+ \begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{base.png}
   \caption{These two datasets have the same fiber space  $\dfiber=\reals\times\reals$, but the left dataset has a discrete continuity while the right is 1D continuous over the interval $\left[0,1\right]$.}
-  \label{fig:data_continuity}
+  \label{fig:math:data:base}
  \end{figure}
 
- As illustrated in ~\autoref{fig:data_continuity}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
+ As illustrated in ~\autoref{fig:math:data:base}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
  \begin{equation}
     \label{eq:math:data:base:decompose}
      \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
@@ -270,11 +270,11 @@ Defining the monoid actions on the components serves as the basis for identifyin
 
  \subsubsection{Section: Values}
  \label{sec:math:data:section}
- \begin{figure}[tb]
+ \begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{fiberbundle.png}
   \caption{Each section in the fiber bundle is a unique continuous map from base space to fiber encoding the set of records in the dataset. The two sections, $\dsection^{(1)}$ and $\dsection^{(2)}$, shown here are in the set of global sections $\Gamma(\dtotal)$.}
-  \label{fig:data_section}
+  \label{fig:math:data:section}
  \end{figure}
 
  While the projection function $\pi:\dtotal \rightarrow\dbase$ ties together the base space \dbase\ with the fiber \dfiber, a section $\dsection: \dbase\rightarrow \dtotal$ encodes a dataset. A section function takes as input location $\dbasepoint \in \dbase$ and returns a record $\delement \in \dtotal$. For any fiber bundle, there exists a map
@@ -284,7 +284,7 @@ Defining the monoid actions on the components serves as the basis for identifyin
                            & \dbase \arrow[u, "\dsection"', bend right]
      \end{tikzcd}
  \end{equation}
-  such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. As illustrated in \autoref{fig:data_section}, the section is a continuous mapping from a location $\dbasepoint \in \dbase$ on the base space to a record $\delement \in \dfiber$ in the fiber. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
+  such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. As illustrated in \autoref{fig:math:data:section}, the section is a continuous mapping from a location $\dbasepoint \in \dbase$ on the base space to a record $\delement \in \dfiber$ in the fiber. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
  \begin{equation}
      \label{eq:section_return}
      \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
@@ -324,11 +324,11 @@ such that a rendered graphic only consists of 2D position and color. By abstract
 
 \subsubsection{Equivariant Topology: Graphic Base Space}
 \label{sec:math:graphic:base}
-\begin{figure}[tb]
+\begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{retraction_maps.png}
   \caption{The 0D scatter \dbasepoint\ and 1D line \dbasepoint\ are thickened into \gbase\ with coordinates $\gbasepoint=(\gx, \gy)$ that are a region in an idealized 2D screen. The image has the same dimension in \gbase\ as in \dbase.}
-  \label{fig:graphic_base}
+  \label{fig:math:graphic:base}
  \end{figure}
 
 Just as the \dbase\ encodes the connectivity of the records in the data, we propose an equivalent \gbase\ that encodes the connectivity of the rendered elements of the graphic. Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopology2020} of \gbase\ so that \dbase\ and \gbase\ have the same homotopy. The surjective map $\vindex: \gbase \rightarrow \dbase$ 
@@ -338,7 +338,7 @@ Just as the \dbase\ encodes the connectivity of the records in the data, we prop
         \dbase                   & \gbase \arrow[l, "\vindex"']
     \end{tikzcd}
 \end{equation}
-goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:graphic_base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. 
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:math:graphic:base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. 
 
 \subsection{Artist}
 The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
@@ -366,9 +366,9 @@ where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDia
 
 In \autoref{eq:math:artist:diagram}, the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components. The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase. Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal. This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
 
-\subsubsection{Equivariant Visual Component Maps}
+\subsubsection{Visual Component Maps}
 \label{sec:math:artist:nu}
-\begin{figure}[tb]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{equivariance_nu.png}
   \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions, represented by the colored arrows, are the same on the input \dsection\ and output \vsection\ sets.}
@@ -416,6 +416,64 @@ We therefore can test if a \vchannel\ is equivariant by testing the actions unde
   .5 &\neq .5 + 2
 \end{align}
 \vchannel\ does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into the artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
+
+\subsubsection{Visualization Assembly}
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{path_of_q}
+  \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data.} 
+  \label{fig:math:artist:q}
+\end{figure}p
+
+As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\, reduce the encodings into a graphic \gsection. While it may seem intuitive that visualizations that generate the same graphic should do so consistently given the same input, we formalize this constraint such that it can be specified as a constraint of \vmark. We define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to two visual sections $\vsection,\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection,\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{diff_type_q.png}
+  \caption{These two glyphs are generated by the same \vmark\ function. The monoid 
+  action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
+  \label{fig:math:arist:graphic}
+\end{figure}
+
+Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
+\begin{equation}
+\vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
+\end{equation}
+then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. This equivariance is illustrated in figure \autoref{fig:math:artist:graphic}. Given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
+
+We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input:
+\begin{equation}
+\dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
+\end{equation}
+where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
+\begin{equation}
+  \begin{tikzcd}
+      \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
+      \end{tikzcd}
+  \label{eq:mark}
+\end{equation}
+such that for every glyph there is at least one corresponding region on \dbase, in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
+
+\begin{figure}
+  \centering
+  \includegraphics{}
+\end{figure}
+
+In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image.
+
+The scatter plot can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. 
+
+
+
+The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
+\begin{align}
+x &= size *\alpha \cos(\beta) + xpos \\
+y &= size *\alpha \sin(\beta) + ypos
+\end{align}
+
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in figure~\ref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
+
+
 
 
 \section{Prototype}
