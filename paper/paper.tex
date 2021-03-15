@@ -59,6 +59,7 @@
 %% with other math-related packages, you may want to disable it.
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{mathrsfs} % math script fonts
+\usepackage{tabulary}
 \usepackage{tikz}
 \usetikzlibrary{cd} % commutative diagrams
 \usepackage{minted}
@@ -383,23 +384,16 @@ In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same typ
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-One example of an equivariant \vchannel\ is illustrated in \autoref{fig:math:artist:nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
-\begin{equation*}
-  \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
-\end{equation*}
-such that shuffling the words must have an equivalent shuffle of the symbols they are mapped to. This is illustrated in the identical actions, represented by the colored arrows, on the words and emojis. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$,
-\begin{equation*}
-\text{ if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2*)
-\end{equation*}
-the visual encodings must also have some sort of ordering. For interval scale data, \vchannel\ is equivariant under translation monoid actions if 
-\begin{equation*}
-\vchannel (x + c) = \vchannel(x) + c
-\end{equation*}
-while for ratio data, there must be equivalent scaling\cite{weissteinSimilarityTransformation} 
-\begin{equation*}
-\vchannel(xc) = \vchannel(x)*c 
-\end{equation*}
-We therefore can test if a \vchannel\ is equivariant by testing the actions under which it must  commute. For example, given a a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
+The equivariant \vchannel\ illustrated in \autoref{fig:math:artist:nu} is a mapping from \textbf{Strings} to symbols, which is an example of a Steven's nominal measurement. More generally, for the Steven's scales an equivariant \vchannel\ has the following properties
+\begin{table}[H]
+  \begin{tabulary}{\columnwidth}{llL}
+      nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
+      ordinal &  monotonic & $\text{if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$\\
+      interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
+      ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\
+  \end{tabulary}
+\end{table}
+\noindent where the middle column is the group structure. We therefore can test if a \vchannel\ is equivariant by testing the actions under which it must  commute. For example, given a a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
 \begin{align*}
   \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
   .5 &\neq .5 + 2
