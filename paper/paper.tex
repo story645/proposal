@@ -456,24 +456,62 @@ such that for every glyph there is at least one corresponding region on \dbase, 
 
 \begin{figure}
   \centering
-  \includegraphics{}
+  \includegraphics[width=\columnwidth]{base_q}
+  \caption{The coordinates $(\gx, \gy)$ dictate the color of the region in prerender space \gbase\, which over the whole disk generates the graphical mark. The line fiber is thickened with the derivative because the tangent the line needs to be pushed perpendicular to the tangent of (xpos, ypos) in order to have visible thickness.}
+  \label{fig:math:artist:base}
 \end{figure}
 
-In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image.
-
-The scatter plot can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. 
-
-
-
-The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
-\begin{align}
+In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image. The scatter plot can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in \autoref{fig:math:artist:base}
+\begin{align*}
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
-\end{align}
+\end{align*}
 
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in figure~\ref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. As shown in \ref{fig:math:arist:base} line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
+such that the normal is  $\hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
+\begin{align*}
+ x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
+\end{align*}
 
+where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n_1}, \hat{n_2}$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
 
+The image $\vmark(xpos, ypos, color)$ in \autoref{fig:teaser} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. The indexing variables $(\alpha, \beta)$ define the distance along the space, which is then used by \vindex\ to map into \dbase\ to lookup the color values 
+\begin{equation*}
+R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vindex(\alpha, \beta))
+\end{equation*}
+In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
+
+\subsubsection{Assembly Factory}
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+\begin{figure}[htb]
+  \centering
+    \includegraphics[width=1\columnwidth]{q_hat.png}
+    \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
+    \label{fig:math:artist:qhat}
+\end{figure}
+
+The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
+\begin{equation}
+    \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
+\end{equation}
+copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
+
+As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that\vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber is equivalent to the line on \vfiberpull. 
+
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
+\begin{equation}
+    \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
+    \label{eq:math:artist:qhat}
+\end{equation}
+ is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint.Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+\begin{equation}
+\label{eq:math:artist:qhat_q_s}
+\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\end{equation} 
+where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. 
+
+Factoring out \gbasepoint\ from equation~\ref{eq:math:artist:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
 
 
 \section{Prototype}
