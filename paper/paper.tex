@@ -230,7 +230,7 @@ which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component
 \label{sec:math:data:monoid}
 While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. A partial ordering allows for multiple measurement values to have the same rank\cite{fongInvitationAppliedCategory2019}, which is useful for visualizing many types of multi indicator systems\cite{bruggemannRankingPrioritizationMultiindicator2011}. 
 
-A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,ActionNLab} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
+A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlab:action} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
@@ -667,7 +667,7 @@ An unoffical philosophy of Matplotlib is to support making whatever kinds of plo
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
-The authors wish to thank the Matplotlib development team for their invaluable feedback along the way, particulary Bruno Beltran for discussions about the visual fiber space. This work was supported in part by a grant from the Chan Zuckerberg Institute (EOSS cycle 1).}
+The authors wish to thank the Matplotlib development team for their invaluable feedback along the way, particulary Bruno Beltran for discussions about the visual fiber space. This project has been made possible in part by grant number 2019-207333 from the Chan Zuckerberg Initiative DAF, an advised fund of Silicon Valley Community Foundation.}
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}
