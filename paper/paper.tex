@@ -95,7 +95,7 @@
 \vgtcpapertype{Theory/Model}
 
 %% Paper title.
-\title{Topological Equivariance Artist Model}
+\title{Topological Equivariant Artist Model}
 
 %% This is how authors are specified in the journal style
 
@@ -104,7 +104,7 @@
 \authorfooter{
 %% insert punctuation at end of each item
 \item
- A B are with Computer Science, City College of New York. E-mail: roy.g.biv@aol.com.
+ A B are with the Computer Science department, City College of New York. E-mail: roy.g.biv@aol.com.
 \item
  Thomas Caswell is with Brookhaven National Lab E-mail: ed.grimley@aol.com.
 }
@@ -159,23 +159,16 @@
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
 \maketitle
-The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools.
-
-The contribution of this work is
-\begin{enumerate}
-  \item topology preserving relationship between data and graphic via continuous maps
-  \item property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
-  \item functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
-  \item prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
-\end{enumerate}
+The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools. The contribution of this work is (a) topology preserving relationship between data and graphic via continuous maps, (b) property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions, (c) functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model, (d) prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model.
 
 \section{Related Work}
-Most information visualization tools are tuned to data continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of data they encode.  Where GoG and ImageJ type libraries have very consistent APIs for their visualization tools because the data structure is the same, the APIs for visualizations in VTK and Matplotlib are significantly dependent on the structure of the data it expects. This has lead to poor API consistency and brittle code as every visualization type has a very different point of view on how the data is structured. We present a model that has a single core data abstraction for the API consistency benefits, but the abstraction is general enough to provide a common interface for many different types of visualization.
+The underlying structure and semantics of visualization are by definition reflected in visual representations \cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity to external concepts \cite{byrneAcquiredCodesMeaning2016}. The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. 
+Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency model of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
 
-The structure visualizations are expected to preserve is encoded in the connectivity of the records and in the properties of the variables in the dataset. Fiber bundles were proposed by Butler as one way to encode the continuity of the data separately from the types of variables \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Our model builds on this work because the abstraction of data and flexible enough to support discrete and ND continuous datasets. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} so that we can encode a schema like description of the data in the fiber bundle. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the position of the value in the dataset, our model considers keys to be a pure reference to topology. This allows the metadata to be altered, for example by changing the coordinate systems or time resolution, without imposing new semantics on the underlying structure. 
-Visual representations of data, by definition, reflect something of the underlying structure and semantics\cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity in shape to external concepts \cite{byrneAcquiredCodesMeaning2016}. The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. 
+On the other hand, most information visualization tools are explicitly tuned to specific continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to libraries built on top of Grammar of Graphics\cite{wilkinsonGrammarGraphics2005}, including ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, protovis\cite{bostockProtoviz2009} and D3 \cite{bostockDataDrivenDocuments2011}, vega\cite{satyanarayanDeclarativeInteractionDesign2014} and altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and  the digital humanaties oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro. Neither the table nor image model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} explicitly carry around different data representations for all the different types of visualizations they support.  Where libraries with a single core data structure have very consistent APIs, VTK and Matplotlib APIs can be rather inconsistent as every visualization has a different notion of how the data is structured.
 
-Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's A Presentation Tool introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency notion of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity. 
+Fiber bundles are a generalized abstraction proposed by Butler to encode the continuity of the data separately from the variable information \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} to incorporate a schema like description of the variables. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the index of the value, our model considers keys to be a reference to topology. This allows the metadata to be altered, for example by changing the coordinate system or time resolution, without imposing new semantics on the underlying structure. 
+
 
 \section{Topological Equivariant Artist Model}
 \label{sec:math}
@@ -316,11 +309,7 @@ We introduce a graphic bundle to hold the essential information necessary to ren
                         \& \gbase \arrow[u, "\gsection"', bend right]
   \end{tikzcd}
 \end{equation}
-where \gsection\ is the fully encoded graphic. To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
-\begin{equation}
-(x,\, y,\, r,\, g,\, b) \in \gfiber
-\end{equation}
-such that a rendered graphic only consists of 2D position and color. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
+where \gsection\ is the fully encoded graphic. To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements $(x,\, y,\, r,\, g,\, b) \in \gfiber$ such that a rendered graphic only consists of 2D position and color. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
 
 \subsubsection{Equivariant Topology: Graphic Base Space}
 \label{sec:math:graphic:base}
@@ -395,26 +384,26 @@ In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same typ
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
 One example of an equivariant \vchannel\ is illustrated in \autoref{fig:math:artist:nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
-\begin{equation}
+\begin{equation*}
   \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
-\end{equation}
+\end{equation*}
 such that shuffling the words must have an equivalent shuffle of the symbols they are mapped to. This is illustrated in the identical actions, represented by the colored arrows, on the words and emojis. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$,
-\begin{equation}
-\text{ if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)
-\end{equation}
+\begin{equation*}
+\text{ if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2*)
+\end{equation*}
 the visual encodings must also have some sort of ordering. For interval scale data, \vchannel\ is equivariant under translation monoid actions if 
-\begin{equation}
+\begin{equation*}
 \vchannel (x + c) = \vchannel(x) + c
-\end{equation}
+\end{equation*}
 while for ratio data, there must be equivalent scaling\cite{weissteinSimilarityTransformation} 
-\begin{equation}
+\begin{equation*}
 \vchannel(xc) = \vchannel(x)*c 
-\end{equation}
+\end{equation*}
 We therefore can test if a \vchannel\ is equivariant by testing the actions under which it must  commute. For example, given a a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
-\begin{align}
+\begin{align*}
   \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
   .5 &\neq .5 + 2
-\end{align}
+\end{align*}
 \vchannel\ does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into the artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
 
 \subsubsection{Visualization Assembly}
@@ -423,8 +412,7 @@ We therefore can test if a \vchannel\ is equivariant by testing the actions unde
   \includegraphics[width=\columnwidth]{path_of_q}
   \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data.} 
   \label{fig:math:artist:q}
-\end{figure}p
-
+\end{figure}
 As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\, reduce the encodings into a graphic \gsection. While it may seem intuitive that visualizations that generate the same graphic should do so consistently given the same input, we formalize this constraint such that it can be specified as a constraint of \vmark. We define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to two visual sections $\vsection,\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection,\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.
 
 \begin{figure}[htb]
@@ -432,16 +420,16 @@ As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce
   \includegraphics[width=\columnwidth]{diff_type_q.png}
   \caption{These two glyphs are generated by the same \vmark\ function. The monoid 
   action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
-  \label{fig:math:arist:graphic}
+  \label{fig:math:artist:graphic}
 \end{figure}
 
 Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
 \begin{equation}
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
 \end{equation}
-then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. This equivariance is illustrated in figure \autoref{fig:math:artist:graphic}. Given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
+then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. Given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
 
-We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input:
+We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input 
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
@@ -466,14 +454,12 @@ In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will gener
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
 \end{align*}
-
 such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. As shown in \ref{fig:math:arist:base} line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
 such that the normal is  $\hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
 \begin{align*}
  x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
  y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
 \end{align*}
-
 where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n_1}, \hat{n_2}$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
 
 The image $\vmark(xpos, ypos, color)$ in \autoref{fig:teaser} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. The indexing variables $(\alpha, \beta)$ define the distance along the space, which is then used by \vindex\ to map into \dbase\ to lookup the color values 
@@ -495,16 +481,16 @@ The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many g
 \begin{equation}
     \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
 \end{equation}
-copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
+copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
 
-As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that\vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber is equivalent to the line on \vfiberpull. 
+As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber is equivalent to the line on \vfiberpull. 
 
-Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
 \begin{equation}
     \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
     \label{eq:math:artist:qhat}
 \end{equation}
- is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint.Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+ is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint. Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
 \begin{equation}
 \label{eq:math:artist:qhat_q_s}
 \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
@@ -513,8 +499,12 @@ where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input t
 
 Factoring out \gbasepoint\ from equation~\ref{eq:math:artist:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
 
-\subsection{Composite and Reusable Artists}
-Given the family of artists $(\dtotal_i: i\in I)$ on the same image $+ \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}$, the + operator defines a simple composition of artists. When artists share a base space $\dbase_2 \hookrightarrow \dbase_1$, a composition operator can be defined such that the the artists can be considered to be acting on different components of the same section. This type of composition is important for creating visualizations where elements need to update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. It is impractical to implement an artist for every single graphic; instead we implement an approximation of an the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, equivalent artists have the same fiber bundle \vtotal\ and same assembly function \vmark\ but act on different sections \vsection, but we will formalize the definition of the equivalance class in future work.
+\subsubsection{Composite and Reusable Artists}
+Given the family of artists $(\dtotal_i: i\in I)$ on the same image, the + operator 
+\begin{equation}
++ \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}
+\end{equation}
+defines a simple composition of artists. When artists share a base space $\dbase_2 \hookrightarrow \dbase_1$, a composition operator can be defined such that the artists are acting on different components of the same section. This type of composition is important for visualizations where elements update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. It is impractical to implement an artist for every single graphic; instead we implement an approximation of the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, two artists are equivalent if they have the same visual fiber \vfiber\, assembly function \vmark\, and continuity map \vindex. 
 
 \section{Prototype}
 
