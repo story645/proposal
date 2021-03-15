@@ -448,6 +448,27 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
         \caption{The actions on the text data are the same as the actions on the visual representation of that data as emojis.}
     \end{figure}
 \end{frame}
+\begin{frame}{Measurement Scale Groups}
+
+\begin{table}[H]
+    \begin{tabulary}{\textwidth}{llL}
+        nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
+        ordinal &  monotonic & $\text{if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$\\
+        interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
+        ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $
+    \end{tabulary}
+\end{table}
+
+    \pause
+    \begin{block}{Invalid \vchannel}
+     Given $\vchannel_{i}(x) = .5$ and $t(x) = x+2$,
+    \pause    
+    \begin{align*}
+            \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
+            .5 &\neq .5 + 2
+    \end{align*}
+    \end{block}
+\end{frame}
 
 \begin{frame}{Visualization Assembly Function}
     \begin{figure}
@@ -550,7 +571,7 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
     roughly treats two artists as equivalent if they 
     \begin{itemize}
         \item act on the same visual bundle \vtotal
-        \item have the same assembly function \vmarkd 
+        \item have the same assembly function \vmark 
         \item have the same continuity map \vindex 
     \end{itemize}
 \end{frame}
@@ -592,7 +613,7 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
     \end{subfigure}
 \end{figure}
 \begin{columns}
-\column{,49\textwidth}
+\column{0.49\textwidth}
 \begin{minted}{python}
 fig, ax = plt.subplots()
 artist = Point(data, transforms)

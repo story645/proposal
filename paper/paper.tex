@@ -52,14 +52,14 @@
 \usepackage{times}                     % we use Times as the main font
 \renewcommand*\ttdefault{txtt}         % a nicer typewriter font
 \usepackage{cite}                      % needed to automatically sort the references
-\usepackage{tabu}                      % only used for the table example
-\usepackage{booktabs}                  % only used for the table example
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
 %% with other math-related packages, you may want to disable it.
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{mathrsfs} % math script fonts
 \usepackage{tabulary}
+\usepackage{subfig}
+\usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{cd} % commutative diagrams
 \usepackage{minted}
@@ -68,7 +68,6 @@
                    numbersep=8pt,
                    autogobble, 
                    frame=lines,
-                   bgcolor=bg,
                    framesep=3mm} 
 \usepackage{notation} % move this later
 %% In preprint mode you may define your own headline. If not, the default IEEE copyright message will appear in preprint mode.
@@ -291,6 +290,7 @@ Defining the monoid actions on the components serves as the basis for identifyin
  where each section $\dsection_i$ maps into a record on a component $\dfiber_i \in \dfiber$. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
 
  \subsubsection{Sheafs: Gluing Sections }
+ \label{sec:math:data:sheaf}
  The restriction maps of a sheaf describe how local sections $\iota^{*}\dsection$ over a neighborhood $U$ around \dbasepoint\ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. This puts a continuous structure on local sections, which allows for defining a section over a subset in \dbase. The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ 
  \begin{equation}
      \label{eq:sheaf}
@@ -384,7 +384,7 @@ In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same typ
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-The equivariant \vchannel\ illustrated in \autoref{fig:math:artist:nu} is a mapping from \textbf{Strings} to symbols, which is an example of a Steven's nominal measurement. More generally, for the Steven's scales an equivariant \vchannel\ has the following properties
+The \vchannel\ illustrated in \autoref{fig:math:artist:nu} is an equivariant mapping from \textbf{Strings} to emojis, as seen in the identical actions, represented as arrows, on the data and emojis. More generally, for the Steven's scales\cite{stevensTheoryScalesMeasurement1946} an equivariant \vchannel\ has the following properties
 \begin{table}[H]
   \begin{tabulary}{\columnwidth}{llL}
       nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
@@ -393,7 +393,7 @@ The equivariant \vchannel\ illustrated in \autoref{fig:math:artist:nu} is a mapp
       ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\
   \end{tabulary}
 \end{table}
-\noindent where the middle column is the group structure. We therefore can test if a \vchannel\ is equivariant by testing the actions under which it must  commute. For example, given a a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
+\noindent where the middle column is the group structure. Therefore, a \vchannel\ is equivariant if it satisfies the listed condition. For example, given a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
 \begin{align*}
   \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
   .5 &\neq .5 + 2
@@ -501,72 +501,173 @@ Given the family of artists $(\dtotal_i: i\in I)$ on the same image, the + opera
 defines a simple composition of artists. When artists share a base space $\dbase_2 \hookrightarrow \dbase_1$, a composition operator can be defined such that the artists are acting on different components of the same section. This type of composition is important for visualizations where elements update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. It is impractical to implement an artist for every single graphic; instead we implement an approximation of the equivalence class of artists $\{\vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}\}$. Roughly, two artists are equivalent if they have the same visual fiber \vfiber\, assembly function \vmark\, and continuity map \vindex. 
 
 \section{Prototype}
+To build a prototype, we make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and exploit the Matplotlib transform stack to transform data coordinates into screen coordinates.
+\begin{minted}{python}
+  fig, ax = plt.subplots()
+  artist = Artist(data, transforms)
+  ax.add_artist(artist)
+\end{minted}
+Building on the current Matplotlib artists which construct an internal representation of the graphic, \mintinline{python}{ArtistClass} acts as an equivalance class artist \vartisteq. The visual bundle \vtotal\ is specified as the \mintinline{python}{transform}dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber,  and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist.
+\begin{minted}{python}
+  class ArtistClass(matplotlib.artist.Artist):
+      def __init__(self, data, transforms, *args, **kwargs):
+          # properties that are specific to the graphic
+          self.data = data 
+          self.transforms = transforms
+          super().__init__(*args, **kwargs)
+  
+      def assemble(self, **args):
+          # set the properties of the graphic
+  
+      def draw(self, renderer):
+          # returns K, indexed on fiber then key 
+          view = self.data.view(self.axes) 
+          # visual channel encoding applied fiberwise 
+          visual = {p: t['encoder'](view[t['name']])
+                    for p, t in self.transforms.items()}
+          self.assemble(**visual)
+          # pass configurations off to the renderer
+          super().draw(renderer)
+  \end{minted}
+ The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that can be used to query back into data to select a subset. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, which means that the values cannot change after the method is called in draw until a new call in draw. We put this constraint on the return of the \mintinline{python}{view} method so that we do not risk race conditions. 
+ 
+ The \vchannel\ functions are then applied to the data to generate the visual section \vsection\ that here is the object \mintinline{python}{visual}. The conversion from data to visual space is simplified here to directly show that it is the encoding \vchannel\ applied to the component. The \mintinline{python}{assemble} function that is \vmarkd is responsible for generating a representation such that it could be serialized to recreate a static version of the graphic. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemented.
 
+ \subsection{Scatter and Line Artists}
+ \begin{figure}[H]
+    \centering 
+    \subfloat[\label{fig:code:scatter}]{%
+      \includegraphics[width=0.49\columnwidth]{scatter_0.png}}
+    \subfloat[\label{fig:code:line}]{%
+      \includegraphics[width=0.49\columnwidth]{line_1.png}}
+  \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering.}
+  \label{fig:code_scatter_line}
+\end{figure}
 
+To generate the figure in \autoref{fig:code:scatter}, the \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker. We only show the \mintinline{python}{assemble} function here because the \mintinline{python}{__init__, draw} are identical the prototype artist. The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices. Even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$. This means that all the data on one vertex maps to one glyph.
+\begin{minted}{python}
+class Point(mcollections.Collection):
+  def assemble(self, x, y, s, facecolors='C0' ):
+    # construct geometries of circle glyphs
+    self._paths = [mpath.Path.circle((xi,yi), radius=si) 
+                for (xi, yi, si) in zip(x, y, s)] 
+    # set attributes of glyphs, these are vectorized 
+    # circles and facecolors are lists of the same size
+    self.set_facecolors(facecolors)
+\end{minted} 
+In \mintinline{python}{assemble}, the \vsection\ components are used to construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. This is done via the \mintinline{python}{Path.circle} object. 
+\begin{minted}{python}
+class Line(mcollections.LineCollection):
+    def assemble(self, x, y, color='C0'):
+            #assemble line marks as set of segments 
+            segments = [np.vstack((vx, vy)).T for vx, vy 
+                        in zip(x, y)]
+            self.set_segments(segments)
+            self.set_color(color)
+\end{minted}
+To generate \autoref{fig:code:line}, the \mintinline{python}{Line} artist \mintinline{python}{view} method returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, this visual representation is composed into a set of line segments, where each segment is the array generated by \mintinline{python}{np.vstack((vx, vy))}. Then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
 
-\subsubsection{Ejector Seat Reservation}
+\subsubsection{Visual Encoders}
+The visual parameter serves as the dictionary key because the visual representation is constructed from the encoding applied to the data  $\vsection = \vchannel \circ \dsection$. For the scatter plot, the mappings for the visual fiber components $\vfiber=(x,y, facecolors, s)$ are defined as
+\begin{minted}{python}
+cmap =  color.Categorical({'true':'deeppink', 
+                           'false':'deepskyblue'})
+transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
+              'y': {'name': 'v2', 'encoder': lambda x: x},
+              'facecolors': {'name':'v3', 'encoder': cmap}, 
+              's':{'name': None , 
+                   'encoder': lambda _: itertools.repeat(.02)}}
+\end{minted}
 
-Duis autem~\cite{Lorensen:1987:MCA}\footnote{The algorithm behind
-Marching Cubes \cite{Lorensen:1987:MCA} had already been
-described by Wyvill et al. \cite{Wyvill:1986:DSS} a year
-earlier.} vel eum iriure dolor in hendrerit
-in vulputate velit esse molestie consequat,\footnote{Footnotes
-appear at the bottom of the column.} vel illum dolore eu
-feugiat nulla facilisis at vero eros et accumsan et iusto odio
-dignissim qui blandit praesent luptatum zzril delenit augue duis
-dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
-consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
-ut laoreet dolore magna aliquam erat volutpat.
+where \mintinline{python}{lambda x: x} is an identity \vchannel\, \mintinline{python}|{'name':None}| maps into \vfiber\ without corresponding \dsection\ to set a constant visual value, and \mintinline{python}{color.Categorical} is a custom \vchannel\ implemented as a class for reusability.  A test for equivariance can be implemented trivially
+\begin{minted}{python}
+def test_nominal(values, encoder):
+    m1 = list(zip(values, encoder(values)))
+    random.shuffle(values)
+    m2 = list(zip(values, encoder(values)))
+    assert sorted(m1) == sorted(m2)
+\end{minted}
+but is currently factored out of the artist for clarity. 
 
+\subsubsection{Data Model}
+The data input into the \mintinline{python}{Artist} will often be a wrapper class around an existing data structure. This wrapper object must specify the fiber components \dfiber\ and connectivity \dbase\ and have a \mintinline{python}{view} method that returns an atomic object that encapsulates \dsection. To support specifying the fiber bundle, we define a \mintinline{python}{FiberBundle} data class\cite{DataclassesDataClasses}
 
-\paragraph{Confirmed Ejector Seat Reservation}
+\begin{minted}{python}
+@dataclass
+class FiberBundle:
+    K: dict #{'tables': []}
+    F: dict #  {variable name: type}
+\end{minted}
+that asks the user to specify the the properties of \dfiber\ and the \dbase\ connectivity in terms of a  simplicial triangulation scheme \cite{geometricaSimplicialComplexes}. To generate the scatter plot and the line plot, the distinction is in the \mintinline{python}{tau} method that is the section. 
+\begin{minted}{python}
+class VertexSimplex: 
+    """Fiberbundle is consistent across all sections
+    """
+    FB = FiberBundle({'tables': ['vertex']},  
+            {'v1': float, 'v2': str, 'v3': float})
+            
+    def __init__(self, sid = 45, size=1000, max_key=10**10):
+        # create random list of keys
+    def tau(self, k):
+      # e1 is sampled from F1, e2 from F2, etc...
+      return (k, (e1, e2, e3, e4))
+\end{minted}
+The discrete \mintinline{python}{tau} method returns a record of discrete points, while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint
+\begin{minted}{python}
+def tau(self, k): #will fix location on page on revision
+    x, y = self._xy(k, self.distances, 
+               self.angle_samples[k], self.angle_samples[k+1]) 
+    color = self._color(k) 
+    return (k, (x, y, color))
+\end{minted}
+In both cases the \mintinline{python}{view} method packages the data
+\begin{minted}{python}
+  def view(self, axes):
+      table = defaultdict(list)
+      for k in self.keys:
+          table['index'].append(k)
+          for (name, value) in zip(self.FB.fiber.keys(), 
+                                   self.tau(k)[1]):
+              table[name].append(value)
+      return table
+\end{minted}
+into a data structure that the artist can unpack via data component name. 
 
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-suscipit lobortis nisl ut aliquip ex ea commodo
-consequat~\cite{Nielson:1991:TAD}. Duis autem vel eum iriure dolor in
-hendrerit in vulputate velit esse molestie consequat, vel illum dolore
-eu feugiat nulla facilisis at vero eros et accumsan et iusto odio
-dignissim qui blandit praesent luptatum zzril delenit augue duis
-dolore te feugait nulla facilisi.
+\begin{figure}[htb]
+  \centering 
+  \subfloat[\label{fig:code:line:arc}]{%
+    \includegraphics[width=0.49\columnwidth]{linec_1.png}}
+  \subfloat[\label{fig:code:line:step}]{%
+    \includegraphics[width=0.49\columnwidth]{lined_1.png}}
+\caption{Continuous and discontinuous lines as defined via the same data model, and generated with the same \vartisteq \mintinline{python}{Line}}
+\label{fig:code:multilines}
+\end{figure}
+The graphics in figure~\ref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
+\begin{minted}{python}
+simplex.GraphLine(FB, edges, verticies, 
+                      num_samples=1000, connect=True)
+\end{minted}
+while the stair chart is discontinuous and only needs to be evaluated at the edges of the interval 
+\begin{minted}{python}
+simplex.GraphLine(FB, edges, verticies, 
+                      num_samples=2, connect=False)
+\end{minted}
+such that one advantage of this model is it helps differentiate graphics that have different artists from graphics that have the same artist but make different assumptions about the source data. 
 
-\paragraph{Rejected Ejector Seat Reservation}
+\section{Discussion}
+This work contributes a mathematical description of the mapping \vartist\ from data to visual representation. Combining Butler's proposal of a fiber bundle model of visualization data with Spivak's formalism of schema lets this model support a variety of datasets, including  discrete relational tables,, multivariate high resolution spatio temporal datasets, and complex networks. Decomposing the artist into encoding \vchannel, assembly \vmark, and reindexing \vindex\ provides the specifications that the graphic must have continuity equivalent to the data, and that the visual characteristics of the graphics are equivariant to their corresponding components under monoid actions. This model defines these constraints on the transformation function such that they are not specific to any one type of encoding or visual characteristic. Encoding the graphic space as a fiber bundle provides a structure rich abstraction of the target graphical design in the target display space. The toy prototype built using this model validates that is usable for a general purpose visualization tool since it can be iteratively integrated into the existing architecture rather than starting from scratch. Factoring out graphic formation into assembly functions allows for much more clarity in how they differ. This prototype demonstrates that this framework can generate the fundemental point (scatter plot) and line (line chart) marks. 
 
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
-vel eum iriure dolor in hendrerit in vulputate velit esse molestie
+\subsection{Limitations}
+So far this model has only been worked out for a single data set tied to a primitive mark. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated from parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it does not have a way to evaluate the semantic accuracy of the figurative representation. Even though the model is designed to be backend and format independent, it has only really been tested against PNGs rendered with the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}. This model and the associated prototype is deeply tied to Matplotlib's existing architecture, so it has not been worked through how the model generalizes to other libraries, such as those built on Mackinlay's APT framework.
 
-\subsection{Vestibulum}
-
-Vestibulum ut est libero. Suspendisse non libero id massa congue egestas nec at ligula. Donec nibh lorem, ornare et odio eu, cursus accumsan felis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec dapibus quam vel eros mattis, id ornare dolor convallis. Donec at nisl sapien. Integer fringilla laoreet tempor. Fusce accumsan ante vel augue euismod, sit amet maximus turpis mattis. Nam accumsan vestibulum rhoncus. Aenean quis pellentesque augue. Suspendisse sed augue et velit consequat bibendum id nec est. Quisque erat purus, ullamcorper ut ex vel, dapibus dignissim erat.
-
-Quisque sit amet orci quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam pharetra, nunc non efficitur convallis, tellus purus iaculis lorem, nec ultricies dolor ligula in metus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean eu ex nulla. Morbi id ex interdum, scelerisque lorem nec, iaculis dui. Phasellus ultricies nunc vitae quam fringilla laoreet. Quisque sed dolor at sem vestibulum fringilla nec ac augue. Ut consequat, velit ac mattis ornare, eros arcu pellentesque erat, non ultricies libero metus nec mi. Sed eget elit sed quam malesuada viverra. Quisque ullamcorper, felis ut convallis fermentum, purus ligula varius ligula, sit amet tempor neque dui non neque. Donec vulputate ultricies tortor in mollis.
-
-Integer sit amet dolor sit amet turpis ullamcorper varius. Cras volutpat bibendum scelerisque. Maecenas mauris dolor, gravida eu elit et, sodales consequat tortor. Integer id commodo elit. Pellentesque sollicitudin ex non nulla molestie eleifend. Mauris sagittis metus nec turpis imperdiet, vel ullamcorper nibh tincidunt. Sed semper tempus ex, ut aliquet erat hendrerit id. Maecenas sit amet dolor sollicitudin, luctus nunc sit amet, malesuada justo.
-
-Mauris ut sapien non ipsum imperdiet sodales sit amet ac diam. Nulla vel convallis est. Etiam dapibus augue urna. Aenean enim leo, fermentum quis pulvinar at, ultrices quis enim. Sed placerat porta libero et feugiat. Phasellus ullamcorper, felis id porta sollicitudin, dolor dui venenatis augue, vel fringilla risus massa non risus. Maecenas ut nulla vitae ligula pharetra feugiat non eu ante. Donec quis neque quis lorem cursus pretium ac vulputate quam. Cras viverra tellus vitae sapien pretium laoreet. Pellentesque fringilla odio venenatis ex viverra, quis eleifend tortor ornare. Ut ut enim nunc. Vivamus id ligula nec est dignissim eleifend.
-
-Nunc ac velit tellus. Donec et venenatis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vitae lectus vel ante mollis congue. Vestibulum at cursus velit. Curabitur in facilisis enim. Vestibulum eget dui aliquet risus laoreet laoreet. Phasellus et est id magna interdum venenatis. Donec luctus vehicula justo sed laoreet. Quisque tincidunt suscipit augue, in molestie sem accumsan sed.
+\subsection{Future Work}
+More work is needed to formalize the composition operators and equivalence class \vartisteq.  More artists need to be implemented to demonstrate that the model can underpin a minimally viable library,  foremost an image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization}, a heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas}, and an imherently computational artist such as the boxplot\cite{wickham40YearsBoxplots2011}. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
 \section{Conclusion}
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-invidunt ut labore et dolore magna aliquyam erat, sed diam
-voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum.
-
+An unoffical philosophy of Matplotlib is to support making whatever kinds of plots a user may want, even if they seem nonsensical to the development team. The topological framework described in this work provides a way to facilitate this graph creation in a rigorous manner; any artist that meets the equivariance criteria described in this work by definition generates a graphic representation that matches the structure of the data being represented. We leave it to domain specialists to define the structure they need to preserve and the maps they want to make, and hopefully make the process easier by untangling these components into seperate constrained maps and providing a fairly general data and display model. 
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
-The authors wish to thank A, B, and C. This work was supported in part by
-a grant from Chan Zuckerberg Institute  (\# 12345-67890).}
+The authors wish to thank the Matplotlib development team for their invaluable feedback along the way, particulary Bruno Beltran for discussions about the visual fiber space. This work was supported in part by a grant from the Chan Zuckerberg Institute (EOSS cycle 1).}
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}
