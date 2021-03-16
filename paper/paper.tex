@@ -58,7 +58,7 @@
 \usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{mathrsfs} % math script fonts
 \usepackage{tabulary}
-\usepackage{subfig}
+\usepackage{subfig} %ieee does not like subfigure
 \usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{cd} % commutative diagrams
@@ -107,9 +107,9 @@
 \authorfooter{
 %% insert punctuation at end of each item
 \item
- Hannah Aizenman and Michael Grossberg are with the Computer Science department, City College of New York. E-mail: roy.g.biv@aol.com.
+ Hannah Aizenman and Michael Grossberg are with the Computer Science department, City College of New York. E-mail: haizenman@ccny.cuny.edu, mgrossberg@ccny.cuny.edu.
 \item
- Thomas Caswell is with Brookhaven National Lab E-mail: ed.grimley@aol.com.
+ Thomas Caswell is with National Synchrotron Light Source II, Brookhaven National Lab E-mail: tcaswell@bnl.gov.
 }
 
 %other entries to be set up for journal
@@ -117,7 +117,9 @@
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{ A critical aspect of data visualization is that the graphical representation of data is expected to match the properties of the data; this fails when order is not preserved in representations of ordinal data or scale for numerical data. In this work, we propose that the mathematical notions of equivariance and topology formalizes the expectation of matching properties. We developed a model we call the topological artist model (TAM) in which data and graphics can be viewed as sections of fiber bundles. This model allows for (1) decomposing the translation of data fields (variables) into visual channels via an equivariant map on the fibers and (2) a topology-preserving map of the base spaces that translates the dataset connectivity into graphical elements. Furthermore, our model supports an algebraic sum operation such that more complex visualizations can be built from simple ones. We illustrate the application of the model through case studies of a scatter plot, line plot, and heatmap. We show that this model can be implemented with a small prototype.} % end of abstract
+\abstract{ A critical aspect of data visualization is that the graphical representation of data is expected to match the structure of the data; this fails, for example, when order is not preserved in representations of ordinal data or proportional distance for numerical data or when discrete data is plotted on a line plot or interpolated as an image. In this work, we propose the topological equivariant artist model (TEAM), wherein we formalize the expectations of attributes and continuity matching using the mathematical notion of equivariance and by modeling data and graphics as fiber bundles. Specifically, our model introduces measurement scale preserving maps on the fiber that transform data components (variables) into visual channels and a continuity preserving map on the base space that transforms dataset connectivity into graphical elements. Furthermore, TEAM has a sum operator to allow for building composite visualizations. We illustrate the application of the model through case studies of a scatter plot, line plot, and heatmap and show that this model can be implemented with a small prototype.} 
+
+% end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
@@ -162,7 +164,13 @@
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
 \maketitle
-The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools. The contribution of this work is (a) topology preserving relationship between data and graphic via continuous maps, (b) property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions, (c) functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model, (d) prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model.
+The aim of this work is to rearchitecture Matplotlib to take advantage of developments in software design, data structures, and visualization to improve consistency, reusability, and discoverability, so domain specific tool developers can build structure preserving visualization tools. The contribution of this work is 
+\begin{enumerate}
+  \item topology preserving relationship between data and graphic via continuous maps
+  \item property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+  \item functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
+  \item prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model.
+\end{enumerate}
 
 \section{Related Work}
 The underlying structure and semantics of visualization are by definition reflected in visual representations \cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity to external concepts \cite{byrneAcquiredCodesMeaning2016}. The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. 
@@ -340,7 +348,7 @@ The topological artist \vartist\ is a monoid equivariant sheaf map from the shea
 \end{equation}
 While \vartist\ can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
 
-Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
+Specifically, \vartist\ is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
 \begin{equation}
     \label{eq:math:artist:diagram}
     \begin{tikzcd}
@@ -410,7 +418,7 @@ The \vchannel\ illustrated in \autoref{fig:math:artist:nu} is an equivariant map
   \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data.} 
   \label{fig:math:artist:q}
 \end{figure}
-As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\, reduce the encodings into a graphic \gsection. While it may seem intuitive that visualizations that generate the same graphic should do so consistently given the same input, we formalize this constraint such that it can be specified as a constraint of \vmark. We define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to two visual sections $\vsection,\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection,\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.
+As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\ reduce the encodings into a graphic \gsection. While it may seem intuitive that visualizations that generate the same graphic should do so consistently given the same input, we formalize this constraint such that it can be specified as a constraint of \vmark. We define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to two visual sections $\vsection,\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection,\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.
 
 \begin{figure}[htb]
   \centering
@@ -451,7 +459,7 @@ In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will gener
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
 \end{align*}
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. As shown in \ref{fig:math:arist:base} line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \ref{fig:math:arist:base} line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
 such that the normal is  $\hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
 \begin{align*}
  x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
@@ -480,7 +488,7 @@ The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many g
 \end{equation}
 copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
 
-As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber is equivalent to the line on \vfiberpull. 
+As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber\ is equivalent to the line on \vfiberpull. 
 
 Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
 \begin{equation}
@@ -582,7 +590,7 @@ transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
                    'encoder': lambda _: itertools.repeat(.02)}}
 \end{minted}
 
-where \mintinline{python}{lambda x: x} is an identity \vchannel\, \mintinline{python}|{'name':None}| maps into \vfiber\ without corresponding \dsection\ to set a constant visual value, and \mintinline{python}{color.Categorical} is a custom \vchannel\ implemented as a class for reusability.  A test for equivariance can be implemented trivially
+where \mintinline{python}{lambda x: x} is an identity \vchannel, \mintinline{python}|{'name':None}| maps into \vfiber\ without corresponding \dsection\ to set a constant visual value, and \mintinline{python}{color.Categorical} is a custom \vchannel\ implemented as a class for reusability.  A test for equivariance can be implemented trivially
 \begin{minted}{python}
 def test_nominal(values, encoder):
     m1 = list(zip(values, encoder(values)))
