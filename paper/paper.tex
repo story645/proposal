@@ -62,6 +62,7 @@
 \usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{cd} % commutative diagrams
+\usepackage[switch]{lineno}
 \usepackage{minted}
 \setminted[python]{fontsize=\scriptsize, 
                    linenos,
@@ -70,6 +71,8 @@
                    frame=lines,
                    framesep=3mm} 
 \usepackage{notation} % move this later
+
+
 %% In preprint mode you may define your own headline. If not, the default IEEE copyright message will appear in preprint mode.
 %\preprinttext{To appear in IEEE Transactions on Visualization and Computer Graphics.}
 
@@ -100,11 +103,11 @@
 %% This is how authors are specified in the journal style
 
 %% indicate IEEE Member or Student Member in form indicated below
-\author{A, B, C}
+\author{Hannah Aizenman, Thomas Caswell, Michael Grossberg}
 \authorfooter{
 %% insert punctuation at end of each item
 \item
- A B are with the Computer Science department, City College of New York. E-mail: roy.g.biv@aol.com.
+ Hannah Aizenman and Michael Grossberg are with the Computer Science department, City College of New York. E-mail: roy.g.biv@aol.com.
 \item
  Thomas Caswell is with Brookhaven National Lab E-mail: ed.grimley@aol.com.
 }
@@ -152,7 +155,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
+\linenumbers %linenumbers for comments [make sure to remove later]
 %% The ``\maketitle'' command must be the first command after the
 %% ``\begin{document}'' command. It prepares and prints the title block.
 
