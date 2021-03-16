@@ -1185,6 +1185,21 @@
   journal = {Visualization in scientific computing}
 }
 
+@inproceedings{hanrahanVizQL2006,
+  title = {{{VizQL}}: {{A}} Language for Query, Analysis and Visualization},
+  booktitle = {Proceedings of the 2006 {{ACM SIGMOD}} International Conference on Management of Data},
+  author = {Hanrahan, Pat},
+  year = {2006},
+  pages = {721},
+  publisher = {{Association for Computing Machinery}},
+  address = {{New York, NY, USA}},
+  doi = {10.1145/1142473.1142560},
+  abstract = {Conventional query languages such as SQL and MDX have limited formatting and visualization capabilities. Thus, although powerful queries can be composed, another layer of software is needed to report or present the results in a useful form to the analyst. VizQL\texttrademark{} is designed to fill that gap. VizQL evolved from the Polaris system at Stanford, which combined query, analysis and visualization into a single framework [1].VizQL is a formal language for describing tables, charts, graphs, maps, time series and tables of visualizations. These different types of visual representations are unified into one framework, making it easy to switch from one visual representation to another (e.g. from a list view to a cross-tab to a chart). Unlike current charting packages and like query languages, VizQL permits an unlimited number of picture expressions. Visualizations can thus be easily customized and controlled. VizQL is a declarative language. The desired picture is described; the low-level operations needed to retrieve the results, to perform analytical calculations, to map the results to a visual representation, and to render the image are generated automatically by the query analyzer. The query analyzer compiles VizQL expressions to SQL and MDX and thus VizQL can be used with relational databases and datacubes. The current implementation supports Hyperion Essbase, Microsoft SQL Server, Microsoft Analysis Services, MySQL, Oracle, as well as desktop data sources such as CSV and Excel files. This analysis phase includes many optimizations that allow large databases to be browsed interactively. VizQL enables a new generation of visual analysis tools that closely couple query, analysis and visualization.},
+  isbn = {1-59593-434-0},
+  keywords = {OLAP,visualization},
+  series = {{{SIGMOD}} '06}
+}
+
 @book{hansen2011visualization,
   title = {Visualization Handbook},
   author = {Hansen, Charles D and Johnson, Chris R},
@@ -1793,6 +1808,21 @@
   file = {C\:\\Users\\story\\OneDrive - Cuny GradCenter\\sources\\Mackinlay - 1986 - Automating the design of graphical presentations o.pdf},
   journal = {ACM Transactions on Graphics},
   number = {2}
+}
+
+@article{MackinlayShowme2007,
+  title = {Show Me: {{Automatic}} Presentation for Visual Analysis},
+  author = {Mackinlay, J. and Hanrahan, P. and Stolte, C.},
+  year = {2007},
+  month = nov,
+  volume = {13},
+  pages = {1137--1144},
+  issn = {1941-0506},
+  doi = {10.1109/TVCG.2007.70594},
+  abstract = {This paper describes Show Me, an integrated set of user interface commands and defaults that incorporate automatic presentation into a commercial visual analysis system called Tableau. A key aspect of Tableau is VizQL, a language for specifying views, which is used by Show Me to extend automatic presentation to the generation of tables of views (commonly called small multiple displays). A key research issue for the commercial application of automatic presentation is the user experience, which must support the flow of visual analysis. User experience has not been the focus of previous research on automatic presentation. The Show Me user experience includes the automatic selection of mark types, a command to add a single field to a view, and a pair of commands to build views for multiple fields. Although the use of these defaults and commands is optional, user interface logs indicate that Show Me is used by commercial users.},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  keywords = {algebraic specification,algebraic specification language,automatic presentation,Automatic presentation,best practices,Best practices,Computer Graphics,data analysis,Data analysis,data visualisation,data visualization,Data visualization,Displays,Encoding,Expert Systems,graphic design,Graphics,Information analysis,Information Storage and Retrieval,Programming Languages,small multiple display,small multiples.,Software,Software Design,specification languages,Specification languages,user interface,user interfaces,User interfaces,User-Computer Interface,visual analysis,visual analysis system},
+  number = {6}
 }
 
 @misc{malamedInformationDisplayTips2010,
@@ -2489,6 +2519,21 @@
   abstract = {The history of mathematical statistics in the United States prior to 1885 is reviewed, with emphasis upon the works of Robert Adrain, Benjamin and Charles Peirce, Simon Newcomb, and Erastus De Forest. While the period before 1850 produced little of substance, the years from 1850 to 1885 saw such innovations as an outlier rejection procedure, randomized design of experiments, elicitation of personal probabilities, kernel estimation of density functions, an anticipation of sufficiency, a runs test for fit, a Monte Carlo study, optimal linear smoothing, and the fitting of gamma distributions by the method of moments. Reasons for the rapid acceleration in the growth of the field are explored.},
   journal = {The Annals of Statistics},
   number = {2}
+}
+
+@article{StoltePolaris2002,
+  title = {Polaris: A System for Query, Analysis, and Visualization of Multidimensional Relational Databases},
+  author = {Stolte, C. and Tang, D. and Hanrahan, P.},
+  year = {2002},
+  month = jan,
+  volume = {8},
+  pages = {52--65},
+  issn = {1941-0506},
+  doi = {10.1109/2945.981851},
+  abstract = {In the last several years, large multidimensional databases have become common in a variety of applications, such as data warehousing and scientific computing. Analysis and exploration tasks place significant demands on the interfaces to these databases. Because of the size of the data sets, dense graphical representations are more effective for exploration than spreadsheets and charts. Furthermore, because of the exploratory nature of the analysis, it must be possible for the analysts to change visualizations rapidly as they pursue a cycle involving first hypothesis and then experimentation. In this paper, we present Polaris, an interface for exploring large multidimensional databases that extends the well-known pivot table interface. The novel features of Polaris include an interface for constructing visual specifications of table-based graphical displays and the ability to generate a precise set of relational queries from the visual specifications. The visual specifications can be rapidly and incrementally developed, giving the analyst visual feedback as he constructs complex queries and visualizations.},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  keywords = {data analysis,data visualisation,Data visualization,data warehousing,database analysis,database interfaces,database querying,database visualization,dense graphical representations,Displays,exploration tasks,exploratory analysis,Feedback,formal specification,graphical user interfaces,hypothesis-experimentation cycle,large data sets,multidimensional relational databases,Multidimensional systems,pivot table interface,Polaris,Polarization,query processing,relational databases,Relational databases,relational query generation,scientific computing,Scientific computing,Spatial databases,table-based graphical displays,very large databases,Visual databases,visual feedback,visual specifications,Warehousing},
+  number = {1}
 }
 
 @misc{studiesCulturevisImageplot2021,
