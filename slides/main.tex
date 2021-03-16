@@ -1,6 +1,7 @@
 \documentclass[xcolor={dvipsnames}, handout]{beamer}
 
-\usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
+%\usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
+\usepackage{amsmath, amsfonts, amssymb, mathtools, eulervm, xspace}
 \usepackage{bm}
 \usepackage{mathrsfs} % math script fonts
 \usepackage{tikz}
@@ -77,39 +78,51 @@
 \end{frame}
 
 \subsection{Background}
-\begin{frame}{Tools are tuned to the continuity of the date \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}}
+\begin{frame}{Tools are tuned to date continuity \cite{HeerSoftware2006}}
     \begin{columns}
-        \column{0.33\textwidth}
-        \begin{figure}
-            \includegraphics[width=1\textwidth]{figures/intro/data_formatting.png}
-            \caption{Based on fig~2.5 in Munzner's VAD\cite{munznerVisualizationAnalysisDesign2014}}
-        \end{figure}
-    
-        \begin{enumerate}
-            \item ggplot\cite{wickhamGgplot2ElegantGraphics2016a}
-            \item protovis\cite{bostockProtoviz2009}
-            \item vega\cite{satyanarayanDeclarativeInteractionDesign2014}, altair\cite{vanderplasAltairInteractiveStatistical2018}
-        \end{enumerate}
-        \pause
-        \column{0.33\textwidth}
-        \begin{figure}
-            \includegraphics[width=1\textwidth]{figures/intro/landsat.png}
-        \end{figure}
-        \begin{enumerate}
-            \item ImageJ\cite{schneiderNIHImageImageJ2012}, ImagePlot\cite{studiesCulturevisImageplot2021}\item Napari\cite{nicholas_sofroniew_2021_4533308}
-        \end{enumerate}
-        \pause
-        \column{0.33\textwidth}
-        \begin{figure}
-            \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
-            \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
-        \end{figure}
-        \begin{enumerate}
-            \item Matplotlib\cite{hunterMatplotlib2DGraphics2007}, 
-            \item VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}, MayaVi\cite{RamachandranMayaVI2011}, ParaView\cite{ahrens2005paraview}, Titan\cite{brianwylieUnifiedToolkitInformation2009}
-            \item D3 \cite{bostockDataDrivenDocuments2011}
-        \end{enumerate}
+            \column{0.33\textwidth}
+            \begin{figure}
+                \includegraphics[width=1\textwidth]{figures/intro/data_formatting.png}
+                \caption{Based on fig~2.5 in Munzner's VAD\cite{munznerVisualizationAnalysisDesign2014}}
+            \end{figure}
+            \begin{enumerate}
+                \item Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007}
+                \item ggplot\cite{wickhamGgplot2ElegantGraphics2016a}
+                \item Vega\cite{satyanarayanDeclarativeInteractionDesign2014}, Altair\cite{vanderplasAltairInteractiveStatistical2018}
+            \end{enumerate}
+            \pause
+            \column{0.33\textwidth}
+            \begin{figure}
+                \includegraphics[width=1\textwidth]{figures/intro/landsat.png}
+            \end{figure}
+            \begin{enumerate}
+                \item ImageJ\cite{schneiderNIHImageImageJ2012}, ImagePlot\cite{studiesCulturevisImageplot2021}
+                \item Napari\cite{nicholas_sofroniew_2021_4533308}
+            \end{enumerate}
+            \pause
+            \column{0.33\textwidth}
+            \begin{figure}
+                \includegraphics[width=1\textwidth]{figures/intro/dataset_diagram.png}
+                \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
+            \end{figure}
+            \begin{enumerate}
+                \item Gephi\cite{bastianGephiOpenSource2009}
+                \item Graphviz\cite{ellsonGraphvizOpenSource2002}
+                \item Networkx\cite{HagbergExploringNetwork2008}
+            \end{enumerate}
     \end{columns}
+\end{frame}
+
+\begin{frame}{Visualizations are tuned to data continuinity\cite{toryRethinkingVisualizationHighlevel2004}}
+    \begin{figure}
+        \includegraphics[height=.5\textheight]{figures/intro/dataset_diagram.png}
+        \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
+    \end{figure}
+    \begin{enumerate}
+        \item Matplotlib\cite{hunterMatplotlib2DGraphics2007}, 
+        \item D3 \cite{bostockDataDrivenDocuments2011}
+        \item VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}, MayaVi\cite{RamachandranMayaVI2011}, ParaView\cite{ahrens2005paraview}, Titan\cite{brianwylieUnifiedToolkitInformation2009}
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}{Structure is encoded in variables and continuity}
@@ -544,9 +557,8 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
 \end{figure}
-\begin{equation}
-\label{eq:qhat_q_s}
-\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\begin{equation}\label{eq:qhat_q_s}
+    \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation} 
 such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
@@ -564,6 +576,7 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
     \end{equation}
     a composition operator can be defined such that the the artists can be considered to be acting on different components of the same section. 
 \end{frame}
+
 \begin{frame}{Equivalance class of artists}
     An approximation of the equivalence class of artists $\vartist^{\prime}$
     \begin{equation}
