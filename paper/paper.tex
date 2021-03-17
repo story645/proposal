@@ -189,7 +189,7 @@ We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$. To formalize the structure the artist is preserving, we describe how we model data (\ref{sec:math:data}) and graphics (\ref{sec:math:graphic}) as fiber bundles. We then discuss the equivariant maps that make up $\mathscr{\vartist}$, which are a map from  graphic continuity to data continuity (\ref{sec:math:graphic:base}), data components to visual components (\ref{sec:math:artist:nu}) and visual components to graphic (\ref{sec:math:artist:q}).
+from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$. To formalize the structure the artist is preserving, we describe how we model data (\autoref{sec:math:data}) and graphics (\autoref{sec:math:graphic}) as fiber bundles. We then discuss the equivariant maps that make up $\mathscr{\vartist}$, which are a map from  graphic continuity to data continuity (\autoref{sec:math:graphic:base}), data components to visual components (\autoref{sec:math:artist:nu}) and visual components to graphic (\autoref{sec:math:artist:q}).
 
 
 \subsection{Data Bundle}
@@ -201,16 +201,10 @@ Building on Butler's proposal of using fiber bundles as a common data representa
         \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
-that binds the components of the data in \dfiber\ to the continuity represented in \dbase. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartestian product $\dbase\times\dfiber$. 
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartesian product $\dbase\times\dfiber$. 
 
 \subsubsection{Fiber Space: Variables}
 \label{sec:math:data:fiber}
-\begin{figure}[htb]
-  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
-  \includegraphics[width=\columnwidth]{fiber.png}
-  \caption{These two datasets have the same base space \dbase\ of discrete points, but the square is a visual representation of the fiber space  $\dfiber=\reals\times\reals$, while the cube is a representation of $\dfiber=\reals\times\realsp\times\reals$}
-  \label{fig:math:data:fiber}
-\end{figure}
 To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
@@ -232,7 +226,15 @@ which is equivalent to
     \label{eq:math:data:fiber:decompose}
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
-which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space, as illustrated in \autoref{fig:math:data:fiber}. The space $\dfiber=\reals\times\reals$ encodes that the dataset has two quantative continuous variables, while $\dfiber=\reals\times\reals\realsp$ encodes a dataset with three quantative contunous variables, one of which must be positive. 
+which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component of \dfiber\ is a dimension of the topological fiber space and is specified by a tuple of the form (\fname, \ftype, \(\ftotal_{\fsection(\fname)}\)). 
+\begin{figure}[htb]
+  \centering 
+  \includegraphics[width=\columnwidth]{fiber.png}
+  \caption{These two datasets have the same base space \dbase. The plane is a representation of the fiber $\dfiber=\reals\times\reals$ for the variables (time, temperature),  while the cube is the fiber $\reals\times\realsp\times\reals$ associated with (time, wind=(speed, direction))}
+  \label{fig:math:data:fiber}
+\end{figure}
+In \autoref{fig:math:data:fiber} the plane fiber has components (\emph{time}, \texttt{datetime}, \reals) and (\emph{temperature}, \texttt{float}, \reals), while the cube fiber has components (\emph{time}, \texttt{datetime}, \reals) and (\emph{wind}, \texttt{wind}, \(\realsp\times\reals)\)) which encodes (\emph{speed}, \emph{direction}). 
+
 
 \subsubsection{Equivariant Variable Properties: Monoid Actions}
 \label{sec:math:data:monoid}
@@ -244,7 +246,7 @@ A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operato
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
 As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
-\begin{equation}
+\begin{equation}\label{eq:math:data:monoid:decompose}
 \monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
@@ -253,8 +255,8 @@ Defining the monoid actions on the components serves as the basis for identifyin
 
 \subsubsection{Base Space: Continuity}
 \label{sec:math:data:base}
- The base space \dbase\ is way to express how the records in \dtotal\ are connected to each other, for example if they are discrete points or if they lie in a 2D continous surface. Formally \dbase\ is the quotient space of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. Our model formulates \dbase\ as akin to an indexing space into \dtotal\ that describes the structure of \dtotal.  
- 
+ The base space \dbase\ acts as an indexing space, as emphasized by Butler\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, to express how the records in \dtotal\ are connected to each other and does not itself store any of the components of the data. For example, \dbase\ can encode that the timeseries data described in \autoref{sec:math:data:fiber} is continuous, but is doing so independent of the timestamps. Every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$ because \dbase\ is the quotient space\cite{QuotientSpaceTopology2020,aurouxMath131Introduction} of \dtotal. 
+
  \begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{base.png}
@@ -262,12 +264,11 @@ Defining the monoid actions on the components serves as the basis for identifyin
   \label{fig:math:data:base}
  \end{figure}
 
- As illustrated in ~\autoref{fig:math:data:base}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with fibers and monoids, we can decompose the total space into components $\pi:\dtotal_i\rightarrow \dbase$ where
- \begin{equation}
-    \label{eq:math:data:base:decompose}
+ As illustrated in ~\autoref{fig:math:data:base}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose},  we can decompose the total space into component bundles
+ \begin{equation}\label{eq:math:data:base:decompose}
      \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
  \end{equation}
- which is a decomposition of \dfiber. The \dbase\ remains the same because the connectivity of records does not change just because there are fewer elements in each record. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
+ such that \(\monoid_{i}\) acts on component bundle \(\dtotal_i\). The \dbase\ remains the same because the connectivity of records does not change just because there are fewer components in each record. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
 
  \subsubsection{Section: Values}
  \label{sec:math:data:section}
@@ -318,7 +319,7 @@ We introduce a graphic bundle to hold the essential information necessary to ren
                         \& \gbase \arrow[u, "\gsection"', bend right]
   \end{tikzcd}
 \end{equation}
-where \gsection\ is the fully encoded graphic. To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements $(x,\, y,\, r,\, g,\, b) \in \gfiber$ such that a rendered graphic only consists of 2D position and color. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
+where \gsection\ is a fully specified graphic such that it is an abstraction of rendering. To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements $(x,\, y,\, r,\, g,\, b) \in \gfiber$ such that a rendered graphic only consists of 2D position and color. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
 
 \subsubsection{Equivariant Topology: Graphic Base Space}
 \label{sec:math:graphic:base}
@@ -336,33 +337,35 @@ Just as the \dbase\ encodes the connectivity of the records in the data, we prop
         \dbase                   & \gbase \arrow[l, "\vindex"']
     \end{tikzcd}
 \end{equation}
-goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:math:graphic:base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. 
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:math:graphic:base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. The \vindex\ mapping is critical to interactive visualizations as it is the map from a region on screen to the data associated with that region. One example is to fill in details in a hover tooltip, another is to convert region selection on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
 \subsection{Artist}
-The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+The topological artist \vartist\ is a map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
-While \vartist\ can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
+that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
+\begin{equation}
+\vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
+\end{equation}
+such that applying a monoid action $m \in \monoid$ to the data $\delement \in \mathscr{\dtotal}$ input to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
 
-Specifically, \vartist\ is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
+The monoid equivariant map has two stages: the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components, and the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal.
 \begin{equation}
     \label{eq:math:artist:diagram}
     \begin{tikzcd}
-        \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
+        \dtotal \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is  defined by the projection map $\pi$
+\vtotalpull\ is the visual bundle \vtotal\ pulled back over \gbase\ via the equivariant continuity map $\vindex:\gbase \rightarrow \dbase$ introduced in \autoref{sec:math:graphic:base}. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is defined by the projection map $\pi$
 \begin{equation}
     \begin{tikzcd}[ampersand replacement=\&]
         \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
                           \& \dbase \arrow[u, "\vsection"', bend right]
     \end{tikzcd}
 \end{equation}
-where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDiagrams2011a} of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. 
-
-In \autoref{eq:math:artist:diagram}, the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components. The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase. Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal. This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
+where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDiagrams2011a} of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. The functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
 
 \subsubsection{Visual Component Maps}
 \label{sec:math:artist:nu}
@@ -457,7 +460,7 @@ In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will gener
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
 \end{align*}
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \ref{fig:math:arist:base} line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. In contrast, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \autoref{fig:math:artist:base}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
 such that the normal is  $\hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
 \begin{align*}
  x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
@@ -472,8 +475,8 @@ R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vinde
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly Factory}
-\label{sec:math:artis:qhat}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+\label{sec:math:artist:qhat}
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
 \begin{figure}[htb]
   \centering
     \includegraphics[width=1\columnwidth]{q_hat.png}
@@ -501,7 +504,7 @@ Given the equivalence between \vsection\ and \vsectionpull\ defined above, the r
 \end{equation} 
 where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. 
 
-Factoring out \gbasepoint\ from equation~\ref{eq:math:artist:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
+Factoring out \gbasepoint\ from \autoref{eq:math:artist:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
 
 \subsubsection{Composite and Reusable Artists}
 Given the family of artists $(\dtotal_i: i\in I)$ on the same image, the + operator 
@@ -652,7 +655,7 @@ into a data structure that the artist can unpack via data component name.
 \caption{Continuous and discontinuous lines as defined via the same data model, and generated with the same \vartisteq \mintinline{python}{Line}}
 \label{fig:code:multilines}
 \end{figure}
-The graphics in figure~\ref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
+The graphics in figure \autoref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
 \begin{minted}{python}
 simplex.GraphLine(FB, edges, verticies, 
                       num_samples=1000, connect=True)

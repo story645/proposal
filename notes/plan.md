@@ -9,9 +9,9 @@ March 27-29, April 2-4
 ## Tasks
 ### Paper: https://github.com/story645/proposal/projects/5
 V0: Monday 15 latest
-- [ ] drop figures into template
-- [ ] pare content down into template
-- [ ] copy edit so is coherant
+- [x] drop figures into template
+- [x] pare content down into template
+- [x] copy edit so is coherant
 
 V0.1: Thur 18 (drop into MPL meeting, possibly send to committee for feedback)
 - [ ] adjust abstract based on content
