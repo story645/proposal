@@ -117,7 +117,7 @@
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{ A critical aspect of data visualization is that the graphical representation of data is expected to match the structure of the data; this fails, for example, when order is not preserved in representations of ordinal data or proportional distance for numerical data or when discrete data is plotted on a line plot or interpolated as an image. In this work, we propose the topological equivariant artist model (TEAM), wherein we formalize the expectations of attributes and continuity matching using the mathematical notion of equivariance and by modeling data and graphics as fiber bundles. Specifically, our model introduces measurement scale preserving maps on the fiber that transform data components (variables) into visual channels and a continuity preserving map on the base space that transforms dataset connectivity into graphical elements. Furthermore, TEAM has a sum operator to allow for building composite visualizations. We illustrate the application of the model through case studies of a scatter plot, line plot, and heatmap and show that this model can be implemented with a small prototype.} 
+\abstract{ A critical aspect of data visualization is that the graphical representation of data is expected to match the structure of the data; this fails, for example, when order is not preserved in representations of ordinal data or proportional distance for numerical data or when discrete data is plotted on a line plot or interpolated as an image. In this work, we propose the topological equivariant artist model (TEAM), wherein we formalize the expectations of attributes and continuity matching using the mathematical notion of equivariance and by modeling data and graphics as fiber bundles. Specifically, our model introduces measurement scale preserving maps on the fiber that transform components of the data into visual channels and a continuity preserving map on the base space that transforms dataset connectivity into graphical elements. Furthermore, TEAM has a sum operator to allow for building composite visualizations. We illustrate the application of the model through case studies of a scatter plot, line plot, and heatmap and show that this model can be implemented with a small prototype.} 
 
 % end of abstract
 
@@ -179,22 +179,19 @@ Models of visualization evaluate this equivariance and how elements built in the
 On the other hand, most information visualization tools are explicitly tuned to specific continuity \cite{HeerSoftware2006,toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to tools influenced by APT, such as
 Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007} and the Grammar of Graphics\cite{wilkinsonGrammarGraphics2005} inspired ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, Vega\cite{satyanarayanDeclarativeInteractionDesign2014} and Altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and the digital humanities oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro; the need to visualize and manipulate graphs has spawned tools like Gephi\cite{bastianGephiOpenSource2009}, Graphviz\cite{ellsonGraphvizOpenSource2002}, and Networkx\cite{HagbergExploringNetwork2008}. Neither the table nor image nor graph model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} and D3 \cite{bostockDataDrivenDocuments2011} explicitly carry around different data representations for all the different types of visualizations they support.  Where libraries with a single core data structure have very consistent APIs, VTK, D3 and Matplotlib APIs can be rather inconsistent as every visualization has a different notion of how the data is structured.
 
-Fiber bundles are a generalized abstraction proposed by Butler to encode the continuity of the data separately from the variable information \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} to incorporate a schema like description of the variables. One way of describing the binding between the schame and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the index of the value, our model considers keys to be a reference to topology. This allows the metadata to be altered, for example by changing the coordinate system or time resolution, without imposing new semantics on the underlying structure. 
+Fiber bundle and sheafs are generalized abstractions proposed by Butler to encode the continuity of the data separately from the properties of each variable  \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} to incorporate a schema like description of the variables. One way of describing the binding between the scheme and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the index of the value, our model considers keys to be a reference to topology. This allows the metadata to be altered, for example by changing the coordinate system or time resolution, without imposing new semantics on the underlying structure. 
 
 
 \section{Topological Equivariant Artist Model}
 \label{sec:math}
-We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
+We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in \autoref{sec:math:data:monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
-\begin{equation}
-\mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
-\end{equation}
-such that applying a monoid action $m \in \monoid$ to the data $\delement \in \mathscr{\dtotal}$ input to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
-We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity; by doing so we can develop implementations that keep track of both in ways that let us distribute computation while still allowing assembly and dynamic update of the graphic. 
+from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$. To formalize the structure the artist is preserving, we describe how we model data (\ref{sec:math:data}) and graphics (\ref{sec:math:graphic}) as fiber bundles. We then discuss the equivariant maps that make up $\mathscr{\vartist}$, which are a map from  graphic continuity to data continuity (\ref{sec:math:graphic:base}), data components to visual components (\ref{sec:math:artist:nu}) and visual components to graphic (\ref{sec:math:artist:q}).
+
+
 \subsection{Data Bundle}
 \label{sec:math:data}
 Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
@@ -204,7 +201,7 @@ Building on Butler's proposal of using fiber bundles as a common data representa
         \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
-that binds the components of the data in \dfiber\ to the continuity represented in \dbase. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity.
+that binds the components of the data in \dfiber\ to the continuity represented in \dbase. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartestian product $\dbase\times\dfiber$. 
 
 \subsubsection{Fiber Space: Variables}
 \label{sec:math:data:fiber}
@@ -214,7 +211,6 @@ that binds the components of the data in \dfiber\ to the continuity represented 
   \caption{These two datasets have the same base space \dbase\ of discrete points, but the square is a visual representation of the fiber space  $\dfiber=\reals\times\reals$, while the cube is a representation of $\dfiber=\reals\times\realsp\times\reals$}
   \label{fig:math:data:fiber}
 \end{figure}
-
 To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
@@ -413,6 +409,7 @@ The \vchannel\ illustrated in \autoref{fig:math:artist:nu} is an equivariant map
 \vchannel\ does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into the artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
 
 \subsubsection{Visualization Assembly}
+\label{sec:math:artist:q}
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{path_of_q}
@@ -475,6 +472,7 @@ R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vinde
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly Factory}
+\label{sec:math:artis:qhat}
 The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
 \begin{figure}[htb]
   \centering
