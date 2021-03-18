@@ -298,7 +298,7 @@ Defining the monoid actions on the components serves as the basis for identifyin
  \end{equation}
  where each section $\dsection_i$ maps into a record on a component $\dfiber_i \in \dfiber$. This allows for accessing the data component wise in addition to accessing the data in terms of its location over \dbase.
 
- \subsubsection{Sheafs: Gluing Sections }
+ \subsubsection{Sheafs}
  \label{sec:math:data:sheaf}
  The restriction maps of a sheaf describe how local sections $\iota^{*}\dsection$ over a neighborhood $U$ around \dbasepoint\ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. This puts a continuous structure on local sections, which allows for defining a section over a subset in \dbase. The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ 
  \begin{equation}
@@ -369,12 +369,6 @@ where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDia
 
 \subsubsection{Visual Component Maps}
 \label{sec:math:artist:nu}
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=\columnwidth]{equivariance_nu.png}
-  \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions, represented by the colored arrows, are the same on the input \dsection\ and output \vsection\ sets.}
-  \label{fig:math:artist:nu}
-\end{figure}
  We define the visual transformers \vchannel\ 
 \begin{equation}
   \label{eq:math:artist:nu}
@@ -395,7 +389,21 @@ In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same typ
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-The \vchannel\ illustrated in \autoref{fig:math:artist:nu} is an equivariant mapping from \textbf{Strings} to emojis, as seen in the identical actions, represented as arrows, on the data and emojis. More generally, for the Steven's scales\cite{stevensTheoryScalesMeasurement1946} an equivariant \vchannel\ has the following properties
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=1\columnwidth]{monoid_equivariant.png}
+  \caption{fill in this caption tomorrow}
+  \label{fig:math:artist:nu}
+\end{figure}
+
+\autoref{fig:math:artist:nu} illustrates a \vchannel\ that preserves partial order relations because 
+ou would have to state that the monoid of monitonic actions is equivalent to the partial order realationship
+ok
+so that the order is preserved IF and only IF it is an equivariant map.
+I think that is true but it would be nice to have a reference.
+but then you don't have to really plot out m.
+
+Generally, for the Steven's scales\cite{stevensTheoryScalesMeasurement1946} an equivariant \vchannel\ has the following properties
 \begin{table}[H]
   \begin{tabulary}{\columnwidth}{llL}
       nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
@@ -404,12 +412,7 @@ The \vchannel\ illustrated in \autoref{fig:math:artist:nu} is an equivariant map
       ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\
   \end{tabulary}
 \end{table}
-\noindent where the middle column is the group structure. Therefore, a \vchannel\ is equivariant if it satisfies the listed condition. For example, given a transform $\vchannel_{i}(x) = .5$ on interval data, it must commute under translation. Testing this constraint with a translation action $t(x) = x+2$
-\begin{align*}
-  \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
-  .5 &\neq .5 + 2
-\end{align*}
-\vchannel\ does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into the artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
+\noindent where the middle column is the group structure. Therefore, a \vchannel\ is equivariant if it satisfies the listed condition.  
 
 \subsubsection{Visualization Assembly}
 \label{sec:math:artist:q}
@@ -450,7 +453,7 @@ such that for every glyph there is at least one corresponding region on \dbase, 
 
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{base_q}
+  \includegraphics[width=.5\columnwidth]{base_q}
   \caption{The coordinates $(\gx, \gy)$ dictate the color of the region in prerender space \gbase\, which over the whole disk generates the graphical mark. The line fiber is thickened with the derivative because the tangent the line needs to be pushed perpendicular to the tangent of (xpos, ypos) in order to have visible thickness.}
   \label{fig:math:artist:base}
 \end{figure}

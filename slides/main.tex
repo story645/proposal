@@ -246,22 +246,13 @@
 
 \begin{frame}{Variable types are dimensions of the fiber}
     \begin{figure}[H]
-        \begin{subfigure}{.49\textwidth}
-            \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
-            \caption{}
-            \label{fig:fiber_example_plane}
-        \end{subfigure}
-        \begin{subfigure}{.49\textwidth}
-            \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
-            \caption{}
-            \label{fig:fiber_example_cube}
-        \end{subfigure}
+        \includegraphics[width=\textwidth]{figures/math/fiber.png}
         \caption{}
         \label{fig:data_fiber_example}
     \end{figure}
     \begin{description}
-        \item[\ref{fig:fiber_example_plane}]  $\dfiber=\reals\times\reals$, (time, temperature)
-        \item[\ref{fig:fiber_example_cube}]  $\reals\times\realsp\times\reals$, (time, wind=(speed, direction))
+        \item[plane]  $\dfiber=\reals\times\reals$, (time, temperature)
+        \item[cube]  $\reals\times\realsp\times\reals$, (time, wind=(speed, direction))
     \end{description}
 \end{frame}
 
@@ -312,22 +303,13 @@ where the total space can be decomposed into components
 
 \begin{frame}{Data connectivity is encoded as the base space}
     \begin{figure}[H]
-        \begin{subfigure}{.49\textwidth}
-            \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
-            \caption{}
-            \label{fig:base_example_discrete}
-        \end{subfigure}
-        \begin{subfigure}{.49\textwidth}
-            \includegraphics[width=\textwidth]{figures/math/temp_2f.png}
-            \caption{}
-            \label{fig:base_example_continuous}
-        \end{subfigure}
+        \includegraphics[width=1\textwidth]{figures/math/base.png}
         \caption{}
         \label{fig:base_example}
     \end{figure}
     \begin{description}
-        \item[\ref{fig:base_example_discrete}] data is discrete 0D points
-        \item[\ref{fig:base_example_continuous}]  data is lies on the 1D continuous interval \dbase\
+        \item[points] data is 0D discrete
+        \item[line]  data is lies on the 1D continuous interval \dbase\
     \end{description}
 \end{frame}
 
@@ -458,8 +440,7 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
 
 \begin{frame}{Example: Nominal Equivariance}
     \begin{figure}
-        \includegraphics[width=1\textwidth]{figures/math/equivariance_nu.png}
-        \caption{The actions on the text data are the same as the actions on the visual representation of that data as emojis.}
+        \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
     \end{figure}
 \end{frame}
 \begin{frame}{Measurement Scale Groups}
