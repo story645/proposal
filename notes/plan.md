@@ -13,7 +13,7 @@ V0: Monday 15 latest
 - [x] pare content down into template
 - [x] copy edit so is coherant
 
-V0.1: Thur 18 (drop into MPL meeting, possibly send to committee for feedback)
+V0.1: Friday 19 
 - [ ] adjust abstract based on content
 - [ ] clean up figures
 - [ ] clean up words
@@ -30,7 +30,7 @@ V0.4 Wed 31, 5:00PM PST
 - [] submit paper
 
 ### Slides
-V0.1 Fri 19
+V0.1 Monday 22
 - [] add timeline/gant chart
 - [] make clearer that this is math + implementation 
 - [] incorporate figures changed for paper, w/ different font sizes/weights  
