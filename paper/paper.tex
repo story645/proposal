@@ -113,7 +113,7 @@
 }
 
 %other entries to be set up for journal
-\shortauthortitle{ \MakeLowercase{\textit{et al.}}: Topological Equivariant Artist Model}
+\shortauthortitle{Aizenman \MakeLowercase{\textit{et al.}}: Topological Equivariant Artist Model}
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
@@ -124,7 +124,7 @@
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
 % http://ieeevis.org/year/2021/info/call-participation/paper-keywords
-\keywords{Taxonomy, Models, Frameworks, Theory }
+\keywords{Taxonomy, Models, Frameworks, Theory}
 
 %% ACM Computing Classification System (CCS). 
 %% See <http://www.acm.org/class/1998/> for details.
@@ -141,6 +141,7 @@
   \caption{Visualizations consist of topologically equivariant maps. There is a set of monoid action equivariant maps from data components to visual components \vchannel\ that are then reduced via \vmark\ into a single graphic, and there is a deformation retraction \vindex\ from graphic continuity to data continuity.}
   \label{fig:teaser}
 }
+
 
 %% Uncomment below to disable the manuscript note
 %\renewcommand{\manuscriptnotetxt}{}
@@ -396,23 +397,21 @@ such that $\varphi$ maps a monoid action on data to a monoid action on visual el
   \label{fig:math:artist:nu}
 \end{figure}
 
-\autoref{fig:math:artist:nu} illustrates a \vchannel\ that preserves partial order relations because 
-ou would have to state that the monoid of monitonic actions is equivalent to the partial order realationship
-ok
-so that the order is preserved IF and only IF it is an equivariant map.
-I think that is true but it would be nice to have a reference.
-but then you don't have to really plot out m.
+\autoref{fig:math:artist:nu} illustrates a \vchannel\ that preserves partial order relations. 
 
-Generally, for the Steven's scales\cite{stevensTheoryScalesMeasurement1946} an equivariant \vchannel\ has the following properties
+Stevens scales\cite{stevensTheoryScalesMeasurement1946} are groups, which are monoids with invertible elements, 
+
 \begin{table}[H]
-  \begin{tabulary}{\columnwidth}{llL}
+  \begin{tabulary}{\columnwidth}{|llL|}\hline
+      \textbf{scale} & \textbf{group} & \textbf{constraint}\\ \hline
       nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
       ordinal &  monotonic & $\text{if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$\\
       interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
-      ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\
+      ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\ \hline
   \end{tabulary}
 \end{table}
-\noindent where the middle column is the group structure. Therefore, a \vchannel\ is equivariant if it satisfies the listed condition.  
+
+\noindent where the group is a monoid with invertible elements. Therefore, a \vchannel\ is equivariant if it satisfies 
 
 \subsubsection{Visualization Assembly}
 \label{sec:math:artist:q}
