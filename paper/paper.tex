@@ -62,6 +62,7 @@
 \usepackage{multicol}
 \usepackage{tikz}
 \usetikzlibrary{cd} % commutative diagrams
+\newtheorem{prop}{Proposition} %math?
 \usepackage[switch]{lineno}
 \usepackage{minted}
 \setminted[python]{fontsize=\scriptsize, 
@@ -375,8 +376,7 @@ where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDia
   \label{eq:math:artist:nu}
   \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. 
-A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes such that 
+as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes
 \begin{equation}
   \label{eq:math:artist:nu_commute}
 \begin{tikzcd}
@@ -384,24 +384,14 @@ A validly constructed \vchannel\ is one where the diagram of the monoid transfor
   \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
+such that applying equivariant monoid actions to $\dtotal_{i}$ and $\vtotal_{i}$ preserves the map $\vchannel_{i}: \dtotal_{i}\rightarrow \vtotal_{i}$. In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
 \begin{equation}
 \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=1\columnwidth]{monoid_equivariant.png}
-  \caption{fill in this caption tomorrow}
-  \label{fig:math:artist:nu}
-\end{figure}
-
-\autoref{fig:math:artist:nu} illustrates a \vchannel\ that preserves partial order relations. 
-
-Stevens scales\cite{stevensTheoryScalesMeasurement1946} are groups, which are monoids with invertible elements, 
-
 \begin{table}[H]
+  %%\renewcommand{\arraystretch}{2}
   \begin{tabulary}{\columnwidth}{|llL|}\hline
       \textbf{scale} & \textbf{group} & \textbf{constraint}\\ \hline
       nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
@@ -409,9 +399,20 @@ Stevens scales\cite{stevensTheoryScalesMeasurement1946} are groups, which are mo
       interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
       ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\ \hline
   \end{tabulary}
+  \caption{}
+  \label{tab:math:artist:nu}
 \end{table}
+The equivariance constraints on the Stevens measurement scales \cite{stevensTheoryScalesMeasurement1946} are listed in \autoref{tab:math:artist:nu}. These are derived from the group actions on the scales, as defined by Stevens.
 
-\noindent where the group is a monoid with invertible elements. Therefore, a \vchannel\ is equivariant if it satisfies 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=1\columnwidth]{monoid_equivariant.png}
+  \caption{In the top two panels \vchannel\ maps to visual elements such that the relative order of the visual elements is the same as the data. In the bottom right panel, \textit{rain} is mapped to a visual element that is less than the visual element \textit{storm} is mapped to, which is not an allowed \vchannel. Changing the map so that \textit{storm} goes to the same visual element as \textit{rain} yields an order preserving map and is therefore a valid \vchannel.}
+  \label{fig:math:artist:nu}
+\end{figure}
+
+The equivariance constraint for monoid actions is that relative order is preserved, as shown in the top two panels of \autoref{fig:math:artist:nu}. In the bottom right panel the ordering of \textit{rain} and \textit{storm} is swapped in the visual elements; in the bottom left panel, \textit{storm} is instead mapped to the same visual element as \textit{rain} so that the ordering is preserved. 
+
 
 \subsubsection{Visualization Assembly}
 \label{sec:math:artist:q}
@@ -421,21 +422,24 @@ Stevens scales\cite{stevensTheoryScalesMeasurement1946} are groups, which are mo
   \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data.} 
   \label{fig:math:artist:q}
 \end{figure}
-As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\ reduce the encodings into a graphic \gsection. While it may seem intuitive that visualizations that generate the same graphic should do so consistently given the same input, we formalize this constraint such that it can be specified as a constraint of \vmark. We define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to two visual sections $\vsection,\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection,\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.
-
+As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings \vsection\ reduce the encodings into a graphic \gsection. The space of all graphics that \vmark\ can generate is the subset of graphics reachable via applying the reduction function $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ to the visual section $\vsection \in \Gamma(\vtotal)$. We formalize the expectation that visualization generation functions parameterized in the same way should generate the same functions as the equivariant map $\vmark: \vsection \mapsto \gsection$. We then define the constraint on \vmark\ such that if \vmark\ is applied to two visual sections $\vsection$ and $\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection$ and $\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.  We cannot define monoid actions on all of $\Gamma(\gtotal)$ because there are graphics $\gsection \in \Gamma(\gtotal)$ for which we cannot construct a valid mapping from \vtotal.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{diff_type_q.png}
-  \caption{These two glyphs are generated by the same \vmark\ function. The monoid 
-  action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
+  \caption{These two glyphs are generated by the same annulus \vmark\ function. The monoid action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
   \label{fig:math:artist:graphic}
 \end{figure}
-
-Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
+Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$
+\begin{prop}
+If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
 \begin{equation}
 \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
+\label{eq:math:artist:q}
 \end{equation}
-then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. Given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
+then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. If and only if \vmark\ satistfies \autoref{eq:math:artist:q}, we can state that the transformed graphic $\gsection^{\prime}=\vmark(m\circ \vsection)$ is equivariant to a monoid action applied on \vmark\ with input $\vsection \in \vmark^{-1}(\gsection)$ that must generate valid \gsection. 
+\end{prop}
+
+For example, given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
 
 We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input 
 \begin{equation}
@@ -452,7 +456,7 @@ such that for every glyph there is at least one corresponding region on \dbase, 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.5\columnwidth]{base_q}
+  \includegraphics[width=\columnwidth]{base_q}
   \caption{The coordinates $(\gx, \gy)$ dictate the color of the region in prerender space \gbase\, which over the whole disk generates the graphical mark. The line fiber is thickened with the derivative because the tangent the line needs to be pushed perpendicular to the tangent of (xpos, ypos) in order to have visible thickness.}
   \label{fig:math:artist:base}
 \end{figure}
@@ -676,7 +680,7 @@ This work contributes a mathematical description of the mapping \vartist\ from d
 So far this model has only been worked out for a single data set tied to a primitive mark. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated from parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it does not have a way to evaluate the semantic accuracy of the figurative representation. Even though the model is designed to be backend and format independent, it has only really been tested against PNGs rendered with the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}. This model and the associated prototype is deeply tied to Matplotlib's existing architecture, so it has not been worked through how the model generalizes to other libraries, such as those built on Mackinlay's APT framework.
 
 \subsection{Future Work}
-More work is needed to formalize the composition operators and equivalence class \vartisteq.  More artists need to be implemented to demonstrate that the model can underpin a minimally viable library,  foremost an image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization}, a heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas}, and an imherently computational artist such as the boxplot\cite{wickham40YearsBoxplots2011}. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
+More work is needed to formalize the composition operators and equivalence class \vartisteq.  More artists need to be implemented to demonstrate that the model can underpin a minimally viable library,  foremost an image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization}, a heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas}, and an inherently computational artist such as the boxplot\cite{wickham40YearsBoxplots2011}. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
 \section{Conclusion}
 An unoffical philosophy of Matplotlib is to support making whatever kinds of plots a user may want, even if they seem nonsensical to the development team. The topological framework described in this work provides a way to facilitate this graph creation in a rigorous manner; any artist that meets the equivariance criteria described in this work by definition generates a graphic representation that matches the structure of the data being represented. We leave it to domain specialists to define the structure they need to preserve and the maps they want to make, and hopefully make the process easier by untangling these components into seperate constrained maps and providing a fairly general data and display model. 
 
