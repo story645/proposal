@@ -141,17 +141,10 @@
         \end{tikzcd}
     \end{equation}
     \begin{description}
-        \item[base space \dbase] coordinate system agnostic \textit{keys}
-        \item[fiber space \dfiber] contains \textit{values}    
+        \item[base space \dbase] continuity
+        \item[fiber space \dfiber] variable characteristics
+        \item[total space \dtotal] dataset topology
     \end{description}
-    \begin{block}{Structural \textit{keys} with associated \textit{values} \cite{munznerVisualizationAnalysisDesign2014}}
-        \begin{figure}
-            \includegraphics[width=1\textwidth]{figures/intro/munzner_datatypes.png}
-            \caption{Figure 2.8 in Munzner's Visualization Analysis and Design\cite{munznerVisualizationAnalysisDesign2014}}
-        \end{figure}
-    \end{block} 
-
-
 \end{frame}
 
 
@@ -176,19 +169,20 @@
 \end{frame}
 
 
-\begin{frame}{}
+\begin{frame}{Structural \textit{keys} with associated \textit{values} \cite{munznerVisualizationAnalysisDesign2014}}
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/base.png}
         \label{fig:base_example}
     \end{figure}
-    \begin{block}{\dbase\ is an indexing space regardless of components}
+    
+    \begin{block}{\dbase\ is an indexing space independent of component semantics}
         \begin{equation}
             \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
         \end{equation}
     \end{block}
 \end{frame}
 
-\begin{frame}{Data are sections\dsection\ on the \dtotal}
+\begin{frame}{Data are sections \dsection\ on \dtotal}
     For any fiber bundle, there exists a map
     \begin{equation}
         \begin{tikzcd}[ampersand replacement=\&]
@@ -382,9 +376,88 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
         \item have the same continuity map \vindex 
     \end{itemize}
 \end{frame}
-
-
 \section{Prototype}
+
+\begin{frame}{TEAM driven rearchitecture of Matplotlib}
+    \begin{itemize}
+        \item fiber bundle with schema is a structure rich abstraction
+        \begin{itemize}
+            \item topologically complex heterogenous data 
+            \item target display spaces
+        \end{itemize}
+        \item structure preserving maps from data to visual:
+            \begin{itemize}
+                \item data and graphics have equivalent continuity
+                \item properties are equivariant under monoid actions
+            \end{itemize}  
+        \item composable into complex visualizations
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Artists: Scatter \& Line}
+    \begin{figure}[H]
+        \begin{subfigure}{0.49\textwidth}
+            \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
+        \end{subfigure}
+        \begin{subfigure}{0.49\textwidth}
+            \includegraphics[width=\textwidth]{figures/code/line_1.png}
+        \end{subfigure}
+    \end{figure}
+    \begin{columns}
+    \column{0.49\textwidth}
+    \begin{minted}{python}
+    fig, ax = plt.subplots()
+    artist = Point(data, transforms)
+    ax.add_artist(artist)
+    \end{minted}
+    \column{.49\textwidth}
+    \begin{minted}{python}
+    fig, ax = plt.subplots()
+    artist = Line(data, transforms)
+    ax.add_artist(artist)
+    \end{minted}
+    \end{columns}
+\end{frame}
+
+\subsection{Visual Transforms}
+\begin{frame}[fragile]{Visual Transformations}
+    \begin{minted}{python}
+    cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
+    transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
+                    'y': {'name': 'v2', 'encoder': lambda x: x},
+                    'facecolors': {'name':'v3', 'encoder': cmap}, 
+                    's':{'name': None , 
+                        'encoder': lambda _: itertools.repeat(.02)}}
+    \end{minted}
+        \begin{itemize}
+            \item \mintinline{python}{lambda x: x} is identity \vchannel\
+            \item \mintinline{python}|{'name':None}| map into \vfiber\ without corresponding \dsection\
+            \item \mintinline{python}{color.Categorical} is custom \vchannel
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}[fragile]{Complex \vchannel}
+    \begin{minted}{python}
+    class Categorical:
+        def __init__(self, mapping):
+            # check that the conversion is to valid colors
+            assert(mcolors.is_color_like(color) for color in mapping.values())
+            self._mapping = mapping
+    
+        def __call__(self, value):
+            # convert value to a color
+            return [mcolors.to_rgba(self._mapping[v]) for v in values]
+    \end{minted}
+    That we can test for action equivariance
+    \begin{minted}{python}
+    def test_nominal(values, encoder):
+        m1 = list(zip(values, encoder(values)))
+        random.shuffle(values)
+        m2 = list(zip(values, encoder(values)))
+        assert sorted(m1) == sorted(m2)
+    \end{minted}
+\end{frame}
+
 \subsection{Artist}
 \begin{frame}[fragile]{Artist}
     \begin{minted}{python}
@@ -411,31 +484,6 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
 
 \begin{frame}[fragile]{Artists: Scatter \& Line}
-\begin{figure}[H]
-    \begin{subfigure}{0.49\textwidth}
-        \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
-    \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
-        \includegraphics[width=\textwidth]{figures/code/line_1.png}
-    \end{subfigure}
-\end{figure}
-\begin{columns}
-\column{0.49\textwidth}
-\begin{minted}{python}
-fig, ax = plt.subplots()
-artist = Point(data, transforms)
-ax.add_artist(artist)
-\end{minted}
-\column{.49\textwidth}
-\begin{minted}{python}
-fig, ax = plt.subplots()
-artist = Line(data, transforms)
-ax.add_artist(artist)
-\end{minted}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Artists: Scatter \& Line}
 \begin{minted}{python}
 class Point(mcollections.Collection):
     def assemble(self, x, y, s, facecolors='C0' ):
@@ -445,9 +493,7 @@ class Point(mcollections.Collection):
         # set attributes of glyphs, these are vectorized 
         # circles and facecolors are lists of the same size
         self.set_facecolors(facecolors)
-\end{minted} 
-    \pause
-\begin{minted}{python}
+
 class Line(mcollections.LineCollection):
     def assemble(self, x, y, color='C0'):
         #assemble line marks as set of segments 
@@ -456,95 +502,23 @@ class Line(mcollections.LineCollection):
         self.set_color(color)
 \end{minted}
 \end{frame}
-
-\begin{frame}[fragile]{Visual Transformations}
-\begin{minted}{python}
-cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
-transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
-                'y': {'name': 'v2', 'encoder': lambda x: x},
-                'facecolors': {'name':'v3', 'encoder': cmap}, 
-                's':{'name': None , 
-                    'encoder': lambda _: itertools.repeat(.02)}}
-\end{minted}
-    \begin{itemize}
-        \item \mintinline{python}{lambda x: x} is identity \vchannel\
-        \item \mintinline{python}|{'name':None}| map into \vfiber\ without corresponding \dsection\
-        \item \mintinline{python}{color.Categorical} is custom \vchannel
-    \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Custom Complex \vchannel}
-\begin{minted}{python}
-class Categorical:
-    def __init__(self, mapping):
-        # check that the conversion is to valid colors
-        assert(mcolors.is_color_like(color) for color in mapping.values())
-        self._mapping = mapping
-
-    def __call__(self, value):
-        # convert value to a color
-        return [mcolors.to_rgba(self._mapping[v]) for v in values]
-\end{minted}
-That we can test for action equivariance
-\begin{minted}{python}
-def test_nominal(values, encoder):
-    m1 = list(zip(values, encoder(values)))
-    random.shuffle(values)
-    m2 = list(zip(values, encoder(values)))
-    assert sorted(m1) == sorted(m2)
-\end{minted}
-\end{frame}
 \subsection{Data}
-\begin{frame}[fragile]{Fiber Bundle}
-\begin{minted}{python}
-@dataclass
-class FiberBundle:
-"""
-Attributes
-----------
-K: {'tables': []}
-F: {variable name: type}
-"""
-    K: dict 
-    F: dict
-\end{minted}
-\end{frame}
-
-\begin{frame}[fragile]{Discrete Connectivity}
+\begin{frame}[fragile]{Continuity}
 \begin{minted}{python}
 class VertexSimplex: #maybe change name to something else
     """Fiberbundle is consistent across all sections
     """
     FB = FiberBundle({'tables': ['vertex']},  
             {'v1': float, 'v2': str, 'v3': float})
-
     def __init__(self, sid = 45, size=1000, max_key=10**10):
         # create random list of keys
     def tau(self, k):
         # e1 is sampled from F1, e2 from F2, etc...
         return (k, (e1, e2, e3, e4))
-\end{minted}
-\end{frame}
 
-\begin{frame}[fragile]{1D Continuous Connectivity}
-\begin{minted}{python}
 class EdgeSimplex: 
     FB = FiberBundle({'tables': ['vertex','edge']},
-                         {'x' : float, 'y':  float, 
-                         'color':mtypes.Color()}})
-    def __init__(self, num_edges=4, num_samples=1000): 
-        self.keys = range(num_edge) #edge id
-        self.distances = np.linspace(0,1, num_samples)
-        # half generlized representation of arcs on a circle
-        self.angle_samples = np.linspace(0, 2*np.pi, len(self.keys)+1)
-    @staticmethod
-    def _color(edge):
-        return ['red','orange', 'green','blue'][edge%4]
-    @staticmethod
-    def _xy(edge, distances, start=0, end=2*np.pi):
-        # start and end are parameterizations b/c really there is 
-        angles = (distances *(end-start)) + start
-        return np.cos(angles), np.sin(angles)
+                     {'x' : float, 'y':  float, 'color':mtypes.Color()}})
     def tau(self, k): #will fix location on page on revision
         x, y = self._xy(k, self.distances, 
                         self.angle_samples[k], self.angle_samples[k+1]) 
@@ -583,23 +557,6 @@ simplex.GraphLine(FB, edge_table, vertex_table,
 simplex.GraphLine(FB, edge_table, vertex_table, 
                       num_samples=2, connect=False)
 \end{minted}
-\end{frame}
-
-\section{Conclusion}
-\begin{frame}{Summary}
-    \begin{itemize}
-        \item structure preserving maps from data to visual representation:
-            \begin{itemize}
-                \item data and graphics have equivalent continuity
-                \item properties are equivariant under monoid actions
-            \end{itemize}  
-        \item fiber bundles with a schema are structure rich abstractions of 
-            \begin{itemize}
-                \item topologically complex heterogenous data 
-                \item target display spaces
-            \end{itemize}
-        \item model can be iteratively integrated into existing Matplotlib architecture
-    \end{itemize}
 \end{frame}
 
 \begin{frame}{Proposed Dissertation}
@@ -721,6 +678,20 @@ simplex.GraphLine(FB, edge_table, vertex_table,
         \label{eq:mark}
     \end{equation}
     such that the glyph is differentiable, in keeping with Ziemkiewicz and Kosara's description of a glyph\cite{ziemkiewiczEmbeddingInformationVisualization2009}.
+\end{frame}
+\begin{frame}[fragile]{Fiber Bundle}
+    \begin{minted}{python}
+    @dataclass
+    class FiberBundle:
+    """
+    Attributes
+    ----------
+    K: {'tables': []}
+    F: {variable name: type}
+    """
+        K: dict 
+        F: dict
+    \end{minted}
 \end{frame}
 
 \begin{frame}[fragile]{GraphLine Data Model}
