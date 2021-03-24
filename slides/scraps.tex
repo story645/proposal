@@ -8,6 +8,16 @@
     \end{figure}
 \end{frame}
 
+\begin{frame}{Visualizations are (mostly) evaluated on equivariance}
+    \begin{description}
+        \item[Expressiveness] structure preserving mappings from data to graphic (Mackinlay \cite{mackinlayAutomatingDesignGraphical1986})
+        \item[Effectiveness] design choices made in deference to perceptual saliency (Mackinlay \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014})
+        \item[Naturalness] easier to understand when properties match (Norman \cite{norman_things_smart})
+        \item[Graphical Integrity] graphs show \textbf{only} the data (Tufte \cite{tufteVisualDisplayQuantitative2001})
+    \end{description}
+\end{frame}
+
+
 \begin{frame}{Visualization is commutative maps}
 
     \pause
@@ -16,14 +26,34 @@
         \textbf{Tam: Add topology and make it functional}
     \end{center}
 \end{frame}
-\begin{frame}{Evaluating visualizations}
+
+\begin{frame}{Models describe composition}
     \begin{description}
-        \item[Expressiveness] structure preserving mappings from data to graphic (Mackinlay \cite{mackinlayAutomatingDesignGraphical1986})
-        \item[Effectiveness] design choices made in deference to perceptual saliency \cite (Mackinlay \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014})
-        \item[Naturalness] easier to understand when properties match (Norman \cite{norman_things_smart})
-        \item[Graphical Integrity] graphs show \textbf{only} the data (Tufte \cite{tufteVisualDisplayQuantitative2001})
+        \item[language model] APT, GoG: syntax, semantics, and grammar of graphics (Mackinlay, Wilkenson  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005})
+        \item[functional dependencies] constrained maps between data and visual representation(Sugibuchi \cite{sugibuchiFramwork2009}) 
+        \item[category theory] the semiotics of visualization are commutative (Vickers \cite{vickersUnderstandingViz2013})
+        \item[algebraic process] data ($\alpha$) and viz ($\omega$) transforms are symmetric (Kindlmann and Scheidegger \cite{kindlmannAlgebraicProcessVisualization2014})
+        \begin{columns}
+            \column{.5\textwidth}
+       
+            \begin{description}
+                \item[D] data 
+                \item[R] representations
+                \item[V] visualizations
+            \end{description}
+            \column{.5\textwidth}
+            \begin{equation*}
+                \begin{tikzcd}[ampersand replacement=\&]
+                    D \arrow[d, "\alpha"'] \arrow[r, "r_1"] \& R \arrow[r, "\nu"]  \& V \arrow[d, "\omega"] \\
+                    D \arrow[r, "r_2"']                     \& R \arrow[r, "\nu"'] \& V                    
+                \end{tikzcd}
+                \end{equation*}
+       
+        \end{columns} 
+     
     \end{description}
 \end{frame}
+
 
 \begin{frame}{Mathematical Frameworks for evaluating visualization}
     \begin{enumerate}
@@ -40,3 +70,35 @@
             \end{equation*}
         \end{block}
 \end{frame}
+
+
+\begin{frame}{Structure is encoded in variables and continuity}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/intro/munzner_datatypes.png}
+        \caption{Image is figure 2.8 in Munzner's Visualization Analysis and Design\cite{munznerVisualizationAnalysisDesign2014}}
+    \end{figure}
+    \begin{description}
+        \item[binding] metadata are structural \textit{keys} with associated \textit{values} (Munzner \cite{munznerVisualizationAnalysisDesign2014})] 
+        \item[continuity])
+        \item[variables] Fibers can hold schema like encodings of variables (Spivak \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES})
+    \end{description}
+\end{frame}
+
+
+begin{frame}{Monoid Actions: Permutation}
+    \begin{figure}
+        \includegraphics[width=1\linewidth]{figures/math/monoid_emoji.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Why monoids? partial orders}
+    \begin{figure}
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/monoid_hasse.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/math/monoid_monotone.png}
+            \onslide<3>\includegraphics[width=1\linewidth]{figures/math/monoid_maps.png}
+        \end{overprint}
+    \caption{Inspired by definition 1.59 diagram in Spivak and Fong's An Invitation to Applied Category Theory \cite{fongInvitationAppliedCategory2019}}
+    \end{figure}
+\end{frame}
+
