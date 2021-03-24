@@ -11,6 +11,7 @@
 \usepackage{subcaption} % subfigure float captioning
 
 \usepackage{tabulary}
+\usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
 
@@ -91,9 +92,9 @@
         \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
     \end{figure}
     \begin{enumerate}
-        \item Matplotlib\cite{hunterMatplotlib2DGraphics2007}, 
+        \item Matplotlib\cite{hunterMatplotlib2DGraphics2007} $\rightarrow$Seaborn\cite{waskom2020seaborn}, xarray \cite{hoyer2017xarray} 
         \item D3 \cite{bostockDataDrivenDocuments2011}
-        \item VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}, MayaVi\cite{RamachandranMayaVI2011}, ParaView\cite{ahrens2005paraview}, Titan\cite{brianwylieUnifiedToolkitInformation2009}
+        \item VTK \cite{hanwellVisualizationToolkitVTK2015,geveci2012vtk}(MayaVi\cite{RamachandranMayaVI2011})$\rightarrow$ Titan\cite{brianwylieUnifiedToolkitInformation2009}, ParaView\cite{ahrens2005paraview}
     \end{enumerate}
 \end{frame}
 
@@ -157,13 +158,20 @@
 \begin{frame}{Encode variable types in a schema like fiber \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES}}
     \begin{figure}[H]
         \centering
-        \includegraphics[height=.5\textwidth]{figures/math/fiber.png}
+        \includegraphics[height=.3\textwidth]{figures/math/fiber.png}
         \label{fig:data_fiber_example}
     \end{figure}
-    \begin{block}{Fiber components can be acted on independently}
+    \begin{block}{Monoid actions define the structure on $\dfiber_i$}
         \begin{equation}
             \dfiber = \dfiber_0 \times \ldots \times \dfiber_i \times \ldots \times \dfiber_n
         \end{equation}
+    
+        $\monoid_{i}$ actions (e.g. rotation, partial ordering) 
+        \begin{equation}
+            \bullet: \monoid_i\times \dfiber_i \rightarrow \dfiber_i
+        \end{equation}
+        must be associative and have an identity element. 
+
     \end{block}
 \end{frame}
 
@@ -171,7 +179,6 @@
 \begin{frame}{}
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/base.png}
-        \caption{}
         \label{fig:base_example}
     \end{figure}
     \begin{block}{\dbase\ is an indexing space regardless of components}
@@ -198,44 +205,33 @@
 
 
 \subsection{Graphics}
-\begin{frame}{Graphic Bundle}
-    The graphics bundle is a tuple $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$ defined by the projection map $\pi$
+\begin{frame}{Graphic Bundle $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$}
+    Continuity is preserved via the deformation retraction $\vindex: \gbase\rightarrow\dbase$
     \begin{equation}
         \begin{tikzcd}[ampersand replacement=\&]
-            \gfiber \arrow[r, hook] \& \gtotal \arrow[d, "\pi"'] \\
-                              \& \gbase \arrow[u, "\gsection"', bend right]
-        \end{tikzcd}
-    \end{equation}
-    where \gsection\ is the fully encoded graphic. 
-    \pause
-    \begin{block}{Example: 2D opaque image}
-    The target display is $\gfiber=\reals^5$ with elements 
-    \begin{equation*}
-    (x,\, y,\, r,\, g,\, b) \in \gfiber
-    \end{equation*}
-    returned by \gsection\ such that a graphic has color and 2D position.
-    \end{block}
-
-\end{frame}
-\begin{frame}{Graphic Continuity}
-    The surjective map $\vindex: \gbase \rightarrow \dbase$
-    \begin{equation}
-        \begin{tikzcd}[ampersand replacement=\&]
-            \dtotal \arrow[d, "\pi"'] \& \gtotal \arrow[d, "\pi"'] \\
-            \dbase                   \& \gbase \arrow[l, "\vindex"']
-        \end{tikzcd}
-    \end{equation}
-    goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\dbasepoint$ in data space. 
-\pause
+            F \arrow[r, hook] \& E \arrow[d, "\pi"']              \& D \arrow[r, hook] \& H \arrow[d, "\pi"']                                 \\
+                              \& K \arrow[u, "\tau"', bend right] \&                   \& S \arrow[ll, "\xi"'] \arrow[u, "\rho"', bend right]
+            \end{tikzcd}
+        \end{equation}
+    \gfiber\ is a proxy for the target display, for example $(x,\, y,\, r,\, g,\, b) \in \gfiber$
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
         \label{fig:graphic_retraction_map}
     \end{figure}
 \end{frame}
 
+
 \subsection{Artist}
 \begin{frame}{Topological Equivariant Artist Model}
-The topological artist $\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)$ is sheaf map
+The topological artist is a sheaf map
+\begin{equation}
+\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+\end{equation}
+that carries homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019} 
+\begin{equation}
+\vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
+\end{equation} 
+and is implemented via an intermediate visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$
 \begin{equation}
     \label{eq:artist_diagram}
     \begin{tikzcd}[ampersand replacement=\&]
@@ -243,53 +239,26 @@ The topological artist $\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\
                                               \& \dbase                  \& \gbase \arrow[l, "\vindex"']                                              \&                    
         \end{tikzcd}
 \end{equation}
-that carries homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019} 
-\begin{equation}\huge
-\vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
-\end{equation} 
 \end{frame}
 
-\begin{frame}{Existing models don't have continuity}
+\begin{frame}{Existing models don't have continuity, many evaluative}
         \begin{description}
-            \item[language model] APT, GoG: syntax, semantics, and grammar of graphics (Mackinlay, Wilkenson  \cite{mackinlayAutomatingDesignGraphical1986, mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005})
-            \item[functional dependencies] constrained maps between data and visual representation(Sugibuchi \cite{sugibuchiFramwork2009}) 
-            \item[category theory] data, representation, and understanding are commutative (Vickers \cite{vickersUnderstandingViz2013})
-            \item[algebraic process] data ($\alpha$) and viz ($\omega$) transforms are symmetric (Kindlmann and Scheidegger \cite{kindlmannAlgebraicProcessVisualization2014})
-            \begin{columns}
-                \column{.5\textwidth}
-                \begin{description}
-                    \item[\vtotal] visual components
-                    \item[$\alpha$] \monoid
-                    \item[$\omega$] $\varphi(\monoid)$
-                \end{description}
-                \column{.5\textwidth}
-                \begin{equation*}
-                    \begin{tikzcd}[ampersand replacement=\&]
-                        \dtotal \arrow[d, "\alpha"'] \arrow[r, "r_1"] \& \vtotal \arrow[r, "\nu"]  \& \gtotal \arrow[d, "\omega"] \\
-                        \dtotal \arrow[r, "r_2"']                     \& \vtotal \arrow[r, "\nu"'] \& \gtotal                  
-                    \end{tikzcd}
-                    \end{equation*}
+            \item[algebraic process] data and viz transforms are symmetric \cite{kindlmannAlgebraicProcessVisualization2014}
+            \begin{equation*}
+                \begin{tikzcd}[ampersand replacement=\&]
+                    \dtotal \arrow[d, "m"'] \arrow[r, "r_1"] \& \vtotal \arrow[r, "\nu"]  \& \gtotal \arrow[d, "\varphi(m)"] \\
+                    \dtotal \arrow[r, "r_2"']                     \& \vtotal \arrow[r, "\nu"'] \& \gtotal                  
+                \end{tikzcd}
+            \end{equation*}
+          
+            \item[language] APT and GoG: syntax, semantics, and grammar\\ 
+            \cite{mackinlayAutomatingDesignGraphical1986,mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005}
+            \item[functional dependencies] relationship between components \cite{sugibuchiFramwork2009}
+            \item[category theory]  \textit{understanding} = \textit{read} $\circ$ \textit{render} \cite{vickersUnderstandingVisualizationFormal2013}
            
-            \end{columns} 
-         
         \end{description}
 \end{frame}
-    
 
-
-\begin{frame}{Visual Bundle}
-    The visual bundle is a tuple $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ defined by the projection map $\pi$
-    \begin{equation}
-        \begin{tikzcd}[ampersand replacement=\&]
-            \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
-                              \& \dbase \arrow[u, "\vsection"', bend right]
-        \end{tikzcd}
-    \end{equation}
-    where \vsection\ is the visual variable encoding\cite{bertinIIPropertiesGraphic2011} of the data section \dsection. 
-    \begin{block}{Example: position and color}
-        Given an artist with parameters $\{xpos, ypos, color\}$, a sample visual section \vsection\ could be $\{.5, .5, (255, 20,147)\}$
-    \end{block}
-\end{frame}
 
 \begin{frame}{Visual Channel Encoders}
 We define the visual transformers \vchannel\ on components of the data bundle $\dsection_{i}$
@@ -304,18 +273,19 @@ as the set of equivariant maps with the constraint
 where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of monoid actions. 
 \end{frame}
 
-\begin{frame}{Partial Order Equivariance and Stevens Scales \cite{stevensTheoryScalesMeasurement1946}}
+\begin{frame}{Equivariance: Partial Order \& and Stevens' Scales \cite{stevensTheoryScalesMeasurement1946}}
     \begin{figure}
         \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
     \end{figure}
 
 \begin{table}[H]
-    \begin{tabulary}{\textwidth}{llL}
+    \begin{tabularx}{\textwidth}{|l|l|X|}\toprule
+        \textbf{scale} & \textbf{group} & \textbf{constraint} \\\midrule
         nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
         ordinal &  monotonic & $\text{if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$\\
         interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
-        ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $
-    \end{tabulary}
+        ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\ \bottomrule
+    \end{tabularx}
 \end{table}
 \end{frame}
 
@@ -377,12 +347,12 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
 \end{frame}
 
 \begin{frame}{Assembly Function Factory}
-\begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
-\end{figure}
 \begin{equation}\label{eq:qhat_q_s}
     \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation} 
+\begin{figure}[H]
+    \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
+\end{figure}
 such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
 
@@ -515,7 +485,6 @@ class Categorical:
         # convert value to a color
         return [mcolors.to_rgba(self._mapping[v]) for v in values]
 \end{minted}
-\pause
 That we can test for action equivariance
 \begin{minted}{python}
 def test_nominal(values, encoder):
@@ -677,7 +646,6 @@ simplex.GraphLine(FB, edge_table, vertex_table,
         \item[associative binary operator] $\ast:\monoid \times \monoid\rightarrow \monoid$
         \item[identity element] $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. 
     \end{description}
-    \pause
     \begin{block}{left monoid action}
     A set \dfiber\ with an action\cite{nlab:action} $\bullet: \monoid\times \dfiber \rightarrow \dfiber$ with the properties:
         \begin{align*}

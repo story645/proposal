@@ -13,24 +13,24 @@ V0: Monday 15 latest
 - [x] pare content down into template
 - [x] copy edit so is coherant
 
-V0.1: Friday 19 
-- [ ] adjust abstract based on content
-- [ ] clean up figures
-- [ ] clean up words
-- [ ] clean up references
+V0.05: Sunday 21, 5:00PM PST
+- [x] abstract due
 
-V0.2: Sunday 21, 5:00PM PST
-- [] abstract due
+V0.1: Monday 22
+- [x] adjust abstract based on content
+- [x] clean up figures
+- [x] clean up words
+- [x] clean up references
 
-V0.3 Thursday 25:
+V0.3 Tuesday 30:
 - [] revisions based on feedback comments
+- [] revisions based on exam feedback 
 
 V0.4 Wed 31, 5:00PM PST
-- [] revisions based on exam feedback 
 - [] submit paper
 
 ### Slides
-V0.1 Monday 22
+V0.1 Monday 23
 - [] add timeline/gant chart
 - [] make clearer that this is math + implementation 
 - [] incorporate figures changed for paper, w/ different font sizes/weights  
