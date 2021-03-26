@@ -18,6 +18,7 @@
 \usepackage{graphicx}
 
 \usepackage{appendixnumberbeamer} 
+\usepackage{comment}
 \usepackage{minted}
 \setminted[python]{fontsize=\scriptsize, 
                    linenos,
@@ -61,32 +62,35 @@
 \section{Introduction}
 
 \begin{frame}{Visualizations are structure preserving maps}
+    %add arrow between data and vizualizations
+    % we're focused on building good arrows 
     \begin{figure}
         \includegraphics[width=\textwidth]{figures/intro/viz_same.png}
     \end{figure}
+    \pause 
     \begin{description}
         \item[equivariance] properties of data and visual encoding match
+    \pause 
         \item[continuity] connectivity of data and visual encoding match
-        \item[composibility] structure preserved by individual components is preserved in combined components
     \end{description}
 \end{frame}
 
-
-\begin{frame}{Tools are tuned to continuity \cite{HeerSoftware2006}}
-\begin{table}
-    %\renewcommand{\arraystretch}{2}
-    \begin{tabulary}{\textwidth}{|L|l|l|}\toprule
-        \includegraphics[width=.24\textwidth]{figures/intro/table.png} & \includegraphics[width=.3\textwidth]{figures/intro/landsat.png} & \includegraphics[width=.33\textwidth]{figures/math/graph.png} \\
-        ggplot\cite{wickhamGgplot2ElegantGraphics2016a}  & ImageJ\cite{schneiderNIHImageImageJ2012}& Gephi\cite{bastianGephiOpenSource2009}\\
-        Vega\cite{satyanarayanDeclarativeInteractionDesign2014} & ImagePlot\cite{studiesCulturevisImageplot2021} & Graphviz\cite{ellsonGraphvizOpenSource2002}\\
-        Altair\cite{vanderplasAltairInteractiveStatistical2018}& Napari\cite{nicholas_sofroniew_2021_4533308} & Networkx\cite{HagbergExploringNetwork2008}\\
-         Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007} & &\\
-         \bottomrule
-    \end{tabulary}
-\end{table}
+\begin{frame}{Domain specific libraries assume data structure\cite{HeerSoftware2006}}
+    \begin{table}
+        %\renewcommand{\arraystretch}{2}
+        \begin{tabulary}{\textwidth}{|L|l|l|}\toprule
+            \includegraphics[width=.24\textwidth]{figures/intro/table.png} & \includegraphics[width=.3\textwidth]{figures/intro/landsat.png} & \includegraphics[width=.33\textwidth]{figures/math/graph.png} \\
+            ggplot\cite{wickhamGgplot2ElegantGraphics2016a}  & ImageJ\cite{schneiderNIHImageImageJ2012}& Gephi\cite{bastianGephiOpenSource2009}\\
+            Vega\cite{satyanarayanDeclarativeInteractionDesign2014} & ImagePlot\cite{studiesCulturevisImageplot2021} & Graphviz\cite{ellsonGraphvizOpenSource2002}\\
+            Altair\cite{vanderplasAltairInteractiveStatistical2018}& Napari\cite{nicholas_sofroniew_2021_4533308} & Networkx\cite{HagbergExploringNetwork2008}\\
+             Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007} & &\\
+             \bottomrule
+        \end{tabulary}
+    \end{table}
 \end{frame}
 
-\begin{frame}{Visualizations are tuned to continuinity\cite{toryRethinkingVisualizationHighlevel2004}}
+
+\begin{frame}{General purpose libraries can't\cite{toryRethinkingVisualizationHighlevel2004}}
     \begin{figure}
         \includegraphics[height=.5\textheight]{figures/intro/dataset_diagram.png}
         \caption{Data Representation, MayaVi 4.7.2 docs\cite{DataRepresentationMayavi}}
@@ -98,98 +102,112 @@
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{Tools are evaluated on the structure they preserve}
+\begin{frame}{Best practices in visualization design}
     \begin{description}
-        \item[Naturalness] easier to understand when properties match \cite{norman_things_smart}
-        \item[Graphical Integrity] graphs show \textbf{only} the data \cite{tufteVisualDisplayQuantitative2001}
-        \item[Expressiveness] structure preserving mappings from data to graphic \cite{mackinlayAutomatingDesignGraphical1986}
-        \item[Effectiveness] design choices made in deference to perceptual saliency \cite{clevelandResearchStatisticalGraphics1987,clevelandGraphicalPerceptionTheory1984,chambersGraphicalMethodsData1983a, munznerVisualizationAnalysisDesign2014}
+        \item[Expressiveness] structure preserving mappings\cite{mackinlayAutomatingDesignGraphical1986}
+        \pause
+        \item[Naturalness] easier to understand when properties match\cite{norman_things_smart}
+        \pause
+       \item[Graphical Integrity] graphs show \textbf{only} the data\cite{tufteVisualDisplayQuantitative2001}
     \end{description}
 \end{frame}
-
 
 \subsection{Contributions}
 \begin{frame}{Contributions}
     \begin{description}
-        \item[Topological] topology preserving relationship between data and graphic via continuous maps
-        \item[Equivariant] property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
-        \item[Artist] functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
-        \item [Model] prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model
+        \item[Topological] continuity  
+        \item[Equivariant] monoid action 
+        \item[Artist] Matplotlib $\textit{artist}: \textit{data} \rightarrow \textit{graphic}$ 
+        \item [Model] 
     \end{description}
 \end{frame}
+
 
 \section{Mathematical Framework}
 
 \begin{frame}{Topological Equivariant Artist Model}
     \centering
     An artist $\mathscr{\vartist}$ is an equivariant map 
-    \begin{equation}\Huge
+    \begin{equation*}\Huge
         \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
-    \end{equation}
+    \end{equation*}
     from data $\mathscr{\dtotal}$ space to graphic $\mathscr{\gtotal}$ space. 
-
 \end{frame}
 
-\subsection{Data Model}
 
+\subsection{Data Model}
 \begin{frame}{Model data as a fiber bundle \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}}
     A fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the map $\pi$
-    \begin{equation}
+    \begin{equation*}
         \label{eq:fiber_bundle}
         \begin{tikzcd}[ampersand replacement=\&]
             \dfiber \arrow[r, hook] \& \dtotal \arrow[r, "\pi"] \& \dbase
         \end{tikzcd}
-    \end{equation}
+    \end{equation*}
     \begin{description}
-        \item[base space \dbase] continuity
-        \item[fiber space \dfiber] variable characteristics
+        \pause
         \item[total space \dtotal] dataset topology
+        \pause
+        \item[fiber space \dfiber] variable schema
+        \pause
+        \item[base space \dbase] continuity
     \end{description}
 \end{frame}
-
 
 \begin{frame}{Encode variable types in a schema like fiber \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES}}
     \begin{figure}[H]
         \centering
-        \includegraphics[height=.3\textwidth]{figures/math/fiber.png}
-        \label{fig:data_fiber_example}
+        \includegraphics[width=\textwidth]{figures/math/fiber.png}
+    \label{fig:data_fiber_example}
     \end{figure}
-    \begin{block}{Monoid actions define the structure on $\dfiber_i$}
-        \begin{equation}
-            \dfiber = \dfiber_0 \times \ldots \times \dfiber_i \times \ldots \times \dfiber_n
-        \end{equation}
-    
-        $\monoid_{i}$ actions (e.g. rotation, partial ordering) 
-        \begin{equation}
-            \bullet: \monoid_i\times \dfiber_i \rightarrow \dfiber_i
-        \end{equation}
-        must be associative and have an identity element. 
+\end{frame}
 
-    \end{block}
+\begin{frame}{Structure of components of \dfiber}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height=.3\textheight]{figures/math/fiber.png}
+    \label{fig:data_fiber_example}
+    \end{figure}
+        \begin{equation*}
+            \dfiber = \dfiber_0 \times \ldots \times \dfiber_i \times \ldots \times \dfiber_n
+        \end{equation*}
+        \pause
+        Monoid actions $\monoid_{i}$ (e.g. rotation, partial ordering) define the structure on $\dfiber_i$
+        \begin{equation*}
+            \bullet: \monoid_i\times \dfiber_i \rightarrow \dfiber_i
+        \end{equation*}
+        They must be associative and have an identity element. 
 \end{frame}
 
 
-\begin{frame}{Structural \textit{keys} with associated \textit{values} \cite{munznerVisualizationAnalysisDesign2014}}
+\begin{frame}{\dbase\ is an indexing space}
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/base.png}
-        \label{fig:base_example}
+    \label{fig:base_example}
     \end{figure}
-    
-    \begin{block}{\dbase\ is an indexing space independent of component semantics}
-        \begin{equation}
-            \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
-        \end{equation}
-    \end{block}
 \end{frame}
+
+\begin{frame}{Structural \textit{keys} with associated \textit{values} \cite{munznerVisualizationAnalysisDesign2014}}
+\begin{figure}
+    \includegraphics[width=1\textwidth]{figures/intro/munzner_datatypes.png}
+    \caption{Figure 2.8 in Munzner's Visualization Analysis and Design\cite{munznerVisualizationAnalysisDesign2014}}
+\end{figure}
+\pause
+\begin{figure}[H]
+    \includegraphics[width=.5\textheight]{figures/math/base.png}
+    \label{fig:base_example}
+\end{figure}
+\end{frame}
+
 
 \begin{frame}{Data are sections \dsection\ on \dtotal}
     For any fiber bundle, there exists a map
-    \begin{equation}
+    \begin{equation*}
         \begin{tikzcd}[ampersand replacement=\&]
             \dfiber \arrow[r, hook] \& \dtotal \arrow[d, "\pi"'] \\
                               \& \dbase \arrow[u, "\dsection"', bend right]
         \end{tikzcd}
-    \end{equation}
+    \end{equation*}
      s.t. $\pi(\dsection(\dbasepoint)) = \dbasepoint$. $\Gamma(\dtotal)$ is the set of all global sections.
      \begin{figure}[H]
         \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
@@ -199,79 +217,60 @@
 
 
 \subsection{Graphics}
-\begin{frame}{Graphic Bundle $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$}
-    Continuity is preserved via the deformation retraction $\vindex: \gbase\rightarrow\dbase$
-    \begin{equation}
+\begin{frame}{Graphic Bundle $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$} % watch dr explaination
+    Continuity is preserved via the many \gbasepoint\ to one \dbasepoint\ map $\vindex: \gbase\rightarrow\dbase$
+    \begin{equation*} 
         \begin{tikzcd}[ampersand replacement=\&]
             F \arrow[r, hook] \& E \arrow[d, "\pi"']              \& D \arrow[r, hook] \& H \arrow[d, "\pi"']                                 \\
                               \& K \arrow[u, "\tau"', bend right] \&                   \& S \arrow[ll, "\xi"'] \arrow[u, "\rho"', bend right]
             \end{tikzcd}
-        \end{equation}
+        \end{equation*}
+    \pause
     \gfiber\ is a proxy for the target display, for example $(x,\, y,\, r,\, g,\, b) \in \gfiber$
-    \begin{figure}[H]
+    \pause
+    \begin{figure}[H] %%%bring up one at a time
         \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
         \label{fig:graphic_retraction_map}
     \end{figure}
 \end{frame}
 
-
-\subsection{Artist}
-\begin{frame}{Topological Equivariant Artist Model}
-The topological artist is a sheaf map
-\begin{equation}
-\vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
-\end{equation}
-that carries homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019} 
-\begin{equation}
-\vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
-\end{equation} 
-and is implemented via an intermediate visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$
-\begin{equation}
+\subsection{Artist}%formalize the structure
+\begin{frame}{Visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$}
+\begin{equation*}
     \label{eq:artist_diagram}
     \begin{tikzcd}[ampersand replacement=\&]
         \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] \& \vtotal \arrow[d, "\pi"] \& \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] \& \gtotal \arrow[ld, "\pi"] \\
                                               \& \dbase                  \& \gbase \arrow[l, "\vindex"']                                              \&                    
         \end{tikzcd}
-\end{equation}
+\end{equation*}
+\pause
+\begin{equation*}
+    \mathcal{A}:\mathcal{E}\rightarrow\mathcal{E}
+\end{equation*}
+\pause
+The topological artist is a sheaf map
+\begin{equation*}
+    \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+\end{equation*}
 \end{frame}
 
-\begin{frame}{Existing models don't have continuity, many evaluative}
-        \begin{description}
-            \item[algebraic process] data and viz transforms are symmetric \cite{kindlmannAlgebraicProcessVisualization2014}
-            \begin{equation*}
-                \begin{tikzcd}[ampersand replacement=\&]
-                    \dtotal \arrow[d, "m"'] \arrow[r, "r_1"] \& \vtotal \arrow[r, "\nu"]  \& \gtotal \arrow[d, "\varphi(m)"] \\
-                    \dtotal \arrow[r, "r_2"']                     \& \vtotal \arrow[r, "\nu"'] \& \gtotal                  
-                \end{tikzcd}
-            \end{equation*}
-          
-            \item[language] APT and GoG: syntax, semantics, and grammar\\ 
-            \cite{mackinlayAutomatingDesignGraphical1986,mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005}
-            \item[functional dependencies] relationship between components \cite{sugibuchiFramwork2009}
-            \item[category theory]  \textit{understanding} = \textit{read} $\circ$ \textit{render} \cite{vickersUnderstandingVisualizationFormal2013}
-           
-        \end{description}
-\end{frame}
-
-
-\begin{frame}{Visual Channel Encoders}
-We define the visual transformers \vchannel\ on components of the data bundle $\dsection_{i}$
-\begin{equation}
-    \label{eq:nu_expanded}
-    \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
-\end{equation}
-as the set of equivariant maps with the constraint 
-\begin{equation}
-    \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
-\end{equation} 
-where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of monoid actions. 
-\end{frame}
-
-\begin{frame}{Equivariance: Partial Order \& and Stevens' Scales \cite{stevensTheoryScalesMeasurement1946}}
+\begin{frame}{Visualization Assembly Function}
     \begin{figure}
-        \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
+        \includegraphics[width=\textwidth]{figures/math/path_of_q.png}
     \end{figure}
+    \pause
+    \begin{equation*}
+        \label{eq:nu_expanded}
+        \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
+    \end{equation*}
+    \pause
+    \begin{equation*}
+        Q = \nu \circ \tau
+    \end{equation*}
+\end{frame}
 
+
+\begin{frame}{Stevens' Scales \cite{stevensTheoryScalesMeasurement1946}}
 \begin{table}[H]
     \begin{tabularx}{\textwidth}{|l|l|X|}\toprule
         \textbf{scale} & \textbf{group} & \textbf{constraint} \\\midrule
@@ -283,25 +282,19 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
 \end{table}
 \end{frame}
 
-
-\begin{frame}{Visualization Assembly Function}
-    \begin{figure}
-        \includegraphics[width=\textwidth]{figures/math/path_of_q.png}
+\begin{frame}{Equivariance: Partial Order}
+    \begin{figure} %break out steps/reveal
+        \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
     \end{figure}
 \end{frame}
+
 
 \begin{frame}{Visualization Equivariance}
     \begin{figure}[H]
         \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
     \end{figure}
-    \begin{prop}
-        If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
-        \begin{equation}
-        \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
-        \label{eq:math:artist:q}
-        \end{equation}
-        then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. If and only if \vmark\ satistfies \autoref{eq:math:artist:q}, we can state that the transformed graphic $\gsection^{\prime}=\vmark(m\circ \vsection)$ is equivariant to a monoid action applied on \vmark\ with input $\vsection \in \vmark^{-1}(\gsection)$ that must generate valid \gsection. 
-    \end{prop}
+
+    %put equation w/ rho, label rho, rho'
 \end{frame}
 
 \begin{frame}{Scatter: $\vmark(xpos, ypos)(\alpha, \beta)$}
@@ -319,82 +312,53 @@ where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of mo
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/line.png}
     \end{figure}
-        \begin{equation*}
-            \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2},\; 
-            \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
-        \end{equation*}
-    \begin{align*}
-     x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
-     y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
-    \end{align*}
 \end{frame}
 
 \begin{frame}{Image $\vmark(xpos, ypos, color)$}
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/image.png}
     \end{figure}
-    \begin{align*}
-        R &= R(\vindex(\alpha, \beta))\\
-        G &= G(\vindex(\alpha, \beta))\\
-        B &= B(\vindex(\alpha, \beta))
-    \end{align*}
 \end{frame}
 
-\begin{frame}{Assembly Function Factory}
-\begin{equation}\label{eq:qhat_q_s}
-    \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
-\end{equation} 
+\begin{frame}{Build \vmark over \dbase:\vmarkd}
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
 \end{figure}
+\begin{equation*}\label{eq:qhat_q_s}
+    \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\end{equation*} 
 such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
 
-\begin{frame}{Composition of artists}
+\begin{frame}{Composition of artists} 
+    % make disjointed figure or scatter + line
     Given the family of artists $(\dtotal_i: i\in I)$ on the same image
-    \begin{equation}
+    \begin{equation*}
         + \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}
-    \end{equation}
+    \end{equation*}
     the + operator defines a simple composition of artists. 
-
-    When artists share a base space 
-    \begin{equation}
-        \dbase_2 \hookrightarrow \dbase_1
-    \end{equation}
-    a composition operator can be defined such that the the artists can be considered to be acting on different components of the same section. 
 \end{frame}
 
-\begin{frame}{Equivalance class of artists}
-    An approximation of the equivalence class of artists $\vartist^{\prime}$
-    \begin{equation}
-    \vartist \in \vartist^{\prime}: \vartist_{1} \equiv \vartist_{2}
-    \end{equation}
-    roughly treats two artists as equivalent if they 
-    \begin{itemize}
-        \item act on the same visual bundle \vtotal
-        \item have the same assembly function \vmark 
-        \item have the same continuity map \vindex 
-    \end{itemize}
-\end{frame}
+
 \section{Prototype}
-
 \begin{frame}{TEAM driven rearchitecture of Matplotlib}
     \begin{itemize}
-        \item fiber bundle with schema is a structure rich abstraction
         \begin{itemize}
             \item topologically complex heterogenous data 
             \item target display spaces
         \end{itemize}
-        \item structure preserving maps from data to visual:
+        \pause
+        \item structure preserving maps from data to visual
             \begin{itemize}
                 \item data and graphics have equivalent continuity
                 \item properties are equivariant under monoid actions
             \end{itemize}  
+        \pause
         \item composable into complex visualizations
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Artists: Scatter \& Line}
+\begin{frame}[fragile]{How do we make things with this model?}
     \begin{figure}[H]
         \begin{subfigure}{0.49\textwidth}
             \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
@@ -420,7 +384,7 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
 
 \subsection{Visual Transforms}
-\begin{frame}[fragile]{Visual Transformations}
+\begin{frame}[fragile]{How do we implement \vchannel?}
     \begin{minted}{python}
     cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
     transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
@@ -429,119 +393,78 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
                     's':{'name': None , 
                         'encoder': lambda _: itertools.repeat(.02)}}
     \end{minted}
-        \begin{itemize}
-            \item \mintinline{python}{lambda x: x} is identity \vchannel\
-            \item \mintinline{python}|{'name':None}| map into \vfiber\ without corresponding \dsection\
-            \item \mintinline{python}{color.Categorical} is custom \vchannel
-        \end{itemize}
-    \end{frame}
-    
-    \begin{frame}[fragile]{Complex \vchannel}
-    \begin{minted}{python}
-    class Categorical:
-        def __init__(self, mapping):
-            # check that the conversion is to valid colors
-            assert(mcolors.is_color_like(color) for color in mapping.values())
-            self._mapping = mapping
-    
-        def __call__(self, value):
-            # convert value to a color
-            return [mcolors.to_rgba(self._mapping[v]) for v in values]
-    \end{minted}
-    That we can test for action equivariance
-    \begin{minted}{python}
-    def test_nominal(values, encoder):
-        m1 = list(zip(values, encoder(values)))
-        random.shuffle(values)
-        m2 = list(zip(values, encoder(values)))
-        assert sorted(m1) == sorted(m2)
-    \end{minted}
+    \begin{itemize}
+        \item \mintinline{python}{lambda x: x} is identity \vchannel\
+        \item \mintinline{python}|{'name':None}| map into \vfiber\ without corresponding \dsection\
+        \item \mintinline{python}{color.Categorical} is custom \vchannel
+    \end{itemize}
 \end{frame}
+    
 
 \subsection{Artist}
-\begin{frame}[fragile]{Artist}
+\begin{frame}[fragile]{Artist} %% rewrite w/ letters in talk
     \begin{minted}{python}
         class ArtistClass(matplotlib.artist.Artist):
-            def __init__(self, data, transforms, *args, **kwargs):
-                # properties that are specific to the graphic
-                self.data = data 
-                self.transforms = transforms
+            def __init__(self, E, V, *args, **kwargs):
+                # set properties that are specific to the artist
+                # stash the input E and V
                 super().__init__(*args, **kwargs)
         
-            def assemble(self, **args):
+            def qhat(self, **args):
                 # set the properties of the graphic
         
             def draw(self, renderer):
-                # returns K, indexed on fiber then key 
-                view = self.data.view(self.axes) 
+                # returns tau, indexed on fiber then key 
+                tau = self.E.view(self.axes) 
                 # visual channel encoding applied fiberwise 
-                visual = {p: t['encoder'](view[t['name']])
-                          for p, t in self.transforms.items()}
-                self.assemble(**visual)
+                visual = {p_i: nu_i(tau_i)
+                          for p_i, nu_i, tau)i 
+                          in zip(self.V, tau)}
+                self.qhat(**visual)
                 # pass configurations off to the renderer
                 super().draw(renderer)
         \end{minted}
 \end{frame}
 
 \begin{frame}[fragile]{Artists: Scatter \& Line}
+%%keep the signatures, comments, change names to math
 \begin{minted}{python}
-class Point(mcollections.Collection):
-    def assemble(self, x, y, s, facecolors='C0' ):
-        # construct geometries of the circle glyphs in visual coordinates
-        self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
-                    for (xi, yi, si) in zip(x, y, s)] 
-        # set attributes of glyphs, these are vectorized 
-        # circles and facecolors are lists of the same size
-        self.set_facecolors(facecolors)
+    class Point(mcollections.Collection):
+        def assemble(self, x, y, s, facecolors='C0' ):
+            # construct geometries of the circle glyphs in visual coordinates
+            self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
+                        for (xi, yi, si) in zip(x, y, s)] 
+            # set attributes of glyphs, these are vectorized 
+            # circles and facecolors are lists of the same size
+            self.set_facecolors(facecolors)
 
-class Line(mcollections.LineCollection):
-    def assemble(self, x, y, color='C0'):
-        #assemble line marks as set of segments 
-        segments = [np.vstack((vx, vy)).T for vx, vy in zip(x, y)]
-        self.set_segments(segments)
-        self.set_color(color)
-\end{minted}
+    class Line(mcollections.LineCollection):
+        def assemble(self, x, y, color='C0'):
+            # assemble line marks as set of segments 
+            segments = [np.vstack((vx, vy)).T for vx, vy in zip(x, y)]
+            self.set_segments(segments)
+            self.set_color(color)
+    \end{minted}
 \end{frame}
+
 \subsection{Data}
 \begin{frame}[fragile]{Continuity}
-\begin{minted}{python}
-class VertexSimplex: #maybe change name to something else
-    """Fiberbundle is consistent across all sections
-    """
+    \begin{minted}{python}
+class PointData: 
+    # Fiberbundle is consistent across all sections
     FB = FiberBundle({'tables': ['vertex']},  
-            {'v1': float, 'v2': str, 'v3': float})
-    def __init__(self, sid = 45, size=1000, max_key=10**10):
-        # create random list of keys
+        {'v1': float, 'v2': str, 'v3': float})
     def tau(self, k):
-        # e1 is sampled from F1, e2 from F2, etc...
-        return (k, (e1, e2, e3, e4))
+        return # tau evaluated at one point k
 
-class EdgeSimplex: 
-    FB = FiberBundle({'tables': ['vertex','edge']},
-                     {'x' : float, 'y':  float, 'color':mtypes.Color()}})
-    def tau(self, k): #will fix location on page on revision
-        x, y = self._xy(k, self.distances, 
-                        self.angle_samples[k], self.angle_samples[k+1]) 
-        color = self._color(k) 
-        return (k, (x, y, color))
-\end{minted}
+class LineData: 
+    FB = FiberBundle({'tables': ['edge']},
+                {'x' : float, 'y':  float, 'color':mtypes.Color()})
+    def tau(self, k): 
+        return # tau evaluated on interval k
+    \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{View}
-\begin{minted}{python}
-def view(self, axes):
-    table = defaultdict(list)
-    for k in self.keys:
-        table['index'].append(k)
-        for (name, value) in zip(self.FB.fiber.keys(), self.tau(k)[1]):
-            table[name].append(value)
-    return table
-\end{minted}
-\begin{description}
-    \item [\mintinline{python}{VertexSimplex}] (name, value), value is scaler
-    \item [\mintinline{python}{EdgeSimplex}]  (name, value), value is [x0, ..., xn]
-\end{description}
-\end{frame}
 \begin{frame}[fragile]{Same Artist, Different Data Configurations}
     \begin{figure}[H]
         \begin{subfigure}{0.49\textwidth}
@@ -551,15 +474,15 @@ def view(self, axes):
             \includegraphics[width=\textwidth]{figures/code/lined_1.png}
         \end{subfigure}
     \end{figure}
-\begin{minted}{Python}
-simplex.GraphLine(FB, edge_table, vertex_table, 
-                      connect=True)
-simplex.GraphLine(FB, edge_table, vertex_table, 
-                      num_samples=2, connect=False)
+\begin{minted}{python}
+LineData(FB, edge_table, vertex_table, connect=True)
+LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
 \end{minted}
 \end{frame}
 
 \begin{frame}{Proposed Dissertation}
+% math + prototypes, organize it
+% papers + contributions to matplotlib
 \begin{itemize}
     \item expansion of the mathematical framework to include worked out simple and complex addition
     \item formalization of definition of equivalance class \vartisteq
@@ -577,150 +500,7 @@ simplex.GraphLine(FB, edge_table, vertex_table,
 \printbibliography
 \end{frame}
 \appendix 
-\begin{frame}{Fiber is all possible values a variable can be \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES}}
-    Given a space of all possible values \ftotal\
-    \begin{equation}
-        \label{eq:data_types}
-        \begin{tikzcd}[ampersand replacement=\&]
-            \fttype \arrow[r] \arrow[d, "\pi_{\fsection}"'] \& \ftotal \arrow[d, "\pi"] \\
-            \fnames \arrow[r, "\fsection"']                  \& \ftypes       
-        \end{tikzcd}
-    \end{equation}
-    a fiber component is the restricted space $\ftotal_{\fsection(\fname)}$. 
-    \begin{equation}
-        \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
-    \end{equation}
-    \begin{description}
-        \item[\ftypes] data types of the variables in the dataset 
-        \item[\ftotal] disjoint union of all values of type $\ftype \in \ftypes$ 
-        \item[\fnames] variable names, $\fname \in \fnames$
-        \item[\fttype] \ftotal\ restricted to the data type of a named variable   
-    \end{description}
-\end{frame}
-\begin{frame}{Monoid actions}
-    A monoid \monoid\ is a set with
-    \begin{description}
-        \item[associative binary operator] $\ast:\monoid \times \monoid\rightarrow \monoid$
-        \item[identity element] $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. 
-    \end{description}
-    \begin{block}{left monoid action}
-    A set \dfiber\ with an action\cite{nlab:action} $\bullet: \monoid\times \dfiber \rightarrow \dfiber$ with the properties:
-        \begin{align*}
-            \textbf{associativity}\;& \text{for all } f,g \in \monoid \text{ and } x\in \dfiber,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-            \textbf{identity}\;& \text{for all } x\in \dfiber, e\in \monoid,\,  e\bullet x = x 
-        \end{align*}
-    \end{block}
-\end{frame}
-\begin{frame}{Keeping track of sections with sheafs}
-    Restriction maps of a sheaf describe how local $\iota^*\dsection$ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}.
-    
-    \begin{equation}
-        \label{eq:sheaf}
-        \begin{tikzcd}[ampersand replacement=\&]
-            \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             \& \dtotal \arrow[d, "\pi"']                  \\
-            U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] \& \dbase \arrow[u, "\dsection"', bend right]
-        \end{tikzcd}
-    \end{equation}
-    The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$.
-\end{frame}
-
-\begin{frame}{Rendering: Define a Pixel}
-    \begin{columns}
-        \column{0.5\textwidth}
-        Given a pixel
-        \begin{equation}
-        p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]
-        \end{equation}
-        the inverse map of the bounding box 
-        \begin{equation}
-        \gbase_{p} ={\gsection_{xy}}^{-1}(p)
-        \end{equation}
-        is a region $\gbase_p \subset \gbase$ such that 
-        \begin{align}
-            \scriptstyle r_p &= \scriptstyle \iint\limits_{S_p} \rho_r(s)ds^{2}\\
-            \scriptstyle g_p &= \scriptstyle \iint\limits_{S_p} \rho_g(s)ds^{2}\\
-            \scriptstyle  b_p &= \scriptstyle \iint\limits_{S_p} \rho_b(s)ds^{2}
-        \end{align}
-        yields the color of the pixel. 
-        \column{0.5\textwidth}
-        \begin{figure}[H]
-            \includegraphics[width=\textwidth]{figures/math/render.png}
-        \end{figure}
-    \end{columns}
-\end{frame}
-\begin{frame}{\vfiber\ Components}
-    
-\begin{table}[H]
-    \renewcommand{\arraystretch}{2}
-    \begin{tabulary}{\textwidth}{|l|L|l|}\hline
-     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i}) \subset \vfiber_{i}}$  \\ \hline                                              
-    position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
-    size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
-    shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
-    color                       & color, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
-    \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
-                                & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
-    \end{tabulary}
-    \label{tab:mpl_visual_variable_fiber}
-\end{table}
-\end{frame}
-
-\begin{frame}{Glyph}
-    The glyph is the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$ where the path connected components $\dbasepath \subset \dbase$ are defined 
-    \begin{equation}
-    \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
-    \end{equation}
-    such that the  path $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1] and $\gbase_{\dbasepathpoint}$ is the region
-    \begin{equation}
-        \begin{tikzcd}[ampersand replacement=\&]
-            \gtotal \arrow[r, shift left] \& \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] \& \& \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
-            \end{tikzcd}
-        \label{eq:mark}
-    \end{equation}
-    such that the glyph is differentiable, in keeping with Ziemkiewicz and Kosara's description of a glyph\cite{ziemkiewiczEmbeddingInformationVisualization2009}.
-\end{frame}
-\begin{frame}[fragile]{Fiber Bundle}
-    \begin{minted}{python}
-    @dataclass
-    class FiberBundle:
-    """
-    Attributes
-    ----------
-    K: {'tables': []}
-    F: {variable name: type}
-    """
-        K: dict 
-        F: dict
-    \end{minted}
-\end{frame}
-
-\begin{frame}[fragile]{GraphLine Data Model}
-\begin{minted}{python}
-class GraphLine:
-    def __init__(self, FB, edge_table, vertex_table, num_samples=1000,
-                        connect=False):
-        #set args as attributes and generate distance
-        if connect: # test connectivity if edges are continuous
-            assert edge_table.keys() == self.FB.F.keys()
-            assert is_continuous(vertex_table)
-
-    def tau(self, k):
-        # evaluates functions defined in edge table
-        return(k, (self.edges[c][k](self.distances) 
-                        for c in self.FB.F.keys()))
-
-    def view(self, axes):
-        # walk the edge_vertex table to return the edge function
-        table = defaultdict(list)
-        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), 
-                                            key=lambda v:v[1][0]):
-            table['index'].append(i)
-            # same as view for line, returns nested list
-            for (name, value) in zip(self.FB.F.keys(), self.tau(i)[1]):
-                table[name].append(value)
-        return table
-\end{minted}
-\end{frame}
+\subsection{Appendix}
 
 \end{document}
 
