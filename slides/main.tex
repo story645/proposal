@@ -105,9 +105,9 @@
     \begin{description}
         \item[Expressiveness] structure preserving mappings\cite{mackinlayAutomatingDesignGraphical1986}
         \pause
+        \item[Graphical Integrity] graphs show \textbf{only} the data\cite{tufteVisualDisplayQuantitative2001}
+        \pause 
         \item[Naturalness] easier to understand when properties match\cite{norman_things_smart}
-        \pause
-       \item[Graphical Integrity] graphs show \textbf{only} the data\cite{tufteVisualDisplayQuantitative2001}
     \end{description}
 \end{frame}
 
@@ -127,7 +127,7 @@
 \begin{frame}{Topological Equivariant Artist Model}
     \centering
     An artist $\mathscr{\vartist}$ is an equivariant map 
-    \begin{equation*}\Huge
+    \begin{equation*}\huge
         \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
     \end{equation*}
     from data $\mathscr{\dtotal}$ space to graphic $\mathscr{\gtotal}$ space. 
@@ -145,9 +145,9 @@
     \end{equation*}
     \begin{description}
         \pause
-        \item[total space \dtotal] dataset topology
+        \item[total space \dtotal] topology
         \pause
-        \item[fiber space \dfiber] variable schema
+        \item[fiber space \dfiber] schema
         \pause
         \item[base space \dbase] continuity
     \end{description}
@@ -175,7 +175,7 @@
         \begin{equation*}
             \bullet: \monoid_i\times \dfiber_i \rightarrow \dfiber_i
         \end{equation*}
-        They must be associative and have an identity element. 
+        where $\bullet$ is associative and has an identity action. 
 \end{frame}
 
 
@@ -233,8 +233,12 @@
     \end{figure}
 \end{frame}
 
-\subsection{Artist}%formalize the structure
+\subsection{Artist}
 \begin{frame}{Visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$}
+    \begin{equation*}
+        \mathcal{A}:\mathcal{E}\rightarrow\mathcal{H}
+    \end{equation*}
+\pause
 \begin{equation*}
     \label{eq:artist_diagram}
     \begin{tikzcd}[ampersand replacement=\&]
@@ -243,11 +247,6 @@
         \end{tikzcd}
 \end{equation*}
 \pause
-\begin{equation*}
-    \mathcal{A}:\mathcal{E}\rightarrow\mathcal{E}
-\end{equation*}
-\pause
-The topological artist is a sheaf map
 \begin{equation*}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation*}
@@ -269,7 +268,7 @@ The topological artist is a sheaf map
 \end{frame}
 
 
-\begin{frame}{Stevens' Scales \cite{stevensTheoryScalesMeasurement1946}}
+\begin{frame}{Group Equivariance: Stevens' Scales \cite{stevensTheoryScalesMeasurement1946}}
 \begin{table}[H]
     \begin{tabularx}{\textwidth}{|l|l|X|}\toprule
         \textbf{scale} & \textbf{group} & \textbf{constraint} \\\midrule
@@ -281,7 +280,7 @@ The topological artist is a sheaf map
 \end{table}
 \end{frame}
 
-\begin{frame}{Equivariance: Partial Order}
+\begin{frame}{Monoid Equivariance: Partial Orders}
     \begin{figure} %break out steps/reveal
         \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
     \end{figure}
@@ -292,19 +291,16 @@ The topological artist is a sheaf map
     \begin{figure}[H]
         \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
     \end{figure}
-
-    %put equation w/ rho, label rho, rho'
+    \begin{equation*}
+        \vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
+    \end{equation*}
+  
 \end{frame}
 
 \begin{frame}{Scatter: $\vmark(xpos, ypos)(\alpha, \beta)$}
     \begin{figure}[H]
         \includegraphics[width=1\textwidth]{figures/math/scatter.png}
-    \end{figure}
-    
-    \begin{align*}
-        x &= size *\alpha \cos(\beta) + xpos \\
-        y &= size *\alpha \sin(\beta) + ypos
-    \end{align*}    
+    \end{figure}   
 \end{frame}
 
 \begin{frame}{Line: $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ }
@@ -319,23 +315,19 @@ The topological artist is a sheaf map
     \end{figure}
 \end{frame}
 
-\begin{frame}{Build \vmark over \dbase:\vmarkd}
+\begin{frame}{Build \vmark\ over \dbase:\vmarkd}
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
 \end{figure}
 \begin{equation*}\label{eq:qhat_q_s}
     \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation*} 
-such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \end{frame}
 
-\begin{frame}{Composition of artists} 
-    % make disjointed figure or scatter + line
-    Given the family of artists $(\dtotal_i: i\in I)$ on the same image
-    \begin{equation*}
-        + \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}
-    \end{equation*}
-    the + operator defines a simple composition of artists. 
+\begin{frame}{Composition of artists $+ \coloneqq \sqcup \dtotal_{i}$} 
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/math/exploding_artist.png}
+    \end{figure}
 \end{frame}
 
 
@@ -426,24 +418,16 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
         \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Artists: Scatter \& Line}
-%%keep the signatures, comments, change names to math
+\begin{frame}[fragile]{Artists: Scatter \& Line \vmarkd}
 \begin{minted}{python}
     class Point(mcollections.Collection):
         def assemble(self, x, y, s, facecolors='C0' ):
             # construct geometries of the circle glyphs in visual coordinates
-            self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
-                        for (xi, yi, si) in zip(x, y, s)] 
-            # set attributes of glyphs, these are vectorized 
-            # circles and facecolors are lists of the same size
-            self.set_facecolors(facecolors)
+            # set attributes of glyphs
 
     class Line(mcollections.LineCollection):
         def assemble(self, x, y, color='C0'):
             # assemble line marks as set of segments 
-            segments = [np.vstack((vx, vy)).T for vx, vy in zip(x, y)]
-            self.set_segments(segments)
-            self.set_color(color)
     \end{minted}
 \end{frame}
 
@@ -480,19 +464,10 @@ LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
 \end{minted}
 \end{frame}
 
-\begin{frame}{Proposed Dissertation}
-% math + prototypes, organize it
-% papers + contributions to matplotlib
-\begin{itemize}
-    \item expansion of the mathematical framework to include worked out simple and complex addition
-    \item formalization of definition of equivalance class \vartisteq
-    \item implementation of artist with explicit \vindex\
-    \item specification of interactive visualization
-    \item mathematical formulation of a graphic with axes labeling
-    \item implementation of new prototype artists that do not inherit from Matplotlib artists
-    \item provisional mathematics and implementation of user level composite artists
-    \item proof of concept domain specific user facing library 
-\end{itemize}
+\begin{frame}{Proposed Work}
+\begin{figure}
+    \includegraphics[width=1\textwidth]{figures/intro/gantt.png}
+\end{figure}
 \end{frame}
 
 \section{References}
