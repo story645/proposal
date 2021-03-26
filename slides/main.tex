@@ -58,7 +58,6 @@
     Committee: Dr. Robert Haralick, Dr. Lev Manovich, Dr. Huy Vo\\
     External Member: Dr. Marcus Hanwell
 \end{frame}
-
 \section{Introduction}
 
 \begin{frame}{Visualizations are structure preserving maps}
@@ -343,18 +342,19 @@ such \gbasepoint\ can be factored out when $\vpreimg = \gbasepoint$
 \section{Prototype}
 \begin{frame}{TEAM driven rearchitecture of Matplotlib}
     \begin{itemize}
+        \item complex visualizations
+        \pause 
+        \item structure preserving maps from data to visual
+        \begin{itemize}
+            \item data and graphics have equivalent continuity
+            \item properties are equivariant under monoid actions
+        \end{itemize}  
+        \pause
+        \item fiber bundles are an abstraction
         \begin{itemize}
             \item topologically complex heterogenous data 
             \item target display spaces
         \end{itemize}
-        \pause
-        \item structure preserving maps from data to visual
-            \begin{itemize}
-                \item data and graphics have equivalent continuity
-                \item properties are equivariant under monoid actions
-            \end{itemize}  
-        \pause
-        \item composable into complex visualizations
     \end{itemize}
 \end{frame}
 
@@ -500,7 +500,289 @@ LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
 \printbibliography
 \end{frame}
 \appendix 
+
 \subsection{Appendix}
+
+\begin{frame}{Mathematical Models of Vizualization}
+    \begin{description}
+        \item[algebraic process] data and viz transforms are symmetric \cite{kindlmannAlgebraicProcessVisualization2014}
+        \begin{equation*}
+            \begin{tikzcd}[ampersand replacement=\&]
+                \dtotal \arrow[d, "m"'] \arrow[r, "\nu"] \& \vtotal \arrow[r, "Q"]  \& \gtotal \arrow[d, "\varphi(m)"] \\
+                \dtotal \arrow[r, "\nu"']                     \& \vtotal \arrow[r, "Q"'] \& \gtotal                  
+            \end{tikzcd}
+        \end{equation*}
+      
+        \item[language] APT and GoG: syntax, semantics, and grammar\\ 
+        \cite{mackinlayAutomatingDesignGraphical1986,mackinlayAUTOMATICDESIGNGRAPHICAL1987,wilkinsonGrammarGraphics2005}
+        \item[functional dependencies] relationship between components \cite{sugibuchiFramwork2009}
+        \item[category theory]  \textit{understanding} = \textit{read} $\circ$ \textit{render} \cite{vickersUnderstandingVisualizationFormal2013}    
+    \end{description}
+\end{frame}
+
+\begin{frame}{Fiber is all possible values a variable can be \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES}}
+    Given a space of all possible values \ftotal\
+    \begin{equation*}
+        \label{eq:data_types}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \fttype \arrow[r] \arrow[d, "\pi_{\fsection}"'] \& \ftotal \arrow[d, "\pi"] \\
+            \fnames \arrow[r, "\fsection"']                  \& \ftypes       
+        \end{tikzcd}
+    \end{equation*}
+    a fiber component is the restricted space $\ftotal_{\fsection(\fname)}$. 
+    \begin{equation*}
+        \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
+    \end{equation*}
+    \begin{description}
+        \item[\ftypes] data types of the variables in the dataset 
+        \item[\ftotal] disjoint union of all values of type $\ftype \in \ftypes$ 
+        \item[\fnames] variable names, $\fname \in \fnames$
+        \item[\fttype] \ftotal\ restricted to the data type of a named variable   
+    \end{description}
+\end{frame}
+
+\begin{frame}{Monoid actions}
+    A monoid \monoid\ is a set with
+    \begin{description}
+        \item[associative binary operator] $\ast:\monoid \times \monoid\rightarrow \monoid$
+        \item[identity element] $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. 
+    \end{description}
+    \begin{block}{left monoid action}
+    A set \dfiber\ with an action\cite{nlab:action} $\bullet: \monoid\times \dfiber \rightarrow \dfiber$ with the properties:
+        \begin{align*}
+            \textbf{associativity}\;& \text{for all } f,g \in \monoid \text{ and } x\in \dfiber,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
+            \textbf{identity}\;& \text{for all } x\in \dfiber, e\in \monoid,\,  e\bullet x = x 
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Keeping track of sections with sheafs}
+    Restriction maps of a sheaf describe how local $\iota^*\dsection$ can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}
+    \begin{equation*}
+        \label{eq:sheaf}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             \& \dtotal \arrow[d, "\pi"']                  \\
+            U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] \& \dbase \arrow[u, "\dsection"', bend right]
+        \end{tikzcd}
+    \end{equation*}
+    The inclusion map $\iota: U \rightarrow \dbase$ pulls \dtotal\ over $U$ such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$.
+\end{frame}
+
+\begin{frame}{Rendering: Define a Pixel}
+    \begin{columns}
+        \column{0.5\textwidth}
+        Given a pixel
+        \begin{equation*}
+        p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]
+        \end{equation*}
+        the inverse map of the bounding box 
+        \begin{equation*}
+        \gbase_{p} ={\gsection_{xy}}^{-1}(p)
+        \end{equation*}
+        is a region $\gbase_p \subset \gbase$ such that 
+        \begin{align}
+            \scriptstyle r_p &= \scriptstyle \iint\limits_{S_p} \rho_r(s)ds^{2}\\
+            \scriptstyle g_p &= \scriptstyle \iint\limits_{S_p} \rho_g(s)ds^{2}\\
+            \scriptstyle  b_p &= \scriptstyle \iint\limits_{S_p} \rho_b(s)ds^{2}
+        \end{align}
+        yields the color of the pixel. 
+        \column{0.5\textwidth}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth]{figures/math/render.png}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{$\mathcal{A}:\mathcal{E}\rightarrow\mathcal{E}$}
+    The topological artist is a sheaf map
+    \begin{equation*}
+    \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+    \end{equation*}
+    that carries homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ 
+    \cite{cegarraCohomologyMonoidsOperators2019} 
+    \begin{equation*}
+    \vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{Visual Channel Encoders}
+    We define the visual transformers \vchannel\ on components of the data bundle $\dsection_{i}$
+    \begin{equation*}
+        \label{eq:nu_expanded}
+        \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
+    \end{equation*}
+    as the set of equivariant maps with the constraint 
+    \begin{equation*}
+        \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
+    \end{equation*} 
+    where $\varphi:\monoid\rightarrow \monoid^{\prime}$ carries a homomorphism of monoid actions. 
+\end{frame}
+
+\begin{frame}{\vfiber\ Components}    
+\begin{table}[H]
+    \renewcommand{\arraystretch}{2}
+    \begin{tabulary}{\textwidth}{|l|L|l|}\hline
+     $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i}) \subset \vfiber_{i}}$  \\ \hline                                              
+    position                    & x, y, z, theta, r                                                          & $\mathbb{R}$   \\ \hline
+    size                        & linewidth, markersize                                            & $\mathbb{R}^{+}$   \\ \hline
+    shape                       & markerstyle                                                      & $\{f_{0}, \ldots, f_{n}\}$ \\ \hline
+    color                       & color, facecolor, markerfacecolor, edgecolor  & $\mathbb{R}^{4}$ \\ \hline
+    \multirow{2}{*}{texture}    & hatch                                                            & $\mathbb{N}^{10}$\\\cline{2-3}
+                                & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
+    \end{tabulary}
+    \label{tab:mpl_visual_variable_fiber}
+\end{table}
+\end{frame}
+
+\begin{frame}{Glyph}
+    The glyph is the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$ where the path connected components $\dbasepath \subset \dbase$ are defined 
+    \begin{equation*}
+    \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
+    \end{equation*}
+    such that the  path $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1] and $\gbase_{\dbasepathpoint}$ is the region
+    \begin{equation*}
+        \begin{tikzcd}[ampersand replacement=\&]
+            \gtotal \arrow[r, shift left] \& \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] \& \& \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
+            \end{tikzcd}
+        \label{eq:mark}
+    \end{equation*}
+    such that the glyph is differentiable, in keeping with Ziemkiewicz and Kosara's description of a glyph\cite{ziemkiewiczEmbeddingInformationVisualization2009}.
+\end{frame}
+
+\begin{frame}{Artist Equivalance class}
+    When artists share a base space 
+    \begin{equation*}
+        \dbase_2 \hookrightarrow \dbase_1
+    \end{equation*}
+    a composition operator can be defined such that the the artists can be considered to be acting on different components of the same section. 
+\end{frame}
+
+\begin{frame}[fragile]{Complex \vchannel}
+    \begin{minted}{python}
+    class Categorical:
+        def __init__(self, mapping):
+            # check that the conversion is to valid colors
+            assert(mcolors.is_color_like(color) for color in mapping.values())
+            self._mapping = mapping
+    
+        def __call__(self, value):
+            # convert value to a color
+            return [mcolors.to_rgba(self._mapping[v]) for v in values]
+    \end{minted}
+    That we can test for action equivariance
+    \begin{minted}{python}
+    def test_nominal(values, encoder):
+        m1 = list(zip(values, encoder(values)))
+        random.shuffle(values)
+        m2 = list(zip(values, encoder(values)))
+        assert sorted(m1) == sorted(m2)
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Artist}
+    \begin{minted}{python}
+        class ArtistClass(matplotlib.artist.Artist):
+            def __init__(self, data, transforms, *args, **kwargs):
+                # properties that are specific to the graphic
+                self.data = data 
+                self.transforms = transforms
+                super().__init__(*args, **kwargs)
+        
+            def assemble(self, **args):
+                # set the properties of the graphic
+        
+            def draw(self, renderer):
+                # returns K, indexed on fiber then key 
+                view = self.data.view(self.axes) 
+                # visual channel encoding applied fiberwise 
+                visual = {p: t['encoder'](view[t['name']])
+                          for p, t in self.transforms.items()}
+                self.assemble(**visual)
+                # pass configurations off to the renderer
+                super().draw(renderer)
+        \end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Artists: Scatter \& Line}
+\begin{minted}{python}
+class Point(mcollections.Collection):
+    def assemble(self, x, y, s, facecolors='C0' ):
+        # construct geometries of the circle glyphs in visual coordinates
+        self._paths = [mpath.Path.circle(center=(xi,yi), radius=si) 
+                    for (xi, yi, si) in zip(x, y, s)] 
+        # set attributes of glyphs, these are vectorized 
+        # circles and facecolors are lists of the same size
+        self.set_facecolors(facecolors)
+
+class Line(mcollections.LineCollection):
+    def assemble(self, x, y, color='C0'):
+        #assemble line marks as set of segments 
+        segments = [np.vstack((vx, vy)).T for vx, vy in zip(x, y)]
+        self.set_segments(segments)
+        self.set_color(color)
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{View}
+\begin{minted}{python}
+def view(self, axes):
+    table = defaultdict(list)
+    for k in self.keys:
+        table['index'].append(k)
+        for (name, value) in zip(self.FB.fiber.keys(), self.tau(k)[1]):
+            table[name].append(value)
+    return table
+\end{minted}
+\begin{description}
+    \item [\mintinline{python}{VertexSimplex}] (name, value), value is scaler
+    \item [\mintinline{python}{EdgeSimplex}]  (name, value), value is [x0, ..., xn]
+\end{description}
+\end{frame}
+
+\begin{frame}[fragile]{Fiber Bundle}
+    \begin{minted}{python}
+    @dataclass
+    class FiberBundle:
+    """
+    Attributes
+    ----------
+    K: {'tables': []}
+    F: {variable name: type}
+    """
+        K: dict 
+        F: dict
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{GraphLine Data Model}
+\begin{minted}{python}
+class GraphLine:
+    def __init__(self, FB, edge_table, vertex_table, num_samples=1000,
+                        connect=False):
+        #set args as attributes and generate distance
+        if connect: # test connectivity if edges are continuous
+            assert edge_table.keys() == self.FB.F.keys()
+            assert is_continuous(vertex_table)
+
+    def tau(self, k):
+        # evaluates functions defined in edge table
+        return(k, (self.edges[c][k](self.distances) 
+                        for c in self.FB.F.keys()))
+
+    def view(self, axes):
+        # walk the edge_vertex table to return the edge function
+        table = defaultdict(list)
+        for (i, (start, end)) in sorted(zip(self.ids, self.vertices), 
+                                            key=lambda v:v[1][0]):
+            table['index'].append(i)
+            # same as view for line, returns nested list
+            for (name, value) in zip(self.FB.F.keys(), self.tau(i)[1]):
+                table[name].append(value)
+        return table
+\end{minted}
+\end{frame}
 
 \end{document}
 
