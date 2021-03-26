@@ -1,5 +1,5 @@
-\documentclass[xcolor={dvipsnames}, handout]{beamer}
-%\documentclass[xcolor={dvipsnames}]{beamer}
+%\documentclass[xcolor={dvipsnames}, handout]{beamer}
+\documentclass[xcolor={dvipsnames}]{beamer}
 %\usepackage{amsmath,amsfonts,amssymb,pxfonts,eulervm,xspace}
 \usepackage{amsmath, amsfonts, amssymb, mathtools, eulervm, xspace}
 \usepackage{bm}
@@ -14,6 +14,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{array}
 
 \usepackage{graphicx}
 
@@ -61,30 +62,34 @@
 \section{Introduction}
 
 \begin{frame}{Visualizations are structure preserving maps}
-    %add arrow between data and vizualizations
-    % we're focused on building good arrows 
     \begin{figure}
-        \includegraphics[width=\textwidth]{figures/intro/viz_same.png}
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/intro/table_only.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/intro/map.png}
+            \onslide<3|handout:0>\includegraphics[width=1\linewidth]{figures/intro/time.png}
+            \onslide<4->\includegraphics[width=1\linewidth]{figures/intro/artist.png}
+        \end{overprint}
     \end{figure}
     \pause 
     \begin{description}
-        \item[equivariance] properties of data and visual encoding match
-    \pause 
-        \item[continuity] connectivity of data and visual encoding match
+        \uncover<5->{\item[equivariance] properties of data and visual encoding match}
+        \uncover<6>{\item[continuity] connectivity of data and visual encoding match}
     \end{description}
 \end{frame}
 
 \begin{frame}{Domain specific libraries assume data structure\cite{HeerSoftware2006}}
     \begin{table}
         %\renewcommand{\arraystretch}{2}
-        \begin{tabulary}{\textwidth}{|L|l|l|}\toprule
+        %
+        \begin{tabular}{>{\onslide<1->}l>{\onslide<2->}l>{\onslide<3->}l}
             \includegraphics[width=.24\textwidth]{figures/intro/table.png} & \includegraphics[width=.3\textwidth]{figures/intro/landsat.png} & \includegraphics[width=.33\textwidth]{figures/math/graph.png} \\
             ggplot\cite{wickhamGgplot2ElegantGraphics2016a}  & ImageJ\cite{schneiderNIHImageImageJ2012}& Gephi\cite{bastianGephiOpenSource2009}\\
             Vega\cite{satyanarayanDeclarativeInteractionDesign2014} & ImagePlot\cite{studiesCulturevisImageplot2021} & Graphviz\cite{ellsonGraphvizOpenSource2002}\\
             Altair\cite{vanderplasAltairInteractiveStatistical2018}& Napari\cite{nicholas_sofroniew_2021_4533308} & Networkx\cite{HagbergExploringNetwork2008}\\
-             Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007} & &\\
-             \bottomrule
-        \end{tabulary}
+             Tableau \cite{StoltePolaris2002}& &\\
+            \cite{hanrahanVizQL2006,MackinlayShowme2007}&&\\
+           
+        \end{tabular}
     \end{table}
 \end{frame}
 
@@ -127,9 +132,12 @@
 \begin{frame}{Topological Equivariant Artist Model}
     \centering
     An artist $\mathscr{\vartist}$ is an equivariant map 
-    \begin{equation*}\huge
+    \begingroup 
+    \Huge
+    \begin{equation*}
         \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
     \end{equation*}
+    \endgroup
     from data $\mathscr{\dtotal}$ space to graphic $\mathscr{\gtotal}$ space. 
 \end{frame}
 
@@ -161,7 +169,7 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Structure of components of \dfiber}
+\begin{frame}{Monoids are the structure of the components of \dfiber}
     \begin{figure}[H]
         \centering
         \includegraphics[height=.3\textheight]{figures/math/fiber.png}
@@ -186,12 +194,11 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Structural \textit{keys} with associated \textit{values} \cite{munznerVisualizationAnalysisDesign2014}}
+\begin{frame}{\dbase\ is the space of \textit{keys} into data in \dtotal \cite{munznerVisualizationAnalysisDesign2014}}
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/intro/munzner_datatypes.png}
     \caption{Figure 2.8 in Munzner's Visualization Analysis and Design\cite{munznerVisualizationAnalysisDesign2014}}
 \end{figure}
-\pause
 \begin{figure}[H]
     \includegraphics[width=.5\textheight]{figures/math/base.png}
     \label{fig:base_example}
@@ -217,19 +224,31 @@
 
 \subsection{Graphics}
 \begin{frame}{Graphic Bundle $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$} % watch dr explaination
-    Continuity is preserved via the many \gbasepoint\ to one \dbasepoint\ map $\vindex: \gbase\rightarrow\dbase$
+    \only<2->{Continuity is preserved via the many \gbasepoint\ to one \dbasepoint\ map $\vindex: \gbase\rightarrow\dbase$}
+
+    \only<1>{
+        \begin{equation*} 
+            \begin{tikzcd}[ampersand replacement=\&]
+                F \arrow[r, hook] \& E \arrow[d, "\pi"']              \& D \arrow[r, hook] \& H \arrow[d, "\pi"']              \\
+                                  \& K \arrow[u, "\tau"', bend right] \&                   \& S \arrow[u, "\rho"', bend right]
+                \end{tikzcd}
+            \end{equation*}}
+    \only<2->{
     \begin{equation*} 
         \begin{tikzcd}[ampersand replacement=\&]
             F \arrow[r, hook] \& E \arrow[d, "\pi"']              \& D \arrow[r, hook] \& H \arrow[d, "\pi"']                                 \\
                               \& K \arrow[u, "\tau"', bend right] \&                   \& S \arrow[ll, "\xi"'] \arrow[u, "\rho"', bend right]
             \end{tikzcd}
-        \end{equation*}
-    \pause
-    \gfiber\ is a proxy for the target display, for example $(x,\, y,\, r,\, g,\, b) \in \gfiber$
+        \end{equation*}}
+    \only<3->{   
+    \gfiber\ is a proxy for the target display, for example $(x,\, y,\, r,\, g,\, b) \in \gfiber$}
     \pause
     \begin{figure}[H] %%%bring up one at a time
-        \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-        \label{fig:graphic_retraction_map}
+        \begin{overprint}
+            \onslide<4|handout:0>\includegraphics[width=1\linewidth]{figures/math/scatter_s.png}
+            \onslide<5|handout:0>\includegraphics[width=1\linewidth]{figures/math/line_s.png}
+            \onslide<6>\includegraphics[width=1\linewidth]{figures/math/image_s.png}
+        \end{overprint}
     \end{figure}
 \end{frame}
 
@@ -281,8 +300,12 @@
 \end{frame}
 
 \begin{frame}{Monoid Equivariance: Partial Orders}
-    \begin{figure} %break out steps/reveal
-        \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
+    \begin{figure} 
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/partial.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/math/partial_invalid.png}
+            \onslide<3>\includegraphics[width=1\linewidth]{figures/math/partial_fixed.png}
+        \end{overprint}
     \end{figure}
 \end{frame}
 
@@ -299,14 +322,20 @@
 
 \begin{frame}{Scatter: $\vmark(xpos, ypos)(\alpha, \beta)$}
     \begin{figure}[H]
-        \includegraphics[width=1\textwidth]{figures/math/scatter.png}
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/scatter_q.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/math/scatter_with_s.png}
+        \end{overprint}
     \end{figure}   
 \end{frame}
 
 \begin{frame}{Line: $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ }
     \begin{figure}[H]
-        \includegraphics[width=1\textwidth]{figures/math/line.png}
-    \end{figure}
+        \begin{overprint}
+            \onslide<1|handout:0>\includegraphics[width=1\linewidth]{figures/math/line_q.png}
+            \onslide<2|handout:0>\includegraphics[width=1\linewidth]{figures/math/line_with_s.png}
+        \end{overprint}
+    \end{figure}   
 \end{frame}
 
 \begin{frame}{Image $\vmark(xpos, ypos, color)$}
@@ -315,7 +344,7 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Build \vmark\ over \dbase:\vmarkd}
+\begin{frame}{Build \vmark\ over \dbase: \vmarkd}
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
 \end{figure}
@@ -350,7 +379,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{How do we make things with this model?}
+\begin{frame}[fragile]{How do we make things?}
     \begin{figure}[H]
         \begin{subfigure}{0.49\textwidth}
             \includegraphics[width=\textwidth]{figures/code/scatter_0.png}
@@ -376,7 +405,7 @@
 \end{frame}
 
 \subsection{Visual Transforms}
-\begin{frame}[fragile]{How do we implement \vchannel?}
+\begin{frame}[fragile]{ \vchannel}
     \begin{minted}{python}
     cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
     transforms = {'x': {'name': 'v4', 'encoder': lambda x: x},
@@ -394,7 +423,7 @@
     
 
 \subsection{Artist}
-\begin{frame}[fragile]{Artist} %% rewrite w/ letters in talk
+\begin{frame}[fragile]{\vartist} %% rewrite w/ letters in talk
     \begin{minted}{python}
         class ArtistClass(matplotlib.artist.Artist):
             def __init__(self, E, V, *args, **kwargs):
@@ -418,7 +447,7 @@
         \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Artists: Scatter \& Line \vmarkd}
+\begin{frame}[fragile]{\vmarkd}
 \begin{minted}{python}
     class Point(mcollections.Collection):
         def assemble(self, x, y, s, facecolors='C0' ):
@@ -449,7 +478,7 @@ class LineData:
     \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Same Artist, Different Data Configurations}
+\begin{frame}[fragile]{Same Artist, Different \dtotal}
     \begin{figure}[H]
         \begin{subfigure}{0.49\textwidth}
             \includegraphics[width=\textwidth]{figures/code/linec_1.png}
@@ -468,6 +497,16 @@ LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
 \begin{figure}
     \includegraphics[width=1\textwidth]{figures/intro/gantt.png}
 \end{figure}
+\end{frame}
+
+\begin{frame}{Acknowledgments}
+    \begin{itemize}
+        \item Professor Michael Grossberg and Dr. Thomas Caswell
+        \item Professor Haralick, Professor Vo, Professor Manovich, Dr. Hanwell
+        \item Matplotlib development team 
+        \item CZI EOSS (grant number 2019-207333) from the Chan Zuckerberg Initiative DAF, an advised fund of Silicon Valley Community Foundation
+    \end{itemize}
+    
 \end{frame}
 
 \section{References}
@@ -607,6 +646,11 @@ LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
     \end{tabulary}
     \label{tab:mpl_visual_variable_fiber}
 \end{table}
+\end{frame}
+\begin{frame}{Monoid Equivariance: Partial Orders}
+    \begin{figure} %break out steps/reveal
+        \includegraphics[width=1\textwidth]{figures/math/monoid_equivariant.png}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Glyph}
