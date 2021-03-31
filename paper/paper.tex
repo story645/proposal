@@ -119,7 +119,7 @@
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{This work presents a functional model of the structure-preserving maps from data to visual representation to guide the development of visualization libraries.  Our model, which we call the  topological equivariant artist model (TEAM), provides a means to express the constraints of preserving the data continuity in the graphic and faithfully translating the properties of the data variables into visual variables. We formalize these transformations as actions on sections of topological fiber bundles, which are mathematical structures that allow us to encode continuity as a base space, variable properties as a fiber space, and data as binding maps, called sections, between the base and fiber spaces. This abstraction allows us to generalize to any type of data structure, rather than assuming, for example, that the data is a relational table, image, data cube, or network-graph. Moreover, we extend the fiber bundle abstraction to the graphic objects that the data is mapped to. By doing so, we can track the preservation of data continuity in terms of continuous maps from the base space of the data bundle to the base space of the graphic bundle. Equivariant maps on the fiber spaces preserve the structure of the variables; this structure can be represented in terms of monoid actions, which are a generalization of the mathematical structure of Stevens’ theory of measurement scales. We briefly sketch that these transformations have an algebraic structure which lets us build complex components for visualization from simple ones. We demonstrate the utility of this model through case studies of a scatter plot, line plot, and image. To demonstrate the feasibility of the model, we implement a prototype of a scatter and line plot in the context of the Matplotlib Python visualization library.  We propose that the functional architecture derived from a TEAM based design specification can provide a basis for a more consistent API and better modularity, extendability, scaling and support for concurrency} 
+\abstract{This work presents a functional model of the structure-preserving maps from data to visual representation to guide the development of visualization libraries. Our model, which we call the  topological equivariant artist model (TEAM), provides a means to express the constraints of preserving the data continuity in the graphic and faithfully translating the properties of the data variables into visual variables. We formalize these transformations as actions on sections of topological fiber bundles, which are mathematical structures that allow us to encode continuity as a base space, variable properties as a fiber space, and data as binding maps, called sections, between the base and fiber spaces. This abstraction allows us to generalize to any type of data structure, rather than assuming, for example, that the data is a relational table, image, data cube, or network-graph. Moreover, we extend the fiber bundle abstraction to the graphic objects that the data is mapped to. By doing so, we can track the preservation of data continuity in terms of continuous maps from the base space of the data bundle to the base space of the graphic bundle. Equivariant maps on the fiber spaces preserve the structure of the variables; this structure can be represented in terms of monoid actions, which are a generalization of the mathematical structure of Stevens’ theory of measurement scales. We briefly sketch that these transformations have an algebraic structure which lets us build complex components for visualization from simple ones. We demonstrate the utility of this model through case studies of a scatter plot, line plot, and image. To demonstrate the feasibility of the model, we implement a prototype of a scatter and line plot in the context of the Matplotlib Python visualization library.  We propose that the functional architecture derived from a TEAM based design specification can provide a basis for a more consistent API and better modularity, extendability, scaling and support for concurrency} 
 
 % end of abstract
 
@@ -167,20 +167,36 @@
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
 \maketitle
-The underlying structure and semantics of visualization are by definition reflected in visual representations \cite{friendlyBriefHistoryData2008}, whether through direct mappings from data into visual elements or via figurative representations that have meaning due to their similarity to external concepts \cite{byrneAcquiredCodesMeaning2016}. Visualization tools allow practioners to automate these transformations, but most visualization tools are either explicitly tuned to specific continuity \cite{HeerSoftware2006} or define every interface relative to its expected data structure. The former approach is often too restrictive for a general purpose tool, while the latter often results in a library that can feel inconsistent or disjointed. Motivated by the challenge of rearchitecturing a general purpose visualization library, we developed the Topological Equivariant Artist Model (TEAM) to express the constraints of preserving data continuity and translating data properties into a visual representation. The contribution of TEAM is 
+%% this is still a mess, come back to it
+Models for describing visualizations and visualization tools are deeply tied to to the domains in which the visualizations are made \cite{friendlyBriefHistoryData2006a,pousmanCasualInformation2007}, and these tools are often made from building block libraries \cite{wongsuphasawatNavigatingWideWorld2021} such as the Python visualization library Matplotlib. Because building block libraries often support so many domains, the API can grow organically in ways that are incoherant and brittle. To adapt to modern domain library development needs, this paper presents a functional model of the constraints building block software needs to satisfy so that a visualization, however it is specified in the library built out of these blocks, is guaranteed to be a faithful representation of the data. Our model, which we call the  topological equivariant artist model (TEAM), provides a means to express the constraints of preserving the data continuity in the graphic and faithfully translating the properties of the data variables into visual variables.
+
+ 
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/continuity.png}
+  \caption{Continuity describes how the records in the dataset, in this case the rows in the table, are connected to each other. The line plot is an invalid visual representation of the table because it implies that the records are connected to each other in some way. On the other hand the bar plot is valid because it preserves the records as independent data points.}
+  \label{fig:intro:continuity}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/equivariance.png}
+  \caption{Equivariance means that transformations on the data side and on the visual side are equal. In this example, the temperature is doubled via the arrows representing the doubling action, and the plot of the temperature is doubled via the arrows on the visual side.}
+  \label{fig:intro:equivariance}
+\end{figure}
+
+Motivated by the challenge of rearchitecturing a general purpose visualization library, we developed the Topological Equivariant Artist Model (TEAM) to express the constraints of preserving data continuity and translating data properties into a visual representation. The contribution of TEAM is 
 \begin{enumerate}
   \item topology preserving relationship between data and graphic via continuous maps
-  \item property preservation from data component to visual representation as equivariant maps that carry a homomorphism of monoid actions
+  \item property preservation from data component to visual representation as monoid action equivariant maps
   \item functional oriented visualization tool architecture built on the mathematical model to demonstrate the utility of the model
   \item prototype of the architecture built on Matplotlib's infrastructure to demonstrate the feasibility of the model.
 \end{enumerate}
 
 \section{Related Work}
-The components of a visual representation were first codified by Bertin\cite{bertinSemiologyGraphicsDiagrams2011a}, and the notion that the properties of the data and visual representation match is the basis of most evaluations of visualization. Expressiveness, as defined by Mackinlay \cite{mackinlayAUTOMATICDESIGNGRAPHICAL1987, mackinlayAutomatingDesignGraphical1986} is a measure of how much of the structure any map can encode. A fully expressive component is one that is equivariant since it has preserved all the structure in the data. Models of visualization evaluate this equivariance and how elements built in the model can be composed to build more complex visualizations. Mackinlay's \textit{A Presentation Tool} (APT) introduced the notion of visualizations having syntax and semantics \cite{mackinlayAutomatingDesignGraphical1986} and Wilkenson described the grammar of this language \cite{wilkinsonGrammarGraphics2005}. This grammar oriented approach allows users to describe how to compose visual elements into a graphical design \cite{wongsuphasawatNavigatingWideWorld2021}, while we are proposing a framework for building those elements. This same limitation is explicitly stated in the functional dependency model of visualization developed by Sugibuchi\cite{sugibuchiFramwork2009} and evident in Vickers' category theory oriented framework in which semiotics are commutative. The algebraic process model by Kindlmann and Scheideggar proposes that the data and visualization transformations are commutative; while similar to our framework, it is missing any explicit mention of continuity.
+%
+% My best paraphrasing of the main idea would be that this paper takes the ideas of going from data to graphic along with some important constraints that people generally agree are important and formalizes them into a topological model, then shows how that model can map into a concrete implementation. The important part of this model is that it models the data sufficiently abstractly that it's able to work with basically any form or type of data. The sentence starting at line 489 seems to be the big "aha" to me, basically saying something like "if you implement things such that the code equivalents of these terms are separated in some specific way, then you get these important formally-describable properties". Is that right? If so, I'm left very curious about what alternative (possibly already-existing?) Artist implementations there might be that seem to work, but don't decompose things in this way, and therefore don't have these important properties. Or maybe the existing implementations do have these properties but aren't general enough? I know there are space constraints etc but if there was some way of showing how the current Matplotlib artists work and how they fall short of this model, that would be very enlightening I think.
 
-Much of visualization algorithm design is oriented around continuity, as described in Tory and Möller's taxonomy\cite{toryRethinkingVisualizationHighlevel2004}. For example, the relational database is core to tools influenced by APT, such as Tableau\cite{StoltePolaris2002,hanrahanVizQL2006,MackinlayShowme2007} and the Grammar of Graphics\cite{wilkinsonGrammarGraphics2005} inspired ggplot\cite{wickhamGgplot2ElegantGraphics2016a}, Vega\cite{satyanarayanDeclarativeInteractionDesign2014} and Altair\cite{vanderplasAltairInteractiveStatistical2018}. Images underpin scientific visualization tools such as Napari\cite{nicholas_sofroniew_2021_4533308} and ImageJ\cite{schneiderNIHImageImageJ2012} and the digital humanities oriented ImagePlot\cite{studiesCulturevisImageplot2021} macro; the need to visualize and manipulate graphs has spawned tools like Gephi\cite{bastianGephiOpenSource2009}, Graphviz\cite{ellsonGraphvizOpenSource2002}, and Networkx\cite{HagbergExploringNetwork2008}. Neither the table nor image nor graph model on its own supports all the data types a typical general purpose visualization library needs to support; instead libraries such as Matplotlib\cite{hunterMatplotlib2DGraphics2007} and Vtk\cite{hanwellVisualizationToolkitVTK2015, geveci2012vtk} and D3 \cite{bostockDataDrivenDocuments2011} explicitly carry around different data representations for all the different types of visualizations they support.  Where libraries with a single core data structure have very consistent APIs, VTK, D3 and Matplotlib APIs can be rather inconsistent as every visualization has a different notion of how the data is structured.
 
-Fiber bundle and sheafs are generalized abstractions proposed by Butler to encode the continuity of the data separately from the properties of each variable  \cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Since Butler's model lacks a robust way of describing variables, we fold in Spivak's Simplicial formulation of databases \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES} to incorporate a schema like description of the variables. One way of describing the binding between the scheme and the continuinity is using the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}. Unlike Munzner's model where the semantic meaning of the key is tightly coupled to the index of the value, our model considers keys to be a reference to topology. This allows the metadata to be altered, for example by changing the coordinate system or time resolution, without imposing new semantics on the underlying structure. 
 
 \section{Topological Equivariant Artist Model}
 \label{sec:math}
@@ -189,7 +205,7 @@ We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$. To formalize the structure the artist is preserving, we describe how we model data (\autoref{sec:math:data}) and graphics (\autoref{sec:math:graphic}) as fiber bundles. We then discuss the equivariant maps that make up $\mathscr{\vartist}$, which are a map from  graphic continuity to data continuity (\autoref{sec:math:graphic:base}), data components to visual components (\autoref{sec:math:artist:nu}) and visual components to graphic (\autoref{sec:math:artist:q}).
+from data $\mathscr{\dtotal}$ (\autoref{sec:math:data}) to graphic $\mathscr{\gtotal}$ (\autoref{sec:math:graphic}) fiber bundles. We decompose the artist into an indexing map from graphic to data (\autoref{sec:math:graphic:base}), a map from data components to visual components (\autoref{sec:math:artist:nu}), and map from visual components to graphic (\autoref{sec:math:artist:q}). In this section we discuss the formal properties of these fiber bundles and maps such that they can be used to specify an implementation, for example the one prototyped in \autoref{sec:code}. 
 
 
 \subsection{Data Bundle}
@@ -205,15 +221,7 @@ that binds the components of the data in \dfiber\ to the continuity represented 
 
 \subsubsection{Fiber Space: Variables}
 \label{sec:math:data:fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
-\begin{equation}
-    \label{eq:data_types}
-    \begin{tikzcd}
-        \fttype \arrow[r] \arrow[d, "\pi_{\fsection}"'] & \ftotal \arrow[d, "\pi"] \\
-        \fnames \arrow[r, "\fsection"']                          & \ftypes       
-    \end{tikzcd}
-\end{equation}
-which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. The \fttype\ lookup is by name to specify that every component is distinct, since multiple components can have the same type \ftype. Given \fsection, the fiber for a one variable dataset is
+To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES,spivakDatabasesAreCategories2010} that binds the components of the fiber to variable names. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype, which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \fname. The \fttype\ lookup is by name to specify that every component is distinct, since multiple components can have the same type \ftype. Given \fsection, the fiber for a one variable dataset is
 \begin{equation}
     \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
 \end{equation}
@@ -230,9 +238,10 @@ which allows us to decouple \dfiber\ into components $\dfiber_i$. Each component
 \begin{figure}[htb]
   \centering 
   \includegraphics[width=\columnwidth]{fiber.png}
-  \caption{These two datasets have the same base space \dbase. The plane is a representation of the fiber $\dfiber=\reals\times\reals$ for the variables (time, temperature),  while the cube is the fiber $\reals\times\realsp\times\reals$ associated with (time, wind=(speed, direction))}
+  \caption{These two datasets have the same base space \dbase. The plane is a representation of the fiber $\dfiber=\reals\times\reals$ for the variables (time, temperature) from \autoref{fig:intro:equivariance}, while the cube is the fiber $\reals\times\realsp\times\reals$ associated with (time, wind=(speed, direction))}
   \label{fig:math:data:fiber}
 \end{figure}
+
 In \autoref{fig:math:data:fiber} the plane fiber has components (\emph{time}, \texttt{datetime}, \reals) and (\emph{temperature}, \texttt{float}, \reals), while the cube fiber has components (\emph{time}, \texttt{datetime}, \reals) and (\emph{wind}, \texttt{wind}, \(\realsp\times\reals)\)) which encodes (\emph{speed}, \emph{direction}). 
 
 
@@ -240,31 +249,27 @@ In \autoref{fig:math:data:fiber} the plane fiber has components (\emph{time}, \t
 \label{sec:math:data:monoid}
 While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946, leaFormalizationMeasurementScale}, we generalize to monoids to support partial orderings. A partial ordering allows for multiple measurement values to have the same rank\cite{fongInvitationAppliedCategory2019}, which is useful for visualizing many types of multi indicator systems\cite{bruggemannRankingPrioritizationMultiindicator2011}. 
 
-A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlab:action} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
-\begin{align*}
-    \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
-\end{align*}
-As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
+A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlab:action} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties of associativity and identity. As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
 \begin{equation}\label{eq:math:data:monoid:decompose}
 \monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmannAlgebraicProcessVisualization2014} that must be preserved in the visual representation of the component. A secondary advantage of defining structure in terms of monoids is that they are commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}.
+Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmannAlgebraicProcessVisualization2014} that must be preserved in the visual representation of the component. Monoids are commonly found in functional programming because a property of monoids is that the components can be composed into complex transformation pipelines \cite{yorgeyMonoidsThemeVariations}. For example, a component that converts \(\dfiber_i=time\) with \(\monoid_i\) to hours can be combined with a component that shifts \(time\) by 2 hours to yield \(hours_2\) with the same \(monoid_i\). 
+
 
 \subsubsection{Base Space: Continuity}
 \label{sec:math:data:base}
- The base space \dbase\ acts as an indexing space, as emphasized by Butler\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, to express how the records in \dtotal\ are connected to each other and does not itself store any of the components of the data. For example, \dbase\ can encode that the timeseries data described in \autoref{sec:math:data:fiber} is continuous, but is doing so independent of the timestamps. Every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$ because \dbase\ is the quotient space\cite{QuotientSpaceTopology2020,aurouxMath131Introduction} of \dtotal. 
 
- \begin{figure}[htb]
-  \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
-  \includegraphics[width=\columnwidth]{base.png}
-  \caption{These two datasets have the same fiber space  $\dfiber=\reals\times\reals$, but the left dataset has a discrete continuity while the right is 1D continuous over the interval $\left[0,1\right]$.}
-  \label{fig:math:data:base}
- \end{figure}
-
- As illustrated in ~\autoref{fig:math:data:base}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose},  we can decompose the total space into component bundles
+ The base space \dbase\ acts as an indexing space, as emphasized by Butler\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, to express how the records in \dtotal\ are connected to each other. This is similar the notion of structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}, but our model treats keys as a pure reference to topology. Decoupling the keys from their semantics allows the metadata to be altered facilitates encoding of data where the independent variable may not be clear; for example the growth of a plant is dependent on both time and sunlight, and changing the changing the coordinate system or time resolution should have no effect on how the records are connected to each other. 
+ 
+  \begin{figure}[htb]
+    \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
+    \includegraphics[width=\columnwidth]{base.png}
+    \caption{These two datasets have the same fiber space $\dfiber=\reals\times\reals$. For example, the left dataset is a set of discrete (\textit{time}, \textit{temperature}) records while the right is a 1D continuous function over the interval $\left[0,1\right]$ with return values of the form (\textit{time}, \textit{temperature}).}
+    \label{fig:math:data:base}
+   \end{figure}
+ As illustrated in ~\autoref{fig:math:data:base}, \dbase\ can have any number of dimensions, can be continuous or discrete, and is somewhat independent of the dimensions of the fiber. Every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$ because \dbase\ is the quotient space\cite{QuotientSpaceTopology2020,aurouxMath131Introduction} of \dtotal. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose}, we can decompose the total space into component bundles
  \begin{equation}\label{eq:math:data:base:decompose}
      \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
  \end{equation}
@@ -272,10 +277,13 @@ Defining the monoid actions on the components serves as the basis for identifyin
 
  \subsubsection{Section: Values}
  \label{sec:math:data:section}
+ 
+
+
  \begin{figure}[htb]
   \centering % avoid the use of \begin{center}...\end{center} and use \centering instead (more compact)
   \includegraphics[width=\columnwidth]{fiberbundle.png}
-  \caption{Each section in the fiber bundle is a unique continuous map from base space to fiber encoding the set of records in the dataset. The two sections, $\dsection^{(1)}$ and $\dsection^{(2)}$, shown here are in the set of global sections $\Gamma(\dtotal)$.}
+  \caption{Each section in the fiber bundle is a unique continuous map from base space to fiber encoding a set of records in the dataset. For example, the two sections $\dsection^{(1)}$ and $\dsection^{(2)}$ each encode a timeseries from a different weather station.}
   \label{fig:math:data:section}
  \end{figure}
 
@@ -286,12 +294,12 @@ Defining the monoid actions on the components serves as the basis for identifyin
                            & \dbase \arrow[u, "\dsection"', bend right]
      \end{tikzcd}
  \end{equation}
-  such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. As illustrated in \autoref{fig:math:data:section}, the section is a continuous mapping from a location $\dbasepoint \in \dbase$ on the base space to a record $\delement \in \dfiber$ in the fiber. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, the section is 
+  such that $\pi(\dsection(\dbasepoint)) = \dbasepoint$. The set of all global sections is denoted as $\Gamma(\dtotal)$. As illustrated in \autoref{fig:math:data:section}, the section is a continuous mapping from a location $\dbasepoint \in \dbase$ on the base space to a record $\delement \in \dfiber$ in the fiber. Assuming a trivial fiber bundle $\dtotal = \dbase \times \dfiber$, a section
  \begin{equation}
      \label{eq:section_return}
      \dsection(\dbasepoint) = (\dbasepoint, (g_{\dfiber_{0}}(\dbasepoint), \ldots, g_{\dfiber_{n}}(\dbasepoint)))
  \end{equation}
- where $g: \dbase \rightarrow \dfiber$ is the index function into the fiber component. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:base:decompose}, \dsection\ can be decomposed into components 
+ returns a record for each \dbasepoint. The index function $g: \dbase \rightarrow \dfiber$ into each fiber component returns a value in the component. This formulation of the section also holds on locally trivial sections of a non-trivial fiber bundle. As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:base:decompose}, \dsection\ can be decomposed into components 
  \begin{equation}
  \label{eq:math:data:section:decompose}
  \dsection= (\dsection_0,\ldots, \dsection_i, \dots, \dsection_n) 
@@ -303,12 +311,12 @@ Defining the monoid actions on the components serves as the basis for identifyin
 A sheaf is a mathematical structure for defining collections of objects\cite{ghristElementaryAppliedTopology2014, ghristHomologicalAlgebraData2018,urbanikBriefIntroductionSchemes} on mathematical spaces. On the fiber bundle \dtotal, we can describe a sheaf as the collection of local sections $\iota^{*}\dsection$
  \begin{equation}
      \label{eq:sheaf}
-     \begin{tikzcd}
+     \begin{tikzcd}[column sep=huge]
          \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
          U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
      \end{tikzcd}
  \end{equation}
-which are sections of \dtotal\ pulled back over local neighborhood $U \subset \dtotal$ via the inclusion map \(\iota:\dtotal\rightarrow U\). The bookkeeping enabled by sheafs is necessary for navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}
+which are sections of \dtotal\ pulled back over local neighborhood $U \subset \dtotal$ via the inclusion map \(\iota:\dtotal\rightarrow U\). The collation of sections enabled by sheafs is necessary for navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}
 
  \subsection{Graphic Bundle}
  \label{sec:math:graphic}  
@@ -337,7 +345,7 @@ Just as the \dbase\ encodes the connectivity of the records in the data, we prop
         \dbase                   & \gbase \arrow[l, "\vindex"']
     \end{tikzcd}
 \end{equation}
-goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:math:graphic:base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. The \vindex\ mapping is critical to interactive visualizations as it is the map from a region on screen to the data associated with that region. One example is to fill in details in a hover tooltip, another is to convert region selection on \gbase\ to a query on the data to access the corresponding record components on \dbase.
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. While \gbase\ must have the same continuity as \dbase\, it is sometimes the  thickened version shown in \autoref{fig:math:graphic:base}. This thickening is necessary when the dimensionality of \dbase\ is less than the dimensionality of the target display. For example, a \dbasepoint\ that is a point in 0D \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the points in \gfiber\ that visually represent the record at \dbasepoint. The \vindex\ mapping is critical to interactive visualizations as it is the map from a region on screen to the data associated with that region. One example is to fill in details in a hover tooltip, another is to convert region selection on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
 \subsection{Artist}
 The topological artist \vartist\ is a map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
@@ -359,14 +367,14 @@ The monoid equivariant map has two stages: the encoders $\vchannel:\dtotal^{\pri
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-\vtotalpull\ is the visual bundle \vtotal\ pulled back over \gbase\ via the equivariant continuity map $\vindex:\gbase \rightarrow \dbase$ introduced in \autoref{sec:math:graphic:base}. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is defined by the projection map $\pi$
+\vtotalpull\ is the visual bundle \vtotal\ pulled back over \gbase\ via the equivariant continuity map $\vindex:\gbase \rightarrow \dbase$ introduced in \autoref{sec:math:graphic:base}. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is defined by the projection map $\pi$
 \begin{equation}
     \begin{tikzcd}[ampersand replacement=\&]
         \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
                           \& \dbase \arrow[u, "\vsection"', bend right]
     \end{tikzcd}
 \end{equation}
-where \vsection\ is the visual variable encoding\cite{bertinSemiologyGraphicsDiagrams2011a} of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. The functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
+where \vsection\ is the visual variable encoding, as described by Bertin \cite{bertinSemiologyGraphicsDiagrams2011a}, of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave. The functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
 
 \subsubsection{Visual Component Maps}
 \label{sec:math:artist:nu}
@@ -392,8 +400,8 @@ such that $\varphi$ maps a monoid action on data to a monoid action on visual el
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=1\columnwidth]{monoid_equivariant.png}
-  \caption{Equivariant \vchannel\ maps the weather data to corresponding symbols such that the relative order of the symbols is the same as the data as shown in the top two panels. In the bottom right panel the ordering of \textit{rain} and \textit{storm} is swapped in the symbols, meaning that the \vchannel\ is invalid; in the bottom left panel, \textit{storm} is instead mapped to the same symbol as \textit{rain} so that the ordering is preserved.}
+  \includegraphics[width=1\columnwidth]{figures/partial_fixed.png}
+  \caption{The equivariance constraint is not met in the first figure because \(rain\geq storm\), but \(\vchannel(rain) \leq \vchannel(storm)\) as shown by the crossed arrows. This is fixed by mapping \textit{storm} to the same element as \textit{rain}, such that \(\vchannel(rain) \geq \vchannel(storm)\).}
   \label{fig:math:artist:nu}
 \end{figure}
 
@@ -408,7 +416,7 @@ such that $\varphi$ maps a monoid action on data to a monoid action on visual el
   \end{tabulary}
   \label{tab:math:artist:nu}
 \end{table}
-The equivariance constraints for the Steven measurement scales\cite{stevensTheoryScalesMeasurement1946} are derived from the mathematical group structure of the scales. For monoid actions, the equivariance constraint is that relative order is preserved, as shown in the top two panels of \autoref{fig:math:artist:nu}.
+We can state the conditions on \vchannel\ such that they cover the Stevens measurement scales\cite{stevensTheoryScalesMeasurement1946}, as defined in \autoref{tab:math:artist:nu}. This is because Stevens’ defined the measurement scales in terms of their mathematical group structure and a group is a monoid with inverses\cite{remlingAlgebraMath5353}. An example of monoid action equivariance is the preservation of partial ordering illustrated in \autoref{fig:math:artist:nu}.
 
 
 \subsubsection{Visualization Assembly}
@@ -416,10 +424,10 @@ The equivariance constraints for the Steven measurement scales\cite{stevensTheor
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{path_of_q}
-  \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data.} 
+  \caption{The transform functions $\vchannel_i$ convert data $\dsection_i\in \dtotal$ to visual characteristics $\vsection_i \in \vtotal$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection \in \gtotal$.} 
   \label{fig:math:artist:q}
 \end{figure}
-As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are analogous to a  map-reduce operation: data components $\dtotal_{i}$ are mapped into visual components $\vtotal_{i}$ that are reduced into a graphic in \gtotal. The space of all graphics that \vmark\ can generate is the subset of graphics reachable via applying the reduction function $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ to the visual section $\vsection \in \Gamma(\vtotal)$. We formalize the expectation that visualization generation functions parameterized in the same way should generate the same functions as the equivariant map $\vmark: \vsection \mapsto \gsection$. We then define the constraint on \vmark\ such that if \vmark\ is applied to two visual sections $\vsection$ and $\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection$ and $\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.  We cannot define monoid actions on all of $\Gamma(\gtotal)$ because there are graphics $\gsection \in \Gamma(\gtotal)$ for which we cannot construct a valid mapping from \vtotal.
+As shown in \autoref{fig:math:artist:q}, \vchannel\ and \vmark\ are analogous to a  map-reduce operation: data components $\dtotal_{i}$ are mapped into visual components $\vtotal_{i}$ that are reduced into a graphic in \gtotal. The space of all graphics that \vmark\ can generate is the subset of graphics reachable via applying the reduction function $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ to the visual section $\vsection \in \Gamma(\vtotal)$. We formalize the expectation that visualization generation functions parameterized in the same way should generate the same functions as the equivariant map $\vmark: \vsection \mapsto \gsection$. We then define the constraint on \vmark\ such that if \vmark\ is applied to two visual sections $\vsection$ and $\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection$ and $\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.  We do not define monoid actions on all of $\Gamma(\gtotal)$ because there may be graphics $\gsection \in \Gamma(\gtotal)$ for which we cannot construct a valid mapping from \vtotal.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{diff_type_q.png}
@@ -454,7 +462,7 @@ such that for every glyph there is at least one corresponding region on \dbase, 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{base_q}
-  \caption{The coordinates $(\gx, \gy)$ dictate the color of the region in prerender space \gbase\, which over the whole disk generates the graphical mark. The line fiber is thickened with the derivative because the tangent the line needs to be pushed perpendicular to the tangent of (xpos, ypos) in order to have visible thickness.}
+  \caption{The coordinates \(\gbasepoint=(\gx, \gy)\) dictate the color of the region in prerender space \gbase. When \vmark\ is applied over the whole disk \(\gbase_{\dbasepoint}\), it generates the graphical point mark. The line fiber is thickened with the derivative because the tangent the line needs to be pushed perpendicular to the tangent of (xpos, ypos) in order to have visible thickness.}
   \label{fig:math:artist:base}
 \end{figure}
 
@@ -463,7 +471,7 @@ In \autoref{fig:teaser}, we illustrate the output of a minimal Q that will gener
 \vmark(xpos, ypos)(\alpha, \beta)
 \label{eq:math:artist:q:scatter}
 \end{equation}
-where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in \autoref{fig:math:artist:base}
+with a constant \textit{size} and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of \vmark. The position of this swatch of color can be computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:base}
 \begin{align*}
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
@@ -471,16 +479,16 @@ y &= size *\alpha \sin(\beta) + ypos
 such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. 
 In contrast, the line plot 
 \begin{equation}
-\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)
+\vmark(xpos, \hat{n}_{1}, ypos, \hat{n}_{2})(\alpha, \beta)
 \label{eq:math:artist:q:line}
 \end{equation}
 in \autoref{fig:teaser} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \autoref{fig:math:artist:base}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
-such that the normal is  $\hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
+such that the normal is  $\hat{n}_{1} = \frac{n_1}{\lvert n \rvert}, \; \hat{n}_{2} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
 \begin{align*}
- x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
- y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
+ x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n}_1(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n}_2(\vindex(\alpha)) 
 \end{align*}
-where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n_1}, \hat{n_2}$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
+where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
 In \autoref{fig:teaser}, the image 
 \begin{equation}
 \vmark(xpos, ypos, color)
@@ -541,38 +549,38 @@ Roughly, two artists are equivalent if they have the same visual fiber \vfiber\,
 
 \section{Prototype}
 \label{sec:code}
-To build a prototype, we make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and exploit the Matplotlib transform stack to transform data coordinates into screen coordinates. While the artist is specified in a fully functional manner in \autoref{eq:math:artist:diagram}, we implement our prototype in a heavily object oriented manner. This is a concession to existing Matplotlib architecture and so that the object can do bookkeeping of parameter information. But, in keeping with functional norms, we attempt to pass around as little information as necessary.
+To build a prototype, we make use of the Matplotlib figure and axes artists \cite{hunterArchitectureOpenSource,hunterMatplotlib2DGraphics2007} so that we can initially focus on the data to graphic transformations and exploit the Matplotlib transform stack to transform data coordinates into screen coordinates. While the artist is specified in a fully functional manner in \autoref{eq:math:artist:diagram}, we implement our prototype in a heavily object oriented manner. We do so mostly to more easily manage function inputs, especially parameters that are passed through to the structurally functional transform and draw methods. 
+
 \begin{minted}{python}
   fig, ax = plt.subplots()
-  artist = Artist(data, transforms)
+  artist = Artist(E, V)
   ax.add_artist(artist)
 \end{minted}
-Building on the current Matplotlib artists which construct an internal representation of the graphic, \mintinline{python}{ArtistClass} acts as an equivalance class artist \vartisteq\ as described in \autoref{eq:math:artist:aprime} . The visual bundle \vtotal\ is specified as the \mintinline{python}{transform}dictionary of the form \mintinline{python}|{parameter:(variable, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber, and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{data} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist\ as defined in \autoref{eq:math:artist:artist}.
+Building on the current Matplotlib artists which construct an internal representation of the graphic, \mintinline{python}{ArtistClass} acts as an equivalence class artist \vartisteq\ as described in \autoref{eq:math:artist:aprime}. The visual bundle \vtotal\ is specified as the \mintinline{python}{V} dictionary of the form \mintinline{python}|{parameter:(variable name, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber, and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{E} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist\ as defined in \autoref{eq:math:artist:artist}.
 \begin{minted}{python}
   class ArtistClass(matplotlib.artist.Artist): #A'
-      def __init__(self, data, transforms, *args, **kwargs):
+      def __init__(self, E, V, *args, **kwargs):
           # properties that are specific to the graphic
-          self.data = data #E
-          self.transforms = transforms #V
+          self.E = E
+          self.V = V 
           super().__init__(*args, **kwargs)
   
-      def assemble(self, **args): #\hat{Q}
+      def hat_Q(self, **args): 
           # set the properties of the graphic
   
-      def draw(self, renderer): #A
+      def draw(self, renderer):
           # returns K, indexed on fiber then key 
-          view = self.data.view(self.axes) #\tau
+          tau = self.E.view(self.axes) 
           # visual channel encoding applied fiberwise 
-          # \nu_i(\tau_i)
-          visual = {p: t['encoder'](view[t['name']])
-                    for p, t in self.transforms.items()} 
-          self.assemble(**visual)
+          mu = {p: nu(tau(c))
+                   for p, (c, nu) in self.V.items()} 
+          self.hat_q(**mu)
           # pass configurations off to the renderer
           super().draw(renderer)
   \end{minted}
- The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that can be used to query back into data to select a subset. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, which means that the values cannot change after the method is called in draw until a new call in draw. We put this constraint on the return of the \mintinline{python}{view} method so that we do not risk race conditions. 
+ The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that can be used to query back into data to select a subset as described in \autoref{sec:math:data:sheaf}. To ensure the integrity of the section, \mintinline{python}{view} must be atomic, which means that the values cannot change after the method is called in draw until a new call in draw. We put this constraint on the return of the \mintinline{python}{view} method so that we do not risk race conditions. 
  
- The \vchannel\ functions are then applied to the data, as describe in \autoref{eq:math:artist:nu}, to generate the visual section \vsection that here is the object \mintinline{python}{visual}. The conversion from data to visual space is simplified here to directly show that it is the encoding \vchannel\ applied to the component. The \mintinline{python}{assemble} function that is \vmarkd,  as defined in \autoref{eq:math:artist:qhat_k}, is responsible for generating a representation such that it could be serialized to recreate a static version of the graphic. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemented.
+ The \vchannel\ functions are then applied to the data, as describe in \autoref{eq:math:artist:nu}, to generate the visual section \vsection that here is the object \mintinline{python}{V}. The conversion from data to visual space is simplified here to directly show that it is the encoding \vchannel\ applied to the component. The \mintinline{python}{q_hat} function that is \vmarkd,  as defined in \autoref{eq:math:artist:qhat_k}, is responsible for generating a representation such that it could be serialized to recreate a static version of the graphic. This artist is not optimized because we prioritized demonstrating the separability of \vchannel\ and \vmarkd. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemented.
 
  \subsection{Scatter and Line Artists}
  \begin{figure}[H]
@@ -584,11 +592,12 @@ Building on the current Matplotlib artists which construct an internal represent
   \caption{Scatter plot and line plot implemented using prototype artists and data models, building on Matplotlib rendering.}
   \label{fig:code_scatter_line}
 \end{figure}
+The figure in \autoref{fig:code:scatter} is described by \autoref{eq:math:artist:q:scatter}. This is implemented via a \mintinline{python}{Line} object where the scatter marker shape is fixed as a circle, and the visual fiber components are x and y position and the facecolor and size of the marker. We only show the \mintinline{python}{q_hat} function here because the \mintinline{python}{__init__, draw} are identical the prototype artist. 
 
-To generate the figure in \autoref{fig:code:scatter}, the \mintinline{python}{Point} artist builds on \mintinline{python}{collection} artists because collections are optimized to efficiently draw a sequence of primitive point and area marks. In this prototype, the scatter marker shape is fixed as a circle, and the only visual fiber components are x and y position, size, and the facecolor of the marker, as described  by \autoref{eq:math:artist:q:scatter}. We only show the \mintinline{python}{assemble} function here because the \mintinline{python}{__init__, draw} are identical the prototype artist. The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices. Even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$. This means that all the data on one vertex maps to one glyph.
+The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices. Even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint has corresponding values in section $\dsection(\dbasepoint_{i})$. This means that all the data on one vertex maps to one glyph.
 \begin{minted}{python}
 class Point(mcollections.Collection):
-  def assemble(self, x, y, s, facecolors='C0' ): #\hat{Q}
+  def q_hat(self, x, y, s, facecolors): #\hat{Q}
     # construct geometries of circle glyphs
     self._paths = [mpath.Path.circle((xi,yi), radius=si) 
                 for (xi, yi, si) in zip(x, y, s)] 
@@ -596,17 +605,17 @@ class Point(mcollections.Collection):
     # circles and facecolors are lists of the same size
     self.set_facecolors(facecolors)
 \end{minted} 
-In \mintinline{python}{assemble}, the \vsection\ components are used to construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. This is done via the \mintinline{python}{Path.circle} object. 
+In \mintinline{python}{q_hat}, the \vsection\ components are used to construct the vector path of each circular marker with center \texttt{(x,y)} and size \texttt{x} and set the colors of each circle. This is done via the \mintinline{python}{Path.circle} object. 
 \begin{minted}{python}
 class Line(mcollections.LineCollection):
-    def assemble(self, x, y, color='C0'): #\hat{Q}
-            #assemble line marks as set of segments 
-            segments = [np.vstack((vx, vy)).T for vx, vy 
-                        in zip(x, y)]
-            self.set_segments(segments)
-            self.set_color(color)
+  def q_hat(self, x, y, color): #\hat{Q}
+    #assemble line marks as set of segments 
+    segments = [np.vstack((vx, vy)).T for vx, vy 
+                in zip(x, y)]
+    self.set_segments(segments)
+    self.set_color(color)
 \end{minted}
-To generate \autoref{fig:code:line}, the \mintinline{python}{Line} artist \mintinline{python}{view} method returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{assemble}, described by \autoref{eq:math:artist:q:line}, this visual representation is composed into a set of line segments, where each segment is the array generated by \mintinline{python}{np.vstack((vx, vy))}. Then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
+To generate \autoref{fig:code:line}, the \mintinline{python}{Line} artist \mintinline{python}{view} method returns a table of edges. Each edge consists of (x,y) points sampled along the line defined by the edge and information such as the color of the edge. As with \mintinline{python}{Point}, the data is then converted into visual variables. In \mintinline{python}{q_hat}, described by \autoref{eq:math:artist:q:line}, this visual representation is composed into a set of line segments, where each segment is the array generated by \mintinline{python}{np.vstack((vx, vy))}. Then the colors of each line segment are set. The colors are guaranteed to correspond to the correct segment because of the atomicity constraint on view. 
 
 \subsubsection{Visual Encoders}
 The visual parameter serves as the dictionary key because the visual representation is constructed from the encoding applied to the data  $\vsection = \vchannel \circ \dsection$. For the scatter plot, the mappings for the visual fiber components $\vfiber=(x,y, facecolors, s)$ are defined as
@@ -614,11 +623,11 @@ The visual parameter serves as the dictionary key because the visual representat
 cmap =  color.Categorical({'true':'deeppink', 
                            'false':'deepskyblue'}) 
 # {P_i name:{'name':c_i, 'encoder:\nu_i}}
-transforms = {'x': {'name': 'v4', 'encoder': lambda x: x}, 
-              'y': {'name': 'v2', 'encoder': lambda x: x},
-              'facecolors': {'name':'v3', 'encoder': cmap}, 
-              's':{'name': None , 
-              'encoder': lambda _: itertools.repeat(.02)}}
+V = {'x': {'name': 'v4', 'encoder': lambda x: x}, 
+     'y': {'name': 'v2', 'encoder': lambda x: x},
+     'facecolors': {'name':'v3', 'encoder': cmap}, 
+     's':{'name': None , 
+          'encoder': lambda _: itertools.repeat(.02)}}
 \end{minted}
 where \mintinline{python}{lambda x: x} is an identity \vchannel, \mintinline{python}|{'name':None}| maps into \vfiber\ without corresponding \dsection\ to set a constant visual value, and \mintinline{python}{color.Categorical} is a custom \vchannel\ implemented as a class for reusability.  A test for equivariance, as described in \autoref{eq:math:artist:nu:equivariance}, can be implemented trivially
 \begin{minted}{python}
@@ -640,29 +649,25 @@ class FiberBundle:
     K: dict #{'tables': []}
     F: dict #  {variable name: type}
 \end{minted}
-that asks the user to specify the the properties of \dfiber\ and the \dbase\ connectivity in terms of a  simplicial triangulation scheme \cite{geometricaSimplicialComplexes}. To generate the scatter plot and the line plot, the distinction is in the \mintinline{python}{tau} method that is the section. 
+that asks the user to specify the the properties of \dfiber\ and the \dbase\ connectivity as either discrete vertices or continuous data along edges. To generate the scatter plot and the line plot, the distinction is in the \mintinline{python}{tau} method that is the section. 
 \begin{minted}{python}
-class VertexSimplex: 
-    """Fiberbundle is consistent across all sections
-    """
-    FB = FiberBundle({'tables': ['vertex']},  
-            {'v1': float, 'v2': str, 'v3': float})
-            
-    def __init__(self, sid = 45, size=1000, max_key=10**10):
-        # create random list of keys
+class PointData:     
+    def __init__(self):
+      FB = FiberBundle({'tables': ['vertex']},  
+                       {'v1': float, 'v2': str, 'v3': float})
     def tau(self, k):
-      # e1 is sampled from F1, e2 from F2, etc...
-      return (k, (e1, e2, e3, e4))
+      return # tau evaluated at one point k
 \end{minted}
-The discrete \mintinline{python}{tau} method returns a record of discrete points, while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint
+The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, 
 \begin{minted}{python}
-def tau(self, k): #will fix location on page on revision
-    x, y = self._xy(k, self.distances, 
-               self.angle_samples[k], self.angle_samples[k+1]) 
-    color = self._color(k) 
-    return (k, (x, y, color))
+class LineData:
+  def __init__(self):
+    FB = FiberBundle({'tables': ['edge']},  
+                       {'x': float, 'y': float, 'color': str})
+  def tau(self, k):
+    return # tau evaluated on interval k
 \end{minted}
-In both cases the \mintinline{python}{view} method packages the data
+while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint.
 \begin{minted}{python}
   def view(self, axes):
       table = defaultdict(list)
@@ -673,7 +678,7 @@ In both cases the \mintinline{python}{view} method packages the data
               table[name].append(value)
       return table
 \end{minted}
-into a data structure that the artist can unpack via data component name. 
+In both cases the \mintinline{python}{view} method packages the data into a data structure that the artist can unpack via data component name, akin to a table with column names when \dbase\ is 0 or 1 D. 
 
 \begin{figure}[htb]
   \centering 
@@ -686,30 +691,29 @@ into a data structure that the artist can unpack via data component name.
 \end{figure}
 The graphics in figure \autoref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
 \begin{minted}{python}
-simplex.GraphLine(FB, edges, verticies, 
-                      num_samples=1000, connect=True)
+LineData(FB, edges, verticies, num_samples=1000, connect=True)
 \end{minted}
 while the stair chart is discontinuous and only needs to be evaluated at the edges of the interval 
 \begin{minted}{python}
-simplex.GraphLine(FB, edges, verticies, 
-                      num_samples=2, connect=False)
+LineData(FB, edges, verticies, num_samples=2, connect=False)
 \end{minted}
 such that one advantage of this model is it helps differentiate graphics that have different artists from graphics that have the same artist but make different assumptions about the source data. 
 
 \section{Discussion}
-This work contributes a mathematical description of the mapping \vartist\ from data to visual representation. Combining Butler's proposal of a fiber bundle model of visualization data with Spivak's formalism of schema lets this model support a variety of datasets, including  discrete relational tables,, multivariate high resolution spatio temporal datasets, and complex networks. Decomposing the artist into encoding \vchannel, assembly \vmark, and reindexing \vindex\ provides the specifications that the graphic must have continuity equivalent to the data, and that the visual characteristics of the graphics are equivariant to their corresponding components under monoid actions. This model defines these constraints on the transformation function such that they are not specific to any one type of encoding or visual characteristic. Encoding the graphic space as a fiber bundle provides a structure rich abstraction of the target graphical design in the target display space. The toy prototype built using this model validates that is usable for a general purpose visualization tool since it can be iteratively integrated into the existing architecture rather than starting from scratch. Factoring out graphic formation into assembly functions allows for much more clarity in how they differ. This prototype demonstrates that this framework can generate the fundemental point (scatter plot) and line (line chart) marks. 
+This work contributes a functional model of the structure-preserving maps from data to visual representation to guide the development of visualization libraries, thereby providing a means to express the constraints of preserving the data continuity in the graphic and faithfully translating the properties of the data variables into visual variables. Combining Butler's proposal of a fiber bundle model of visualization data with Spivak's formalism of schema lets this model support a variety of datasets, including  discrete relational tables, multivariate high resolution spatio temporal datasets, and complex networks. Decomposing the artist into encoding \vchannel, assembly \vmark, and reindexing \vindex\ provides the specifications that the graphic must have continuity equivalent to the data, and that the visual characteristics of the graphics are equivariant to their corresponding components under monoid actions. This model defines these constraints on the transformation function such that they are not specific to any one type of encoding or visual characteristic. Encoding the graphic space as a fiber bundle provides a structure rich abstraction of the target graphical design in the target display space. The toy prototype built using this model validates that is usable for a general purpose visualization tool since it can be iteratively integrated into the existing architecture rather than starting from scratch. Factoring out graphic formation into assembly functions allows for much more clarity in how they differ. This prototype demonstrates that this framework can generate the fundemental point (scatter plot) and line (line chart) marks. 
 
 \subsection{Limitations}
-So far this model has only been worked out for a single data set tied to a primitive mark. The examples and prototype have so far only been implemented for the static 2D case, but nothing in the math limits to 2D and expansion to the animated case should be possible because the model is formalized in terms of the sheaf. While this model supports equivariance of figurative glyphs generated from parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it does not have a way to evaluate the semantic accuracy of the figurative representation. Even though the model is designed to be backend and format independent, it has only really been tested against PNGs rendered with the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}. This model and the associated prototype is deeply tied to Matplotlib's existing architecture, so it has not been worked through how the model generalizes to other libraries, such as those built on Mackinlay's APT framework.
+This model and the associated prototype is deeply tied to Matplotlib's existing architecture, so it has not yet been worked through how the model generalizes to libraries such as VTK or D3. Even though the model is designed to be backend and format independent, it has only really been tested against PNGs rendered with the AGG backend. It is especially unknown how this framework interfaces with high performance rendering libraries such as openGL\cite{CarsonOpenGL1997}. While this model supports equivariance of figurative glyphs \cite{byrneAcquiredCodesMeaning2016} generated from parameters of the data\cite{beckfeathers2014,byrneFigurativeFramesCritical2017}, it cannot evaluate the semantic accuracy of the figurative representation. Effectiveness criteria\cite{mackinlayAutomaticDesignGraphical1987,chambersGraphicalMethodsData1983a} are out of scope for this model. 
 
 \subsection{Future Work}
-More work is needed to formalize the composition operators and equivalence class \vartisteq.  More artists need to be implemented to demonstrate that the model can underpin a minimally viable library,  foremost an image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization}, a heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas}, and an inherently computational artist such as the boxplot\cite{wickham40YearsBoxplots2011}. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
+More work is needed to formalize the composition operators and equivalence class \vartisteq.  More artists need to be implemented to demonstrate that the model can underpin a minimally viable library, foremost an image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization}, a heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas}, and an inherently computational artist such as the boxplot\cite{wickham40YearsBoxplots2011}. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
+
 \section{Conclusion}
-An unoffical philosophy of Matplotlib is to support making whatever kinds of plots a user may want, even if they seem nonsensical to the development team. The topological framework described in this work provides a way to facilitate this graph creation in a rigorous manner; any artist that meets the equivariance criteria described in this work by definition generates a graphic representation that matches the structure of the data being represented. We leave it to domain specialists to define the structure they need to preserve and the maps they want to make, and hopefully make the process easier by untangling these components into seperate constrained maps and providing a fairly general data and display model. 
+The data model and functional transform refactor presented here allows bulding block libraries to better support domain specific libraries without having to explicitly take in the specific data structure and visualization needs of those domains. Adopting this model would induce a separation of data representation and visual representation that for example in Matplotlib is so entangled that it has lead to a brittle and sometimes incoherent API and internal code base. Because of the model presented here, this refactor can be done in consistent and robust manner such that the resulting components can be be guaranteed to preserve continuity and structure as defined by the domain specific library developers without having to fold those definitions back into the base library. 
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{
-The authors wish to thank the Matplotlib development team for their invaluable feedback along the way, particulary Bruno Beltran. This project has been made possible in part by grant number 2019-207333 from the Chan Zuckerberg Initiative DAF, an advised fund of Silicon Valley Community Foundation.}
+The authors wish to thank the Matplotlib development team for their invaluable feedback along the way, particulary Bruno Beltran. Also much appreciation to Nicolas Kruchten, Eric Schles, and Chana Tilevitz idenfiying the confusing bits and offering lots of suggestions. Thank you Marc Hanwell and Lev Manovich for helping refine the motivation, and Robert Haralick and Huy Vo for invaluable feedback on various iterations of this work. This project has been made possible in part by grant number 2019-207333 from the Chan Zuckerberg Initiative DAF, an advised fund of Silicon Valley Community Foundation.}
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}
