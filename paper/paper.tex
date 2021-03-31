@@ -109,7 +109,7 @@
 \authorfooter{
 %% insert punctuation at end of each item
 \item
- Hannah Aizenman and Michael Grossberg are with the Computer Science department, City College of New York. E-mail: haizenman@ccny.cuny.edu, mgrossberg@ccny.cuny.edu.
+ Hannah Aizenman and Michael Grossberg are with the department of Computer Science, City College of New York. E-mail: haizenman@ccny.cuny.edu, mgrossberg@ccny.cuny.edu.
 \item
  Thomas Caswell is with National Synchrotron Light Source II, Brookhaven National Lab E-mail: tcaswell@bnl.gov.
 }
@@ -169,8 +169,7 @@
 \maketitle
 %% this is still a mess, come back to it
 
-Building block libraries underpin the visualization ecosystem; they are not the automated tools or high level libraries many practitioners use to build their visualizations, rather they are the libraries on which these tools are built. These building block libraries, as described by Wongsuphasawat, provide specific components and utilities that are composed by domain specific visualization practitioners into reusable visualization tools \cite{wongsuphasawatNavigatingWideWorld2021}. Because building block libraries often support many domains, the API can grow organically in ways that are incoherent and brittle. Motivated by the challenge of rearchitecturing a building blocks library, Matplotlib\cite{hunterMatplotlib2DGraphics2007}, we developed a functional model, which we call the Topological Equivariant Artist Model (TEAM), to formalize the constraints building block components must satisfy to be considered structure preserving maps from data to visual representation.
-
+General purpose visualization libraries are often tasked with supporting many domains, leading the libraries to grow organically in ways that can lead to incoherent interfaces and brittle components. To adapt to modern library development needs, this paper presents a functional model of the how components provided by lower level libraries\cite{wongsuphasawatNavigatingWideWorld2021} can be guaranteed to be structure preserving maps from data to graphic. We target this level of library architecture because our aim is the libraries developers use to build automated and user facing tools, not those tools themselves; we are agnostic to what makes for a good visualization so long as the structure preserving constraints are satisfied. 
 \begin{figure}[H]
   \centering 
   \subfloat[\label{fig:intro:continuity}]{%
@@ -180,9 +179,9 @@ Building block libraries underpin the visualization ecosystem; they are not the 
 \caption{In \autoref{fig:intro:continuity}, the line plot does not preserve \textit{continuity} because it implies that the discrete records are connected to each other, while the bar plot is \textit{continuity} preserving because it visually represents the records as independent data points. In \autoref{fig:intro:equivariance}, the data in blue is scaled by a factor of two, yielding the data in orange. To preserve \textit{equivariance}, the blue line plot representation of the unscaled data is also scaled by a factor of two, yielding the orange line plot that is equivalent to the scaled data.}
 \label{fig:intro:structure}
 \end{figure}
-The structure that visualizations must preserve is \textit{continuity} and \textit{equivariance}, as illustrated in \autoref{fig:intro:structure}. \textit{continuity} is the way in which the records in the dataset are connected to each other. In \autoref{fig:intro:continuity} the line plot does not preserve continuity because the lines connecting the discrete categories implies that weather events and frequency of those events is continuous. Equivariance means that if any action is applied to the data or the visual, for example a rotation, permutation, translation, or rescaling, an equivalent action is applied on the other side. In \autoref{fig:intro:equivariance}, the data and visual representation are scaled by equivalent factors of two, resulting in the change illustrated in the shift from orange to blue.  
+The structure that components of a visualization library must preserve is \textit{continuity} and \textit{equivariance}, as illustrated in \autoref{fig:intro:structure}. \textit{Continuity} is the way in which the records in the dataset are connected to each other. In \autoref{fig:intro:continuity}, the line plot does not preserve continuity because the line connecting the discrete categories implies that the frequency of weather events is sampled from a continuous interval and the categories are points on that interval. \textit{Equivariance} means that if any action is applied to the data or the visual, for example a rotation, permutation, translation, or rescaling, an equivalent action is applied on the other side. In \autoref{fig:intro:equivariance}, the data and visual representation are scaled by equivalent factors of two, resulting in the change illustrated in the shift from orange to blue.  
 
-To adapt to modern domain library development needs, this paper presents a functional model of the constraints building block software must satisfy so that a visualization--however it is specified in the library built out of these blocks--is guaranteed to be an equivariant continuity preserving mapping from data to visualization. The contribution of this work is 
+Motivated by the challenge of re-architecturing the Python visualization library Matplotlib, we developed a functional model of library architecture, which we call the Topological Equivariant Artist Model (TEAM), to specify the constraints components must satisfy to be equivariant continuity preserving mappings from data to visual representation. A functional architecture derived from our model would gain a generalized data abstraction and well specified reusable components with minimal side effects\cite{loudenProgrammingLanguagesPrinciples2010}, in turn yielding improvements in maintainability, extendability, scaling, and support for concurrency. The contribution of this work is 
 \begin{enumerate}
   \item formalization of the topology preserving relationship between data and graphic via continuous maps \autoref{sec:math:graphic:base}
   \item formalization of property preservation from data component to visual representation as monoid action equivariant maps \autoref{sec:math:artist}
@@ -400,7 +399,7 @@ such that $\varphi$ maps a monoid action on data to a monoid action on visual el
 \begin{figure}[htb]
   \centering
   \includegraphics[width=1\columnwidth]{figures/partial_fixed.png}
-  \caption{The equivariance constraint is not met in the first figure because \(rain\geq storm\), but \(\vchannel(rain) \leq \vchannel(storm)\) as shown by the crossed arrows. This is fixed by mapping \textit{storm} to the same element as \textit{rain}, such that \(\vchannel(rain) \geq \vchannel(storm)\).}
+  \caption{As highlighted by the red arrows, the equivariance constraint is not met because \(rain\geq storm\), but \(\vchannel(rain) \leq \vchannel(storm)\). Instead, mapping \textit{storm} to the same element as \textit{rain} yields an equivariant \vchannel\ such that \(\vchannel(rain) \geq \vchannel(storm)\).}
   \label{fig:math:artist:nu}
 \end{figure}
 
@@ -656,17 +655,15 @@ class PointData:
                        {'v1': float, 'v2': str, 'v3': float})
     def tau(self, k):
       return # tau evaluated at one point k
-\end{minted}
-The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, 
-\begin{minted}{python}
+
 class LineData:
   def __init__(self):
     FB = FiberBundle({'tables': ['edge']},  
-                       {'x': float, 'y': float, 'color': str})
+                     {'x': float, 'y': float, 'color': str})
   def tau(self, k):
     return # tau evaluated on interval k
 \end{minted}
-while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint.
+The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint.
 \begin{minted}{python}
   def view(self, axes):
       table = defaultdict(list)
@@ -677,7 +674,7 @@ while the line\mintinline{python}{tau} returns a sampling of points along an edg
               table[name].append(value)
       return table
 \end{minted}
-In both cases the \mintinline{python}{view} method packages the data into a data structure that the artist can unpack via data component name, akin to a table with column names when \dbase\ is 0 or 1 D. 
+In both cases, the \mintinline{python}{view} method packages the data into a data structure that the artist can unpack via data component name, akin to a table with column names when \dbase\ is 0 or 1 D. 
 
 \begin{figure}[htb]
   \centering 
@@ -688,13 +685,13 @@ In both cases the \mintinline{python}{view} method packages the data into a data
 \caption{Continuous and discontinuous lines as defined via the same data model, and generated with the same \vartisteq \mintinline{python}{Line}}
 \label{fig:code:multilines}
 \end{figure}
-The graphics in figure \autoref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{Graphline} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
+The graphics in figure \autoref{fig:code:multilines} are made using the \mintinline{python}{Line} artist and the \mintinline{python}{GraphData} data source where if told that the data is connected, the data source will check for that connectivity by constructing an adjacency matrix. The multicolored line is a connected graph of edges with each edge function evaluated on 1000 samples, 
 \begin{minted}{python}
-LineData(FB, edges, verticies, num_samples=1000, connect=True)
+GraphData(FB, edges, verticies, num_samples=1000, connect=True)
 \end{minted}
 while the stair chart is discontinuous and only needs to be evaluated at the edges of the interval 
 \begin{minted}{python}
-LineData(FB, edges, verticies, num_samples=2, connect=False)
+GraphData(FB, edges, verticies, num_samples=2, connect=False)
 \end{minted}
 such that one advantage of this model is it helps differentiate graphics that have different artists from graphics that have the same artist but make different assumptions about the source data. 
 
