@@ -127,7 +127,7 @@
 \end{frame}
 
 
-\section{Mathematical Framework}
+\section{Math}
 
 \begin{frame}{Topological Equivariant Artist Model}
     \centering
@@ -142,7 +142,7 @@
 \end{frame}
 
 
-\subsection{Data Model}
+\subsection{Data}
 \begin{frame}{Model data as a fiber bundle \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}}
     A fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the map $\pi$
     \begin{equation*}
@@ -222,7 +222,7 @@
 \end{frame}
 
 
-\subsection{Graphics}
+\subsection{Graphic}
 \begin{frame}{Graphic Bundle $(\gtotal,\,\gbase,\,\pi ,\,\gfiber)$} % watch dr explaination
     \only<2->{Continuity is preserved via the many \gbasepoint\ to one \dbasepoint\ map $\vindex: \gbase\rightarrow\dbase$}
 
@@ -360,7 +360,7 @@
 \end{frame}
 
 
-\section{Prototype}
+\section{Code}
 \begin{frame}{TEAM driven rearchitecture of Matplotlib}
     \begin{itemize}
         \item complex visualizations
@@ -404,7 +404,7 @@
     \end{columns}
 \end{frame}
 
-\subsection{Visual Transforms}
+\subsection{Artist}
 \begin{frame}[fragile]{ \vchannel}
     \begin{minted}{python}
     cmap =  color.Categorical({'true':'deeppink', 'false':'deepskyblue'})
@@ -421,8 +421,6 @@
     \end{itemize}
 \end{frame}
     
-
-\subsection{Artist}
 \begin{frame}[fragile]{\vartist} %% rewrite w/ letters in talk
     \begin{minted}{python}
         class ArtistClass(matplotlib.artist.Artist):
@@ -509,13 +507,10 @@ LineData(FB, edge_table, vertex_table, num_samples=2, connect=False)
     
 \end{frame}
 
-\section{References}
 \begin{frame}[allowframebreaks]{References}
 \printbibliography
 \end{frame}
 \appendix 
-
-\subsection{Appendix}
 
 \begin{frame}{Mathematical Models of Vizualization}
     \begin{description}
