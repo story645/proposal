@@ -1,46 +1,31 @@
-## Deadlines
-### Proposal 
-V1 April ? (this date will be set by department)  
-- [] revise and resubmit based on committee feedback 
-- [] close out board https://github.com/story645/proposal/projects/3
-- [] turn off line numbers?
-
-### deliverables 
-- [] chapter section: new artists 
-    - [] code: at least 3 high level plotting functions (e.g. plot, scatter, imshow, bar)
-    - [] code: implementation of artist with explicit reindexing (heatmap)
-    - [] code: implementation of new prototype artists that do not inherit from Matplotlib artists
-    - [] math: formalization of definition of equivalance class \vartisteq
-    - [] write: what new artist looks like & how it differs from old artist (side by side or line by line)?
-    - [] write: second general public version of this for developer docs 
-    
-- [] chapter section: data
-    - [] code: at least 1 computational plotting function (e.g. hist, contour)
-    - [] code: at least 2 types of data structures (e.g. array, list, dict, analytic function)
--   - [] code: implement a data object for a non-trivial fiber bundle
-    - [] math: pin down how computations work -> transform to new bundle/selfbundle
-    - [] write: add more data case studies 
-    - [] write: triangulization/encoding data section
-    - [] write: clarify non-trivial fiber bundle section 
-    - [] reach: math/code/write-build distributed data source models and concurrent artists.
-
-- [] chapter section: interactivity
-    - [] code: demo of at least 1 complex interactive composite plot using new api (e.g. scatter with regression and parasitic histograms)
-    - [] math: expansion of the mathematical framework for + and complex (^) addition
-    - [] math: specification of interactive visualization
-    - [] write: up ^ operator
-    - [] write: figure: operator (two panel: math diagram, parasitic grid )
-
-- [] chapter: building libraries
-    - code: proof of concept 3rd party user-facing library with a biology partner that supports 
-    - [] code: at least one type of structured data (for example, phylogentic tree or cryo-electron microscopy image) and one composite visualization.
-    - [] math: formulation of a graphic with axes labeling
-    - [] write: describe how all this fits together to build library (systems paper)
-    - [] write: dev/api docs on building library using this architecture 
-    - [] reach: du bois toy library
-
-- [] chapter: lit review
-    - [] rework w/ continuity framing (troy paper + chi taxonomy + more on tools maybe?)
-
-- [] chapter: probabilistic forecast evaluation 
-    - [] rework w/ complex structured data + computation bent? 
+## Goals
+1) on track and back on track?
+2) discuss to resolve it
+### Proposal Due April 16
+- [ ] revise and resubmit based on committee feedback 
+    - [ ] (1) Audience: lower-level visualization library developers, domain specific library developers (continuing the architecture choices mpl made)
+    - [ ] (2) Need: unified model: continuity + equivariance 
+            - [ ] mpl works, unmaintainable, grew organically, this stuff is buried implicitly, gives a way to make it clear
+            - [ ] interactivity screen space back to data space, different implicit data than API incoherancy than bug?
+                - [ ] currently done in adhoc manner, want to enforce contracts for the interactivity 
+            - [ ] redesign that reliably enforces these constraints 
+            - [ ] library that supports all the data 
+                - [ ] relational tables, and images, and data cubes (with coordinates), and networks, and other data structures
+                - [ ] streaming and concurrency 
+                - [ ] blob the same? - model explains why this should be true
+            - [ ] framework to enforce invariance at the architecture level
+            - [ ] match engineering w/ math
+    - [ ] (3) Proposed solution: 
+        - [ ] functional math model, structure/type preserving 
+    - [ ] (4) Novelty:
+        - [ ] functional architecture
+        - [ ] explicitly expressing continuity
+    - [ ] (5) Benefits: 
+        - [ ] functional: robustness, concurrency, modularity, proves that reliably, backfit needs to this 
+    - [ ] (6) Evaluation: The method of evaluation to verify that the proposed solution delivers the stated benefits must be given.
+            The best justifications explicitly discuss particular choices in the context of several possible alternatives.
+            1. Case studies in the form of implementations (is this feasible) 
+            2. Comparison w/ existing implementation          
+    - [ ] (7) More specific discussion of what will be done and on what timeline.
+            [quarterly gantt charts?]
+ [] close out board https://github.com/story645/proposal/projects/3

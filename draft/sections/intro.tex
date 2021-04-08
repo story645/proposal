@@ -7,6 +7,38 @@
     \caption{Visualization is a mapping from data into visual encodings that are then rendered into images. In our model, this visual encoding stage is called the artist.}
     \label{fig:intro_artist_stages}
 \end{figure}
+
+
+- [ ] (1) Audience: lower-level visualization library developers, domain specific library developers (continuing the architecture choices mpl made)
+- [ ] (2) Need: unified model: continuity + equivariance 
+        - [ ] mpl works, unmaintainable, grew organically, this stuff is buried implicitly, gives a way to make it clear
+        - [ ] interactivity screen space back to data space, different implicit data than API incoherancy than bug?
+            - [ ] currently done in adhoc manner, want to enforce contracts for the interactivity 
+        - [ ] redesign that reliably enforces these constraints 
+        - [ ] library that supports all the data 
+            - [ ] relational tables, and images, and data cubes (with coordinates), and networks, and other data structures
+            - [ ] streaming and concurrency 
+            - [ ] blob the same? - model explains why this should be true
+        - [ ] framework to enforce invariance at the architecture level
+        - [ ] match engineering w/ math
+- [ ] (3) Proposed solution: 
+    - [ ] functional math model, structure/type preserving 
+- [ ] (4) Novelty:
+    - [ ] functional architecture
+    - [ ] explicitly expressing continuity in the model
+    - [ ] model is constraint oriented rather than evaluative
+- [ ] (5) Benefits: 
+    - [ ] functional: robustness, concurrency, modularity, proves that reliably, backfit needs to this 
+- [ ] (6) Evaluation: The method of evaluation to verify that the proposed solution delivers the stated benefits must be given.
+        The best justifications explicitly discuss particular choices in the context of several possible alternatives.
+        1. Case studies in the form of implementations (is this feasible) 
+        2. Comparison w/ existing implementation          
+- [ ] (7) More specific discussion of what will be done and on what timeline.
+        [quarterly gantt charts?]
+[] close out board https://github.com/story645/proposal/projects/3
+
+
+
 The work presented in this paper is motivated by a need for a library of visualization components that developers could use to build complex, domain specific tools tuned to the semantics and structure carried in domain specific data. While many researchers have identified and described important aspects of visualization, they have specialized in such different ways as to not provide a model general enough to natively support the full range of data and visualization types many general purpose modern visualization tools may need to support. The core architecture also needs to be robust to the big data needs of many visualization practitioners, and therefore support distributed and streaming data needs. To support both exploratory and confirmatory visualization\cite{tukeyWeNeedBoth1980}, this tool needs to support 2D and 3D, static, dynamic and interactive visualizations. 
 
 Specifically, this work was driven by a rearchitecture of the Python visualization library Matplotlib\cite{hunterMatplotlib2DGraphics2007} to meet modern data visualization needs. We aim to take advantage of developments in software design, data structures, and visualization to improve the consistency, composibility, and discoverability of the API. To do so, this work first presents a mathematical description of how data is transformed into graphic representations, as shown in figure~\ref{fig:intro_artist_stages}. As with other mathematical formalisms of visualization \cite{mackinlayAutomatingDesignGraphical1986,kindlmann2014algebraic,sugibuchiFramwork2009,vickersUnderstandingViz2013}, a mathematical framework provides a way to formalize the properties and structure of the visualization. In contrast to the other formalisms, the model presented here is focused on the components that build a visualization rather than the visualization itself. 
