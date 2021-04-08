@@ -3,10 +3,11 @@
 \section{Introduction}
 \label{sec:intro}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/intro/dar.png}
-    \caption{Visualization is a mapping from data into visual encodings that are then rendered into images. In our model, this visual encoding stage is called the artist.}
+    \includegraphics[width=\textwidth]{figures/intro/artist.png}
+    \caption{This table encodes information that here we choose to represent as a map or time series to try to match the visual encoding of the data to the structure inferred from the date and latitute, longitude fields of the dataset.}
     \label{fig:intro_artist_stages}
 \end{figure}
+
 
 
 - [ ] (1) Audience: lower-level visualization library developers, domain specific library developers (continuing the architecture choices mpl made)
@@ -46,7 +47,31 @@ Specifically, this work was driven by a rearchitecture of the Python visualizati
 In other words this model is not intended to be evaluative, it is intended to be a reference specification for visualization library API. To make this model as implementation independent as possible, we propose fairly general mathematical abstractions of the data container such that we do not need to assume the data has any specific structure, such as a relational database. We reuse this structure for the graphic as that allows us to specifically discuss how structure is preserved. We take a functional approach because functional paradigms encourage writing APIs that are flexible, concise and predictable due to the lack of side effects \cite{loudenProgrammingLanguagesPrinciples2010}. Furthermore, by structuring the API in terms of composition of the smallest units of transformation for which we can define correctness, a functional paradigm naturally leads to a library of highly modular components that are composable in such a way that by definition the composition is also correct. This allows us to ensure that domain specific visualizations built on top of these components are also correct without needing knowledge of the domain. As with the other mathematical formalisms of visualization, we factor out the rendering into a separate stage; but, our framework describes how these rendering instructions are generated. 
 
 In this work, we present a framework for understanding visualization as equivariant maps between topological spaces. Using this mathematical formalism, we can interpret and extend prior work and also develop new tools. We validate our model by using it to re-design artist and data access layer of Matplotlib, a general purpose visualization tool.
+
+\begin{figure}[H]
+    \begin{subfigure}{1\textwidth}
+        \includegraphics[width=1\columnwidth]{figures/intro/continuity.png}
+        \caption{The line plot does not preserve \textit{continuity} because it implies that the discrete records are connected to each other, while the bar plot is \textit{continuity} preserving because it visually represents the records as independent data points. }
+        \label{fig:intro:continuity}
+    \end{subfigure}
+    \begin{subfigure}{1\textwidth}
+        \includegraphics[width=1\columnwidth]{figures/intro/equivariance.png}
+        \caption{The data in blue is scaled by a factor of two, yielding the data in orange. To preserve \textit{equivariance}, the blue line plot representation of the unscaled data is also scaled by a factor of two, yielding the orange line plot that is equivalent to the scaled data.}
+        \label{fig:intro:equivariance}
+    \end{subfigure}
+  \caption{}
+  \label{fig:intro:structure}
+  \end{figure}
+  The structure that the transformations that make up a visualization library must preserve are \textit{continuity} and \textit{equivariance}, as illustrated in \autoref{fig:intro:structure}.
+\begin{mdframed}[roundcorner=10pt, frametitle= definitions, frametitlerule=true, frametitlebackgroundcolor=gray!10]
+    \begin{description}
+        \item[\textbf{continuity}] How records in the dataset are connected to each other, e.g. discrete rows, neworked nodes, points on a continuous surface
+        \item[\textbf{equivariance}] if an action is applied to the data or the graphic--e.g. a rotation, permutation, translation, or rescaling-- there must be an equivalent action applied on the other side of the transformation. 
+    \end{description}
+\end{mdframed}
  
+  In \autoref{fig:intro:continuity}, the line plot does not preserve continuity because the line connecting the discrete categories implies that the frequency of weather events is sampled from a continuous interval and the categories are points on that interval. In \autoref{fig:intro:equivariance}, the data and visual representation are scaled by equivalent factors of two, resulting in the change illustrated in the shift from blue to orange data and lines.
+
 
 \section{Background}
 One of the reasons we developed a new formalism rather than adopting the architecture of an existing library is that most information visualization software design patterns, as categorized by Heer and Agrawala\cite{HeerSoftware2006}, are tuned to very specific data structures. This in turn restricts the design space of visual algorithms that display information (the visualization types the library supports) since the algorithms are designed such that the structure of data is assumed, as described in Tory and Möller's taxonomy \cite{ToryRethinkingVisualization2004}. In proposing a new architecture, we contrast the trade offs libraries make, describe different types of data continuity, and discuss metrics by which a visualization library is traditionally evaluated. 
