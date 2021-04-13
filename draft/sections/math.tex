@@ -3,18 +3,12 @@
 
 \section{Topological Artist Model}
 \label{sec:tam}
-To guide the implementation of structure preserving building block components, we develop a mathematical formalism of visualization that specifies how these components preserve \textit{continuity} and \textit{equivariance}. We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
+To guide the implementation of structure preserving building block components, we develop a mathematical formalism of visualization that specifies how these components preserve \textit{continuity} and \textit{equivariance}. Inspired by the somewhat analogous component in Matplotlib\cite{hunterArchitectureOpenSource}, we call the transformation from data space to graphic that these building block components implement the \textit{artist}.
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-that carries a homomorphism of monoid actions $\varphi: \monoid \rightarrow \monoid^{\prime}$ \cite{cegarraCohomologyMonoidsOperators2019}, which are discussed in detail in section~\ref{sec:data_monoid}. Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
-\begin{equation}
-\mathscr{\vartist}(m\cdot \delement) = \varphi(m)\cdot\mathscr{\vartist}(\delement) 
-\end{equation}
-such that applying a monoid action $m \in \monoid$ to the data $\delement \in \mathscr{\dtotal}$ input to $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
-
-We model the data $\mathscr{\dtotal}$, graphic $\mathscr{\gtotal}$, and intermediate visual encoding $\mathscr{\vtotal}$ stages of visualization as topological structures that encapsulate types of variables and continuity. To explain which structure the artist is preserving, we first describe how we model data (\ref{sec:data}), graphics (\ref{sec:graphic}), and intermediate visual characteristics (\ref{sec:artist}) as fiber bundles. We then discuss the equivariant maps between data and visual characteristics (\ref{sec:artist_nu}) and visual characteristics and graphics (\ref{sec:artist_q}) that make up the artist.
+The \textit{artist} $\mathscr{\vartist}$ is a map from the data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$ fiber bundles. To explain how the \textit{artist} is a structure preserving map from data to graphic, we first describe how we model data (\ref{sec:data}) and graphics (\ref{sec:graphic}) as topological structures that encapsulate component types and continuity. We then discuss the maps from graphic to data (\ref{sec:graphic_base}, data components to visual components (\ref{sec:artist_nu}), and visual components into graphic (\ref{sec:artist_q}) that make up the artist.
 
 \subsection{Data Space \dtotal}
 \label{sec:data}
