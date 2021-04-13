@@ -3,9 +3,7 @@
 
 \section{Topological Artist Model}
 \label{sec:tam}
-
-As discussed in the introduction, visualization is generally defined as structure preserving maps from a data object to a graphic object. In order to formalize this statement, we describe the connectivity of the records using topology and define the structure on the components in terms of the monoid actions on the component types. By formalizing structure in this way, we can evaluate the extent to which a visualization preserves the structure of the data it is representing and build structure preserving visualization tools. 
-We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
+To guide the implementation of structure preserving building block components, we develop a mathematical formalism of visualization that specifies how these components preserve \textit{continuity} and \textit{equivariance}. We introduce the notion of an artist $\mathscr{\vartist}$ as an equivariant map from data to graphic
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
