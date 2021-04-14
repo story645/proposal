@@ -80,28 +80,23 @@ As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian pro
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, given an arbitrary interval scale fiber component $(\fname=temperature,\, \ftype=\texttt{float},\,\fttype=\reals)$ with with arbitrary monoid translation actions chosen for this example:
-\begin{itemize}
-    \item monoid operator addition $\ast = +$
-    \item monoid operations: $f: x\mapsto x + 1\degree C $, $g: x\mapsto x + 2\degree C$
-    \item monoid action operator composition $\bullet = \circ$
-\end{itemize}
-By structure preservation, we mean that monoid actions are composable. For the translation actions described above on the temperature fiber, this means that they satisfy the condition
-\begin{equation}
-    \begin{tikzcd}
-        \reals \arrow[rd, "(x+ 1\degree C)\circ(x+2\degree C)"] \arrow[d, "x+ 1\degree"'] &            \\
-        \reals \arrow[r, "x+ 2\degree C"']                                   & \reals
-    \end{tikzcd}
-\end{equation}
-where $1\degree C$ and $2\degree C$ are valid distances between two temperatures $x$. What this diagram means is that either the fiber could be shifted by $1 \degree C$ (vertical line) then by $2 \degree C$ (horizontal), or the two shifts could be combined such that in this case the fiber is shifted by $3 \degree C$ (diagonal) and these two paths yield the same temperature. 
+Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, lets say one component of the data is weather states, such that the fiber component is $\dfiber_i=\{sun,\, clouds,\, rain,\, lightning,\, storm\}$. If the data is ordinal, that means some ordering action is applied to the set.
 
-While many component types will be one of the measurement scale types, we generalize to monoids specifically for the case of partially ordered set. Given a set $W=\{mist, \, drizzle, \, rain \}$, then the map $f: W\rightarrow W$ defined by 
-\begin{enumerate}
-    \item $f(rain) = drizzle$,
-    \item  $f(drizzle) = mist$ 
-    \item $f(mist) = mist$
-\end{enumerate}
-is order preserving such that $mist \leq drizzle \leq rain$ but has no inverse since $drizzle$ and $mist$ go to the same value $mist$. Therefore order preserving maps do not form a group, and instead we generalize to monoids to support partial order component types. Defining the monoid actions on the components serves as the basis for identifying the invariance\cite{kindlmann2014algebraic} that must be preserved in the visual representation of the component. We propose equivariance of monoid actions individually on the fiber to visual component maps and on the graphic as a whole.
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+    \includegraphics[width=\textwidth]{figures/math/monoid_total.png}
+    \caption{The identity action $\bullet$ maps the weather states to themselves.}
+    \label{fig:monoid:total}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/monoid_partial.png}
+    \caption{The action $\bullet$ is a monotonic map, meaning that it preserves the relative ordering despite mapping multiple elements to the same element.}
+    \label{fig:monoid:partial}
+\end{subfigure}
+\end{figure}
+\note{I think there's something about associativity here, but I'm not sure what}
+ In \autoref{fig:monoid:partial}, the action $\bullet$ acts on the weather states such that the states that they are mapped into have the same relative ordering as the original states. Unlike group actions, the action $\bullet$ is not invertable and therefore a monoid action. We generalize to monoids specifically for the case of partially ordered scales are common in indicator rankings \cite{bruggemannRankingPrioritizationMultiindicator2011}.
+
 
 \subsubsection{Continuity of the Data $K$} 
 \label{sec:data_base}
@@ -275,7 +270,7 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
 \label{sec:artist_nu}
 %% equivariant maps 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/equivariance_nu.png}
+    \includegraphics[width=\textwidth]{figures/math/partial_fixed.png}
     \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions (which are represented by the colored arrows) are the same on both the \dsection\ input and \vsection\ output sets.}
     \label{fig:artist_nu}
 \end{figure}
@@ -368,7 +363,7 @@ The glyph in figure~\ref{fig:artist_mark_change} has the following characteristi
 \subsubsection{Assembly \vmark}
 In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/math/scatter.png}
+    \includegraphics[width=1\textwidth]{figures/math/scatter_with_s.png}
     \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
     \label{fig:artist_scatter}
@@ -383,7 +378,7 @@ such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) blac
 
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/line.png}
+    \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
@@ -462,11 +457,20 @@ such that the pulled back $\iota^*\dsection$ only contains records over $U \subs
 
 
 \subsubsection{Composition of Artists: +}
-%%\begin{figure}[H]
-%%   \includegraphics[width=1\textwidth]{figures/math/addition_operator.png}
-%%  \caption{$\dsection_1$ and $\dsection_2$ are distinct datasets passed through artists $\vartist_1$ and $\vartist_2$ to generate graphics $\gsection_1$ and $\gsection_2$. These graphics happen to be rendered to the same image, but otherwise have no intrinsinc link.}
-%%    \label{fig:artist_plus}
-%%\end{figure}
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/exploding_artist.png}
+    \caption{Each component of a visualization is generated via a different artist.}
+    \label{fig:seperate_artists}    
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/combined_artist.png}
+    \caption{This visualization is the disjoint union of the artists in \autoref{fig:seperate_artists}.}
+    \label{fig:combined_artists}
+\end{subfigure}
+\caption{}
+\label{fig:artist_plus}
+\end{figure}
 To build graphics that are the composites of multiple artists, we define a simple addition operator that is the disjoint union of fiber bundles \dtotal.  For example, a scatter plot $\dtotal_1$ and a line plot $\dtotal_2$ have different \dbase that are mapped to separate \gbase. To fully display both graphics, the composite graphic $\vartist_1 + \vartist_2$ needs to include all records on both $\dbase_1$ and $\dbase_2$, which are the sections on the disjoint union $\dbase_1 \sqcup \dbase_2$. This in turn yields disjoint graphics $\gbase_1 \sqcup \gbase_2$ rendered to the same image. Constraints can be placed on the disjoint union such as that the fiber components need to have the same \vchannel position encodings or that the position \vsection need to be in a specified range. There is a second type of composition where $\dtotal_1$ and $\dtotal_2$ share a base space $\dbase_2 \hookrightarrow \dbase_1$ such that the the artists can be considered to be acting on different components of the same section. This type of composition is important for creating visualizations where elements need to update together in a consistent way, such as multiple views \cite{alboRadarComparativeEvaluation2016a, hullmanKeeping2018} and brush-linked views\cite{beckerBrushingScatterplots1987,bujaInteractiveData1991}. 
 
 \subsubsection{Equivalance class of artists $\vartist^{\prime}$}
