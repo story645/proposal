@@ -48,29 +48,22 @@ which is equivalent to
 which allows us to decouple \dfiber\ into components $\dfiber_i$.
 
 \begin{figure}[H]
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_1k.png}
-        \caption{}
-        \label{fig:fiber_example_plane}
-    \end{subfigure}
-    \begin{subfigure}{.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/math/temp_3f.png}
-        \caption{}
-        \label{fig:fiber_example_cube}
-    \end{subfigure}
-    \caption{These two datasets have the same base space \dbase\ of discrete points, but figure~\ref{fig:fiber_example_plane} has fiber  $\dfiber=\reals\times\reals$ which is (time, temperature) while figure~\ref{fig:fiber_example_cube} has fiber $\reals\times\realsp\times\reals$ which is (time, wind=(speed, direction))}
+    \includegraphics[width=1\textwidth]{figures/math/fiber.png}
+    \caption{These two datasets have the same continuity, but different components and therefore different fibers. The 2D fiber \(\dfiber=\reals\times\reals\) encodes a dataset consisting of \textit{time} and \textit{temperature} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \reals\ for the temperature component. The 3D fiber encodes a dataset consisting of\textit{temperature}, \textit{latitude}, and \textit{longitude} components.}
     \label{fig:data_fiber_example}
 \end{figure}
 
-For example, the data in figure~\ref{fig:fiber_example_plane} is a pair of times and \textdegree K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
-\begin{equation}
-    \ftotal =  \reals \times \realsp 
-\end{equation} 
-where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=temperature,\, \ftype=\texttt{float},\, \fttype=\realsp)$ and is the set of values $\fttype=\realsp$. In figure~\ref{fig:fiber_example_cube}, temperature is replaced with wind. This wind variable is of type \texttt{wind} and has two components speed and direction $\{(s,d) \in \reals^{2} \mid  0\leq s,\, 0 \leq d \leq 360\}$ . Therefore, the fiber is 
-\begin{equation}
-    \dfiber = \realsp \times \reals^{2}
-\end{equation} 
-such that $F_1$ is specified by $(\fname = wind,\, \ftype = \texttt{wind},\, \fttype=\reals^{2})$.  As illustrated in figure~\ref{fig:data_fiber_example}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
+For example, the records in the 2D fiber in \autoref{fig:data_fiber_example} are a pair of times and \textdegree K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
+\begin{equation*}
+    \dfiber =  \reals \times \realsp 
+\end{equation*} 
+where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=temperature,\, \ftype=\texttt{float},\, \fttype=\reals)$ and is the set of values $\fttype=\reals$. In the 3D fiber in \autoref{fig:fiber_example_cube}, time is replaced with location. This location variable is of type \texttt{point} and has two components \textit{latitude} and \textit{longitude} $\{(lat,lon) \in \reals^{2} \mid  -90\leq lat \leq 90,\, 0 \leq lon \leq 360\}$. The fiber for this dataset is
+\begin{equation*}
+    \dfiber = \reals \times \reals^{2} = \reals \times \reals \times \reals
+\end{equation*} 
+where the dimensionality of the fiber does not change, but the components of the fiber can be coupled. For example, \textit{location} can can either be specified as \((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\)or \((\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals)\) and \((\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\).  
+
+As illustrated in figure~\ref{fig:data_fiber_example}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
