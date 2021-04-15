@@ -74,3 +74,19 @@ In this work, we present a framework for understanding visualization as equivari
 \end{figure}
 
 One example of highly expressive visualizations are the data portraits by Du Bois shown in figure~\ref{fig:intro_dubois}. While the Du Bois charts are different from the usual scatter, line, and plot charts, they conform to the constraint that a graphic is a structure preserving map from data to visual representation. Figure~\ref{fig:intro_dpa} is semantically similar to a bar chart in that the lengths of the segments are mapped to the values, but in this chart the segments are stacked together. Figure~\ref{fig:intro_dpb} is a multicolored line chart where the color shifts are at periods of political significance. In figure~\ref{fig:intro_dbc}, Du Bois combines a graphical representation where glyph size varies by population with a figurative representation of those glyphs as the countries the data is from, which means that the semantic and numerical properties of the data are preserved in the graph. Figure~\ref{fig:intro_dpd} is simply a treemap\cite{heerTourVisualizationZoo2010} with space between the marks. Since the Du Bois data portraits meet the criteria of a faithful visual representation, we propose a mathematical framework and implementation that allows us to express the Du Bois charts and common chart types with equal fidelity. 
+
+
+Associativitly means (a*b)*c = a*(b*c), as you know. Replace * with whatever binary operator you like. Same thing. Key one for CS/cat theory is when a, b, c are functions and * is composition. When you have something that seems like it always holds (like associativity does for function composition and most operations you can think of), it can be confusing because it is like .... why do you need to check this? it always has to be true.
+It turns out that it isn't for some binary operators that can be useful but we just don't see unless we are making general statements.
+But when you are proving something, it is important step in the proof.
+Part of the fact that the composition of equivariant functions eg. \nu and Q is equivariant, relies on the associativity. It just seems so obvious that you don't notice it, but if things wheren't associative .... suddenly all kinds of equations you are writing down and moving parenthesis, would either NOT be true, or be much more complicated.
+one way to write equivariance (for a group at least) as invariance is
+g^-1*\nu(g*\tau) = \nu(\tau)
+just imagine if order of operations between function call and g* mattered... it is hard because function composition IS associative but if it wasn't you couldn't just write that.
+There is an algebra called the octonians which is NOT associative but has a more complicated function so you can relate a*(b*c) with (a*b)*c with a isomorphic map (just isn't equal). Every equation becomes a mess. So the bottom line is that in a definition or a proof you might have to whip out associativity, but most of the time it does "just hold". It is mentioned when needed, but it isn't a serious constrain like continutity or equivariance ... it mostly "just holds".
+
+monoid -> set w/ associativity and identity
+
+set = R, f: R->R, 
+composotion of functions from a space to itself, is associative (\compo)
+ 
