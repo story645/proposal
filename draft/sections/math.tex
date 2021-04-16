@@ -62,7 +62,7 @@ where the first component $F_0$ is the set of values specified by $(\fname=time,
 \end{equation*} 
 where the dimensionality of the fiber does not change, but the components of the fiber can be coupled. For example, \textit{location} can can either be specified as \((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\)or \((\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals)\) and \((\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\).  
 
-As illustrated in figure~\ref{fig:math:data:fiber}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
+As illustrated in \autoref{fig:math:data:fiber}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:math:data:monoid}
@@ -136,7 +136,7 @@ such that \(\monoid_{i}\) acts on component bundle \(\dtotal_i\). The \dbase\ re
     \label{fig:math:data:base}
 \end{figure}
 
-The datasets in figure~\ref{fig:math:data:base} have the same fiber of (temperature, time). The dot represents a discrete base space \dbase, meaning that every dataset encoded in the fiber bundle has discrete continuity. The line is a representation of a 1D continuity, meaning that every dataset in the fiber bundle is 1D continous. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
+The datasets in \autoref{fig:math:data:base} have the same fiber of (temperature, time). The dot represents a discrete base space \dbase, meaning that every dataset encoded in the fiber bundle has discrete continuity. The line is a representation of a 1D continuity, meaning that every dataset in the fiber bundle is 1D continous. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
  
 \subsubsection{Data \dsection}
 \label{sec:data_section}
@@ -167,6 +167,17 @@ where each section $\dsection_i$ maps into a record on a component $\dfiber_i \i
 
 In \autoref{fig:math:data:sections}, the fiber is the same encoding of $(time, \, temperature)$ illustrated in \autoref{fig:math:data:fiber}, and the base space is the interval \dbase\ shown in \autoref{fig:math:data:base}. The section $\dsection^{(1)}$ is a function that for a point \dbasepoint\ returns a record in the fiber \dfiber. The section applied to a set of points in \dbase\ resolves to a series of monotonically increasing in time records of \textit{(time, temperature)} values. Section $\dsection^{(2)}$ returns a different timeseries of \textit{(time, temperature)} values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
 
+\subsubsection{Sheafs}
+\label{sec:math:data:sheaf}
+Many types of dynamic visualizations require evaluating sections on different subspaces of \dbase, an a sheaf, denoted $\mathcal{O}$ provides a way to do so. A sheaf is a mathematical structure for defining collections of objects\cite{ghristElementaryAppliedTopology2014, ghristHomologicalAlgebraData2018,urbanikBriefIntroductionSchemes} on mathematical spaces. On the fiber bundle \dtotal, we can describe a sheaf as the collection of local sections $\iota^{*}\dsection$
+\begin{equation}
+    \label{eq:sheaf}
+    \begin{tikzcd}[column sep=huge]
+        \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
+        U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
+    \end{tikzcd}
+\end{equation}
+which are sections of \dtotal\ pulled back over local neighborhood $U \subset \dtotal$ via the inclusion map \(\iota:\dtotal\rightarrow U\). The collation of sections enabled by sheafs is necessary for navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}.
 
 \subsubsection{Applications to Data Containers}
 This model provides a common formalism for widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a univariate numpy array\cite{harris2020array} that stores an image.  This could be a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. This position information is already implicitely encoded in the array as the index and the resolution of the image being stored.Instead of an image, the numpy array could also store a 2D discrete table. The fiber would not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
@@ -175,64 +186,64 @@ There are also many types of labeled containers that can richly be described in 
 
 Where this model particularly shines are N dimensional labeled data structures. For example, an xarray\cite{hoyer2017xarray} data that stores temperature field could have a \dbase\ that is a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  
 
-
 \subsection{Graphic Space \gtotal}
-\label{sec:graphic}  
-We introduce a graphic bundle to hold the essential information necessary to render a graphical design constructed by the artist. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$. The graphic bundle \gtotal\ consists of a base \gbase (~\ref{sec:graphic_fiber}) that is a thickened form of \dbase\, 
-a fiber \gfiber (~\ref{sec:graphic_base}) that is an idealized display space, and sections \gsection (~\ref{sec:graphic_section}) that encode a graphic where the visual characteristics are fully specified.
+\label{sec:math:graphic} 
+To establish that the artist is structure preserving map from data \dtotal\ to graphic \gtotal\, we construct a graphic bundle so that we can define \textit{equivariance} in terms of maps on the fiber spaces and \textit{continuity} in terms of maps on the base space. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$. 
+\begin{equation}
+    \begin{tikzcd}[ampersand replacement=\&]
+        \gfiber \arrow[r, hook] \& \gtotal \arrow[d, "\pi"'] \\
+                          \& \gbase \arrow[u, "\gsection"', bend right]
+    \end{tikzcd}
+  \end{equation}
+The graphic bundle \gtotal\ consists of a base \gbase (\autoref{sec:math:graphic:fiber}) that is a thickened form of \dbase\, a fiber \gfiber (\autoref{sec:math:graphic:base}) that is an idealized display space, and sections \gsection (\autoref{sec:math:graphic:section}) that encode a graphic where the visual characteristics are fully specified.
 
 \subsubsection{Idealized Display \gfiber}
-\label{sec:graphic_fiber}
+\label{sec:math:graphic:fiber}
 To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
-\begin{equation}
+\begin{equation*}
 (x,\, y,\, r,\, g,\, b) \in \gfiber
-\end{equation}
+\end{equation*}
 such that a rendered graphic only consists of 2D position and color. To support overplotting and transparency, the fiber could be $\gfiber=\reals^{7}$ such that $(x, y, z, r, g, b, a) \in \gfiber$ specifies the target display. By abstracting the target display space as \gfiber, the model can support different targets, such as a 2D screen or 3D printer. 
 
 \subsubsection{Continuity of the Graphic \gbase} 
-\label{sec:graphic_base}
-Just as the \dbase\ encodes the connectivity of the records in the data, we propose an equivalent \gbase\ that encodes the connectivity of the rendered elements of the graphic. For example, consider a \gbase\ that is mapped to the region of a 2D display space that represents \dbase. For some visualizations, \dbase\ may be lower dimension than \gbase. For example, a point that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the pixels that visually represent the point. This thickening is often not necessary when the dimensionality of \dbase\ matches the dimensionality of the target space, for example if \dbase\ is 2D and the display is a 2D screen. We introduce \gbase\ to thicken \dbase\ in a way which preserves the structure of \dbase. 
+\label{sec:math:graphic:base}
+\begin{figure}[H]
+    \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
+    \caption{For a visualization component to preserve continuity, it must have a continuous surjective map $\vindex: \gbase\rightarrow\dbase$ from graphic continuity to data continuity. The scatter and line graphic base spaces \gbase\ have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase.}
+    \label{fig:math:graphic:retraction:map}
+\end{figure}
+To establish that a visualization component preserves continuity, we propose that their must be a continuous map $\vindex: \gbase\rightarrow\dbase$ from the graphic base space to the data space. For example, consider a \gbase\ that is mapped to the region of a 2D display space that represents \dbase. For some visualizations, \dbase\ may be lower dimension than \gbase. For example, a point that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the pixels that visually represent the point. This thickening is often not necessary when the dimensionality of \dbase\ matches the dimensionality of the target space, for example if \dbase\ is 2D and the display is a 2D screen. We introduce \gbase\ to thicken \dbase\ in a way which preserves the structure of \dbase. 
 
-Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopology2020} of \gbase\ so that \dbase\ and \gbase\ have the same homotopy. The surjective map $\vindex: \gbase \rightarrow \dbase$ 
+Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopology2020} of \gbase\ so that \dbase\ and \gbase\ have the same homotopy, meaning there is a continuous map from \gbase\ to \dbase\cite{weissteinHomotopy}. The surjective map $\vindex: \gbase \rightarrow \dbase$ 
 \begin{equation}
     \begin{tikzcd}
         \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
         \dbase                   & \gbase \arrow[l, "\vindex"']
     \end{tikzcd}
 \end{equation}
-goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. 
-
-\begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-    \caption{The scatter and line graphic base spaces have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase.}
-    \label{fig:graphic_retraction_map}
-\end{figure}
-
-When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:graphic_retraction_map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The image has the same dimensions in data space and graphic space such that no extra dimensions are needed in \gbase. 
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in \autoref{fig:math:graphic:retraction:map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The image has the same dimensions in data space and graphic space such that no extra dimensions are needed in \gbase. 
 
 The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
 \subsubsection{Graphic \gsection}
 \label{sec:graphic_section}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/render.png}
-    \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber.  The inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns the list of elements $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ elements is the color of the pixel.}
-    \label{fig:graphic_rho_lookup}
-\end{figure}
-
-This section describes how we go from a graphic in an idealized prerender space to a rendered image, where the graphic is the section $\gsection: \gbase \rightarrow \gtotal$. It is sufficient to sketch out how an arbitrary pixel would be rendered, where a pixel $p$ in a real display corresponds to a region $\gbase_p$ in the idealized display. To determine the color of the pixel, we aggregate the color values over the region via integration. 
-
-For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. To compute the color, we integrate on $\gbase_p$
-
-\begin{align}
+The section $\gsection: \gbase \rightarrow \gtotal$ is the graphic in an idealizes prerender space and also acts as a specification for rendering the graphic to an image. It is sufficient to sketch out how an arbitrary pixel would be rendered, where a pixel $p$ in a real display corresponds to a region $\gbase_p$ in the idealized display. To determine the color of the pixel, we aggregate the color values over the region via integration:
+\begin{align*}
+    \label{eq:math:graphic:section:color}
     r_p &= \iint\limits_{S_p} \rho_r(s)ds^{2}\\
     g_p &= \iint\limits_{S_p} \rho_g(s)ds^{2}\\
     b_p &= \iint\limits_{S_p} \rho_b(s)ds^{2}
-\end{align}
+\end{align*}
+For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. The color is the result of the integration over  $\gbase_p$.
 
-As shown in figure~\ref{fig:graphic_rho_lookup}, a pixel $p$ in the output space is selected and inverse mapped into the corresponding region $\gbase_p \subset \gbase$. This triggers a lookup of the $\gsection$ over the region $\gbase_p$, which yields the set of elements in \gfiber\ that specify the $(r, g, b)$ values corresponding to the region $p$. The color of the pixel is then obtained by taking the integral of $\gsection_{rgb}(\gbase_p)$. 
 
-In general, \gsection\ is an abstraction of rendering. In very broad strokes \gsection\  can be a specification such as PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997}. Alternatively, \gsection can be a rendering engine such as cairo\cite{CairographicsOrg} or AGG\cite{AntiGrainGeometry}. Implementation of \gsection\ is out of scope for this work,
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/math/render.png}
+    \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\ via the renderer. In \gtotal\, the inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns a set of points $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ pixels specifies that the pixel should be green}
+    \label{fig:math:graphic:rho:lookup}
+\end{figure}
+
+As shown in \autoref{fig:math:graphic:rho:lookup}, a pixel $p$ in the output space, drawn in yellow, is selected and mapped, via the renderer, into a region on \gtotal.  The region on \gtotal\ corresponds to a region $\gbase_p \subset \gbase$ via the inverse mapping  ${\gsection_{xy}}^(p)$. The base space \gbase\ is an annulus to match the topology of the graphic idealized in \gtotal. The section  $\gsection(\gbase_{p})$  then maps into the fiber \gfiber\ over $\gbase_p$ to obtain the set of points in \gfiber, here represented as a table, that correspond to that section. The integral over the pixel components of this set of points in the fiber yields \{3, 135, 60\} the actual color of the pixel. In general, \gsection\ is an abstraction of rendering. In very broad strokes \gsection\  can be a specification such as PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997}. Alternatively, \gsection\ can be a rendering engine such as cairo\cite{CairographicsOrg} or AGG\cite{shemanarevAntiGrainGeometry}. Implementation of \gsection\ is out of scope for this work,
 
 \subsection{Artist}
 \label{sec:artist}
@@ -240,7 +251,7 @@ We propose that the transformation from data to visual representation can be des
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
 \end{equation}
-Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in section~\ref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
+Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in \autoref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
 
 
 Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
@@ -252,10 +263,10 @@ Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a speci
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\ref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\ref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\ref{sec:artist_q}). This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. 
+where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\autoref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\autoref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\autoref{sec:artist_q}). This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. 
 
 \subsubsection {Visual Fiber Bundle \vtotal}
-We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to assemble into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example table~\ref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
+We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to assemble into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example \autoref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
@@ -283,12 +294,12 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
     \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions (which are represented by the colored arrows) are the same on both the \dsection\ input and \vsection\ output sets.}
     \label{fig:artist_nu}
 \end{figure}
-As introduced in section~\ref{sec:intro_viz}, there are many ways to visually represent data components. We define the visual transformers \vchannel\ 
+As introduced in \autoref{sec:intro_viz}, there are many ways to visually represent data components. We define the visual transformers \vchannel\ 
 \begin{equation}
     \label{eq:nu_expanded}
     \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in section~\ref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components.  
+as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components.  
 
 A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes such that 
 \begin{equation}
@@ -304,7 +315,7 @@ In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same typ
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-On example of an equivariant \vchannel\ is illustrated in figure~\ref{fig:artist_nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
+On example of an equivariant \vchannel\ is illustrated in \autoref{fig:artist_nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
 \begin{equation}
     \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
 \end{equation}
@@ -335,7 +346,7 @@ we find that the \vchannel\ defined here does not commute and is therefore inval
     \label{fig:artist_q}
 \end{figure}
 
-As shown in figure~\ref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
+As shown in \autoref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
 
 While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input:
 \begin{equation}
@@ -366,7 +377,7 @@ then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\pr
     \label{fig:artist_mark_change}
 \end{figure}
 
-The glyph in figure~\ref{fig:artist_mark_change} has the following characteristics \vfiber\ specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in figure~\ref{fig:artist_mark_change}.
+The glyph in \autoref{fig:artist_mark_change} has the following characteristics \vfiber\ specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:artist_mark_change}.
   
 
 \subsubsection{Assembly \vmark}
@@ -377,13 +388,13 @@ In this section we formulate the minimal Q that will generate distinguishable gr
     }
     \label{fig:artist_scatter}
 \end{figure}
-The scatter plot in figure~\ref{fig:artist_scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in figure~\ref{fig:artist_scatter}:
+The scatter plot in \autoref{fig:artist_scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in \autoref{fig:artist_scatter}:
 \begin{align}
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
 \end{align}
 
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in figure~\ref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in \autoref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
 
 
 \begin{figure}[H]
@@ -392,7 +403,7 @@ such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) blac
     \label{fig:artist_line}
 \end{figure}
 
-In contrast to the scatter, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in fig~\ref{fig:artist_line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. The line also exemplifies the need for the jet since the line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is 
+In contrast to the scatter, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in \autoref{fig:artist_line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. The line also exemplifies the need for the jet since the line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is 
 \begin{equation}
     \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}
 \end{equation}
@@ -415,7 +426,7 @@ where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, w
     \label{fig:artist_heatmap}
 \end{figure}
 
-The image $\vmark(xpos, ypos, color)$ in figure~\ref{fig:artist_heatmap} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. Since \dbase\ is 2D continuous space, the indexing variables $(\alpha, \beta)$ define the distance along the space. This is then used by \vindex\ to map into \dbase\ to lookup the color values 
+The image $\vmark(xpos, ypos, color)$ in \autoref{fig:artist_heatmap} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. Since \dbase\ is 2D continuous space, the indexing variables $(\alpha, \beta)$ define the distance along the space. This is then used by \vindex\ to map into \dbase\ to lookup the color values 
 \begin{align}
 R &= R(\vindex(\alpha, \beta))\\
 G &= G(\vindex(\alpha, \beta))\\
@@ -424,7 +435,7 @@ B &= B(\vindex(\alpha, \beta))
 that the data values have been mapped into. In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in eq~\ref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
     \caption{The pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint. Because the \vsection\ is the same, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
@@ -437,7 +448,7 @@ The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many g
 \end{equation}
 copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
 
-This copying is illustrated in figure~\ref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase. Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in figure~\ref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
+This copying is illustrated in \autoref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase. Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in \autoref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
 
 Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections  into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then 
 \begin{equation}
@@ -450,19 +461,7 @@ the graphic section \gsection\ evaluated on a visual region \gbasepoint\ is defi
 \end{equation} 
 where the assembly function \vmarkd\ that takes as input the visual section on data \vsection\ is defined to be the assembly function \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. 
 
-Factoring out \gbasepoint\ from equation~\ref{eq:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delgate the construction of \gsection\ to a back end such as Matplotlib.
-
-\subsubsection{Sheafs}
-\label{sec:artist_sheaf_stalk}
-The restriction maps of a sheaf describe how local \dsection can be glued into larger sections \cite{ghristElementaryAppliedTopology2014,ghristHomologicalAlgebraData2018}. As part of the definition of local triviality, there is an open neighborhood $U\subset \dbase$ for every $\dbasepoint \in \dbase$. We can define the inclusion map $\iota: U \rightarrow \dbase$  which pulls \dtotal over $U$ 
-\begin{equation}
-    \label{eq:sheaf}
-    \begin{tikzcd}
-        \iota^*\dtotal \arrow[d, "\pi"'] \arrow[r, "\iota^*", hook]             & \dtotal \arrow[d, "\pi"']                  \\
-        U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
-    \end{tikzcd}
-\end{equation}
-such that the pulled back $\iota^*\dsection$ only contains records over $U \subset \dbase$. By gluing $\iota^*\dsection$ together, the sheaf is putting a continuous structure on local sections which allows for defining a section over a subset in \dbase. That section over subset \dbase\ maps to the graphic generated by \vartist\ for visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995} streaming data, or navigation techniques such as pan and zoom\cite{NekrasovskiEvaluationPanZoom2006}.
+Factoring out \gbasepoint\ from \autoref{eq:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delgate the construction of \gsection\ to a back end such as Matplotlib.
 
 
 \subsubsection{Composition of Artists: +}
