@@ -8,10 +8,10 @@ To guide the implementation of structure preserving building block components, w
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-The \textit{artist} $\mathscr{\vartist}$ is a map from the data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$ fiber bundles. To explain how the \textit{artist} is a structure preserving map from data to graphic, we first describe how we model data (\ref{sec:data}) and graphics (\ref{sec:graphic}) as topological structures that encapsulate component types and continuity. We then discuss the maps from graphic to data (\ref{sec:graphic_base}, data components to visual components (\ref{sec:artist_nu}), and visual components into graphic (\ref{sec:artist_q}) that make up the artist.
+The \textit{artist} $\mathscr{\vartist}$ is a map from the data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$ fiber bundles. To explain how the \textit{artist} is a structure preserving map from data to graphic, we first describe how we model data (\autoref{sec:math:data}) and graphics (\autoref{sec:math:graphic}) as topological structures that encapsulate component types and continuity. We then discuss the maps from graphic to data (\autoref{sec:math:graphic:base}, data components to visual components (\autoref{sec:math:artist:nu}), and visual components into graphic (\autoref{sec:math:artist:q}) that make up the artist.
 
 \subsection{Data Space \dtotal}
-\label{sec:data}
+\label{sec:math:data}
 Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
@@ -19,12 +19,10 @@ Building on Butler's proposal of using fiber bundles as a common data representa
         \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
-that binds the components of the data in \dfiber\ to the continuity represented in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\ref{sec:data_fiber}), the continuity of records \dbase\ (\ref{sec:data_base}), the collections of records \dsection\ (\ref{sec:data_section}), and the space \dtotal\ of all possible datasets with these components and continuity. 
-
-By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood we can dispense with extra structure on \dtotal\ and focus on the components and continuity. We use fiber bundles as the data model because they are inclusive enough to express all the types of data described in section~\ref{sec:intro_data}. 
+that binds the components of the data in \dfiber\ to the continuity of the data encoded in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\autoref{sec:math:data:fiber}), the continuity of records \dbase\ (\autoref{sec:math:data:base}), the collections of records \dsection\ (\autoref{sec:math:data:section}), and the space \dtotal\ of all possible datasets with these components and continuity. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartesian product $\dbase\times\dfiber$. We use fiber bundles as the data model because they are inclusive enough to express all the types of structures of data described in \autoref{sec:intro:data:tools}
 
 \subsubsection{Variables in Fiber Space \dfiber}
-\label{sec:data_fiber}
+\label{sec:math:data:fiber}
 To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. This allows us to describe the components in a schema like way. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
@@ -37,7 +35,7 @@ which is \ftotal\ restricted to objects of type \ftype\ bound to variable name \
 \begin{equation}
     \dfiber = \ftotal_{\fsection(\fname)} = \ftotal_{\ftype} 
 \end{equation}
-where \fsection\ is the schema binding variable name \fname\ to its datatype \ftype. A dataset with multiple variables has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
+where \fsection\ is the schema that binds a variable name \fname\ to its datatype \ftype. A dataset with multiple components has a fiber that is the cartesian cross product of $\ftotal_{\fsection}$ applied to all the columns:
 \begin{equation}
 F = \ftotal_{\fsection(\fname_{1})}\times \ldots \ftotal_{\fsection(\fname_{i})} \ldots\times \ftotal_{\fsection(\fname_{n})}
 \end{equation}
@@ -49,11 +47,11 @@ which allows us to decouple \dfiber\ into components $\dfiber_i$.
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/fiber.png}
-    \caption{These two datasets have the same continuity, but different components and therefore different fibers. The 2D fiber \(\dfiber=\reals\times\reals\) encodes a dataset consisting of \textit{time} and \textit{temperature} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \reals\ for the temperature component. The 3D fiber encodes a dataset consisting of\textit{temperature}, \textit{latitude}, and \textit{longitude} components.}
-    \label{fig:data_fiber_example}
+    \caption{The fiber space is the set of all combinations of all theoretically possible values of the components.  The 2D fiber \(\dfiber=\reals\times\reals\) encodes the properties of \textit{time} and \textit{temperature} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \reals\ for the temperature component. This means the fiber is the set of points \textit{(temperature, time)}that are all the combinations of \textit{temperatature} $\times$ \textit{time}. The 3D fiber encodes points at all possible combinations of \textit{temperature}, \textit{latitude}, and \textit{longitude}.}
+    \label{fig:data:fiber:example}
 \end{figure}
 
-For example, the records in the 2D fiber in \autoref{fig:data_fiber_example} are a pair of times and \textdegree K temperature measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
+For example, the records in the 2D fiber in \autoref{fig:data:fiber:example} are a pair of \textit{times} and \textdegree K \textit{temperature} measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
 \begin{equation*}
     \dfiber =  \reals \times \realsp 
 \end{equation*} 
@@ -67,35 +65,46 @@ As illustrated in figure~\ref{fig:data_fiber_example}, Spivak's framework provid
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:data_monoid}
-Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the actions of a monoid on the component. In doing so, we specify the properties of the component that must be preserved in a graphic representation. While structure on a set of values is often described algebraically as operations or through the actions of a group, for example Steven's scales \cite{stevensTheoryScalesMeasurement1946}, we generalize to monoids to support more component types. Monoids are also commonly found in functional programming because they specify compositions of transformations \cite{yorgeyMonoidsThemeVariations, stievenMonadJustMonoid2020}. 
-
-A monoid \cite{Monoid2021} $\monoid$ is a set with an associative binary operator $\ast:\monoid \times \monoid\rightarrow \monoid$. A monoid has an identity element $e\in \monoid$ such that $e\ast a= a \ast e = a$ for all $a \in \monoid$. As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlab:action} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
+Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the actions of a monoid on the component. In doing so, we specify the properties of the component that must be preserved in a graphic representation. A monoid \cite{Monoid2021} $\monoid$ is a set with a binary operation $\ast:\monoid \times \monoid\rightarrow \monoid$ that satisfies the axioms:
+\begin{align*}
+    \textbf{associativity}\; & \text{for all} a, b, c \in \monoid \, (a \bullet b) \bullet c = a \bullet (b \bullet c)\\
+    \textbf{identity}\; & \text{for all } a\in \monoid,\,  e\bullet a = a 
+\end{align*} 
+As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlab:action} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
 \begin{align*}
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
+The identity and associativity properties of the action denote that the action is a monoid homomorphism, which means that the group operation is preserved on both sides of the action\cite{weissteinGroupHomomorphism}. 
+
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=\textwidth]{figures/math/monoid_total.png}
+        \caption{}
+        \label{fig:monoid:total}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \includegraphics[width=1\textwidth]{figures/math/monoid_partial.png}
+        \caption{}
+        \label{fig:monoid:partial}
+    \end{subfigure}
+    \caption{The action $\bullet$ in \autoref{fig:monoid:total} is the arrows from the partial order diagram of weather states on the left to the diagram of weather states on the right. Since the action maps the weather states to themselves, the ordering defined by the monoid $\ast$ is preserved on both sides of the action. The action in \autoref{fig:monoid:partial} is monoid homomorphism because the ordering of the weather states is the same as the ordering of the elements they are mapped to. Given $sun \geq clouds\geq rain\, lightining$ on the right, the action  $sun\, clouds \rightarrow clouds$, and $rain\, lightining \rightarrow rain$ is structure preserving because on the left $cloud \geq rain$ so the relative ordering of elements is the same as the elements they are mapped to.}
+    \label{fig:monoid}
+\end{figure}
+
+One example of monoids are partial orderings on a set, such as seen in \label{fig:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:monoid:total}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action and it is therefore homomorphic. The action $\bullet$ in \autoref{fig:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}, meaning that for  $a,b \in \dfiber_{i}$
+\begin{equation}
+    if\, a \leq b \; then \; \bullet(a) \leq \bullet(b)
+\end{equation}
+the structure the action must preserve is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is also broad enough to include the Steven's measurment scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Monoids are also commonly found in functional programming because a property of monoids is that the components can be composed into complex transformation pipelines \cite{yorgeyMonoidsThemeVariations}. 
+
 As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
 \begin{equation}
 \monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
 \end{equation}
 of each monoid $\monoid_{i}$ on $\dfiber_{i}$.  The monoid is also added to the specification of the fiber $(\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)$
 
-Steven's described the measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale} in terms of the monoid actions on the measurements: nominal data is permutable, ordinal data is monotonic, interval data is translatable, and ratio data is scalable \cite{weissteinSimilarityTransformation}. For example, lets say one component of the data is weather states, such that the fiber component is $\dfiber_i=\{sun,\, clouds,\, rain,\, lightning,\, storm\}$. If the data is ordinal, that means some ordering action is applied to the set.
 
-\begin{figure}[H]
-\begin{subfigure}{.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/math/monoid_total.png}
-    \caption{The identity action $\bullet$ maps the weather states to themselves.}
-    \label{fig:monoid:total}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-    \includegraphics[width=1\textwidth]{figures/math/monoid_partial.png}
-    \caption{The action $\bullet$ is a monotonic map, meaning that it preserves the relative ordering despite mapping multiple elements to the same element.}
-    \label{fig:monoid:partial}
-\end{subfigure}
-\end{figure}
-\note{I think there's something about associativity here, but I'm not sure what}
- In \autoref{fig:monoid:partial}, the action $\bullet$ acts on the weather states such that the states that they are mapped into have the same relative ordering as the original states. Unlike group actions, the action $\bullet$ is not invertable and therefore a monoid action. We generalize to monoids specifically for the case of partially ordered scales are common in indicator rankings \cite{bruggemannRankingPrioritizationMultiindicator2011}.
 
 
 \subsubsection{Continuity of the Data $K$} 
