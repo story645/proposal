@@ -236,7 +236,6 @@ The section $\gsection: \gbase \rightarrow \gtotal$ is the graphic in an idealiz
 \end{align*}
 For a 2D screen, the pixel is defined as a region $p=\left[y_{top}, y_{bottom}, x_{right}, x_{left}\right]$ of the rendered graphic. Since the x and y in $p$ are in the same coordinate system as the x and y components of \gfiber\,  the inverse map of the bounding box $\gbase_{p} ={\gsection_{xy}}^{-1}(p)$ is a region $\gbase_p \subset \gbase$. The color is the result of the integration over  $\gbase_p$.
 
-
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/render.png}
     \caption{To render a graphic, a pixel $p$ is selected in the display space, which is defined in the same coordinates as the x and y components in \gfiber\ via the renderer. In \gtotal\, the inverse mapping ${\gsection_{xy}}^(p)$ returns a region $\gbase_{p} \subset \gbase$. $\gsection(\gbase_{p})$ returns a set of points $(x,\,y,\,r,\,g,\,b) \in \gfiber$ that lie over $\gbase_{p}$. The integral over the $(r,\,g,\,b)$ pixels specifies that the pixel should be green}
@@ -247,27 +246,43 @@ As shown in \autoref{fig:math:graphic:rho:lookup}, a pixel $p$ in the output spa
 
 \subsection{Artist}
 \label{sec:artist}
-We propose that the transformation from data to visual representation can be described as a structure preserving map from one topological space to another. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements. The topological artist \vartist\ is a monoid equivariant sheaf map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
+The topological artist \vartist\ is how we model the building block component that transforms data into a graphic. The artist \vartist\ is a map from the sheaf on a data bundle \dtotal\ which is $\mathcal{O}(\dtotal)$ to the sheaf on the graphic bundle \gtotal, $\mathcal{O}(\gtotal)$. 
 \begin{equation}
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
+    \label{eq:math:artist:artist}
 \end{equation}
-Sheafs are a mathematical object with restriction maps that define how to glue \dsection over local neighborhoods $U \subseteq \dbase$,  discussed in \autoref{sec:artist_sec:data_sheaf_stalk}, such that the \vartist\ maps are consistent over continuous regions of \dbase. While \vartist can usually construct graphical elements solely with the data in \dsection, some visualizations, such as line, may also need some finite number $n$ of derivatives, which is captured by the jet bundle $\mathcal{J}^n$ \cite{JetBundle2020,musilovaCalculusVariationsJet2016} with $\mathcal{J}^{0}(\dtotal)=\dtotal$. In this work, we at most need $\mathcal{J}^{2}(\dtotal)$ which is the value at \dsection\ and its first and second derivatives; therefore the artist takes as input the jet bundle $\dtotal^{\prime}=\mathcal{J}^{2}(\dtotal)$. 
-
-
-Specifically, \vartist is the equivariant map from $\dtotal^{\prime}$ to a specific graphic $\gsection \in \Gamma(H)$ 
-
+The artist preserves \textit{continuity} through the \vindex\ map discussed in \autoref{sec:math:graphic:base} and is an \textit{equivariant} map because it carries a homomorphism of monoid actions \cite{cegarraCohomologyMonoidsOperators2019}
 \begin{equation}
-    \label{eq:artist_diagram}
+    \varphi: \monoid \rightarrow \monoid^{\prime}
+\end{equation}
+
+Given \monoid\ on data $\mathscr{\dtotal}$ and $\monoid^{\prime}$ on graphic $\mathscr{\gtotal}$, we propose that artists $\mathscr{\vartist}$ are equivariant maps 
+\begin{equation}
+\vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
+\end{equation}
+such that applying a monoid action $m \in \monoid$ to the data input $\delement \in \mathscr{\dtotal}$ of the artist $\mathscr{\vartist}$ is equivalent to applying a monoid action $\varphi(\monoid) \in \monoid^{\prime}$ to the graphic $\vartist(\delement) \in \mathscr{\gtotal}$ output of the artist.
+
+The monoid equivariant map has two stages: the encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components, and the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal.
+\begin{equation}
+    \label{eq:math:artist:diagram}
     \begin{tikzcd}
         \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
-where the input can be point wise $\dsection(\dbasepoint)\mid \dbasepoint \in \dbase$. The encoders $\vchannel:\dtotal^{\prime} \rightarrow \vtotal$ convert the data components to visual components(\autoref{sec:graphic_base}). The continuity map $\vindex:\gbase \rightarrow \dbase$ then pulls back the visual bundle \vtotal\ over \gbase (\autoref{sec:artist_nu}). Then the assembly function $\vmark: \vtotalpull \rightarrow \gtotal$ composites the fiber components of \vtotalpull\ into a graphic in \gtotal (\autoref{sec:artist_q}). This functional decomposition of the visualization artist facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. 
+\vtotalpull\ is the visual bundle \vtotal\ pulled back over \gbase\ via the equivariant continuity map $\vindex:\gbase \rightarrow \dbase$ introduced in \autoref{sec:math:graphic:base}.
+The functional decomposition of the visualization artist in \autoref{eq:math:artist:diagram}facilitates building reusable components at each stage of the transformation because the equivariance constraints are defined on \vchannel, \vmark, and \vindex. We name this map the artist as that is the analogous part of the  Matplotlib\cite{hunterArchitectureOpenSource} architecture that builds visual elements.
 
 \subsubsection {Visual Fiber Bundle \vtotal}
-We introduce a visual bundle \vtotal\ to store the visual representations the artist needs to assemble into a graphic. The visual bundle (\vtotal, \dbase, $\pi$, \vfiber) has section $\vsection: \vtotal \rightarrow \dbase$ that resolves to a visual variable in the fiber \vfiber. The visual bundle \vtotal\ is the latent space of possible parameters of a visualization type, such as a scatter or line plot. We define \vfiber\ in terms of the parameters of a visualization libraries compositing functions; for example \autoref{tab:mpl_visual_variable_fiber} is a sample of the fiber space for Matplotlib \cite{hunterMatplotlib2DGraphics2007}.
-
+\label{sec:math:visual}
+We introduce a visual bundle \vtotal\ to store the mappings of the data components into components of the graphic. The visual bundle $(\vtotal,\,\dbase,\,\pi ,\,\vfiber)$ is the space of possible parameters of a visualization type, such as a scatter or line plot. As with the data and graphic bundles, the visual bundle is defined by the projection map $\pi$
+\begin{equation}
+    \begin{tikzcd}[ampersand replacement=\&]
+        \vfiber \arrow[r, hook] \& \vtotal \arrow[d, "\pi"'] \\
+                          \& \dbase \arrow[u, "\vsection"', bend right]
+    \end{tikzcd}
+\end{equation}
+where \vsection\ is the visual variable encoding, as described by Bertin \cite{bertinSemiologyGraphicsDiagrams2011a}, of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave.
 \begin{table}[H]
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
@@ -280,63 +295,67 @@ We introduce a visual bundle \vtotal\ to store the visual representations the ar
                                 & linestyle                                                        & $(\mathbb{R}, \mathbb{R^+}^{n, n\%2=0})$ \\ \hline              
     \end{tabulary}
     \caption{Some possible components of the fiber \vfiber\ for a visualization function implemented in Matplotlib}
-    \label{tab:mpl_visual_variable_fiber}
+    \label{tab:math:artist:mpl:fiber}
 \end{table}
-
- A section \vsection\ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of $\{xpos, ypos, color\}$ one possible section could be  $\{.5, .5, (255, 20,147)\}$. The $codomain(\vchannel_i)$ determines the monoid actions on $\vfiber_i$. These fiber components are implicit in the library, by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
+ A section \vsection\ is a tuple of visual values that specifies the visual characteristics of a part of the graphic. For example, given a fiber of \(\{x, y, color\}\) one possible section could be  \(\{.5, .5, (255, 20,147)\}\). The \(codomain(\vchannel_i)\) determines which monoids can act on $\vfiber_i$. These fiber components are implicit in the library, as seen in \autoref{tab:math:artist:mpl:fiber}, and by making them explicit as components of the fiber we can build consistent definitions and expectations of how these parameters behave. 
 
  
 \subsubsection{Visual Encoders \vchannel}
-\label{sec:artist_nu}
-%% equivariant maps 
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/partial_fixed.png}
-    \caption{In this artist, \vchannel\ maps the strings to the emojis. This \vchannel\ is equivariant because the monoid actions (which are represented by the colored arrows) are the same on both the \dsection\ input and \vsection\ output sets.}
-    \label{fig:artist_nu}
-\end{figure}
-As introduced in \autoref{sec:intro_viz}, there are many ways to visually represent data components. We define the visual transformers \vchannel\ 
+\label{sec:math:artist:nu}
+We define the visual transformers \vchannel\ 
 \begin{equation}
-    \label{eq:nu_expanded}
-    \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
+  \label{eq:math:artist:nu}
+  \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:data_monoid}, we choose monoid actions as the basis for equivariance because they define the structure on the fiber components.  
-
-A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes such that 
+as the set of equivariant maps $\vchannel_i: \dsection_i \mapsto \vsection_i$. Given $\monoid_i$ is the monoid action on $\dtotal_i$ and that there is a monoid ${\monoid_i}^{\prime}$ on $\vtotal_i$, then there is a monoid homomorphism from $\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}$ that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. A validly constructed \vchannel\ is one where the diagram of the monoid transform $m$ commutes
 \begin{equation}
-    \label{eq:nu_categorical}
+  \label{eq:math:artist:nu_commute}
 \begin{tikzcd}
-    \dtotal_i \arrow[r] \arrow[r, "\vchannel_i"] \arrow[d, "m_{\delement}"'] & \vtotal_i \arrow[d, "m_{\velement}"] \\
-    \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
+  \dtotal_i \arrow[r] \arrow[r, "\vchannel_i"] \arrow[d, "m_{\delement}"'] & \vtotal_i \arrow[d, "m_{\velement}"] \\
+  \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
+such that applying equivariant monoid actions to $\dtotal_{i}$ and $\vtotal_{i}$ preserves the map $\vchannel_{i}: \dtotal_{i}\rightarrow \vtotal_{i}$. In general, the data fiber $\dfiber_{i}$ cannot be assumed to be of the same type as the visual fiber $\vfiber_{i}$ and the actions of \monoid\ on $\dfiber_{i}$ cannot be assumed to be the same as the actions of $\monoid^{\prime}$ on \vfiber; therefore an equivariant $\vchannel_i$ must satisfy the constraint  
 \begin{equation}
 \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
+\label{eq:math:artist:nu:equivariance}
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-On example of an equivariant \vchannel\ is illustrated in \autoref{fig:artist_nu}, which is a mapping from \textbf{Strings} to symbols. The data is an example of a Steven's nominal measurement set, which is defined as having on it permutation group actions 
-\begin{equation}
-    \text{ if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)
-\end{equation}
-such that shuffling the words must have an equivalent shuffle of the symbols they are mapped to. This is illustrated in the identical actions, represented by the colored arrows, on the words and emojis. To preserve ordinal and partial order monoid actions, \vchannel\ must be a monotonic function such that given $\delement_1, \delement_2 \in \dtotal_{i}$,
-\begin{equation}
-\text{ if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)
-\end{equation}
-the visual encodings must also have some sort of ordering. For interval scale data, \vchannel\ is equivariant under translation monoid actions if 
-\begin{equation}
-\vchannel (x + c) = \vchannel(x) + c
-\end{equation}
-while for ratio data, there must be equivalent scaling\cite{weissteinSimilarityTransformation} 
-\begin{equation}
-\vchannel(xc) = \vchannel(x)*c 
-\end{equation}
-We therefore can test if a \vchannel\ is equivariant by testing the actions under which is must  commute. For example, we define a transform $\vchannel_{i}(x) = .5$ on interval data. This means it must commute under translation, for example $t(x) = x+2$. Testing this constraint 
-\begin{align}
-    \vchannel(t(\delement + 2)) & \overset{?}{=} \vchannel(\delement) + 2\\
-    .5 &\neq .5 + 2
-\end{align}
-we find that the \vchannel\ defined here does not commute and is therefore invalid. The constraints on \vchannel\ can be embedded into our artist such that the \vchannel\ functions can test for equivariance and also provide guidance on constructing new \vchannel\ functions. 
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/partial_invalid.png}
+    \caption{}
+    \label{fig:math:artist:nu:invalid}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/partial_fixed.png}
+    \caption{}
+    \label{fig:math:artist:nu:valid}
+  \end{subfigure}
+  \caption{The map from data component to visual component in \autoref{fig:math:artist:nu:invalid} is not homomorphic, and therefore invalid, because $rain \geq storm$ is mapped to elements with the reverse ordering $\nu(storm) \geq \nu(storm)$. In contrast, the mapping in \autoref{fig:math:artist:nu:valid} is valud since $\nu(storm)=\nu(rain)$ satisfies the condition $\nu(storm) \geq \nu(storm)$}
+  \label{fig:math:artist:nu}
+\end{figure}
+
+The translation from weather state data to visual representation as umbrella emoji in \autoref{fig:math:artist:nu:invalid} is an invalid visual encoding map \vchannel\ because it is not homomorphic. This is because the monotonic condition \(rain \geq storm \implies \vchannel(rain) \geq  \vchannel(storm)\) is not met since \(\vchannel(rain) \leq\vchannel(storm)\). To satisfy the monotonic condition for $rain \geq storm$, either red arrow in \autoref{fig:math:artist:nu:invalid} would have to go in a different direction. On the other hand, the mapping from weather state to umbrellla in \autoref{fig:math:artist:nu:valid} is a homomorphism since $\vchannel(rain) = \vchannel(storm)$ satisfies the monotonic condition of $rain \geq storm$. 
+
+\begin{table}[H]
+  \renewcommand{\arraystretch}{2}
+  \begin{tabulary}{\columnwidth}{|llL|}\hline
+      \textbf{scale} & \textbf{group} & \textbf{constraint}\\ \hline
+      nominal & permutation &  $\text{if } \delement_1 \neq \delement_2 \text{ then } \vchannel (\delement_1) \neq\vchannel(\delement_2)$\\
+      ordinal &  monotonic & $\text{if } \delement_1 \leq \delement_2 \text{ then } \vchannel (\delement_1) \leq \vchannel(\delement_2)$\\
+      interval &  translation &  $\vchannel (x + c) = \vchannel(x) + c$ \\
+      ratio &  scaling &  $\vchannel(xc) = \vchannel(x)*c $\\ \hline
+  \end{tabulary}
+  \caption{}
+  \label{tab:math:artist:nu}
+\end{table}
+An example of monoid action equivariance is the preservation of partial ordering illustrated in 
+
+\autoref{fig:math:artist:nu} is an example of a valid visual representation of partially ordered data components. \autoref{tab:math:artist:nu} describes the conditions on \vchannel\ for components that are one of the Stevens measurement types\cite{stevensTheoryScalesMeasurement1946}, which he defined in terms of their mathematical group structure. By specifying the equivariance constraints on \vchannel\, we can guarantee that the stage of the artist that transforms data components into visual representations is equivariant. These constraints guide the implementation of reusable component transformers \vchannel\ that are composed when generating the graphic. 
+
 
 \subsubsection{Graphic Assembler \vmark}
 \label{sec:artist_q}
