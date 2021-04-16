@@ -284,6 +284,7 @@ We introduce a visual bundle \vtotal\ to store the mappings of the data componen
 \end{equation}
 where \vsection\ is the visual variable encoding, as described by Bertin \cite{bertinSemiologyGraphicsDiagrams2011a}, of the data section \dsection. The visual fiber \vfiber\ is defined in terms of the input parameters of the visualization library's plotting functions; by making these parameters explicit components of the fiber, we can build consistent definitions and expectations of how these parameters behave.
 \begin{table}[H]
+    \centering
     \renewcommand{\arraystretch}{2}
     \begin{tabulary}{\textwidth}{|l|L|l|}\hline
      $\bm{\vchannel_{i}}$                      & $\bm{\vsection_{i}}$                                                            & $\bm{codomain(\vchannel_{i}) \subset \vfiber_{i}}$  \\ \hline                                              
@@ -338,9 +339,10 @@ such that $\varphi$ maps a monoid action on data to a monoid action on visual el
   \label{fig:math:artist:nu}
 \end{figure}
 
-The translation from weather state data to visual representation as umbrella emoji in \autoref{fig:math:artist:nu:invalid} is an invalid visual encoding map \vchannel\ because it is not homomorphic. This is because the monotonic condition \(rain \geq storm \implies \vchannel(rain) \geq  \vchannel(storm)\) is not met since \(\vchannel(rain) \leq\vchannel(storm)\). To satisfy the monotonic condition for $rain \geq storm$, either red arrow in \autoref{fig:math:artist:nu:invalid} would have to go in a different direction. On the other hand, the mapping from weather state to umbrellla in \autoref{fig:math:artist:nu:valid} is a homomorphism since $\vchannel(rain) = \vchannel(storm)$ satisfies the monotonic condition of $rain \geq storm$. 
+The translation from weather state data to visual representation as umbrella emoji in \autoref{fig:math:artist:nu:invalid} is an invalid visual encoding map \vchannel\ because it is not homomorphic. This is because the monotonic condition \(rain \geq storm \implies \vchannel(rain) \geq  \vchannel(storm)\) is not met since \(\vchannel(rain) \leq\vchannel(storm)\). To satisfy the monotonic condition for $rain \geq storm$, either red arrow in \autoref{fig:math:artist:nu:invalid} would have to go in a different direction. On the other hand, the mapping from weather state to umbrellla in \autoref{fig:math:artist:nu:valid} is a homomorphism since $\vchannel(rain) = \vchannel(storm)$ satisfies the monotonic condition of $rain \geq storm$. \autoref{fig:math:artist:nu} is an example of how the model supports partially ordered data components, which was a motivation for defining equivariance as monoid homomorphisms. 
 
 \begin{table}[H]
+\centering
   \renewcommand{\arraystretch}{2}
   \begin{tabulary}{\columnwidth}{|llL|}\hline
       \textbf{scale} & \textbf{group} & \textbf{constraint}\\ \hline
@@ -352,106 +354,108 @@ The translation from weather state data to visual representation as umbrella emo
   \caption{}
   \label{tab:math:artist:nu}
 \end{table}
-An example of monoid action equivariance is the preservation of partial ordering illustrated in 
 
-\autoref{fig:math:artist:nu} is an example of a valid visual representation of partially ordered data components. \autoref{tab:math:artist:nu} describes the conditions on \vchannel\ for components that are one of the Stevens measurement types\cite{stevensTheoryScalesMeasurement1946}, which he defined in terms of their mathematical group structure. By specifying the equivariance constraints on \vchannel\, we can guarantee that the stage of the artist that transforms data components into visual representations is equivariant. These constraints guide the implementation of reusable component transformers \vchannel\ that are composed when generating the graphic. 
+The Stevens measurement types\cite{stevensTheoryScalesMeasurement1946}, listed in \autoref{tab:math:artist:nu}, are specified in terms of groups, which are monoids with invertible operations\cite{remlingAlgebraMath5353}. Despite critiques of the scales\cite{johnsonPseudoMathematicsMentalSocial1936,thomasMathematizationNotMeasurement2014}, we believe it is critical for the model to include the measurement scales since they are commonly used in visualization to classify components \cite{munznerVisualizationAnalysisDesign2014,wilkinsonGrammarGraphics2005}. By specifying the equivariance constraints on \vchannel\, we can guarantee that the stage of the artist that transforms data components into visual representations is equivariant. These constraints guide the implementation of reusable component transformers \vchannel\ that are composed when generating the graphic. 
 
 
-\subsubsection{Graphic Assembler \vmark}
-\label{sec:artist_q}
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/path_of_q}
-    \caption{$\vchannel_i$ functions convert data $\dsection_i$ to visual characteristics $\vsection_i$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection$ such that there is a map \vindex\ preserving the continuity of the data. \gsection\ applied to a region of connected components $\gbase_{\dbasepathpoint}$  generates a part of a graphic, for example the point graphical mark.} 
-    \label{fig:artist_q}
+\subsubsection{Visualization Assembly}
+\label{sec:math:artist:q}
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{figures/math/path_of_q.png}
+  \caption{The transform functions $\vchannel_i$ convert data $\dsection_i\in \dtotal$ to visual characteristics $\vsection_i \in \vtotal$, then \vmark\ assembles $\vsection_i$ into a graphic $\gsection \in \gtotal$.} 
+  \label{fig:math:artist:q}
 \end{figure}
+The transformation from data into graphic is analagous to a map-reduce operation; as illustrated in \autoref{fig:math:artist}, data components $\dtotal_{i}$ are mapped into visual components $\vtotal_{i}$ that are reduced into a graphic in \gtotal. The space of all graphics that \vmark\ can generate is the subset of graphics reachable via applying the reduction function $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ to the visual section $\vsection \in \Gamma(\vtotal)$. The full space of graphics is not necessarily equivariant; therefore we formalize the constraints on \vmark\ such that it produces structure preserving graphics. 
 
-As shown in \autoref{fig:artist_q}, the assembly function \vmark\ combines the fiber $\dfiber_i$ wise \vchannel\ transforms into a graphic in \gtotal. Together, \vchannel\ and \vmark\ are a map-reduce operation: map the data into their visual encodings, reduce the encodings into a graphic. As with \vchannel\, the constraint on \vmark\ is that for every monoid action on the input \vsection\, there is corresponding monoid action on the output \gsection. 
+We formalize the expectation that visualization generation functions parameterized in the same way should generate the same functions as the equivariant map $\vmark: \vsection \mapsto \gsection$. We then define the constraint on \vmark\ such that if \vmark\ is applied to two visual sections $\vsection$ and $\vsection^{\prime}$ that generate the same \gsection\, then the output of $\vsection$ and $\vsection^{\prime}$ acted on by the same monoid $m$ must be the same.  We do not define monoid actions on all of $\Gamma(\gtotal)$ because there may be graphics $\gsection \in \Gamma(\gtotal)$ for which we cannot construct a valid mapping from \vtotal.
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
+  \caption{These two glyphs are generated by the same annulus \vmark\ function. The monoid action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
+  \label{fig:math:artist:graphic}
+\end{figure}
+Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$
+\begin{prop}
+If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
+\begin{equation}
+\vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
+\label{eq:math:artist:q}
+\end{equation}
+then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. If and only if \vmark\ satistfies \autoref{eq:math:artist:q}, we can state that the transformed graphic $\gsection^{\prime}=\vmark(m\circ \vsection)$ is equivariant to a monoid action applied on \vmark\ with input $\vsection \in \vmark^{-1}(\gsection)$ that must generate valid \gsection. 
+\end{prop}
 
-While \gsection\ generates the entire graphic, we will restrict the discussion of \vmark\ to generation of sections of a glyph. We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input:
+For example, given fiber $\vfiber=(xpos,\, ypos,\, color,\, thickness)$, then sections $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$ and the corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:math:artist:graphic}.
+
+We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that map back to a set of path connected components $\dbasepath \subset \dbase$ as input 
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ s. t. } \exists \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
 where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
 \begin{equation}
-    \begin{tikzcd}
-        \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
-        \end{tikzcd}
-    \label{eq:mark}
+  \begin{tikzcd}
+      \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
+      \end{tikzcd}
+  \label{eq:mark}
 \end{equation}
-such that for every glyph there is at least one corresponding region on \dbase. This is in keeping with the definition of glyph as any differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
-
-
-It is on sections of these glyphs that we define the equivariant map as  $\vmark: \vsection \mapsto \gsection$ and an action on the subset of graphics $\vmark(\Gamma(\vtotal)) \in \Gamma(\gtotal)$ that \vmark\ can generate. We then define the constraint on \vmark such that if \vmark\ is applied to $\vsection, \vsection^{\prime}$ that generate the same \gsection\, then the output of both sections acted on by the same monoid $m$ must be the same. While it may seem intuitive that visualizations that generate the same glyph should consistently generate the same glyph given the same input, we formalize this constraint such that it can be specified as part of the implementation of \vmark. 
-
-Lets call the visual representations of the components $\Gamma(\vtotal)=X$ and the graphic $\vmark(\Gamma(\vtotal))=Y$. If for elements of the monoid $m \in \monoid$ and for all $\vsection, \vsection^{\prime} \in X$, we define the monoid action on $X$ so that it is by definition equivariant
-\begin{equation}
-\vmark(\vsection) = \vmark(\vsection^{\prime})\implies \vmark(m\circ\vsection) = \vmark(m\circ\vsection^{\prime})
-\end{equation}
-then a monoid action on $Y$ can be defined as $m\circ \gsection = \gsection^{\prime}$. The transformed graphic $\gsection^{\prime}$ is equivariant to a transform on the visual bundle $\gsection^{\prime}=\vmark(m\circ \vsection)$ on a section that $\vsection \in \vmark^{-1}(\gsection)$ that must be part of generating \gsection. 
-
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/diff_type_q.png}
-    \caption{These two glyphs are generated by the same \vmark\ function. The monoid 
-    action $m_i$ on edge thickness $\vsection_i$ of the first glyph yields the thicker edge ${\vsection_i}^{\prime}$ in the second glyph.}
-    \label{fig:artist_mark_change}
-\end{figure}
-
-The glyph in \autoref{fig:artist_mark_change} has the following characteristics \vfiber\ specified by  $(xpos,\, ypos,\, color,\, thickness)$ such that one section is $\vsection=(0,0,0,1)$ and $\vmark(\vsection) = \gsection$ generates a piece of the thin hollow circle. The equivariance constraint on \vmark\ is that the action $m=(e, e, e, x+2)$, where e is identity, translates \vsection\ to  $\vsection^{\prime}=(e,e,e,3)$. The corresponding action on \gsection\ causes $\vmark(\vsection^{\prime})$ to be the thicker circle in \autoref{fig:artist_mark_change}.
+such that for every glyph there is at least one corresponding region on \dbase, in keeping with the definition of glyph as any visually differentiable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
   
 
 \subsubsection{Assembly \vmark}
-In this section we formulate the minimal Q that will generate distinguishable graphical marks: non-overlapping scatter points, a non-infinitely thin line, and an image. 
+Given the continuities described in \ref{fig:math:graphic:retraction:map}, 
+we illustrate a minimal Q that will generate the most minimal visualizations associated with those continuities: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/scatter_with_s.png}
     \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
-    \label{fig:artist_scatter}
+    \label{fig:math:artist:q:scatter}
 \end{figure}
-The scatter plot in \autoref{fig:artist_scatter} can be defined as $\vmark(xpos, ypos)(\alpha, \beta)$ where color $\gsection_{RGB} = (0,0,0)$ is defined as part of \vmark\ and $\gbasepoint=(\alpha, \beta)$ defines the region on \gbase. The position of this swatch of color can be computed relative to the location on the disc $\gbase_{\dbasepoint}$ as shown in \autoref{fig:artist_scatter}:
-\begin{align}
+The scatter plot in \autoref{fig:math:artist:q:scatter} can be defined as 
+\begin{equation}
+\vmark(xpos, ypos)(\alpha, \beta)
+\label{eq:math:artist:q:scatter}
+\end{equation}
+with a constant \textit{size} and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of \vmark. The position of this swatch of color can be computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter}
+\begin{align*}
 x &= size *\alpha \cos(\beta) + xpos \\
 y &= size *\alpha \sin(\beta) + ypos
-\end{align}
-
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. Here $size$ can either be defined inside \vmark\ or it could also be a parameter in \vtotal\ that is passed along with (xpos, vpos). As seen in \autoref{fig:artist_scatter}, a scatter has a direct mapping from a region on $\gbase_{k}$ to its corresponding \dbasepoint. 
-
+\end{align*}
+such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. 
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
-
-In contrast to the scatter, the line plot $\vmark(xpos, \hat{n_{1}}, ypos, \hat{n_{2}})(\alpha, \beta)$ shown in \autoref{fig:artist_line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase\. The line also exemplifies the need for the jet since the line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness. The magnitude of the slope is 
+In contrast, the line plot 
 \begin{equation}
-    \lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}
+\vmark(xpos, \hat{n}_{1}, ypos, \hat{n}_{2})(\alpha, \beta)
+\label{eq:math:artist:q:line}
 \end{equation}
-such that the normal is  
-\begin{equation}
-    \hat{n_{1}} = \frac{n_1}{\lvert n \rvert}, \; \hat{n_{2}} = \frac{n_2}{\lvert n \rvert}
-\end{equation}
-
-which yields components of \gsection\
-\begin{align}
- x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n_1}(\vindex(\alpha)) \\
- y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n_2}(\vindex(\alpha)) 
-\end{align}
-
-where (x,y) look up the position $\vindex(\alpha)$ on the data. At that point, we also look up the the derivatives $\hat{n_1}, \hat{n_2}$  which are then multiplied by a $width$ parameter to specify the thickness. As with the $size$ parameter in scatter, $width$ can be defined in \vmark\ or as a component of \vtotal. 
+in \autoref{fig:math:artist:q:line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \autoref{fig:math:artist:q:line}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
+such that the normal is  $\hat{n}_{1} = \frac{n_1}{\lvert n \rvert}, \; \hat{n}_{2} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
+\begin{align*}
+ x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n}_1(\vindex(\alpha)) \\
+ y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n}_2(\vindex(\alpha)) 
+\end{align*}
+where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/image.png}
     \caption{The only visual parameter an image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
-    \label{fig:artist_heatmap}
+    \label{fig:math:artist:q:heatmap}
 \end{figure}
+In \autoref{fig:math:artist:q:heatmap}, the image 
+\begin{equation}
+\vmark(xpos, ypos, color)
+\label{eq:math:artist:q:image}
+\end{equation}
+ is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. The indexing variables $(\alpha, \beta)$ define the distance along the space, which is then used by \vindex\ to map into \dbase\ to lookup the color values 
+\begin{equation*}
+R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vindex(\alpha, \beta))
+\end{equation*}
+In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
-The image $\vmark(xpos, ypos, color)$ in \autoref{fig:artist_heatmap} is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. Since \dbase\ is 2D continuous space, the indexing variables $(\alpha, \beta)$ define the distance along the space. This is then used by \vindex\ to map into \dbase\ to lookup the color values 
-\begin{align}
-R &= R(\vindex(\alpha, \beta))\\
-G &= G(\vindex(\alpha, \beta))\\
-B &= B(\vindex(\alpha, \beta))
-\end{align}
-that the data values have been mapped into. In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 \subsubsection{Assembly factory \vmarkd}
 The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
