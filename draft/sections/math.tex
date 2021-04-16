@@ -457,35 +457,39 @@ R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vinde
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 
-\subsubsection{Assembly factory \vmarkd}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:artist_diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
-\begin{figure}[H]
+\label{sec:math:artist:qhat}
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+\begin{figure}[htb]
+  \centering
     \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
-    \caption{The pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint. Because the \vsection\ is the same, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
-    \label{fig:artist_q_hat}
+    \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
+    \label{fig:math:artist:qhat}
 \end{figure}
- 
+
 The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
 \begin{equation}
     \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
 \end{equation}
-copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase\. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
+copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint. 
 
-This copying is illustrated in \autoref{fig:artist_q_hat}, where the 1D fiber $\vfiber \hookrightarrow \vtotal$ over \dbase\ is copied repeatedly to become the 2D fiber $\vfiberpull \hookrightarrow \vtotalpull$ with identical components over \gbase. Given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map from \vsection on a point \dbasepoint, there is a direct map from the visual section over data base space  $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$ to the visual section \vsectionpull\ over graphic base space. This map means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint. This means that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$, which is illustrated in \autoref{fig:artist_q_hat} as each dot on \vfiber is equivalent to the line intersection \vfiberpull. 
+As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is a direct map $(\dbasepoint, \vsection(\dbasepoint)) \mapsto (\gbasepoint, \vsectionpull(\gbasepoint))$  from \vsection\ over \dbasepoint\ to the section \vsectionpull\ over \gbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber\ is equivalent to the line on \vfiberpull. 
 
-Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections  into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to the pulled back visual section \vsectionpull\ then 
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
 \begin{equation}
     \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
+    \label{eq:math:artist:qhat}
 \end{equation}
-the graphic section \gsection\ evaluated on a visual region \gbasepoint\ is defined as the assembly function \vmark\ with input pulled back visual section \vsectionpull\ also evaluated on \gbasepoint. Since the pulled back visual section \vsectionpull\ is the visual section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+ is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint. Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
 \begin{equation}
-\label{eq:qhat_q_s}
+\label{eq:math:artist:qhat_q_s}
 \vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
 \end{equation} 
-where the assembly function \vmarkd\ that takes as input the visual section on data \vsection\ is defined to be the assembly function \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. 
-
-Factoring out \gbasepoint\ from \autoref{eq:qhat_q_s} yields $\vmarkd(\vsection(k)) = \vmark(\vsectionpull)$ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record   $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delgate the construction of \gsection\ to a back end such as Matplotlib.
-
+where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. Factoring out \gbasepoint\ from \autoref{eq:math:artist:qhat_q_s} yields
+\begin{equation}
+\vmarkd(\vsection(k)) = \vmark(\vsectionpull)
+\label{eq:math:artist:qhat_k}
+\end{equation}
+where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to majorly restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
 
 \subsubsection{Composition of Artists: +}
 \begin{figure}[H]
