@@ -506,7 +506,7 @@ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms
 \caption{Each of the visual elements in \autoref{fig:math:seprate} is generated via a unique artist \vartist. In \autoref{fig:math:seperate}, they are added to the image independent of the other elements, creating an incoherant visualization. In \autoref{fig:math:combined}, these artists are composited before being added to the image. Disjoint union of \dtotal\ aligns the two timeseries with the x and y axis so all these elements use a shared coordinate system. A more complex composition dictates that the legend is connected to the \dtotal\ such that it must use the same color as the data it is identifying.}
 \label{fig:artist_plus}
 \end{figure}
-Visualizations with a single artist do not provide much information, so we define addition operators for generating more complex visualizations. Given the family of artists $(\dtotal_i: i\in I)$ on the same image, the + operator 
+We describe the constraints for compositing artists by defining addition operators. Given the family of artists $(\dtotal_i: i\in I)$ that are rendered to the same image, the + operator 
 \begin{equation}
 + \coloneqq \underset{i\in I}{\sqcup} \dtotal_{i}
 \end{equation}
