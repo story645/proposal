@@ -4,6 +4,7 @@ __pycache__/
 .vscode/
 *.egg-info/
 result_images/
+vgtc_paper/
 Untitled*.ipynb
 figures/intro/*.png
 figures/math/*.png
