@@ -392,9 +392,12 @@ such that applying equivariant monoid actions to $\dtotal_{i}$ and $\vtotal_{i}$
 \end{equation} 
 such that $\varphi$ maps a monoid action on data to a monoid action on visual elements. However, we can construct a monoid action of \monoid\ on $\vfiber_{i}$ that is compatible with a monoid action of \monoid\ on $\dfiber_{i}$. We can compose the monoid actions on the visual fiber $\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi$ that takes \monoid\ to $\monoid^{\prime}$. This allows us to define a monoid action on \vfiber\ of \monoid\ that is $(m, \velement) \rightarrow \varphi(m)\bullet\velement$. Therefore, without a loss of generality, we can assume that an action of \monoid\ acts on $\dfiber_{i}$ and on $\vfiber_{i}$ compatibly such that $\varphi$ is the identity function. 
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=1\columnwidth]{figures/partial_fixed.png}
+\begin{figure}[H]
+  \centering 
+  \subfloat[\label{fig:math:artist:nu:invalid}]{%
+    \includegraphics[width=.5\columnwidth]{figures/partial_invalid.png}}
+  \subfloat[\label{fig:math:artist:nu:fixed}]{%
+    \includegraphics[width=.5\columnwidth]{figures/partial_fixed.png}}
   \caption{As highlighted by the red arrows, the equivariance constraint is not met because \(rain\geq storm\), but \(\vchannel(rain) \leq \vchannel(storm)\). Instead, mapping \textit{storm} to the same element as \textit{rain} yields an equivariant \vchannel\ such that \(\vchannel(rain) \geq \vchannel(storm)\).}
   \label{fig:math:artist:nu}
 \end{figure}
