@@ -17,18 +17,25 @@ This model and the associated prototype is deeply tied to Matplotlib's existing 
 
 \subsection{Future Work}
 While the model and prototype demonstrate that generation of simple marks from the data, there is a lot of work left to develop a model that underpins a minimally viable library. Foremost is implementing a data object that encodes data with a 2D continous topology and an artist that can consume data with a 2D topology to visualize the image\cite{toryRethinkingVisualizationHighlevel2004, haber1990visualization,hansen2011visualization} and also encoding a separate heatmap\cite{wilkinsonHistoryClusterHeat2009,loua1873atlas} artist that consumes 1D discrete data.  A second important proof of concept artist is a boxplot\cite{wickham40YearsBoxplots2011} because it is a graphic that assumes computation on the data side and the glyph is built from semantically defined components and a list of outliers. The model supports simple composition of glyphs by overlaying glyphs at the same position, but more work is needed to define an operator where the fiber bundles have shared $\gbase_2 \hookrightarrow \gbase_1$ such that fibers could be pulled back over the subset. While the model's simple addition supports axes as standalone artists with overlapping visual position encoding, the complex operator would allow for binding together data that needs to be updated together. Additionally, implementing the complex addition operator and explicit graphic to data maps would allow for developing a mathematical formalism and prototype of how interactivity would work in this model.
-In summary, the proposed scope of work for the dissertation is
-\begin{itemize}
-    \item expansion of the mathematical framework to include complex addition
-    \item formalization of definition of equivalance class \vartisteq
-    \item implementation of artist with explicit \vindex\
-    \item specification of interactive visualization
-    \item mathematical formulation of a graphic with axes labeling
-    \item implementation of new prototype artists that do not inherit from Matplotlib artists
-    \item provisional mathematics and implementation of user level composite artists
-    \item proof of concept domain specific user facing library 
-\end{itemize}
- Other potential tasks for future work is implementing a data object for a non-trivial fiber bundle and exploiting the models section level formalism to build distributed data source models and concurrent artists. This could be pushed further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
+
+In summary, the optimistic proposed scope of work is
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabulary}{\textwidth}{|l|L|}\hline
+    \textbf{work period} & \textbf{milestones \& tasks} \\ \hline
+    April-July 2021 & prepare \textbf{conference presentation} on new functionality enabled by model for \textit{SciPy}: artists that do not inherit from existing Matplotlib artists, computational artists such as histograms, non tabular data, composite interactive artist \\ \hline
+    June-September 2021  & prepare \textbf{theory paper} on interactivity for submission to \textit{TCVG or Eurovis 2022}: fully work out and describe math of addition operators and lookups from graphic to data space, implement brush linked artist (shared base space) and artist that exploits sheafs \\ \hline
+    May - November 2021 & prepare \textbf{applications paper} on high dimensional data for submission to \textit{TCVG}: math and implementation of computational artists, concurrent artists and data sources, non-trivial data bundles \\ \hline 
+    August 2020-March 2022 & prepare \textbf{systems paper} on building domain specific libraries based on this model for \textit{Infoviz 2022}: domain specific structured data, composite artists, inference of meta data components, mathematical notion of a visualization (labeled, multiple artists, etc)\\ \hline
+    April 2022 & \textbf{dissertation} writing: synthesize previous work on climate data, compile topological equivariant artist model work \\ \hline
+    May 2022 & \textbf{defense} \\ \hline
+    \end{tabulary}
+    \caption{}
+    \label{tab:code:schedule}
+\end{table}
+In acknowledgement that the proposed scope is optimistic, the data applications of this work could be revisited after the defense as they are not integral to visualization library architecture. The data applications could be further to integrate with topological\cite{heineSurveyTopologybasedMethods2016} and functional \cite{ramsayFunctionalDataAnalysis2006a} data analysis methods. Since this model formalizes notions of structure preservation, it can serve as a good base for tools that assess quality metrics\cite{bertiniQualityMetricsHighdimensional2011a} or invariance \cite{kindlmannAlgebraicProcessVisualization2014} of visualizations with respect to graphical encoding choices. While this paper formulates visualization in terms of monoidal action homomorphisms between fiberbundles, the model lends itself to a categorical formulation\cite{fongInvitationAppliedCategory2019,milewskiCategoryTheoryProgrammers} that could be further explored. 
   
 
 
