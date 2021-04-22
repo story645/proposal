@@ -167,17 +167,17 @@ that asks the user to specify the the properties of \dfiber\ and the \dbase\ con
 \begin{minted}{python}
 class PointData:     
     def __init__(self):
-      FB = FiberBundle({'tables': ['vertex']},  
+        self.FB = FiberBundle({'tables': ['vertex']},  
                        {'v1': float, 'v2': str, 'v3': float})
     def tau(self, k):
-      return # tau evaluated at one point k
+        return # tau evaluated at one point k
 
 class LineData:
-  def __init__(self):
-    FB = FiberBundle({'tables': ['edge']},  
+    def __init__(self):
+        self.FB = FiberBundle({'tables': ['edge']},  
                      {'x': float, 'y': float, 'color': str})
-  def tau(self, k):
-    return # tau evaluated on interval k
+    def tau(self, k):
+        return # tau evaluated on interval k
 \end{minted}
 The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint.
 \begin{minted}{python}
@@ -266,7 +266,8 @@ class StackedBar(martist.Artist):
         floor = 0
         for group in self.MV:
             # pull out the specific group transforms
-            bar = Bar(self.E, {**group, **self.V, 'floor':floor}, self.orientation, transform=self.axes.transData)
+            bar = Bar(self.E, {**group, **self.V, 'floor':floor}, 
+                      self.orientation, transform=self.axes.transData)
             self.children.append(bar)
             floor += view[group['length']['name']]
             
@@ -294,7 +295,7 @@ class GroupedBar(martist.Artist):
             gwidth = width/ngroups
             offset = gid/ngroups*width 
             bar = Bar(self.E, {**group, **self.V, 'width':gwidth, 'offset':offset}, 
-                                self.orientation, transform=self.axes.transData)     
+                      self.orientation, transform=self.axes.transData)     
             self.children.append(bar)
 \end{minted}
 
