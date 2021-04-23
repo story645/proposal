@@ -72,3 +72,8 @@ def plot_time(ax, df, fade='k'):
     ax.spines[:].set_color(fade)
    
     
+def source_cell(cell, color='k', xr=.5, yr=.5):
+    cell.get_text().set_color(color)
+    x = cell.get_x() + cell.get_width()*xr
+    y = cell.get_y() + cell.get_height()*yr
+    return x, y
