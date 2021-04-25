@@ -5,8 +5,10 @@ import matplotlib as mpl
 import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
 import matplotlib.table as mtable
+import matplotlib.patches as mpatches
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
+#scatter position: 
 
 cdict = {'GANG MILLS NEW YORK': '#e6194B',
          'SARA NEW YORK': '#42d4f4',
@@ -34,43 +36,46 @@ def plot_table(ax, dfs, ccolors, edgecolor='k', textcolor='k'):
     for i, color in enumerate(ccolors):
         for j in range(len(dfs)+1):
             if textcolor is None:
-                tab[(j,i)].get_text().set_color(color)
+                tab[j,i].get_text().set_color(color)
             else:
-                tab[(j,i)].get_text().set_color(textcolor)
-            tab[(j,i)].set_edgecolor(edgecolor)    
+                tab[j,i].get_text().set_color(textcolor)
+            tab[j,i].set_edgecolor(edgecolor)    
     
     ax.set(xticks=[], yticks=[], aspect='equal')
     ax.axis('off')
     ax.add_table(tab)
     return tab
 
-def plot_map(ax, gdf, nystate, cmap, norm, fade='k'):
+def plot_map(ax, gdf, nystate, cmap, norm, fade='k', alpha=.5, station=None):
     for name in cdict:
+        a = 1 if name == station else alpha
         df = gdf.loc[[name], ['TAVG','geometry']]
-        df.plot(ax=ax, facecolor=cmap(norm(df['TAVG'])), edgecolor=cdict[name], linewidth=2.5, alpha=.75, markersize=100)
+        df.plot(ax=ax, label=name, facecolor=cmap(norm(df['TAVG'])), 
+                                edgecolor=mcolors.to_rgba(cdict[name], alpha=a), legend=False,
+                                linewidth=2.5, alpha=a, markersize=100)
     
-    mapplot= nystate[nystate['postal'].str.match('NY')].plot(ax=ax, 
-                                                             facecolor='white', 
-                                                             edgecolor=fade, zorder=-1)
+    nystate[nystate['postal'].str.match('NY')].plot(ax=ax,
+                                facecolor='white', edgecolor=fade, zorder=-1)
     
     ax1_divider = make_axes_locatable(ax)
     cax = ax1_divider.append_axes("right", size="5%", pad="2%")
-    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap,norm=norm, orientation='vertical', drawedges=False)
-    
+    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap,norm=norm, orientation='vertical', drawedges=False, alpha=alpha)
     for axes in [ax, cax]:
         axes.tick_params(color=fade, labelcolor=fade)
         axes.spines[:].set_color(fade)
     ax.set_aspect('equal')
     ax.axis('off')
-    return mapplot
+    return 
     
-def plot_time(ax, df, fade='k'):
+def plot_time(ax, df, fade='k', alpha=.5, station=None):
     for name, gdf in df.groupby(['NAME']):
-        ax.plot('DATES', 'TAVG', data=gdf, label=name,  alpha=.75, color=cdict[name])
+        a = 1 if name == station else alpha
+        zorder = 100 if name == station else -1
+        ax.plot('DATES', 'TAVG', data=gdf, label=name, color=cdict[name], alpha=a, zorder=zorder, lw=2)
     ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(mdates.AutoDateLocator()))
     ax.tick_params(color=fade, labelcolor=fade)
     ax.spines[:].set_color(fade)
-   
+    return 
     
 def source_cell(cell, color='k', xr=.5, yr=.5):
     cell.get_text().set_color(color)
