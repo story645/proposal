@@ -39,30 +39,29 @@ where \fsection\ is the schema that binds a variable name \fname\ to its datatyp
 \begin{equation}
 F = \ftotal_{\fsection(\fname_{1})}\times \ldots \ftotal_{\fsection(\fname_{i})} \ldots\times \ftotal_{\fsection(\fname_{n})}
 \end{equation}
-which is equivalent to 
+which can also be written as 
 \begin{equation}
     \label{eq:math:data:fiber:decompose}
     \dfiber= \dfiber_{0} \times \ldots \times \dfiber_{i}\times\ldots\times \dfiber_{n}
 \end{equation}
-which allows us to decouple \dfiber\ into components $\dfiber_i$.
+which allows us to decouple \dfiber\ into components $\dfiber_i = \ftotal_{\fsection{(\fname_{i})}}$.
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/fiber.png}
-    \caption{The fiber space is the set of all combinations of all theoretically possible values of the components.  The 2D fiber \(\dfiber=\reals\times\reals\) encodes the properties of \textit{time} and \textit{temperature} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \reals\ for the temperature component. This means the fiber is the set of points \textit{(temperature, time)}that are all the combinations of \textit{temperatature} $\times$ \textit{time}. The 3D fiber encodes points at all possible combinations of \textit{temperature}, \textit{latitude}, and \textit{longitude}.}
+    \caption{The fiber space is the set of all combinations of all theoretically possible values of the components.  The 2D fiber \(\dfiber=\reals\times\realsp\) (a) encodes the properties of \textit{time} and \textit{precipitation} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \realsp\ for the precipitation component. This means the fiber is the set of points \textit{(precipitation, time)} that are all the combinations of \textit{precipitation} $\times$ \textit{time}. The 3D fiber (b) encodes points at all possible combinations of \textit{precipitation}, \textit{latitude}, and \textit{longitude}.}
     \label{fig:math:data:fiber}
 \end{figure}
 
-For example, the records in the 2D fiber in \autoref{fig:data:fiber:example} are a pair of \textit{times} and \textdegree K \textit{temperature} measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
+For example, the records in the 2D fiber (a) in \autoref{fig:math:data:fiber} are a pair of \textit{times} and \textdegree K \textit{precipitation} measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
 \begin{equation*}
     \dfiber =  \reals \times \realsp 
 \end{equation*} 
-where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=temperature,\, \ftype=\texttt{float},\, \fttype=\reals)$ and is the set of values $\fttype=\reals$. In the 3D fiber in \autoref{fig:fiber_example_cube}, time is replaced with location. This location variable is of type \texttt{point} and has two components \textit{latitude} and \textit{longitude} $\{(lat,lon) \in \reals^{2} \mid  -90\leq lat \leq 90,\, 0 \leq lon \leq 360\}$. The fiber for this dataset is
+where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals)$ and is the set of values $\fttype=\reals$. In the 3D fiber (b) in \autoref{fig:math:data:fiber}, time is replaced with location. This location variable is of type \texttt{point} and has two components \textit{latitude} and \textit{longitude} $\{(lat,lon) \in \reals^{2} \mid  -90\leq lat \leq 90,\, 0 \leq lon \leq 360\}$. The fiber for this dataset is
 \begin{equation*}
-    \dfiber = \reals \times \reals^{2} = \reals \times \reals \times \reals
+    \dfiber = \reals \times [0, 360] \times [-90, 90]
 \end{equation*} 
 where the dimensionality of the fiber does not change, but the components of the fiber can be coupled. For example, \textit{location} can can either be specified as \((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\)or \((\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals)\) and \((\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\).  
 
-As illustrated in \autoref{fig:math:data:fiber}, Spivak's framework provides a consistent way to describe potentially complex components of the input data. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:math:data:monoid}
@@ -93,7 +92,7 @@ The identity and associativity properties of the action denote that the action i
     \label{fig:math:data:monoid}
 \end{figure}
 
-One example of monoids are partial orderings on a set, such as seen in \label{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:monoid:total}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action and it is therefore homomorphic. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}
+One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:monoid:total}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action and it is therefore homomorphic. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}
 \begin{equation*}
     if\, a \leq b \; then \; \bullet(a) \leq \bullet(b) \mid a,b \in \dfiber_{i}
 \end{equation*}
@@ -118,13 +117,13 @@ The base space \dbase\ acts as an indexing space, as emphasized by Butler\cite{b
 
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{figures/math/k_qspace.png}
-    \caption{The base space \dtotal\ is divided into fiber segments \dfiber. The base space \dbase\ acts as an index into the records in the fibers.}
+    \caption{The total space \dtotal\ is divided into fiber segments \dfiber. The base space \dbase\ acts as an index into the records in the fibers, such that every point \dbasepoint\ has a corresponding fiber $\dfiber_{\dbasepoint}$.}
     \label{fig:math:data:base:div}
 \end{figure}
 
 Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every $\dbasepoint \in \dbase$ has a corresponding fiber $\dfiber_k$\cite{QuotientSpaceTopology2020}. In \autoref{fig:math:data:base:div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping $\pi: \dtotal\rightarrow \dbase$ is the closed interval $\left[0,1\right]$. 
 
-As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose}, we can decompose the total space into component bundles$\pi:\dtotal_i\rightarrow \dbase$ where
+As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose}, we can decompose the total space into component bundles $\pi:\dtotal_i\rightarrow \dbase$ where
 \begin{equation}
     \label{eq:math:data:base:decompose}
     \pi:\dtotal_1\oplus\ldots\oplus \dtotal_i \oplus\ldots \oplus \dtotal_n \rightarrow \dbase
@@ -132,11 +131,11 @@ As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:
 such that \(\monoid_{i}\) acts on component bundle \(\dtotal_i\). The \dbase\ remains the same because the connectivity of records does not change just because there are fewer components in each record. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit.
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/base.png}
-    \caption{These two datasets have the same \textit{(time, temperature)} fiber, but different continuities. The dataset on the left consists of discrete records, while the records in the dataset on the right sampled from a continuous space.} 
+    \caption{The fiber bundles in (a) and (b) encode the two component dataset from \autoref{fig:math:data:fiber}, with \textit{(time, precipitation)} components, as having different continuities. The fiber bundle with discrete continuity (a) encodes the dataset as being a set of discrete records. The fiber bundle over the continuous interval \dbase\ (b) encodes the records as if they were sampled from a 1D continuous space.} 
     \label{fig:math:data:base}
 \end{figure}
 
-The datasets in \autoref{fig:math:data:base} have the same fiber of (temperature, time). The dot represents a discrete base space \dbase, meaning that every dataset encoded in the fiber bundle has discrete continuity. The line is a representation of a 1D continuity, meaning that every dataset in the fiber bundle is 1D continous. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
+The datasets in \autoref{fig:math:data:base} have the same fiber of (precipitation, time). The dot represents a discrete base space \dbase, meaning that every dataset encoded in the fiber bundle has discrete continuity. The line is a representation of a 1D continuity, meaning that every dataset in the fiber bundle is 1D continous. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
  
 \subsubsection{Data \dsection}
 \label{sec:data_section}
@@ -161,11 +160,11 @@ where each section $\dsection_i$ maps into a record on a component $\dfiber_i \i
 
 \begin{figure}[H]
     \includegraphics[width=1\linewidth]{figures/math/fiberbundle.png}
-    \caption{ Fiber (time, temperature) with an interval \dbase\ basespace. The sections $\dsection^{(1)}$ and $\dsection^{(2)}$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of temperature values. They are included in the global set of sections  $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$}
+    \caption{ Fiber (time, precipitation) with an interval \dbase\ basespace. The sections $\dsection^{(1)}$ and $\dsection^{(2)}$ are constrained such that the time variable must be monotonic, which means each section is a timeseries of precipitation values. They are included in the global set of sections  $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$}
     \label{fig:math:data:sections}
 \end{figure}
 
-In \autoref{fig:math:data:sections}, the fiber is the same encoding of $(time, \, temperature)$ illustrated in \autoref{fig:math:data:fiber}, and the base space is the interval \dbase\ shown in \autoref{fig:math:data:base}. The section $\dsection^{(1)}$ is a function that for a point \dbasepoint\ returns a record in the fiber \dfiber. The section applied to a set of points in \dbase\ resolves to a series of monotonically increasing in time records of \textit{(time, temperature)} values. Section $\dsection^{(2)}$ returns a different timeseries of \textit{(time, temperature)} values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
+In \autoref{fig:math:data:sections}, the fiber is the same encoding of $(time, \, precipitation)$ illustrated in \autoref{fig:math:data:fiber}, and the base space is the interval \dbase\ shown in \autoref{fig:math:data:base}. The section $\dsection^{(1)}$ is a function that for a point \dbasepoint\ returns a record in the fiber \dfiber. The section applied to a set of points in \dbase\ resolves to a series of monotonically increasing in time records of \textit{(time, precipitation)} values. Section $\dsection^{(2)}$ returns a different timeseries of \textit{(time, precipitation)} values. Both sections are included in the global set of sections $\dsection^{(1)}, \dsection^{(2)} \in \Gamma(\dtotal)$.
 
 \subsubsection{Sheafs}
 \label{sec:math:data:sheaf}
@@ -182,13 +181,13 @@ which are sections of \dtotal\ pulled back over local neighborhood $U \subset \d
 \subsubsection{Applications to Data Containers}
 This model provides a common formalism for widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a univariate numpy array\cite{harris2020array} that stores an image.  This could be a section of a fiber bundle where \dbase\ is a 2D continuous plane and the \dfiber\ is $(\reals^{3}, \reals, \reals)$ where $\reals^3$ is color, and the other two components are the x and y positions of the sampled data in the image. This position information is already implicitely encoded in the array as the index and the resolution of the image being stored.Instead of an image, the numpy array could also store a 2D discrete table. The fiber would not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
 
-There are also many types of labeled containers that can richly be described in this framework because of the schema like structure of the fiber. For example, a pandas series which stores a labeled list, or a dataframe\cite{jeff_reback_2020_3715232} which stores a relational table. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two temperature series, such that a section would be an instance of a dataframe with a time column and two temperature columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is assumed to be data independent references such as hashvalues, virtual memory locations, or random number keys.
+There are also many types of labeled containers that can richly be described in this framework because of the schema like structure of the fiber. For example, a pandas series which stores a labeled list, or a dataframe\cite{jeff_reback_2020_3715232} which stores a relational table. A series could store the values of $\dsection^{(1)}$ and a second series could be  $\dsection^{(2)}$. We could also fatten the fiber to hold two precipitationure series, such that a section would be an instance of a dataframe with a time column and two precipitation columns. While the series and dataframe explicitly have a time index column, they are components in our model and the index is assumed to be data independent references such as hashvalues, virtual memory locations, or random number keys.
 
-Where this model particularly shines are N dimensional labeled data structures. For example, an xarray\cite{hoyer2017xarray} data that stores temperature field could have a \dbase\ that is a continuous volume and the components would be the temperature and the time, latitude, and longitude the measurements were sampled at. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  
+Where this model particularly shines are N dimensional labeled data structures. For example, an xarray\cite{hoyer2017xarray} data that stores precipitation field could have a \dbase\ that is a continuous volume and the components would be the precipitation and the time, latitude, and longitude the measurements were sampled at. A section can also be an instance of a distributed data container, such as a dask array \cite{rocklinDaskParallelComputation2015}. As with the other containers, \dbase\ and \dfiber\ are defined in terms of the index and dtypes of the components of the array. Because our framework is defined in terms of the fiber, continuity, and sections, rather than the exact values of the data, our model does not need to know what the exact values are until the renderer needs to fill in the image.  
 
 \subsection{Graphic Space \gtotal}
 \label{sec:math:graphic} 
-To establish that the artist is structure preserving map from data \dtotal\ to graphic \gtotal\, we construct a graphic bundle so that we can define \textit{equivariance} in terms of maps on the fiber spaces and \textit{continuity} in terms of maps on the base space. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$. 
+To establish that the artist is a structure preserving map from data \dtotal\ to graphic \gtotal\, we construct a graphic bundle so that we can define \textit{equivariance} in terms of maps on the fiber spaces and \textit{continuity} in terms of maps on the base space. As with the data, we can represent the target graphic as a section \gsection\ of a bundle  $(\gtotal, \gbase, \pi, \gfiber)$. 
 \begin{equation}
     \begin{tikzcd}[ampersand replacement=\&]
         \gfiber \arrow[r, hook] \& \gtotal \arrow[d, "\pi"'] \\
@@ -199,7 +198,7 @@ The graphic bundle \gtotal\ consists of a base \gbase (\autoref{sec:math:graphic
 
 \subsubsection{Idealized Display \gfiber}
 \label{sec:math:graphic:fiber}
-To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is an infinite resolution version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
+To fully specify the visual characteristics of the image, we construct a fiber \gfiber\ that is a non-pixelated version of the target space. Typically \gtotal\ is trivial and therefore sections can be thought of as mappings into \gfiber. In this work, we assume a 2D opaque image $\gfiber=\reals^5$ with elements 
 \begin{equation*}
 (x,\, y,\, r,\, g,\, b) \in \gfiber
 \end{equation*}
@@ -209,7 +208,7 @@ such that a rendered graphic only consists of 2D position and color. To support 
 \label{sec:math:graphic:base}
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/retraction_maps.png}
-    \caption{For a visualization component to preserve continuity, it must have a continuous surjective map $\vindex: \gbase\rightarrow\dbase$ from graphic continuity to data continuity. The scatter and line graphic base spaces \gbase\ have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image has the same dimension in \gbase\ as in \dbase.}
+    \caption{For a visualization component to preserve continuity, it must have a continuous surjective map $\vindex: \gbase\rightarrow\dbase$ from graphic continuity to data continuity. The scatter (a) and line (b) graphic base spaces \gbase\ have one more dimension of continuity than \dbase\ so that \gbase\ can encode physical aspects of the glyph, such as shape (a circle) or thickness. The image (c) has the same dimension in \gbase\ as in \dbase\ because \dbase\ is already 2D and therefore can directly map into screen space.}
     \label{fig:math:graphic:retraction:map}
 \end{figure}
 To establish that a visualization component preserves continuity, we propose that their must be a continuous map $\vindex: \gbase\rightarrow\dbase$ from the graphic base space to the data space. For example, consider a \gbase\ that is mapped to the region of a 2D display space that represents \dbase. For some visualizations, \dbase\ may be lower dimension than \gbase. For example, a point that is 0D in \dbase\ cannot be represented on screen unless it is thickened to 2D to encode the connectivity of the pixels that visually represent the point. This thickening is often not necessary when the dimensionality of \dbase\ matches the dimensionality of the target space, for example if \dbase\ is 2D and the display is a 2D screen. We introduce \gbase\ to thicken \dbase\ in a way which preserves the structure of \dbase. 
@@ -220,8 +219,9 @@ Formally, we require that \dbase\ be a deformation retract\cite{RetractionTopolo
         \dtotal \arrow[d, "\pi"'] & \gtotal \arrow[d, "\pi"'] \\
         \dbase                   & \gbase \arrow[l, "\vindex"']
     \end{tikzcd}
+    \label{eq:math:graphic:vindex}
 \end{equation}
-goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ corresponds to a 2D disk $\gbase_{\dbasepoint}$ as shown in \autoref{fig:math:graphic:retraction:map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The image has the same dimensions in data space and graphic space such that no extra dimensions are needed in \gbase. 
+goes from region $\gbasepoint \in \gbase_{\dbasepoint}$ to its associated point $\gbasepoint$. This means that if $\vindex(\gbasepoint) = \dbasepoint$, the record at \dbasepoint\ is copied over the region \gbasepoint\ such that $\dsection(\dbasepoint)=\vindex^*\dsection(\gbasepoint)$ where $\vindex^*\dsection(\gbasepoint)$  is \dsection\ pulled back over \gbase. The map \vindex\ is part of the implementation of the artist $\mathcal{\vartist}$ and therefore is not defined in terms of the data; instead it is how we specify the constraint that the type of the graphic \textit{continuity} must be able to map to the type of the data \textit{continuity}. When \dbase\ is discrete points and the graphic is a scatter plot, each point $\dbasepoint \in \dbase$ can correspond to a 2D disk $\gbase_{\dbasepoint}$ as shown in \autoref{fig:math:graphic:retraction:map}. In the case of 1D continuous data and a line plot, the region \gy\ over a point $\gx_i$ specifies the thickness of the line in \gbase\ for the corresponding \dsection\ on \dbasepoint. The image has the same dimensions in data space and graphic space such that no extra dimensions are needed in \gbase. 
 
 The mapping function \vindex\ provides a way to identify the part of the visual transformation that is specific to the the connectivity of the data rather than the values; for example it is common to flip a matrix when displaying an image. The \vindex\ mapping is also used by interactive visualization components to look up the data associated with a region on screen.  One example is to fill in details in a hover tooltip, another is to convert region selection (such as zooming) on \gbase\ to a query on the data to access the corresponding record components on \dbase.
 
@@ -251,7 +251,7 @@ The topological artist \vartist\ is how we model the building block component th
     \vartist: \mathcal{O}(\dtotal) \rightarrow \mathcal{O}(\gtotal)
     \label{eq:math:artist:artist}
 \end{equation}
-The artist preserves \textit{continuity} through the \vindex\ map discussed in \autoref{sec:math:graphic:base} and is an \textit{equivariant} map because it carries a homomorphism of monoid actions \cite{cegarraCohomologyMonoidsOperators2019}
+The artist preserves \textit{continuity} through the \vindex\ map discussed in \autoref{sec:math:graphic:base}. We conjecture that it is an \textit{equivariant} map because it carries a homomorphism of monoid actions \cite{cegarraCohomologyMonoidsOperators2019}
 \begin{equation}
     \varphi: \monoid \rightarrow \monoid^{\prime}
 \end{equation}
@@ -266,7 +266,7 @@ The monoid equivariant map has two stages: the encoders $\vchannel:\dtotal^{\pri
 \begin{equation}
     \label{eq:math:artist:diagram}
     \begin{tikzcd}
-        \dtotal^{\prime} \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
+        \dtotal \arrow[r, "\vchannel"] \arrow[rd, "\pi"'] & \vtotal \arrow[d, "\pi"] & \vindex^*\vtotal \arrow[r, "\vmark"] \arrow[d, "\vindex^*\pi"'] \arrow[l, "\vindex^*"'] & \gtotal \arrow[ld, "\pi"] \\
                                               & \dbase                  & \gbase \arrow[l, "\vindex"']                                              &                    
         \end{tikzcd}
 \end{equation}
@@ -406,7 +406,7 @@ Given the continuities described in \ref{fig:math:graphic:retraction:map},
 we illustrate a minimal Q that will generate the most minimal visualizations associated with those continuities: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/scatter_with_s.png}
-    \caption{The data is discrete points (temperature, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
+    \caption{The data is discrete points (precipitation, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
     \label{fig:math:artist:q:scatter}
 \end{figure}
@@ -424,7 +424,7 @@ such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) blac
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
-    \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, temperature^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
+    \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, precipitation^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:artist_line}
 \end{figure}
 In contrast, the line plot 
@@ -457,14 +457,25 @@ R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vinde
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 
+\subsubsection{ \vmarkd}
 \label{sec:math:artist:qhat}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+
 \begin{figure}[htb]
-  \centering
-    \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
-    \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
-    \label{fig:math:artist:qhat}
-\end{figure}
+    \centering
+      \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
+      \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can constract a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
+      \label{fig:math:artist:qhat}
+  \end{figure}
+  
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+
+\begin{equation}
+    \begin{tikzcd}
+        V \arrow[d, "\pi"']             & \xi^{*}V \arrow[d, "\pi"'] \arrow[l, "\xi^{*}"']         \\
+        K \arrow[u, "\mu"', bend right] & S \arrow[l, "\xi"'] \arrow[u, "\xi^{*}\mu"', bend right]
+    \end{tikzcd}
+    \label{eq:math:artist:qhat}
+\end{equation}
 
 The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
 \begin{equation}
@@ -494,14 +505,14 @@ where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms
 \subsubsection{Composition of Artists: +}
 \begin{figure}[H]
 \begin{subfigure}{.5\textwidth}
-    \includegraphics[width=1\textwidth]{figures/math/exploding_artist.png}
-    \caption{}
-    \label{fig:math:seperate}    
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
     \includegraphics[width=1\textwidth]{figures/math/combined_artist.png}
     \caption{}
-    \label{fig:math:combined}
+    \label{fig:math:combined}    
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/exploding_artist.png}
+    \caption{}
+    \label{fig:math:seperate}
 \end{subfigure}
 \caption{Each of the visual elements in \autoref{fig:math:seprate} is generated via a unique artist \vartist. In \autoref{fig:math:seperate}, they are added to the image independent of the other elements, creating an incoherant visualization. In \autoref{fig:math:combined}, these artists are composited before being added to the image. Disjoint union of \dtotal\ aligns the two timeseries with the x and y axis so all these elements use a shared coordinate system. A more complex composition dictates that the legend is connected to the \dtotal\ such that it must use the same color as the data it is identifying.}
 \label{fig:artist_plus}
