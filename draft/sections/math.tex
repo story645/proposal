@@ -410,35 +410,53 @@ we illustrate a minimal Q that will generate the most minimal visualizations ass
     }
     \label{fig:math:artist:q:scatter}
 \end{figure}
-The scatter plot in \autoref{fig:math:artist:q:scatter} can be defined as 
-\begin{equation}
-\vmark(xpos, ypos)(\alpha, \beta)
-\label{eq:math:artist:q:scatter}
-\end{equation}
-with a constant \textit{size} and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of \vmark. The position of this swatch of color can be computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter}
-\begin{align*}
-x &= size *\alpha \cos(\beta) + xpos \\
-y &= size *\alpha \sin(\beta) + ypos
-\end{align*}
-such that $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. 
+The scatter plot in \autoref{fig:math:artist:q:scatter} has a constant \textit{size} and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of the point assembly function $\vmark(xpos, ypos)(\alpha, \beta)$.  
+
+\begin{figure} [H]
+\begin{minipage}{.5\textwidth}
+    \centering
+    \includegraphics{figures/math/scatter_s.png}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+    \begin{align*}
+        x &= size *\alpha \cos(\beta) + xpos \\[.5\baselineskip]
+        y &= size *\alpha \sin(\beta) + ypos
+    \end{align*}
+\end{minipage}
+\label{fig:math:artist:q:scatter:s}
+\caption{lookup for scattter glyphs}
+\end{figure}
+
+
+The position of this swatch of color can be computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter:s}. \note{EXPLAIN WHAT IS HAPPING IN THE FIGURE THAT GETS BACK TO gsection}
+
+$\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. 
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, precipitation^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
-    \label{fig:artist_line}
+    \label{fig:math:artist:q:line}
 \end{figure}
-In contrast, the line plot 
-\begin{equation}
-\vmark(xpos, \hat{n}_{1}, ypos, \hat{n}_{2})(\alpha, \beta)
-\label{eq:math:artist:q:line}
-\end{equation}
-in \autoref{fig:math:artist:q:line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. As shown in \autoref{fig:math:artist:q:line}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The magnitude of the slope is $\lvert n \rvert = \sqrt{{n_{1}}^2 + {n_{2}}^2}$
-such that the normal is  $\hat{n}_{1} = \frac{n_1}{\lvert n \rvert}, \; \hat{n}_{2} = \frac{n_2}{\lvert n \rvert}$ which yields components of \gsection\
-\begin{align*}
- x = xpos(\vindex(\alpha)) &+ width*\beta\hat{n}_1(\vindex(\alpha)) \\
- y = ypos(\vindex(\alpha)) &+ width*\beta\hat{n}_2(\vindex(\alpha)) 
-\end{align*}
-where (x,y) look up the position $\vindex(\alpha)$ on the data and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a $width$ parameter to specify the thickness.
+In contrast, the line plot $\vmark(xpos, \hat{n}_{1}, ypos, \hat{n}_{2})(\alpha, \beta)$ in \autoref{fig:math:artist:q:line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. 
+
+\begin{figure} [H]
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics{figures/math/line_s.png}
+    \end{minipage}
+    \begin{minipage}{.5\textwidth}
+        \begin{align*}
+            \lvert n \rvert &=\sqrt{{n_{1}}^2 + {n_{2}}^2},\,
+            \hat{n}_{1} = \frac{n_1}{\lvert n \rvert}, \,\hat{n}_{2} = \frac{n_2}{\lvert n \rvert} \\[.5\baselineskip]
+            x &= xpos(\vindex(\alpha)) + width*\beta\hat{n}_1(\vindex(\alpha))  \\[.5\baselineskip]
+            y &= ypos(\vindex(\alpha)) + width*\beta\hat{n}_2(\vindex(\alpha)) 
+           \end{align*}
+    \end{minipage}
+    \label{fig:math:artist:q:line:s}
+    \caption{lookup for line glyphs}
+\end{figure}
+    
+As shown in \autoref{fig:math:artist:q:line:s}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The indexing map $\vindex(\alpha)$ finds the point in \dbase\ corresponding to the region in \gbase\ at coordinate $\alpha$. The section \dsection\ on the \dbasepoint\ that corresponds to the region in \gbase\ returns  the position \textit{xpos, ypos} and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a \textit{width} parameter to specify the thickness. \note{lil bit messy}
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/image.png}
