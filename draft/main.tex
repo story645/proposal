@@ -36,6 +36,10 @@
 \usepackage{gensymb} %degree
 \usepackage{mathtools} % pretty math typesetting
 \usepackage{mathrsfs} % math script fonts 
+\makeatletter
+\newcommand{\leqnomode}{\tagsleft@true\let\veqno\@@leqno}
+\newcommand{\reqnomode}{\tagsleft@false\let\veqno\@@eqno}
+\makeatother
 \usepackage{lineno}
 \linenumbers %linenumbers for comments
 \usepackage{notation} % notation used in paper 

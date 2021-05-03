@@ -410,68 +410,76 @@ we illustrate a minimal Q that will generate the most minimal visualizations ass
     }
     \label{fig:math:artist:q:scatter}
 \end{figure}
-The scatter plot in \autoref{fig:math:artist:q:scatter} has a constant \textit{size} and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of the point assembly function $\vmark(xpos, ypos)(\alpha, \beta)$.  
+The scatter plot in \autoref{fig:math:artist:q:scatter} has a constant size and color $\gsection_{RGB} = (0,0,0)$ that are defined as part of the point assembly function.
 
 \begin{figure} [H]
+
+\begin{minipage}{.5\textwidth}
+    \begingroup \leqnomode
+    \begin{equation}
+        \vmark(xpos, ypos)(\alpha, \beta)
+        \label{eq:eq:math:artist:q:scatter}
+    \end{equation}
+    \endgroup
+    \begin{align*}
+        x &= \text{size} *\alpha \cos(\beta) + xpos \\[.5\baselineskip]
+        y &= \text{size} *\alpha \sin(\beta) + ypos
+    \end{align*}
+\end{minipage}
 \begin{minipage}{.5\textwidth}
     \centering
     \includegraphics{figures/math/scatter_s.png}
 \end{minipage}
-\begin{minipage}{.5\textwidth}
-    \begin{align*}
-        x &= size *\alpha \cos(\beta) + xpos \\[.5\baselineskip]
-        y &= size *\alpha \sin(\beta) + ypos
-    \end{align*}
-\end{minipage}
+\caption{The simplest form of the scatter plot takes as input the expected position of the marker in visual space \textit{(xpos, ypos)}. The marker shape is determined by the polar coordinates $(\alpha, \beta)$ on the disc; these coordinates dictate whether anything is drawn at that region of \gbase. To obtain the color of the pixel at \textit{(x,y)}, the region on \gbase\ is scaled by a constant size and shifted by the \textit{xpos} and \textit{ypos}.}
 \label{fig:math:artist:q:scatter:s}
-\caption{lookup for scattter glyphs}
 \end{figure}
-
-
-The position of this swatch of color can be computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter:s}. \note{EXPLAIN WHAT IS HAPPING IN THE FIGURE THAT GETS BACK TO gsection}
-
-$\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ colors the point (x,y) black. 
+The position of this swatch of color is computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter:s}. The region $\alpha, \beta)$ is scaled by a constant size and shifted by \textit{xpos} and \textit{ypos}. This computation yields the values \textit{(x,y)} that map into \gfiber\ and have a corresponding function $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ which colors the point \textit{(x,y)} black. 
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, precipitation^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:math:artist:q:line}
 \end{figure}
-In contrast, the line plot $\vmark(xpos, \hat{n}_{1}, ypos, \hat{n}_{2})(\alpha, \beta)$ in \autoref{fig:math:artist:q:line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. 
+In contrast, the line plot in \autoref{fig:math:artist:q:line} has a \vindex\ function that is not only parameterized on \dbasepoint\ but also on the $\alpha$ distance along \dbasepoint\ and corresponding region in \gbase. 
 
 \begin{figure} [H]
+    \begin{minipage}{.5\textwidth}
+        \begingroup \leqnomode
+        \begin{equation}
+            \vmark(xpos, n_1, ypos, n_2 )(\alpha, \beta) 
+            \label{eq:eq:math:artist:q:line}
+        \end{equation} \endgroup
+        \begin{align*}
+            \lvert n \rvert &=\sqrt{{n_{1}}^2(\vindex(\alpha)) + {n_{2}}^2(\vindex(\alpha))} \\
+            \hat{n}_{1} &= \frac{n_1(\vindex(\alpha))}{\lvert n \rvert}, \,\hat{n}_{2} = \frac{n_2(\vindex(\alpha))}{\lvert n \rvert} \\[.5\baselineskip]
+            x &= xpos(\vindex(\alpha)) + \text{width}*\beta\hat{n}_1(\vindex(\alpha))  \\
+            y &= ypos(\vindex(\alpha)) + \text{width}*\beta\hat{n}_2(\vindex(\alpha)) 
+           \end{align*}
+    \end{minipage}
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics{figures/math/line_s.png}
     \end{minipage}
-    \begin{minipage}{.5\textwidth}
-        \begin{align*}
-            \lvert n \rvert &=\sqrt{{n_{1}}^2 + {n_{2}}^2},\,
-            \hat{n}_{1} = \frac{n_1}{\lvert n \rvert}, \,\hat{n}_{2} = \frac{n_2}{\lvert n \rvert} \\[.5\baselineskip]
-            x &= xpos(\vindex(\alpha)) + width*\beta\hat{n}_1(\vindex(\alpha))  \\[.5\baselineskip]
-            y &= ypos(\vindex(\alpha)) + width*\beta\hat{n}_2(\vindex(\alpha)) 
-           \end{align*}
-    \end{minipage}
+    \caption{The \textit{xpos} and \textit{ypos} variables give the position of the line in screen space, but render an infinitely thin line. To draw equidistant lines parallel to(\textit{xpos}, \textit{ypos}), defined by the distance  $(n_1, n_2)$, requires the derivatives $(n_{1} = xpos^{\prime}, n_{2} = ypos^{\prime})$. The position (\textit{xpos}, \textit{ypos}) and width of the line is then used to determine whether a pixel is colored at the position (\textit{x}, \textit{y}). The values in data space are only looked up via the $\alpha$ coordinate of \gbase\ because it maps to a location on \dbase. The $\beta$ parameter is used to specify how thick the line is in conjunction with the constant width. }
     \label{fig:math:artist:q:line:s}
-    \caption{lookup for line glyphs}
 \end{figure}
-    
-As shown in \autoref{fig:math:artist:q:line:s}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The indexing map $\vindex(\alpha)$ finds the point in \dbase\ corresponding to the region in \gbase\ at coordinate $\alpha$. The section \dsection\ on the \dbasepoint\ that corresponds to the region in \gbase\ returns  the position \textit{xpos, ypos} and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a \textit{width} parameter to specify the thickness. \note{lil bit messy}
+As shown in \autoref{fig:math:artist:q:line:s}, line needs to know the tangent of the data to draw an envelope above and below each (xpos,ypos) such that the line appears to have a thickness; therefore the artist takes as input the jet bundle \cite{JetBundle2020,musilovaCalculusVariationsJet2016} $\mathcal{J}^{2}(\dtotal)$ which is the data \dtotal\ and the first and second derivatives of \dtotal. The indexing map $\vindex(\alpha)$ finds the point in \dbase\ corresponding to the region in \gbase\ at coordinate $\alpha$. The section \dsection\ on the \dbasepoint\ that corresponds to the region in \gbase\ returns the position \textit{xpos, ypos} and the derivatives $\hat{n}_1, \hat{n}_2$ . The derivatives are then multiplied by a width parameter to specify the thickness of the line. This is then used to determine the color of the pixel at \textit{(x,y)}.  
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/math/image.png}
-    \caption{The only visual parameter an image requires is color since \vindex\ encodes the mapping between position in data and position in graphic. }
+    \caption{Via \vindex\, the artist maps from a point \textit{(x,y)} on the screen to a corresponding point on \dbase. This maps into \dfiber\ via \dsection. These data points are converted to visual points via \vchannel\, and then \vmark\ assembles the \textit{(xpos, ypos, color)} parameters into attributes of each pixel. }
     \label{fig:math:artist:q:heatmap}
 \end{figure}
-In \autoref{fig:math:artist:q:heatmap}, the image 
+In \autoref{fig:math:artist:q:heatmap}, the image is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. The indexing variables $(\alpha, \beta)$ define the distance along the space, which is then used by \vindex\ to map into \dbase\ to lookup the color values.
 \begin{equation}
-\vmark(xpos, ypos, color)
-\label{eq:math:artist:q:image}
-\end{equation}
- is a direct lookup into  $\vindex:\gbase\rightarrow\dbase$. The indexing variables $(\alpha, \beta)$ define the distance along the space, which is then used by \vindex\ to map into \dbase\ to lookup the color values 
-\begin{equation*}
-R = R(\vindex(\alpha, \beta)), \; G = G(\vindex(\alpha, \beta)), \; B = B(\vindex(\alpha, \beta))
-\end{equation*}
+    \vmark(xpos, ypos, color)(\alpha, \beta)
+    \label{eq:math:artist:q:image}
+    \end{equation}
+\begin{align*}
+x &= xpos(\vindex(\alpha))\\
+y &= ypos(\vindex(\beta))\\
+R, G, B &= color(\vindex(\alpha, \beta))
+\end{align*}
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorientng the array such that the first row in the data is at the bottom of the graphic. 
 
 
@@ -486,15 +494,14 @@ In the case of an image, the indexing mapper \vindex\ may do some translating to
   \end{figure}
   
 The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
-
+%[column sep=huge]
 \begin{equation}
     \begin{tikzcd}
-        V \arrow[d, "\pi"']             & \xi^{*}V \arrow[d, "\pi"'] \arrow[l, "\xi^{*}"']         \\
-        K \arrow[u, "\mu"', bend right] & S \arrow[l, "\xi"'] \arrow[u, "\xi^{*}\mu"', bend right]
-    \end{tikzcd}
-    \label{eq:math:artist:qhat}
+        \textcolor{gray!50}{\dtotal} \arrow[r, "\vchannel", color=gray!50] \arrow[rd, "\pi"', color=gray!50] & \vtotal \arrow[d, "\pi"']                  & \vindex^*\vtotal \arrow[r, "\vmark", color=gray!50] \arrow[d, "\vindex^*\pi"'] \arrow[l,  "\vindex^*"'] & \textcolor{gray!50}{\gtotal} \arrow[ld, "\pi", color=gray!50] \\
+                                                          & \dbase \arrow[u, "\vsection"', bend right] & \gbase \arrow[l, "\vindex"'] \arrow[u, "\vindex^*\vsection"', bend right]               &                          
+        \end{tikzcd}
+        \label{eq:math:artist:qhat}
 \end{equation}
-
 The preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
 \begin{equation}
     \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
