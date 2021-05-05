@@ -46,7 +46,6 @@ The notion that data is equivalent to visual representations when structure is p
 
 \subsection{Tools}
 \label{sec:intro:data:tools}
-
 \begin{figure}[H]
     \begin{subfigure}{.3\textwidth}
         \includegraphics[width=1\textwidth]{figures/intro/table.png}
@@ -82,7 +81,7 @@ Visualizations assume the structure of the input data, as described in Tory and 
 
 
 \subsection{Data}
-\label{sec:intro_data}
+\label{sec:intro:data:continuity}
 Fiber bundles were proposed by Butler as a core data structure for visualization because they encode data \textit{continuity} separately from the components of the dataset\cite{butlerVisualizationModelBased1989,butlerVectorBundleClassesForm1992}. Butler's model lacks a robust way of describing variables; therefore we encode a schema like description of the data in the fiber bundle using Spivak's topological description of data types \cite{spivakDatabasesAreCategories2010,spivakSIMPLICIALDATABASES}. In this work, we refer to the points of the dataset as \textit{records}, as defined by Spivak. Each \textit{component} of the record is a single object, such as a precipitation measurement, a station name, or an image. We generalize \textit{component} to mean all objects in the dataset of a given type, such as all precipitation values or station names or images. The way in which these records are connected is the \textit{continuity} or more generally topology.
 
 \begin{figure}[H]

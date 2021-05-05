@@ -3,27 +3,27 @@
 
 \section{Topological Equivariant Artist Model}
 \label{sec:math}
-To guide the implementation of structure preserving building block components, we develop a mathematical formalism of visualization that specifies how these components preserve \textit{continuity} and \textit{equivariance}. Inspired by the somewhat analogous component in Matplotlib\cite{hunterArchitectureOpenSource}, we call the transformation from data space to graphic that these building block components implement the \textit{artist}.
+To guide the implementation of structure preserving visualization components, we develop a mathematical formalism of visualization that specifies how these components preserve \textit{continuity} and \textit{equivariance}. Inspired by the analogous classes in Matplotlib\cite{hunterArchitectureOpenSource}, we call the transformation from data space to graphic space that these building block components implement the \textit{artist}.
 \begin{equation}
     \label{eq:artist}
     \mathscr{\vartist}: \mathscr{\dtotal} \rightarrow \mathscr{\gtotal}
 \end{equation}
-The \textit{artist} $\mathscr{\vartist}$ is a map from the data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$ fiber bundles. To explain how the \textit{artist} is a structure preserving map from data to graphic, we first describe how we model data (\autoref{sec:math:data}) and graphics (\autoref{sec:math:graphic}) as topological structures that encapsulate component types and continuity. We then discuss the maps from graphic to data (\autoref{sec:math:graphic:base}, data components to visual components (\autoref{sec:math:artist:nu}), and visual components into graphic (\autoref{sec:math:artist:q}) that make up the artist.
+The \textit{artist} $\mathscr{\vartist}$ is a map from data $\mathscr{\dtotal}$ to graphic $\mathscr{\gtotal}$ fiber bundles. To explain how the \textit{artist} is a structure preserving map from data to graphic, we first model data (\autoref{sec:math:data}) and graphics (\autoref{sec:math:graphic}) as topological structures that encapsulate component types and continuity. We then discuss the funtional maps from graphic to data (\autoref{sec:math:graphic:base}), data components to visual components (\autoref{sec:math:artist:nu}), and visual components into graphic (\autoref{sec:math:artist:q}) that make up the artist.
 
 \subsection{Data Space \dtotal}
 \label{sec:math:data}
-Building on Butler's proposal of using fiber bundles as a common data representation structure for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}, a fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
+We use fiber bundles as the data model because they are inclusive enough to express all the types of structures of data described in \autoref{sec:intro:data:tools}. A fiber bundle is a tuple $(\dtotal,\,\dbase,\,\pi ,\,\dfiber)$ defined by the projection map $\pi$
 \begin{equation}
     \label{eq:fiber_bundle}
     \begin{tikzcd}
         \dfiber \arrow[r, hook] & \dtotal \arrow[r, "\pi"] & \dbase
     \end{tikzcd}
 \end{equation}
-that binds the components of the data in \dfiber\ to the continuity of the data encoded in \dbase. The fiber bundle models the properties of data component types \dfiber\ (\autoref{sec:math:data:fiber}), the continuity of records \dbase\ (\autoref{sec:math:data:base}), the collections of records \dsection\ (\autoref{sec:math:data:section}), and the space \dtotal\ of all possible datasets with these components and continuity. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartesian product $\dbase\times\dfiber$. We use fiber bundles as the data model because they are inclusive enough to express all the types of structures of data described in \autoref{sec:intro:data:tools}
+that binds the components of the data in \dfiber\ to the continuity of the data encoded in \dbase. Our use of fiber bundles builds on Butler's work proposing that fiber bundles should be the common data abstraction for visualization data\cite{butlerVectorBundleClassesForm1992, butlerVisualizationModelBased1989}. The fiber bundle models the properties of data component types \dfiber\ (\autoref{sec:math:data:fiber}), the continuity of records \dbase\ (\autoref{sec:math:data:base}), the collections of records (\autoref{sec:math:data:section}), and the space \dtotal\ of all possible datasets with these components and continuity. By definition fiber bundles are locally trivial\cite{spanier1989algebraic,LocallyTrivialFibre}, meaning that over a localized neighborhood $U$ the total space is the cartesian product $\dbase\times\dfiber$. 
 
 \subsubsection{Variables in Fiber Space \dfiber}
 \label{sec:math:data:fiber}
-To formalize the structure of the data components, we use notation introduced by Spivak \cite{spivakSIMPLICIALDATABASES} that binds the components of the fiber to variable names. This allows us to describe the components in a schema like way. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
+To formalize the structure of the data components, we use Spivak's description of the schema \cite{spivakSIMPLICIALDATABASES} as a fiber bundle to bind the components of the fiber to variable names and data types. Spivak constructs a set \ftotal\ that is the disjoint union of all possible objects of types $\{\ftype_0, \ldots, \ftype_m\} \in \ftypes$, where \ftypes\ are the data types of the variables in the dataset. He then defines the single variable set \fttype\ 
 \begin{equation}
     \label{eq:data_types}
     \begin{tikzcd}
@@ -48,11 +48,11 @@ which allows us to decouple \dfiber\ into components $\dfiber_i = \ftotal_{\fsec
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/fiber.png}
-    \caption{The fiber space is the set of all combinations of all theoretically possible values of the components.  The 2D fiber \(\dfiber=\reals\times\realsp\) (a) encodes the properties of \textit{time} and \textit{precipitation} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \realsp\ for the precipitation component. This means the fiber is the set of points \textit{(precipitation, time)} that are all the combinations of \textit{precipitation} $\times$ \textit{time}. The 3D fiber (b) encodes points at all possible combinations of \textit{precipitation}, \textit{latitude}, and \textit{longitude}.}
+    \caption{The fiber space is the cartesian product of the components.  The 2D fiber \(\dfiber=\reals\times\realsp\) (a) encodes the properties of \textit{time} and \textit{precipitation} components.  One dimension of the fiber encodes the range of possible values for the time component of the dataset, which is a subset of the \reals, while the other dimension encodes the range of possible values  \realsp\ for the precipitation component. This means the fiber is the set of points \textit{(precipitation, time)} that are all the combinations of \textit{precipitation} $\times$ \textit{time}. The 3D fiber (b) encodes points at all possible combinations of \textit{precipitation}, \textit{latitude}, and \textit{longitude}.}
     \label{fig:math:data:fiber}
 \end{figure}
 
-For example, the records in the 2D fiber (a) in \autoref{fig:math:data:fiber} are a pair of \textit{times} and \textdegree K \textit{precipitation} measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to floats $\ftotal_{\texttt{datetime}}= \reals$. Temperature values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
+For example, the records in the 2D fiber (a) in \autoref{fig:math:data:fiber} are a pair of \textit{times} and \textit{precipitation} measurements taken at those times. Time is a positive number of type \texttt{datetime} which can be resolved to $\ftotal_{\texttt{datetime}}= \reals$. Precipitation values are real positive numbers $\ftotal_{\texttt{float}} = \realsp$. The fiber is 
 \begin{equation*}
     \dfiber =  \reals \times \realsp 
 \end{equation*} 
@@ -60,7 +60,14 @@ where the first component $F_0$ is the set of values specified by $(\fname=time,
 \begin{equation*}
     \dfiber = \reals \times [0, 360] \times [-90, 90]
 \end{equation*} 
-where the dimensionality of the fiber does not change, but the components of the fiber can be coupled. For example, \textit{location} can can either be specified as \((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\)or \((\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals)\) and \((\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\).  
+and can either be thought of as having two components  
+\begin{equation}
+    \{(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals), ((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\}
+\end{equation}
+ or three
+ \begin{equation}
+    \{(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals), (\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals), (\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\}
+ \end{equation}
 
 
 \subsubsection{Measurement Scales: Monoid Actions}
@@ -138,7 +145,7 @@ such that \(\monoid_{i}\) acts on component bundle \(\dtotal_i\). The \dbase\ re
 The datasets in \autoref{fig:math:data:base} have the same fiber of (precipitation, time). The dot represents a discrete base space \dbase, meaning that every dataset encoded in the fiber bundle has discrete continuity. The line is a representation of a 1D continuity, meaning that every dataset in the fiber bundle is 1D continous. By encoding this continuity in the model as \dbase\, the data model now explicitly carries information about its structure such that the implicit assumptions of the visualization algorithms are now explicit. The explicit topology is a concise way of distinguishing visualizations that appear identical, for example heatmaps and images.  
  
 \subsubsection{Data \dsection}
-\label{sec:data_section}
+\label{sec:math:data:section}
 While the projection function $\pi:\dtotal \rightarrow\dbase$ ties together the base space \dbase\ with the fiber \dfiber, a section $\dsection: \dbase\rightarrow \dtotal$ encodes a dataset. A section function takes as input location $\dbasepoint \in \dbase$ and returns a record $\delement \in \dtotal$. For example, in the special case of a table \cite{spivakSIMPLICIALDATABASES}, \dbase\ is a set of row ids, \dfiber\ is the columns, and the section \dsection\ returns the record \delement\ at a given key in \dbase. For any fiber bundle, there exists a map
 \begin{equation}
     \begin{tikzcd}
