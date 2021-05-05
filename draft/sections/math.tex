@@ -58,21 +58,16 @@ For example, the records in the 2D fiber (a) in \autoref{fig:math:data:fiber} ar
 \end{equation*} 
 where the first component $F_0$ is the set of values specified by $(\fname=time,\, \ftype=\texttt{datetime},\, \fttype=\reals)$ and $F_1$ is specified by $(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals)$ and is the set of values $\fttype=\reals$. In the 3D fiber (b) in \autoref{fig:math:data:fiber}, time is replaced with location. This location variable is of type \texttt{point} and has two components \textit{latitude} and \textit{longitude} $\{(lat,lon) \in \reals^{2} \mid  -90\leq lat \leq 90,\, 0 \leq lon \leq 360\}$. The fiber for this dataset is
 \begin{equation*}
-    \dfiber = \reals \times [0, 360] \times [-90, 90]
+    \dfiber = \reals \times \left[0, 360\right] \times \left[-90, 90\right]
 \end{equation*} 
-and can either be thought of as having two components  
-\begin{equation}
-    \{(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals), ((\fname = location,\, \ftype = \texttt{point},\, \fttype=\reals^{2})\}
-\end{equation}
- or three
- \begin{equation}
-    \{(\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals), (\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\reals), (\fname=longitude,\, \ftype=\texttt{float},\,\fttype=\reals)\}
- \end{equation}
-
+with components \((\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\reals)\), \((\fname=latitude,\, \ftype=\texttt{float}, \, \fttype=\left[0, 360\right])\), and \((\fname=longitude,\, \ftype=\texttt{float},\,\fttype= \left[-90, 90\right]\). By adapting Spivak's framework, our model has a consistent way to describe the components of the data, no matter their complexity. 
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:math:data:monoid}
-Implementing expressive visual encodings requires formally describing the structure on the components of the fiber, which we define by the actions of a monoid on the component. In doing so, we specify the properties of the component that must be preserved in a graphic representation. A monoid \cite{Monoid2021} $\monoid$ is a set with a binary operation $\ast:\monoid \times \monoid\rightarrow \monoid$ that satisfies the axioms:
+Implementing expressive visual encodings requires formally describing the structure on the components of the fiber. We conjecture that the structure can be formally defined as the actions of a monoid on the component. We can also discuss complex structures since a core property of monoids is composability \cite{yorgeyMonoidsThemeVariations}. In doing so, we can specify the properties of the component that must be preserved in a graphic representation. 
+
+
+A monoid \cite{Monoid2021} $\monoid$ is a set with a binary operation $\ast:\monoid \times \monoid\rightarrow \monoid$ that satisfies the axioms:
 \begin{align*}
     \textbf{associativity}\; & \text{for all} a, b, c \in \monoid \, (a \bullet b) \bullet c = a \bullet (b \bullet c)\\
     \textbf{identity}\; & \text{for all } a\in \monoid,\,  e\bullet a = a 
@@ -82,7 +77,7 @@ As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
-The identity and associativity properties of the action denote that the action is a monoid homomorphism, which means that the group operation is preserved on both sides of the action\cite{weissteinGroupHomomorphism}. 
+We conjecture that given these properties, if there is a partial ordering on both sides of the action then the action is equivariant and monotonic.
 
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -95,15 +90,15 @@ The identity and associativity properties of the action denote that the action i
         \caption{}
         \label{fig:math:data:monoid:partial}
     \end{subfigure}
-    \caption{The action $\bullet$ in \autoref{fig:monoid:total} is the arrows from the partial order diagram of weather states on the left to the diagram of weather states on the right. Since the action maps the weather states to themselves, the ordering defined by the monoid $\ast$ is preserved on both sides of the action. The action in \autoref{fig:monoid:partial} is monoid homomorphism because the ordering of the weather states is the same as the ordering of the elements they are mapped to. Given $sun \geq clouds\geq rain\, lightining$ on the right, the action  $sun\, clouds \rightarrow clouds$, and $rain\, lightining \rightarrow rain$ is structure preserving because on the left $cloud \geq rain$ so the relative ordering of elements is the same as the elements they are mapped to.}
+    \caption{The action $\bullet$ in \autoref{fig:math:data:monoid:total} is the arrows from the partial order diagram of weather states on the left to the diagram of weather states on the right. The action maps the weather states to themselves, thereby preserving the ordering defined by the monoid $\ast$ on both sides of the action. We conjecture that the action in \autoref{fig:math:data:monoid:partial} is monotonic when the partial ordering of the weather states is the same as the partial order of the elements they are mapped to. Given $sun \geq clouds\geq rain,\, lightining$ on the right, we conjecture that the action  $sun,\, clouds \rightarrow clouds$, and $rain\, lightining \rightarrow rain$ is structure preserving such that the relative ordering of elements is the same as the elements they are mapped to.}
     \label{fig:math:data:monoid}
 \end{figure}
 
-One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:monoid:total}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action and it is therefore homomorphic. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}
+One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:math:data:monoid}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}
 \begin{equation*}
     if\, a \leq b \; then \; \bullet(a) \leq \bullet(b) \mid a,b \in \dfiber_{i}
 \end{equation*}
-where the structure the action preserves is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is also broad enough to include the Steven's measurment scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}. Monoids are also commonly found in functional programming since the core property of monoids is composability \cite{yorgeyMonoidsThemeVariations}. 
+where the structure the action preserves is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is broad enough to include the Steven's measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}.
 
 As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
 \begin{equation}
@@ -412,7 +407,7 @@ such that for every glyph there is at least one corresponding region on \dbase, 
 Given the continuities described in \ref{fig:math:graphic:retraction:map}, 
 we illustrate a minimal Q that will generate the most minimal visualizations associated with those continuities: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
-    \includegraphics[width=1\textwidth]{figures/math/scatter_with_s.png}
+    \includegraphics[width=1\textwidth]{figures/math/scatter.png}
     \caption{The data is discrete points (precipitation, time). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase. These values are then used to parameterize \gsection\ which returns a color based on the parameters (xpos,ypos) and position $\alpha, \beta$ on $\gbase_{\dbasepoint}$ that \gsection\ is evaluated on. 
     }
     \label{fig:math:artist:q:scatter}
@@ -443,7 +438,7 @@ The scatter plot in \autoref{fig:math:artist:q:scatter} has a constant size and 
 The position of this swatch of color is computed relative to the location on the disc \((\alpha, \beta) \in \gbase_{\dbasepoint}\) as shown in \autoref{fig:math:artist:q:scatter:s}. The region $\alpha, \beta)$ is scaled by a constant size and shifted by \textit{xpos} and \textit{ypos}. This computation yields the values \textit{(x,y)} that map into \gfiber\ and have a corresponding function $\gsection(\gbasepoint) = (x, y, 0, 0, 0)$ which colors the point \textit{(x,y)} black. 
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/math/line_with_s.png}
+    \includegraphics[width=\textwidth]{figures/math/line.png}
     \caption{The line fiber $(time,\, temp)$ is thickened with the derivative $(time^{\prime},\, precipitation^{\prime}$ because that information will be necessary to figure out the tangent to the point to draw a line. This is because the line needs to be pushed perpendicular to the tangent of (xpos, ypos). The data is converted to visual characteristics (xpos, ypos). The $\alpha$ coordinates on \gbase\ specifies the position of the line, the $\beta$ coordinate specifies thickness.}
     \label{fig:math:artist:q:line}
 \end{figure}
