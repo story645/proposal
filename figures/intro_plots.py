@@ -66,7 +66,8 @@ def plot_map(ax, gdf, nystate, cmap, norm, fade='k', alpha=.5, station=None):
     ax1_divider = make_axes_locatable(ax)
     cax = ax1_divider.append_axes("right", size="5%", pad="2%")
     cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap,norm=norm, orientation='vertical', drawedges=False, alpha=alpha)
-    cb.set_label('total precipitation (in.)', color=fade)
+    cb.set_label('total precipitation (in.)', 
+                 rotation=270, color=fade, labelpad=12)
     for axes in [ax, cax]:
         axes.tick_params(color=fade, labelcolor=fade)
         axes.spines[:].set_color(fade)
@@ -82,7 +83,8 @@ def plot_time(ax, df, fade='k', alpha=.5, station=None):
     ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(mdates.AutoDateLocator()))
     ax.tick_params(color=fade, labelcolor=fade)
     ax.spines[:].set_color(fade)
-    ax.set_ylabel('precipitation (in.)', color=fade)
+    ax.set_ylabel('precipitation (in.)', 
+                  rotation=270,  color=fade, labelpad=12)
     ax.yaxis.set_label_position('right')
     ax.tick_params('y', labelright=True, labelleft=False, right=False, left=False)
     return 

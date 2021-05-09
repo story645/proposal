@@ -593,3 +593,6 @@ put all the functorial things together is still functorial
 %%The measurement spaces $X$ are each variables and have the properties of measurement scales, such as Steven's nominal, ordinal, interval, and ratio \cite{stevensTheoryScalesMeasurement1946}. Stevens talks about measurements and this is how we define it here:.... can check symmatry under stevens via carry through on tau
 
  Can in theory approximate hatching/dashing/etc can be approximated w/ functions and neighborhood of k. 
+
+
+ 
