@@ -94,11 +94,11 @@ We conjecture that given these properties, if there is a partial ordering on bot
     \label{fig:math:data:monoid}
 \end{figure}
 
-One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:math:data:monoid}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in  \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map\cite{fongInvitationAppliedCategory2019}
+One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:math:data:monoid}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map \cite{fongInvitationAppliedCategory2019}
 \begin{equation*}
     if\, a \leq b \; then \; \bullet(a) \leq \bullet(b) \mid a,b \in \dfiber_{i}
 \end{equation*}
-where the structure the action preserves is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is broad enough to include the Steven's measurement scales\cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}.
+where the structure the action preserves is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is broad enough to include the Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}.
 
 As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
 \begin{equation}
@@ -115,7 +115,7 @@ of each monoid \(\monoid_{i}\) on \(\dfiber_{i}\).  The monoid is added to the s
     \label{fig:math:data:base:types}
 \end{figure}
 
-The base space \dbase\ provides a way to explicitly encode the continuity of the data, as described in \autoref{sec:intro:data:continuity}. This explicit topology is a concise way of distinguishing between visualizations that appear identical but assume different continuity, for example heat maps and images. The base space \dbase\ acts as an indexing space, as emphasized by Butler\cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, to express how the records in \dtotal\ are connected to each other. As shown in \autoref{fig:math:data:base:types}, \dbase\ can have any number of dimensions and can be continuous or discrete. Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space\cite{aurouxMath131Introduction} such that every \(\dbasepoint \in \dbase\) has a corresponding fiber \(\dfiber_k\)\cite{QuotientSpaceTopology2020}. 
+The base space \dbase\ provides a way to explicitly encode the continuity of the data, as described in \autoref{sec:intro:data:continuity}. This explicit topology is a concise way of distinguishing between visualizations that appear identical but assume different continuity, for example heat maps and images. The base space \dbase\ acts as an indexing space, as emphasized by Butler \cite{butlerVectorBundleClassesForm1992,butlerVisualizationModelBased1989}, to express how the records in \dtotal\ are connected to each other. As shown in \autoref{fig:math:data:base:types}, \dbase\ can have any number of dimensions and can be continuous or discrete. Formally \dbase\ is the quotient space \cite{QuotientSpaceTopology2020} of \dtotal\, meaning it is the finest space \cite{aurouxMath131Introduction} such that every \(\dbasepoint \in \dbase\) has a corresponding fiber \(\dfiber_k\) \cite{QuotientSpaceTopology2020}. 
 
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{figures/math/k_qspace.png}
@@ -123,7 +123,7 @@ The base space \dbase\ provides a way to explicitly encode the continuity of the
     \label{fig:math:data:base:div}
 \end{figure}
 
-In \autoref{fig:math:data:base:div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping \(\pi: \dtotal\rightarrow \dbase\) is the closed interval \(\left[0,1\right]\). While the total space \dtotal\ may have components in \dfiber\ that describe any given point \(\dbasepoint \in \dbase\), such as \textit{time, latitude, longitude}, these labels are indexed into from \dbase\ the same as any other components. In contrast to the structural \textit{keys} with associated \textit{values} proposed by Munzner\cite{munznerVisualizationAnalysisDesign2014}, our model treats keys \dbasepoint\ as a pure reference to topology. Decoupling the keys from their semantics allows the components identifying the keys to be altered, which provides for a coordinate agnostic representation of the continuity and facilitates encoding of data where the independent variable may not be clear. For example total rainfall is dependent on time of day and how much rain has already fallen; therefore changing the coordinate system should have no effect on how the records are connected to each other, as illustrated in \autoref{fig:intro:equivariance} where precipitation in inches and millimeters yield equivalent line plots. 
+In \autoref{fig:math:data:base:div}, \dtotal\ is a rectangle divided by vertical fibers \dfiber, so the minimal \dbase\ for which there is always a mapping \(\pi: \dtotal\rightarrow \dbase\) is the closed interval \(\left[0,1\right]\). While the total space \dtotal\ may have components in \dfiber\ that describe any given point \(\dbasepoint \in \dbase\), such as \textit{time, latitude, longitude}, these labels are indexed into from \dbase\ the same as any other components. In contrast to the structural \textit{keys} with associated \textit{values} proposed by Munzner \cite{munznerVisualizationAnalysisDesign2014}, our model treats keys \dbasepoint\ as a pure reference to topology. Decoupling the keys from their semantics allows the components identifying the keys to be altered, which provides for a coordinate agnostic representation of the continuity and facilitates encoding of data where the independent variable may not be clear. For example total rainfall is dependent on time of day and how much rain has already fallen; therefore changing the coordinate system should have no effect on how the records are connected to each other, as illustrated in \autoref{fig:intro:equivariance} where precipitation in inches and millimeters yield equivalent line plots. 
 
 As with \autoref{eq:math:data:fiber:decompose} and \autoref{eq:math:data:monoid:decompose}, we can decompose the total space into component bundles \(\pi:\dtotal_i\rightarrow \dbase\) where
 \begin{equation}
@@ -171,7 +171,7 @@ In \autoref{fig:math:data:sections}, the fiber is the same encoding of \((time, 
 
 \subsubsection{Sheafs}
 \label{sec:math:data:sheaf}
-Dynamic visualizations require evaluating sections on different subspaces of \dbase; this can be achieved using a mathematical structure, called a sheaf \(\mathcal{O}\), for defining collections of objects\cite{ghristElementaryAppliedTopology2014, ghristHomologicalAlgebraData2018,urbanikBriefIntroductionSchemes} on mathematical spaces.  On the fiber bundle \dtotal, we can describe a sheaf as the collection of local sections \(\iota^{*}\dsection\)
+Dynamic visualizations require evaluating sections on different subspaces of \dbase; this can be achieved using a mathematical structure, called a sheaf \(\mathcal{O}\), for defining collections of objects \cite{ghristElementaryAppliedTopology2014, ghristHomologicalAlgebraData2018,urbanikBriefIntroductionSchemes} on mathematical spaces.  On the fiber bundle \dtotal, we can describe a sheaf as the collection of local sections \(\iota^{*}\dsection\)
 \begin{equation}
     \label{eq:sheaf}
     \begin{tikzcd}[column sep=huge]
@@ -179,7 +179,7 @@ Dynamic visualizations require evaluating sections on different subspaces of \db
         U \arrow[r, "\iota", hook] \arrow[u, "\iota^{*}\dsection"', bend right] & \dbase \arrow[u, "\dsection"', bend right]
     \end{tikzcd}
 \end{equation}
-which are sections of \dtotal\ pulled back over local neighborhood \(U \subset \dtotal\) via the inclusion map \(\iota:\dtotal\rightarrow U\). The collation of sections enabled by sheafs is necessary for navigation techniques such as pan and zoom \cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows\cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}.
+which are sections of \dtotal\ pulled back over local neighborhood \(U \subset \dtotal\) via the inclusion map \(\iota:\dtotal\rightarrow U\). The collation of sections enabled by sheafs is necessary for navigation techniques such as pan and zoom \cite{NekrasovskiEvaluationPanZoom2006} and dynamically updated visualizations such as sliding windows \cite{crouchDynamicGraphsSlidingwindow2013,chuTimeSeriesSegmentation1995}.
 
 \subsubsection{Applications}
 Using fiber bundles as the data abstraction allows the model to describe widely used data containers without sacrificing the semantic structure embedded in each container. For example, the section can be any instance of a numpy array \cite{harris2020array} that stores an image, such as an image where the \dbase\ is a 2D continuous plane and the \dfiber\ is \((\reals^{3}, \reals, \reals)\). In this fiber, the \(\reals^3\) components encode color, and the other two components are the x and y positions of the sampled data in the image. The continuity of the image is implicitly encoded in the array as the index, so the position components encode the resolution. Instead of an image, the numpy array could also store a 2D discrete table. The fiber may not change, but the \dbase\ would now be 0D discrete points. These different choices in topology indicate, for example, what sorts of interpolation would be appropriate when visualizing the data. 
@@ -243,7 +243,7 @@ For a 2D screen, the pixel is defined as a region \(p=\left[y_{top}, y_{bottom},
     \label{fig:math:graphic:rho:lookup}
 \end{figure}
 
-As shown in \autoref{fig:math:graphic:rho:lookup}, a pixel \(p\) in the output space, drawn in yellow, is selected and mapped, via the renderer, into a region on \gtotal.  The region on \gtotal\ corresponds to a region \(\gbase_p \subset \gbase\) via the inverse mapping  \({\gsection_{xy}}^(p)\). The base space \gbase\ is an annulus to match the topology of the graphic idealized in \gtotal. The section  \(\gsection(\gbase_{p})\) then maps into the fiber \gfiber\ over \(\gbase_p\)to obtain the set of points in \gfiber, here represented as a table, that correspond to that section. The integral over the pixel components of this set of points in the fiber yields the color of the pixel. In general, \gsection\ is an abstraction of rendering. In very broad strokes \gsection\ can be a specification such as PDF\cite{bienz1993portable}, SVG\cite{quintScalable2003}, or an openGL scene graph\cite{CarsonOpenGL1997} or a rendering engine such as cairo\cite{CairographicsOrg} or AGG\cite{shemanarevAntiGrainGeometry}. Implementation of \gsection\ is out of scope for this proposal. 
+As shown in \autoref{fig:math:graphic:rho:lookup}, a pixel \(p\) in the output space, drawn in yellow, is selected and mapped, via the renderer, into a region on \gtotal.  The region on \gtotal\ corresponds to a region \(\gbase_p \subset \gbase\) via the inverse mapping  \({\gsection_{xy}}^(p)\). The base space \gbase\ is an annulus to match the topology of the graphic idealized in \gtotal. The section  \(\gsection(\gbase_{p})\) then maps into the fiber \gfiber\ over \(\gbase_p\)to obtain the set of points in \gfiber, here represented as a table, that correspond to that section. The integral over the pixel components of this set of points in the fiber yields the color of the pixel. In general, \gsection\ is an abstraction of rendering. In very broad strokes \gsection\ can be a specification such as PDF \cite{bienz1993portable}, SVG \cite{quintScalable2003}, or an openGL scene graph \cite{CarsonOpenGL1997} or a rendering engine such as cairo \cite{CairographicsOrg} or AGG \cite{shemanarevAntiGrainGeometry}. Implementation of \gsection\ is out of scope for this proposal. 
 
 \subsection{Artist}
 \label{sec:artist}
@@ -282,7 +282,7 @@ We introduce a visual bundle \vtotal\ to store the mappings of the data componen
                           \& \dbase \arrow[u, "\vsection"', bend right]
     \end{tikzcd}
 \end{equation}
-where \vsection\ is the visual variable encoding, as described by Bertin \cite{bertinSemiologyGraphicsDiagrams2011a}, of the data section \dsection. The visual bundle \vtotal\ is the full design space\cite{cardStructureInformationVisualization1997} of possible parameters of a visualization type, such as a scatter plot or line plot. For example, one section \vsection\ of \vtotal\ is a tuple of visual values that specifies the visual characteristics of a part of a graphic. 
+where \vsection\ is the visual variable encoding, as described by Bertin \cite{bertinSemiologyGraphicsDiagrams2011a}, of the data section \dsection. The visual bundle \vtotal\ is the full design space \cite{cardStructureInformationVisualization1997} of possible parameters of a visualization type, such as a scatter plot or line plot. For example, one section \vsection\ of \vtotal\ is a tuple of visual values that specifies the visual characteristics of a part of a graphic. 
 
 \begin{table}[H]
     \centering
@@ -355,7 +355,7 @@ The mapping from weather state to umbrella in \autoref{fig:math:artist:nu:valid}
   \label{tab:math:artist:nu}
 \end{table}
 
-The Stevens measurement types\cite{stevensTheoryScalesMeasurement1946}, listed in \autoref{tab:math:artist:nu}, are specified in terms of groups, which are monoids with invertible operations\cite{remlingAlgebraMath5353}. We generalize to monoids to account for limitations in the types of data that can be described with the Stevens' scales \cite{johnsonPseudoMathematicsMentalSocial1936,thomasMathematizationNotMeasurement2014} 
+The Stevens measurement types \cite{stevensTheoryScalesMeasurement1946}, listed in \autoref{tab:math:artist:nu}, are specified in terms of groups, which are monoids with invertible operations\cite{remlingAlgebraMath5353}. We generalize to monoids to account for limitations in the types of data that can be described with the Stevens' scales \cite{johnsonPseudoMathematicsMentalSocial1936,thomasMathematizationNotMeasurement2014} 
 
 \subsubsection{Visualization Assembly}
 Having described the maps to components in \autoref{sec:math:artist:nu}, we now specify the assembly function \vmarkd\ that composites components in \vtotal\ into a graphic in \gtotal. Since the component transforms \vchannel\ are equivariant, the equivariance constraints carry through to \vmarkd. We specify these constraints to guide the implementation of library components responsible for generating graphics. 
@@ -392,14 +392,14 @@ We formally describe a glyph as \vmark\ applied to the regions \dbasepoint\ that
 \begin{equation}
 \dbasepath = \{\dbasepathpoint \in \dbase \text{ exists } \gamma \text{ s.t. } \gamma(0)=\dbasepoint \text{ and }\gamma(1)=\dbasepathpoint\}
 \end{equation}
-where the path\cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
+where the path \cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepathpoint\ is a continuous function from the interval [0,1]. We define the glyph as the graphic generated by $\vmark(\gbase_{\dbasepathpoint})$
 \begin{equation}
   \begin{tikzcd}
       \gtotal \arrow[r, shift left] & \gbase_\dbasepathpoint \arrow[rr, "\vindex(\gbasepoint)", shift left] \arrow[l, "\gsection(\gbase_\dbasepathpoint)"] &  & \dbasepath_{\dbasepoint} \arrow[ll, "\vindex^{-1}(\dbasepath)"]
       \end{tikzcd}
   \label{eq:mark}
 \end{equation}
-such that for every glyph there is at least one corresponding region on \dbase, in keeping with the definition of glyph as any visually distinguishable element put forth by Ziemkiewicz and Kosara\cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks\cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
+such that for every glyph there is at least one corresponding region on \dbase, in keeping with the definition of glyph as any visually distinguishable element put forth by Ziemkiewicz and Kosara \cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks \cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
   
 
 \subsubsection{Assembly \vmark}

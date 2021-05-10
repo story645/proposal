@@ -10,7 +10,7 @@ To evaluate the feasibility of the model described in ~\autoref{sec:math}, we bu
   artist = ArtistClass(E, V)
   ax.add_artist(artist)
 \end{minted}
-Building on the current Matplotlib Artists which construct an internal representation of the graphic, \mintinline{python}{ArtistClass} acts as an equivalence class artist \vartisteq\ as described in \autoref{eq:math:artist:aprime}. The visual bundle \vtotal\ is specified as the \mintinline{python}{V} dictionary of the form \mintinline{python}|{parameter:(variable name, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber, and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{E} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist\ as defined in \autoref{eq:math:artist:artist}.
+Building on the current Matplotlib Artists, which construct an internal representation of the graphic, \mintinline{python}{ArtistClass} acts as an equivalence class artist \vartisteq\ as described in \autoref{eq:math:artist:aprime}. The visual bundle \vtotal\ is specified as the \mintinline{python}{V} dictionary of the form \mintinline{python}|{parameter:(variable name, encoder)}| where parameter is a component in \vfiber, variable is a component in \dfiber, and the \vchannel\ encoders are passed in as functions or callable objects. The data bundle \dtotal\ is passed in as a \mintinline{python}{E} object. By binding data and transforms to \vartisteq\ inside \mintinline{python}{__init__}, the \mintinline{python}{draw} method is a fully specified artist \vartist\ as defined in \autoref{eq:math:artist:artist}.
 \begin{minted}{python}
   class ArtistClass(matplotlib.artist.Artist): #A'
       def __init__(self, E, V, *args, **kwargs):
@@ -32,7 +32,7 @@ Building on the current Matplotlib Artists which construct an internal represent
           # pass configurations off to the renderer
           super().draw(renderer)
   \end{minted}
- The data is fetched in section \dsection\ via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that can be used to query back into data to select a subset as described in \autoref{sec:math:data:sheaf}. We require that the \mintinline{python}{view} method be atomic so that we do not risk race conditions. Atomicity means that the values cannot change after the method is called in draw until a new call to draw\cite{ullmanFirstCourseDatabase2008}, which ensures the integrity of the section.
+ The data in section \dsection\ is fetched via a \mintinline{python}{view} method on the data because the input to the artist is a section on \dtotal. The \mintinline{python}{view} method takes the \mintinline{python}{axes} attribute because it provides the region in graphic coordinates \gbase\ that can be used to query back into data to select a subset as described in \autoref{sec:math:data:sheaf}. We require that the \mintinline{python}{view} method be atomic so that we do not risk race conditions. Atomicity means that the values cannot change after the method is called in draw until a new call to draw\cite{ullmanFirstCourseDatabase2008}, which ensures the integrity of the section.
  
  The \vchannel\ functions are then applied to the data, as describe in \autoref{eq:math:artist:nu}, to generate the visual section \vsection that here is the object \mintinline{python}{V}. The conversion from data to visual space is simplified here to directly show that it is the encoding \vchannel\ applied to the component. The \mintinline{python}{q_hat} function that is \vmarkd,  as defined in \autoref{eq:math:artist:qhat_k}, is responsible for generating a representation such that it could be serialized to recreate a static version of the graphic. The last step in the artist function is handing itself off to the renderer. The extra \mintinline{python}{*arg, **kwargs} arguments in \mintinline{python}{__init__,draw} are artifacts of how these objects are currently implemented.
 
@@ -53,7 +53,7 @@ Building on the current Matplotlib Artists which construct an internal represent
   \caption{Scatter plot and line plot implemented using \mintinline{python}{Point} and \mintinline{python}{Line} artists and fiber bundle inspired data models. Matplotlib is used for the rendering.}
   \label{fig:code:scatter_line}
 \end{figure}
-The figure in \autoref{fig:code:scatter} is described by \autoref{eq:eq:math:artist:q:scatter}. This is implemented via a \mintinline{python}{Line} object where the scatter marker shape is fixed as a circle, and the visual fiber components are x and y position and the facecolor and size of the marker. We only show the \mintinline{python}{q_hat} function here because the \mintinline{python}{__init__, draw} are inherited from the prototype artist \mintinline{Python}{ArtistClass}. 
+The figure in \autoref{fig:code:scatter} is a scatter plot, as described by \autoref{eq:eq:math:artist:q:scatter}. This is implemented via a \mintinline{python}{Line} object where the scatter marker shape is fixed as a circle, and the visual fiber components are x and y position and the facecolor and size of the marker. We only show the \mintinline{python}{q_hat} function here because the \mintinline{python}{__init__, draw} are inherited from the prototype artist \mintinline{Python}{ArtistClass}. 
 
 The \mintinline{python}{view} method repackages the data as a fiber component indexed table of vertices. Even though the \mintinline{python}{view} is fiber indexed, each vertex at an index \dbasepoint\ has corresponding values in section $\dsection(\dbasepoint_{i})$. This means that all the data on one vertex maps to one glyph.
 \begin{minted}{python}
@@ -145,11 +145,11 @@ def test_nominal(values, encoder):
     m2 = list(zip(values, encoder(values)))
     assert sorted(m1) == sorted(m2)
 \end{minted}
-As described in \autoref{eq:math:artist:nu:equivariance}, a test for equivariance can be implemented trivially. It is currently factored out of the artist for clarity. 
+As described in \autoref{eq:math:artist:nu:equivariance}, a test for equivariance can be implemented trivially. The test shown here is the nominal test described in \autoref{tab:math:artist:nu} because \mintinline{python}{Categorical} is intended to encode nominal data. Equivariance tests are currently factored out of the artist for clarity. 
 
 \subsection{Data Model}
 \label{sec:code:data}
-The data input into the \mintinline{python}{Artist} will often be a wrapper class around an existing data structure. This wrapper object must specify the fiber components \dfiber\ and connectivity \dbase\ and have a \mintinline{python}{view} method that returns an atomic object that encapsulates \dsection. To support specifying the fiber bundle, we define a \mintinline{python}{FiberBundle} data class\cite{DataClasses}
+The data input into the \mintinline{python}{Artist} will often be a wrapper class around an existing data structure. This wrapper object must specify the fiber components \dfiber\ and connectivity \dbase\ and have a \mintinline{python}{view} method that returns an atomic object that encapsulates \dsection. To support specifying the fiber bundle, we define a \mintinline{python}{FiberBundle} data class \cite{DataClasses}
 
 \begin{minted}{python}
 @dataclass
@@ -173,7 +173,7 @@ class LineData:
     def tau(self, k):
         return # tau evaluated on interval k
 \end{minted}
-The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, while the line\mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint. These continuities are also specified in the \mintinline{python}|k={'tables':[]}| dictionary. 
+The discrete \mintinline{python}{tau} method returns a record of discrete points, akin to a row in a table, while the line \mintinline{python}{tau} returns a sampling of points along an edge \dbasepoint. These continuities are also specified in the \mintinline{python}|k={'tables':[]}| dictionary. 
 \begin{minted}{python}
   def view(self, axes):
       table = defaultdict(list)
@@ -208,7 +208,7 @@ such that one advantage of this model is it helps differentiate graphics that ha
 
 \subsection{Case Study: Penguins}
 \label{sec:code_case_study}
-Building on the \mintinline{python}{Bar} artist in \autoref{sec:code:artists}, we implement grouped bar charts as these do not exist out of the box in the current version of Matplotlib. Instead, grouped bar charts are often achieved via looping over an implementation of bar, which forces the user to keep track which values are mapped to a single visual element and how that is achieved. For this case study, we use the Palmer Penguins dataset\cite{gormanEcologicalSexualDimorphism2014, horstPalmerpenguinsPalmerArchipelago2020}, packaged as a pandas data frame\cite{nakhaeeMcnakhaeePalmerpenguins2021} since that is a very commonly used Python labeled data structure. 
+Building on the \mintinline{python}{Bar} artist in \autoref{sec:code:artists}, we implement grouped bar charts as these do not exist out of the box in the current version of Matplotlib. Instead, grouped bar charts are often achieved via looping over an implementation of bar, which forces the user to keep track which values are mapped to a single visual element and how that is achieved. For this case study, we use the Palmer Penguins dataset \cite{gormanEcologicalSexualDimorphism2014, horstPalmerpenguinsPalmerArchipelago2020}, packaged as a pandas data frame \cite{nakhaeeMcnakhaeePalmerpenguins2021} since that is a very commonly used Python labeled data structure. 
 
 \begin{table}[H]
     \centering
@@ -223,9 +223,7 @@ Building on the \mintinline{python}{Bar} artist in \autoref{sec:code:artists}, w
 \caption{Palmer Penguins dataset that is processed to become input into the grouped bar chart. This data is a count of penguin species. The columns with suffix c are used to specify the color of the corresponding visual element.}
 \label{tab:code:penguins}
 \end{table}
-    
-
-The wrapper is very thin because there is explicitly only one section.
+The wrapper is very thin because there is explicitly only one section, which is the penguins dataframe. 
 \begin{minted}{python}
 class DataFrame:
     def __init__(self, dataframe):
@@ -292,7 +290,7 @@ class StackedBar(martist.Artist):
 
 \end{minted}
 
-Since all the visual transformation is passed through to \mintinline{python}{Bar}, the \mintinline{python}{draw} method does not do any visual transformations. In \mintinline{python}{StackedBar} the \mintinline{python}{view} is used to adjust the \mintinline{python}{floor} for every subsequent bar chart, since a stacked bar chart is bar chart area marks concatenated together in the length parameter. In contrast, \mintinline{python}{GroupedBar} does not even need the view, but instead keeps track of the relative position of each group of bars in the visual only variable \mintinline{python}{offset}. 
+The visual transformations are passed through to \mintinline{python}{Bar}; therefore, the \mintinline{python}{draw} method does not do any visual transformations. In \mintinline{python}{StackedBar} the \mintinline{python}{view} is used to adjust the \mintinline{python}{floor} for every subsequent bar chart, since a stacked bar chart is bar chart area marks concatenated together in the length parameter. In contrast, \mintinline{python}{GroupedBar} does not even need the view, but instead keeps track of the relative position of each group of bars in the visual only variable \mintinline{python}{offset}. 
 
 \begin{minted}{python}
 class GroupedBar(martist.Artist):
