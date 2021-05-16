@@ -64,8 +64,7 @@ with components \((\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\rea
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:math:data:monoid}
-Implementing expressive visual encodings requires formally describing the structure on the components of the fiber. We conjecture that the structure can be formally defined as the actions of a monoid on the component. We can also discuss complex structures since a core property of monoids is composability \cite{yorgeyMonoidsThemeVariations}. In doing so, we can specify the properties of the component that must be preserved in a graphic representation. 
-
+Expressiveness of visual encodings is defined as encoding the relations of the data in the visual space \cite{mackinlayAutomatingDesignGraphical1986}; we formally describe these relations as monoid actions on the data component. We propose that an expressive visual transformaton is equivariant with respect to actions on the data components and visual component. We define relations as monoids because they generalize to monoids because they are composable \cite{yorgeyMonoidsThemeVariations} and can be used to encode partial orders, such as multi-ranked indicators \cite{bruggemannRankingPrioritizationMultiindicator2011}.
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with a binary operation $\ast:\monoid \times \monoid\rightarrow \monoid$ that satisfies the axioms:
 \begin{align*}
@@ -77,7 +76,6 @@ As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction
     \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
     \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
 \end{align*}
-We conjecture that given these properties, if there is a partial ordering on both sides of the action then the action is equivariant and monotonic.
 
 \begin{figure}[H]
     \begin{subfigure}{.49\textwidth}
