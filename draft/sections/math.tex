@@ -64,18 +64,24 @@ with components \((\fname=precipitation,\, \ftype=\texttt{float},\, \fttype=\rea
 
 \subsubsection{Measurement Scales: Monoid Actions}
 \label{sec:math:data:monoid}
-Expressiveness of visual encodings is defined as encoding the relations of the data in the visual space \cite{mackinlayAutomatingDesignGraphical1986}; we formally describe these relations as monoid actions on the data component. We propose that an expressive visual transformaton is equivariant with respect to actions on the data components and visual component. We define relations as monoids because they generalize to monoids because they are composable \cite{yorgeyMonoidsThemeVariations} and can be used to encode partial orders, such as multi-ranked indicators \cite{bruggemannRankingPrioritizationMultiindicator2011}.
+Expressiveness of visual encodings is defined as encoding the relations of the data in the visual space \cite{mackinlayAutomatingDesignGraphical1986}; we formally describe these relations as monoid actions on the data component. We propose that an expressive visual transformaton is equivariant with respect to actions on the data components and visual component. We define relations as monoids because they generalize to monoids because they are composable \cite{yorgeyMonoidsThemeVariations} and can be used to describe partial order relations, such as multi-ranked indicators \cite{bruggemannRankingPrioritizationMultiindicator2011}.
 
 A monoid \cite{Monoid2021} $\monoid$ is a set with a binary operation $\ast:\monoid \times \monoid\rightarrow \monoid$ that satisfies the axioms:
-\begin{align*}
-    \textbf{associativity}\; & \text{for all} a, b, c \in \monoid \, (a \bullet b) \bullet c = a \bullet (b \bullet c)\\
-    \textbf{identity}\; & \text{for all } a\in \monoid,\,  e\bullet a = a 
-\end{align*} 
-As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction2021,nlabauthorsAction2021} of $\monoid_i$ is a set $\dfiber_i$ with an action $\bullet: \monoid\times \dfiber_i \rightarrow \dfiber_i$ with the properties:
-\begin{align*}
-    \textbf{associativity}\;& \text{for all } f,g \in \monoid_i \text{ and } x\in \dfiber_i,\, f\bullet(g\bullet x) = (f\ast g) \bullet x\\
-    \textbf{identity}\;& \text{for all } x\in \dfiber_i, e\in \monoid_i,\,  e\bullet x = x 
-\end{align*}
+\begin{align}
+    \textbf{associativity}\; & \text{for all } a, b, c \in \monoid \, (a \ast b) \ast c = a \ast (b \ast c)\\
+    \textbf{identity}\; & \text{for all } a\in \monoid,\,  e\ast a = a 
+\end{align} 
+As defined on data components $\dfiber$, a left monoid action \cite{SemigroupAction2021,nlabauthorsAction2021} of $\monoid$ is a set $\dfiber$ with an action $\bullet: \monoid\times \dfiber \rightarrow \dfiber$ with the properties:
+\begin{align}
+    \textbf{associativity}\;& \text{for all } m_j, m_k \in \monoid \text{ and } x\in \dfiber,\, m_j\bullet(m_k\bullet x) = (m_j\ast m_k) \bullet x\label{eq:math:data:monoid:asso}\\
+    \textbf{identity}\;& \text{for all } x\in \dfiber,\; e\in \monoid,\,  e\bullet x = x \label{eq:math:data:monoid:identity}
+\end{align}
+As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
+\begin{equation}
+    \label{eq:math:data:monoid:decompose}
+\monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
+\end{equation}
+of each monoid \(\monoid_{i}\) on \(\dfiber_{i}\).  The monoid is added to the specification of the fiber \((\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)\)
 
 \begin{figure}[H]
     \begin{subfigure}{.49\textwidth}
@@ -88,22 +94,24 @@ As defined on a component of \dfiber, a left monoid action \cite{SemigroupAction
         \caption{}
         \label{fig:math:data:monoid:partial}
     \end{subfigure}
-    \caption{The action $\bullet$ in \autoref{fig:math:data:monoid:total} is the arrows from the partial order diagram of weather states on the left to the diagram of weather states on the right. The action maps the weather states to themselves, thereby preserving the ordering defined by the monoid $\ast$ on both sides of the action. We conjecture that the action in \autoref{fig:math:data:monoid:partial} is monotonic when the partial ordering of the weather states is the same as the partial order of the elements they are mapped to. Given $sun \geq clouds\geq rain,\, lightining$ on the right, we conjecture that the action  $sun,\, clouds \rightarrow clouds$, and $rain,\, lightining \rightarrow rain$ is structure preserving such that the relative ordering of elements is the same as the elements they are mapped to.}
+    \caption{In this example, the partially ordered set of weather values are a component of the data $F_1$. In \autoref{fig:math:data:monoid:total} the monoid $m_1$ is the identity $e \in \monoid$ and takes every element $x \in \dfiber_i$ to itself. In \autoref{fig:math:data:monoid:partial}, the monoid $m_2$ maps the weather elements on the left to the elements on the right such that multiple weather elements on the right are mapped into the same element on the left. The monoid $m_2$ is order preserving, meaning for example that given $sun \geq clouds$ is true, then $m_2(sun) \geq m_2(clouds)$ must be true. The monoids are composable, meaning that whether they are applied in stages, such as the output of $m_1$ \autoref{fig:math:data:monoid:total} is the input to \autoref{fig:math:data:monoid:partial}, or the monoids (arrows) are first composed $m_1 \circ m_2$, the result will be the same.}
     \label{fig:math:data:monoid}
 \end{figure}
-
-One example of monoids are partial orderings on a set, such as seen in \autoref{fig:math:data:monoid}. Each hasse diagram of the set of weather states describes an ordering on the set; the arrow goes from the lesser value to the greater one. For example, $storm \leq rain$. In \autoref{fig:math:data:monoid}, the action $\bullet$ maps the elements of a set of weather states into itself by mapping them into other elements of the weather states. The action in \autoref{fig:math:data:monoid:total}, represented as the arrows between the hasse diagrams of the weather states, maps the weather states to themselves; therefore the ordering of the weather states is identical on both sides of the action. The action $\bullet$ in \autoref{fig:math:data:monoid:partial} is a monotone map \cite{fongInvitationAppliedCategory2019}
+In \autoref{fig:math:data:monoid}, the monoids $m_1, m_2\in \monoid_i$ act on the partially ordered set $\dfiber_i=weather$. In this example, we define the actions $\bullet$ that compose $m_j \in \monoid_i$ with the set \textit{weather} to be monotone maps \cite{fongInvitationAppliedCategory2019}
 \begin{equation*}
+    \label{eq:math:data:monoid:monotone}
     if\, a \leq b \; then \; \bullet(a) \leq \bullet(b) \mid a,b \in \dfiber_{i}
 \end{equation*}
-where the structure the action preserves is the relative, rather than exact, ordering. Since groups are monoids with invertible operations, this definition of structure is broad enough to include the Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}.
-
-As with the fiber \dfiber\, the total monoid space \monoid\ is the cartesian product
+In \autoref{fig:math:data:monoid:total}, the monoid $m_1$ takes every element in the set \textit{weather} to itself and is therefore the identity $m_1 = e \in \monoid_i$. The monoid $m_2$ in \autoref{fig:math:data:monoid:partial} maps the elements of weather on the left to the subset on the right in a way that satisfies the monotonicity condition in \autoref{eq:math:data:monoid:monotone}. For example, on the right $sun \geq clouds$ is true. Applying the monoid, the result  $m_2(sun) \geq m_2(clouds)$ is true because $m_2(sun)=clouds$ and $m_2(clouds)=clouds$. Composable actions, as defined in \autoref{eq:math:data:monoid:asso}, means that either applying $m_1$ to the weather elements in $F_1$ and then $m_2$ to the results
 \begin{equation}
-    \label{eq:math:data:monoid:decompose}
-\monoid= \monoid_{0} \times \ldots \times \monoid_{i}\times \ldots \times\ldots \monoid_{n}
+\begin{tikzcd}
+    \dfiber_i \arrow[d, "m_1"'] \arrow[rd, "m_1\;\circ\; m_2"] &         \\
+    \dfiber_i \arrow[r, "m_2"']                            & \dfiber_i
+\end{tikzcd}
 \end{equation}
-of each monoid \(\monoid_{i}\) on \(\dfiber_{i}\).  The monoid is added to the specification of the fiber \((\fname_i,\, \ftype_i,\, \fttype\, \monoid_i)\)
+or composing $m_1\circ m_2$ and applying the composition to the elements in $F_i$ will yield the same result. Since groups are monoids with invertible operations, this definition of structure is broad enough to include the Steven's measurement scales \cite{stevensTheoryScalesMeasurement1946,leaFormalizationMeasurementScale}.
+
+
 
 \subsubsection{Continuity of the Data} 
 \label{sec:math:data:base}
