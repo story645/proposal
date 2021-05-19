@@ -264,11 +264,11 @@ The artist preserves \textit{continuity} through the \vindex\ map discussed in \
 \begin{equation}
 \vartist(m\cdot \delement) = \varphi(m)\cdot \vartist(\delement) 
 \end{equation}
-between data element \(\delement \in \mathscr{\dtotal}\) and graphic element \(\vartist(\delement) \in \mathscr{\gtotal}\). To be equivariant with respect to monoids action, we conjecture that an artist carries a monoid homomorphism \(\varphi\)
+between data element \(\delement \in \mathscr{\dtotal}\) and graphic element \(\vartist(\delement) \in \mathscr{\gtotal}\). To be equivariant with respect to monoids action, we propose that an artist carries a monoid homomorphism \(\varphi\)
 \begin{equation}
     \varphi: \monoid \rightarrow \monoid^{\prime}
 \end{equation}
-such that an action in data space \(m \in \monoid\) is equivalent to an action in graphic space \(\varphi(\monoid) \in \monoid^{\prime}\). 
+such that an action in data space \(m \in \monoid\) is equivariant to an action in graphic space \(\varphi(\monoid) \in \monoid^{\prime}\). 
 
 The artist \vartist\ has two stages: the encoders \(\vchannel:\dtotal \rightarrow \vtotal\) convert the data components to visual components, and the assembly function \(\vmark: \vtotalpull \rightarrow \gtotal\) composites the fiber components of \vtotalpull\ into a graphic in \gtotal.
 \begin{equation}
@@ -311,12 +311,12 @@ In \autoref{tab:math:artist:mpl:fiber}, the fiber components are specified by th
 
 \subsubsection{Visual Encoders}
 \label{sec:math:artist:nu}
-We propose that the map from data components to graphic components \(\vchannel: \dsection \mapsto \vsection\) is a monoid \textit{equivariant} map. By specifying this constraints, we can guarantee that the stage of the artist that transforms data components into graphic representations is equivariant. These constraints then guide the implementation of reusable component transformers \vchannel\ that are composed when generating the graphic. We define the visual transformers \vchannel\ 
+We propose that the map from data components to graphic components \(\vchannel: \dsection \mapsto \vsection\) is a monoid \textit{equivariant} map. We conjecture that if the data space or visual space is partially ordered and the map \vchannel\ between the two spaces is equivariant, then it must also be monotonic. By specifying this constraint, we can guarantee that the stage of the artist that transforms data components into graphic representations is equivariant. These constraints then guide the implementation of reusable component transformers \vchannel\ that are composed when generating the graphic. We define the visual transformers \vchannel\ 
 \begin{equation}
   \label{eq:math:artist:nu}
   \{\vchannel_{0}, \ldots, \vchannel_{n}\}: \{\dsection_{0}, \ldots, \dsection_{n}\} \mapsto \{\vsection_{0}, \ldots, \vsection_{n}\}
 \end{equation}
-as the set of equivariant maps \(\vchannel_i: \dsection_i \mapsto \vsection_i\). Given \(\monoid_i\) is the monoid action on \(\dtotal_i\) and that there is a monoid \({\monoid_i}^{\prime}\) on \(\vtotal\), then there is a monoid homomorphism from \(\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}\) that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. Therefore, a validly constructed \vchannel\ is one where the diagram of the monoid transform \(m\) commutes
+as the set of equivariant maps \(\vchannel_i: \dsection_i \mapsto \vsection_i\). Given \(\monoid_i\) is the monoid action on \(\dtotal_i\) and that there is a monoid \({\monoid_i}^{\prime}\) on \(\vtotal_i\), then there is a monoid homomorphism from \(\varphi:\monoid_i \rightarrow {\monoid_i}^{\prime}\) that \vchannel\ must preserve. As mentioned in \autoref{sec:math:data:monoid}, monoid actions define the structure on the fiber components and are therefore the basis for equivariance. Therefore, a validly constructed \vchannel\ is one where the diagram of the monoid action \(m\) commutes
 \begin{equation}
   \label{eq:math:artist:nu_commute}
 \begin{tikzcd}
@@ -324,30 +324,13 @@ as the set of equivariant maps \(\vchannel_i: \dsection_i \mapsto \vsection_i\).
   \dtotal_i \arrow[r, "\vchannel_i"]                           & \vtotal_i               
 \end{tikzcd}
 \end{equation}
-such that applying equivariant monoid actions to \(\dtotal_{i}\) and \(\vtotal_{i}\) preserves the map \(\vchannel_{i}: \dtotal_{i}\rightarrow \vtotal_{i}\). In general, the data fiber \(\dfiber_{i}\) cannot be assumed to be of the same type as the visual fiber \(\vfiber_{i}\) and the actions of \monoid\ on \(\dfiber_{i}\) cannot be assumed to be the same as the actions of \(\monoid^{\prime}\) on \vfiber; therefore an equivariant \(\vchannel_i\) must satisfy the constraint  
+such that applying equivariant monoid actions to \(\dtotal_{i}\) and \(\vtotal_{i}\) preserves the map \(\vchannel_{i}: \dtotal_{i}\rightarrow \vtotal_{i}\). In general, the data fiber \(\dfiber_{i}\) cannot be assumed to be of the same type as the visual fiber \(\vfiber_{i}\) and the actions of \(\monoid_i\) on \(\dfiber_{i}\) cannot be assumed to be the same as the actions of \({\monoid_i}^{\prime}\) on \(\vfiber_i\); therefore an equivariant \(\vchannel_i\) must satisfy the constraint  
 \begin{equation}
 \vchannel_i(m_{\delement}(\dtotal_i)) = \varphi(m_{\delement})(\vchannel_i(\dtotal_i))
 \label{eq:math:artist:nu:equivariance}
 \end{equation} 
 such that \(\varphi\) maps a monoid action on data to a monoid action on visual elements. However, 
-without a loss of generality we can assume that an action of \monoid\ acts on \(\dfiber_{i}\) and on \(\vfiber_{i}\) compatibly such that $\varphi$ is the identity function. We can make this assumption because we can construct a monoid action of \monoid\ on \(\vfiber_{i}\) that is compatible with a monoid action of \monoid\ on \(\dfiber_{i}\). We can then compose the monoid actions on the visual fiber \(\monoid^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi\) that takes \monoid\ to \(\monoid^{\prime}\). This allows us to define a monoid action on \vfiber\ of \monoid\ that is \((m, \velement) \rightarrow \varphi(m)\bullet\velement\), which lets us incorporate \(\varphi\) into the action \(\bullet\) such that \(\varphi\) does not need to be explicitly defined in the constraints. 
-
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{.49\textwidth}
-    \includegraphics[width=1\textwidth]{figures/math/partial_fixed.png}
-    \caption{}
-    \label{fig:math:artist:nu:valid}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \includegraphics[width=1\textwidth]{figures/math/partial_invalid.png}
-    \caption{}
-    \label{fig:math:artist:nu:invalid}
-  \end{subfigure}
-  \caption{ The \vchannel\ mapping in \autoref{fig:math:artist:nu:valid} represented by the colored arrows is monotonic, and therefore monoid equivariant,  since \(\nu(storm)=\nu(rain)\) satisfies the condition \(\nu(storm) \geq \nu(storm)\). In contrast, the map from data component to visual component in \autoref{fig:math:artist:nu:invalid} is not monotonic, and therefore not monoid equivariant, because \(rain \geq storm\) is mapped to elements with the reverse ordering \(\nu(storm) \geq \nu(storm)\).}
-  \label{fig:math:artist:nu}
-\end{figure}
-The mapping from weather state to umbrella in \autoref{fig:math:artist:nu:valid} is monotonic, and therefore we conjecture equivariant, because \(\vchannel(rain) = \vchannel(storm)\) satisfies the monotonic condition of \(rain \geq storm\). \autoref{fig:math:artist:nu} is an example of how the model supports partially ordered data components, which was a motivation for defining equivariance as monoid homomorphisms. In contrast, the translation from weather state data to visual representation as umbrella emoji in \autoref{fig:math:artist:nu:invalid} is an invalid visual encoding map \vchannel\ because it is not monotonic and therefore not equivariant This is because the monotonic condition \(rain \geq storm \implies \vchannel(rain) \geq  \vchannel(storm)\) is not met since \(\vchannel(rain) \leq\vchannel(storm)\). To satisfy the monotonic condition for \(rain \geq storm\), either red arrow in \autoref{fig:math:artist:nu:invalid} would have to go in a different direction.
+without a loss of generality we can assume that an action of\(\monoid_i\) acts on \(\dfiber_{i}\) and on \(\vfiber_{i}\) compatibly such that \(\varphi\) is the identity function. We can make this assumption because we can construct a monoid action of \({monoid_i}^{\prime}\) on \(\vfiber_{i}\) that is compatible with a monoid action of \(monoid_i\) on \(\dfiber_{i}\). We can then compose the monoid actions on the visual fiber \({\monoid_i}^{\prime} \times \vfiber_{i} \rightarrow \vfiber_{i}$ with the homomorphism $\varphi\) that takes \(monoid_i\) to \({\monoid_i}^{\prime}\). This allows us to define a monoid action on \(vfiber_i\) of \(monoid_i\) that is \((m, \velement) \rightarrow \varphi(m)\bullet\velement\), which lets us incorporate \(\varphi\) into the action \(\bullet\) such that \(\varphi\) does not need to be explicitly defined in the constraints. 
 
 \begin{table}[H]
 \centering
@@ -362,10 +345,27 @@ The mapping from weather state to umbrella in \autoref{fig:math:artist:nu:valid}
   \caption{Equivariance constraints for the Stevens' measurement scales\cite{MeasurementScalesStatistics}}
   \label{tab:math:artist:nu}
 \end{table}
+We generalize equivariance constraints to monoid action equivariance to account for limitations in the types of data that can be described with the Stevens' scales \cite{johnsonPseudoMathematicsMentalSocial1936,thomasMathematizationNotMeasurement2014}. The Stevens measurement types \cite{stevensTheoryScalesMeasurement1946}, listed in \autoref{tab:math:artist:nu}, are specified in terms of groups, which are monoids with invertible operations\cite{remlingAlgebraMath5353}.
 
-The Stevens measurement types \cite{stevensTheoryScalesMeasurement1946}, listed in \autoref{tab:math:artist:nu}, are specified in terms of groups, which are monoids with invertible operations\cite{remlingAlgebraMath5353}. We generalize to monoids to account for limitations in the types of data that can be described with the Stevens' scales \cite{johnsonPseudoMathematicsMentalSocial1936,thomasMathematizationNotMeasurement2014} 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/partial_fixed.png}
+    \caption{}
+    \label{fig:math:artist:nu:valid}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \includegraphics[width=1\textwidth]{figures/math/partial_invalid.png}
+    \caption{}
+    \label{fig:math:artist:nu:invalid}
+  \end{subfigure}
+  \caption{ The data component \(\dfiber_i\) is the partially ordered set of words describing weather and the visual component \(\vfiber_i\) is a partially ordered set of emojis; the hasse diagrams in the figure are a subset of each fiber component. The \vchannel\ mapping in \autoref{fig:math:artist:nu:valid} from \(\dfiber_i\) to \(\vfiber_i\) is monotonic, and therefore equivariant. One example of this monotonicity is that \(rain \geq storm \) and \(\nu(rain) \geq \nu(storm)\). In contrast, the map from data component to visual component in \autoref{fig:math:artist:nu:invalid} is not monotonic, and therefore not monoid equivariant, because \(rain \geq storm\) is mapped to elements with the reverse ordering such that \(\nu(rain) \geq \nu(storm)\) is false.}
+  \label{fig:math:artist:nu}
+\end{figure}
+\autoref{fig:math:artist:nu} illustrates the encoding of weather data as umbrella emojis. The weather data is a subset of the partially ordered data component \(\dfiber_i\), while the umbrellas are a subset of the partially ordered visual component \(vfiber_i\). In \autoref{fig:math:artist:nu}, \vchannel\ is equivariant and therefore monotonic, meaning it maps elements from \(\dfiber\) to elements in \(\vfiber_i\) such that the monotonicity condition in \autoref{tab:math:artist:nu} is satisfied. In contrast, the \vchannel\ in \autoref{fig:math:artist:nu:invalid} is not equivariant and therefore not monotonic, which also means it is invalid. To satisfy the monotonic condition for \(rain \geq storm\), either the arrow between \textit{storm} and \textit{rain} or the arrow between the \textit{closed} and \textit{wet} umbrellas in \autoref{fig:math:artist:nu:invalid} would have to go in a different direction. This is because the monotonic condition \(rain \geq storm \implies \vchannel(rain) \geq  \vchannel(storm)\) is not met since \(\vchannel(rain) \leq\vchannel(storm)\). 
 
-\subsubsection{Visualization Assembly}
+
+\subsubsection{Visualization Assembly \vmark}
 Having described the maps to components in \autoref{sec:math:artist:nu}, we now specify the assembly function \vmarkd\ that composites components in \vtotal\ into a graphic in \gtotal. Since the component transforms \vchannel\ are equivariant, the equivariance constraints carry through to \vmarkd. We specify these constraints to guide the implementation of library components responsible for generating graphics. 
 
 \label{sec:math:artist:q}
@@ -409,10 +409,53 @@ where the path \cite{ConnectedSpace2020}  $\gamma$ from \dbasepoint\ to \dbasepa
 \end{equation}
 such that for every glyph there is at least one corresponding region on \dbase, in keeping with the definition of glyph as any visually distinguishable element put forth by Ziemkiewicz and Kosara \cite{ziemkiewiczEmbeddingInformationVisualization2009}. The primitive point, line, and area marks \cite{bertinSemiologyGraphicsDiagrams2011a,carpendaleVisualRepresentationSemiology} are specially cased glyphs.
   
+\subsubsection{Assembly Template \vmarkd}
+\label{sec:math:artist:qhat}
+The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
+%[column sep=huge]
+\begin{equation}
+    \begin{tikzcd}
+        \textcolor{gray!50}{\dtotal} \arrow[r, "\vchannel", color=gray!50] \arrow[rd, "\pi"', color=gray!50] & \vtotal \arrow[d, "\pi"']                  & \vindex^*\vtotal \arrow[r, "\vmark", color=gray!50] \arrow[d, "\vindex^*\pi"'] \arrow[l,  "\vindex^*"'] & \textcolor{gray!50}{\gtotal} \arrow[ld, "\pi", color=gray!50] \\
+                                                          & \dbase \arrow[u, "\vsection"', bend right] & \gbase \arrow[l, "\vindex"'] \arrow[u, "\vindex^*\vsection"', bend right]               &                          
+        \end{tikzcd}
+        \label{eq:math:artist:qhat}
+\end{equation}
 
-\subsubsection{Assembly \vmark}
+The map from graphic base space $\vindex:\gbase \rightarrow \dbase$ (\autoref{sec:math:graphic:base}) to data space maps many points in \gbase\ to a single point in \dbase. This means that the preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
+\begin{equation}
+    \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
+\end{equation}
+copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint.  
+
+\begin{figure}[H]
+    \centering
+      \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
+      \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can construct a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
+      \label{fig:math:artist:qhat}
+  \end{figure}
+  
+As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is mapping from section \vsectionpull\ over \gbasepoint\ to \vsection\ over \dbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber\ is equivalent to the line on \vfiberpull. 
+
+Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
+\begin{equation}
+    \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
+    \label{eq:math:artist:qhat_factor}
+\end{equation}
+ is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint. Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
+\begin{equation}
+\label{eq:math:artist:qhat_q_s}
+\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
+\end{equation} 
+where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. We can then factor \gbasepoint\ out of \autoref{eq:math:artist:qhat_q_s}, which yields
+\begin{equation}
+\vmarkd(\vsection(k)) = \vmark(\vsectionpull)
+\label{eq:math:artist:qhat_k}
+\end{equation}
+where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
+
+\subsubsection{Case Studies: Scatter, Line, Image}
 Given the continuities described in \ref{fig:math:graphic:retraction:map}, 
-we illustrate a minimal Q that will generate the most minimal visualizations associated with those continuities: non-overlapping scatter points, a non-infinitely thin line, and an image. 
+we illustrate a minimal \vmark (\vmarkd) that will generate the most minimal visualizations associated with those continuities: non-overlapping scatter points, a non-infinitely thin line, and an image. 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{figures/math/scatter.png}
     \caption{The data is discrete points (time, precipitation). Via \vchannel\ these are converted to (xpos, ypos) and pulled over discrete \gbase\ via $\vindex^*$. The pulled back visual section $\vchannel$ is composited with the assembly function $\vmarkd \circ  \vchannel=\gsection$ to produce the instructions to make the graphic \gsection. The graphic section fills in the pixels in the screen via lookup on \gbase.}
@@ -490,50 +533,6 @@ R, G, B &= color(\vindex(\alpha, \beta))
 \end{align*}
 In the case of an image, the indexing mapper \vindex\ may do some translating to a convention expected by \vmark, for example reorienting the array such that the first row in the data is at the bottom of the graphic. 
 
-
-\subsubsection{Assembly Template \vmarkd}
-\label{sec:math:artist:qhat}
-The graphic base space \gbase\ is not accessible in many architectures, including Matplotlib; instead we can construct a factory function \vmarkd\ over \dbase\ that can build a \vmark. As shown in \autoref{eq:math:artist:diagram}, \vmark\ is a bundle map $\vmark: \vtotalpull\rightarrow \gtotal$ where \vtotalpull\ and \gtotal\ are both bundles over \gbase.
-%[column sep=huge]
-\begin{equation}
-    \begin{tikzcd}
-        \textcolor{gray!50}{\dtotal} \arrow[r, "\vchannel", color=gray!50] \arrow[rd, "\pi"', color=gray!50] & \vtotal \arrow[d, "\pi"']                  & \vindex^*\vtotal \arrow[r, "\vmark", color=gray!50] \arrow[d, "\vindex^*\pi"'] \arrow[l,  "\vindex^*"'] & \textcolor{gray!50}{\gtotal} \arrow[ld, "\pi", color=gray!50] \\
-                                                          & \dbase \arrow[u, "\vsection"', bend right] & \gbase \arrow[l, "\vindex"'] \arrow[u, "\vindex^*\vsection"', bend right]               &                          
-        \end{tikzcd}
-        \label{eq:math:artist:qhat}
-\end{equation}
-
-The map from graphic base space $\vindex:\gbase \rightarrow \dbase$ (\autoref{sec:math:graphic:base}) to data space maps many points in \gbase\ to a single point in \dbase. This means that the preimage of the continuity map $\vpreimg \subset \gbase$ is such that many graphic continuity points $\gbasepoint \in \gbase_{\dbase}$ go to one data continuity point \dbasepoint; therefore, by definition the pull back of \vsection\
-\begin{equation}
-    \vtotalpull \mid_{\vpreimg} = \vpreimg \times \vfiber
-\end{equation}
-copies the visual fiber \vfiber\ over the the points \gbasepoint\ in graphic space \gbase\ that correspond to one \dbasepoint\ in data space \dbase. This set of points \gbasepoint\ are the preimage \vpreimg\ of \dbasepoint.  
-
-\begin{figure}[H]
-    \centering
-      \includegraphics[width=1\textwidth]{figures/math/q_hat.png}
-      \caption{Because the pullback of the visual bundle \vtotalpull\ is the replication of a \vsection\ over all points \gbasepoint\ that map back to a single \dbasepoint, we can construct a \vmarkd\ on \vsection\ over \dbasepoint\ that will fabricate the \vmark\ for the equivalent region of \gbasepoint\ associated to that \dbasepoint}
-      \label{fig:math:artist:qhat}
-  \end{figure}
-  
-As shown in \autoref{fig:math:artist:qhat}, given the section \vsectionpull\ pulled back from \vsection\ and the point $\gbasepoint \in \vpreimg$, there is mapping from section \vsectionpull\ over \gbasepoint\ to \vsection\ over \dbasepoint. This means that the pulled back section $\vsectionpull(\gbasepoint) = \vindex^*(\vsection(\dbasepoint))$ is the section \vsection\ copied over all \gbasepoint such that \vsectionpull\ is identical for all \gbasepoint\ where $\vindex(\gbasepoint) = \dbasepoint$. In \autoref{fig:math:artist:qhat} each dot on \vfiber\ is equivalent to the line on \vfiberpull. 
-
-Given the equivalence between \vsection\ and \vsectionpull\ defined above, the reliance on \gbase\ can be factored out. When \vmark\ maps visual sections into graphics $\vmark: \Gamma(\vtotalpull) \rightarrow \Gamma(\gtotal)$, if we restrict \vmark\ input to \vsectionpull\ then the graphic section \gsection\ evaluated on a visual region \gbasepoint\
-\begin{equation}
-    \gsection(\gbasepoint) \coloneqq \vmark(\vsectionpull)(s)
-    \label{eq:math:artist:qhat_factor}
-\end{equation}
- is defined as the assembly function \vmark\ with input \vsectionpull\ evaluated on \gbasepoint. Since the pulled back section \vsectionpull\ is the section \vsection\ copied over every graphic region $\gbasepoint \in \vpreimg$, we can define a \vmark\ factory function 
-\begin{equation}
-\label{eq:math:artist:qhat_q_s}
-\vmarkd(\vsection(\dbasepoint))(\gbasepoint) \coloneqq \vmark((\vsectionpull)(\gbasepoint))
-\end{equation} 
-where \vmarkd\ with input \vsection\ is defined to \vmark\ that takes as input the copied section \vsectionpull\ such that both functions are evaluated over the same location $\vpreimg = \gbasepoint$ in the base space \gbase. We can then factor \gbasepoint\ out of \autoref{eq:math:artist:qhat_q_s}, which yields
-\begin{equation}
-\vmarkd(\vsection(k)) = \vmark(\vsectionpull)
-\label{eq:math:artist:qhat_k}
-\end{equation}
-where \vmark\ is no longer bound to input but \vmarkd\ is still defined in terms of \dbase. In fact, \vmarkd\ is a map from visual space to graphic space $\vmarkd:\Gamma(\vtotal) \rightarrow \Gamma(\gtotal)$ locally over \dbasepoint\ such that it can be evaluated on a single visual record  $\vmarkd:\Gamma(\vtotal_{\dbasepoint}) \rightarrow \Gamma(\gtotal\mid_{\vpreimg})$. This allows us to construct a \vmarkd\ that only depends on \dbase, such that for each $\vsection(\dbasepoint)$ there is part of $\gsection\mid_{\vpreimg}$. The construction of \vmarkd\ allows us to retain the functional map reduce benefits of \vmark\ without having to restructure the existing pipeline for libraries that delegate the construction of \gsection\ to a back end such as Matplotlib.
 
 \subsubsection{Composition of Artists: +}
 \begin{figure}[H]
