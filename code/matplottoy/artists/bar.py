@@ -1,5 +1,7 @@
 import copy
 from collections import defaultdict
+from dataclasses import dataclass
+
 import itertools
 
 import numpy as np 
@@ -7,13 +9,20 @@ import numpy as np
 from cycler import cycler
 
 from matplotlib import rcParams
+
+import matplotlib.artist as martist
 import matplotlib.collections as mcollections
 import matplotlib.path as mpath
 import matplotlib.patches as mpatches
-import matplotlib.artist as martist
+import matplotlib.transforms as mtransforms
 
 from matplottoy.artists import utils
 
+@dataclass
+class Graphic:
+    paths: list[mpath.Path]
+    edgecolors: list[]
+    facecolors: list[]
 class BarArtist(martist.Artist):
     def __init__(self, data, transforms, orientation='v', *args, **kwargs):
         """
@@ -55,9 +64,9 @@ class BarArtist(martist.Artist):
         elif self.orientation in {'horizontal', 'h'}:
             verts = make_bars(floor, length, position, width)
         
-        #self._paths = [mpath.Path(xy, closed=True) for xy in verts]
-        #self.set_edgecolors(edgecolors)
-        #self.set_facecolors(facecolors)
+        return Graphic([mpath.Path(xy, closed=True) for xy in verts], 
+                        edgecolors, facecolors)
+
         
     def draw(self, renderer,  *args, **kwargs):
         view = self.data.view(self.axes)
@@ -72,8 +81,10 @@ class BarArtist(martist.Artist):
                     visual[p] = view[t['name']]
             else:
                  visual[p] = t
-        self.assemble(**visual)
-        super().draw(renderer,  *args, **kwargs)
+        graphic = self.assemble(**visual)
+        gc = renderer.new_gc()
+        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), **graphic)
+        #super().draw(renderer,  *args, **kwargs)
 
 
 class Bar(mcollections.Collection):

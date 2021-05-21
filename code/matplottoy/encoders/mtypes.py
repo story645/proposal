@@ -3,6 +3,7 @@ to check against visual channels
 """
 # if validate overwrites is instance, then we can 
 # use float/int/etc...
+from dataclasses import dataclass
 
 import matplotlib.colors as mcolors
 class Nominal: 
@@ -13,6 +14,12 @@ class Nominal:
     def validate(self, value):
         return value in self.categories
 
+@dataclass
+class RGBA:
+    r: float
+    g: float
+    b: float
+    a: float
 class Color:
     mtype = 'nominal'
     @staticmethod
