@@ -1,5 +1,6 @@
 import copy
 from collections import defaultdict
+from dataclasses import dataclass
 
 import itertools
 
@@ -15,9 +16,13 @@ import matplotlib.path as mpath
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 
-from matplottoy.artists import utils, graphic
-from matplottoy.encoders import mtypes
+from matplottoy.artists import utils
 
+@dataclass
+class Graphic:
+    paths: list[mpath.Path]
+    edgecolors: list[]
+    facecolors: list[]
 class BarArtist(martist.Artist):
     def __init__(self, data, transforms, orientation='v', *args, **kwargs):
         """
@@ -42,12 +47,26 @@ class BarArtist(martist.Artist):
         self.data = data
         self.transforms = copy.deepcopy(transforms)
     
+<<<<<<< HEAD
 
     def assemble(self, position, length, floor=0, width=0.8, offset=0, 
                        facecolor='C0', edgecolor='k', linewidth=1, linestyle=0, 
                        antialiased=True, url=None):
 
         position = position + offset
+=======
+    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
+        #set some defaults
+        width = itertools.repeat(width) if np.isscalar(width) else width
+        floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
+        
+        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
+        position = position + offset
+        
+        def make_bars(xval, xoff, yval, yoff):
+             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+>>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
         #build bar glyphs based on graphic parameter
         if self.orientation in {'vertical', 'v'}:
             path = mpath.Path([(position, floor), (position, floor + length), 
@@ -55,6 +74,7 @@ class BarArtist(martist.Artist):
                                 (position + width, floor), 
                                 (position, floor)], closed=True)
         elif self.orientation in {'horizontal', 'h'}:
+<<<<<<< HEAD
             path = mpath.Path([(floor, position), (floor, position+width), 
                               (floor + length, position + width), 
                               (floor + length, position), 
@@ -66,6 +86,12 @@ class BarArtist(martist.Artist):
         return graphic.Graphic(path, transform, offset, offsetTrans, 
                                facecolor, edgecolor, linewidth, linestyle, 
                                antialiased, url)
+=======
+            verts = make_bars(floor, length, position, width)
+        
+        return Graphic([mpath.Path(xy, closed=True) for xy in verts], 
+                        edgecolors, facecolors)
+>>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
 
         
     def draw(self, renderer,  *args, **kwargs):
@@ -81,6 +107,7 @@ class BarArtist(martist.Artist):
                     visual[p] = view[t['name']]
             else:
                  visual[p] = t
+<<<<<<< HEAD
 
         for params in zip(visual.values()):
             vv = dict(zip(visual.keys(), params))
@@ -96,6 +123,11 @@ class BarArtist(martist.Artist):
             gc.restore()
             renderer.draw_path(gc, graphic.path, graphic.transform, 
                                 graphic.facecolor)
+=======
+        graphic = self.assemble(**visual)
+        gc = renderer.new_gc()
+        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), **graphic)
+>>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
         #super().draw(renderer,  *args, **kwargs)
 
 

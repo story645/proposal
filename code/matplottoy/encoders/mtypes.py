@@ -1,23 +1,57 @@
-"""Specifying the objects passed into the renderer
+"""Formally defining measurement types (from Stevens)
+to check against visual channels
 """
-
+# if validate overwrites is instance, then we can 
+# use float/int/etc...
 from dataclasses import dataclass
+
+import matplotlib.colors as mcolors
+class Nominal: 
+    mtype = 'nominal'
+    shape = 'scaler'
+    def __init__(self, categories):
+        self.categories = categories
+    def validate(self, value):
+        return value in self.categories
+
 @dataclass
 class RGBA:
     r: float
     g: float
     b: float
-    a: float = 1.0
-    def __post_init__(self):
-        assert all((0 <= x <= 1.0) for x in [self.r, self.g, self.b, self.a])
+    a: float
+class Color:
+    mtype = 'nominal'
+    @staticmethod
+    def validate(value):
+        return mcolors.is_color_like(value)
 
-@dataclass
-class LineStyle: #replace w/ Bruno's version
-    style: str = 'solid'
+class Ordinal:
+    mtype = 'ordinal'
+    def __init__(self, categories):
+        self.categories = categories
+        self.min = min(categories)
+        self.max = max(categories)
+
+    def validate(self, value):
+        return value in self.categories
+class PositiveInteger:
+    mtype = 'ordinal'
+    def validate(self, value):
+        return value>=0
+class IntervalRatio:
+    mtype = 'interval'
+    def __init__(self, floor=0):
+        self.floor = floor
+    def validate(self, value):
+        return value>=self.floor
+
+class IntervalClosed:
+    mtype = 'interval'
+    def __init__(self, interval):
+        assert len(interval)==2
+        self.min = min(interval)
+        self.max = max(interval)
     
-@dataclass
-class LineWidth:
-    width: float = 1.0
-    def __post_init__(self):
-        assert self.width>0
-
+    def validate(self, value):
+        return (self.min<=value) & (value<=self.max)

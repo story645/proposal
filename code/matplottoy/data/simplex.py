@@ -94,7 +94,7 @@ class EdgeSimplex: # ToDo: generalize to take list of functions as input
     FB = FiberBundle({'tables': ['vertex','edge']},
                      {'x' : {'type:':float, 'monoid':'interval', 'range':[-1,1]},
                       'y':  {'type:':float, 'monoid':'interval', 'range':[-1,1]},
-                      'color': {'type':mtypes.RGBA, 'monoid':'nominal', 
+                      'color': {'type':mtypes.Color(), 'monoid':'nominal', 
                                 'range': ['red', 'green', 'orange', 'blue']}
                     })
 

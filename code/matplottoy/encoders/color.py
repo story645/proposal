@@ -2,7 +2,7 @@ import numpy as np
 
 import matplotlib.colors as mcolors
 
-from matplottoy.encoders.mtypes import RGBA
+from matplottoy.encoders import mtypes
 
 class Identity:
     @staticmethod
@@ -12,7 +12,7 @@ class Identity:
     @staticmethod
     def __call__(value):
         values = np.atleast_1d(np.array(value, dtype=object))
-        return [RGBA(*mcolors.to_rgba(v)) for v in values]
+        return [mcolors.to_rgba(v) for v in values]
 
 class Categorical:
     def __init__(self, mapping):
@@ -23,6 +23,6 @@ class Categorical:
 
     def __call__(self, value):
         values = np.atleast_1d(np.array(value, dtype=object))
-        return [RGBA(*mcolors.to_rgba(self._mapping[v])) for v in values]
+        return [mcolors.to_rgba(self._mapping[v]) for v in values]
 
 
