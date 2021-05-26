@@ -14,21 +14,17 @@ class DataFrame:
     
 class Iris:
     FB = FiberBundle({'tables': ['vertex']},
-                     {'species': mtypes.Nominal({'setosa', 'versicolor', 'virginica'}),
-                      'sepal_length':  mtypes.IntervalRatio(),
-                      'sepal_width': mtypes.IntervalRatio(),
-                      'petal_length': mtypes.IntervalRatio(),
-                      'petal_width': mtypes.IntervalRatio(),
-                      'sepal_length_color': mtypes.Color(),
-                      'sepal_width_color': mtypes.Color(),
-                      'petal_length_color': mtypes.Color(),
-                      'petal_width_color': mtypes.Color()
+                     {'species': str,
+                      'sepal_length': float,
+                      'sepal_width': float,
+                      'petal_length': float,
+                      'petal_width': float,
+                      'sepal_length_color': mtypes.RGBA,
+                      'sepal_width_color': mtypes.RGBA,
+                      'petal_length_color': mtypes.RGBA,
+                      'petal_width_color': mtypes.RGBA,
                       })
     def __init__(self, dataframe):
-        for column in dataframe:
-            if not all(self.FB.F[column].validate(v) for v in dataframe[column]):
-                raise ValueError(f'{column} has values that are invalid {self.FB.F[column]}')
-        
         self.sigma = dataframe.iloc
         self._view = dataframe
 

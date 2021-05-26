@@ -1,6 +1,5 @@
 import copy
 from collections import defaultdict
-from dataclasses import dataclass
 
 import itertools
 
@@ -16,13 +15,9 @@ import matplotlib.path as mpath
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 
-from matplottoy.artists import utils
+from matplottoy.artists import utils, graphic
+from matplottoy.encoders import mtypes
 
-@dataclass
-class Graphic:
-    paths: list[mpath.Path]
-    edgecolors: list[]
-    facecolors: list[]
 class BarArtist(martist.Artist):
     def __init__(self, data, transforms, orientation='v', *args, **kwargs):
         """
@@ -47,13 +42,15 @@ class BarArtist(martist.Artist):
         self.data = data
         self.transforms = copy.deepcopy(transforms)
     
-    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
+    def assemble(self, position, length, floor=0, width=0.8, offset=0, 
+                       facecolors='C0', edgecolors='k', linewidths=1, linestyles=0, 
+                       antialiaseds=True, urls=None, ):
         #set some defaults
         width = itertools.repeat(width) if np.isscalar(width) else width
         floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
         
         # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
-        position = position + offset
+        position = np.array(position) + offset
         
         def make_bars(xval, xoff, yval, yoff):
              return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
@@ -63,9 +60,20 @@ class BarArtist(martist.Artist):
             verts = make_bars(position, width, floor, length)
         elif self.orientation in {'horizontal', 'h'}:
             verts = make_bars(floor, length, position, width)
-        
-        return Graphic([mpath.Path(xy, closed=True) for xy in verts], 
-                        edgecolors, facecolors)
+        paths = [mpath.Path(xy, closed=True) for xy in verts]
+
+        # will blow up w/o length
+        transforms = [mtransforms.IdentityTransform() for _ in verts]
+        offsets = np.vstack([(0,0) for _ in verts])
+        offsetTrans = [mtransforms.IdentityTransform() for _ in verts]
+        # visual variables
+        def vectorize(param):
+            return [param for _ in verts] if (param is None or np.isscalar(param)) else param
+
+        return graphic.GraphicCollection(paths, transforms, offsets, offsetTrans,
+                vectorize(facecolors), vectorize(edgecolors), vectorize(linewidths), 
+                vectorize(linestyles), vectorize(antialiaseds), vectorize(urls), 
+                offset_position='screen')
 
         
     def draw(self, renderer,  *args, **kwargs):
@@ -83,7 +91,22 @@ class BarArtist(martist.Artist):
                  visual[p] = t
         graphic = self.assemble(**visual)
         gc = renderer.new_gc()
-        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), **graphic)
+        #offset_position data is deprecated
+        print(renderer.)
+        renderer.draw_path_collection(gc, 
+        master_transform=mtransforms.IdentityTransform(), 
+        paths=graphic.paths, 
+        all_transforms=graphic.transforms,
+        offsets=graphic.offsets, 
+        offsetTrans=graphic.offsetTrans,
+        facecolors=graphic.facecolors, 
+        edgecolors=graphic.edgecolors, 
+        linewidths=graphic.linewidths, 
+        linestyles=graphic.linestyles,
+        antialiaseds=graphic.antialiaseds,
+        urls=graphic.urls,
+        offset_position=graphic.offset_position
+        )
         #super().draw(renderer,  *args, **kwargs)
 
 
