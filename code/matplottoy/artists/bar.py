@@ -42,38 +42,30 @@ class BarArtist(martist.Artist):
         self.data = data
         self.transforms = copy.deepcopy(transforms)
     
+
     def assemble(self, position, length, floor=0, width=0.8, offset=0, 
-                       facecolors='C0', edgecolors='k', linewidths=1, linestyles=0, 
-                       antialiaseds=True, urls=None, ):
-        #set some defaults
-        width = itertools.repeat(width) if np.isscalar(width) else width
-        floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
-        
-        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
-        position = np.array(position) + offset
-        
-        def make_bars(xval, xoff, yval, yoff):
-             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+                       facecolor='C0', edgecolor='k', linewidth=1, linestyle=0, 
+                       antialiased=True, url=None):
+
+        position = position + offset
         #build bar glyphs based on graphic parameter
         if self.orientation in {'vertical', 'v'}:
-            verts = make_bars(position, width, floor, length)
+            path = mpath.Path([(position, floor), (position, floor + length), 
+                                (position + width, floor + length), 
+                                (position + width, floor), 
+                                (position, floor)], closed=True)
         elif self.orientation in {'horizontal', 'h'}:
-            verts = make_bars(floor, length, position, width)
-        paths = [mpath.Path(xy, closed=True) for xy in verts]
-
-        # will blow up w/o length
-        transforms = [mtransforms.IdentityTransform() for _ in verts]
-        offsets = np.vstack([(0,0) for _ in verts])
-        offsetTrans = [mtransforms.IdentityTransform() for _ in verts]
-        # visual variables
-        def vectorize(param):
-            return [param for _ in verts] if (param is None or np.isscalar(param)) else param
-
-        return graphic.GraphicCollection(paths, transforms, offsets, offsetTrans,
-                vectorize(facecolors), vectorize(edgecolors), vectorize(linewidths), 
-                vectorize(linestyles), vectorize(antialiaseds), vectorize(urls), 
-                offset_position='screen')
+            path = mpath.Path([(floor, position), (floor, position+width), 
+                              (floor + length, position + width), 
+                              (floor + length, position), 
+                              (floor, position)], closed=True)
+            
+        transform = mtransforms.IdentityTransform()
+        offset = (0,0)
+        offsetTrans = mtransforms.IdentityTransform() 
+        return graphic.Graphic(path, transform, offset, offsetTrans, 
+                               facecolor, edgecolor, linewidth, linestyle, 
+                               antialiased, url)
 
         
     def draw(self, renderer,  *args, **kwargs):
@@ -89,24 +81,21 @@ class BarArtist(martist.Artist):
                     visual[p] = view[t['name']]
             else:
                  visual[p] = t
-        graphic = self.assemble(**visual)
-        gc = renderer.new_gc()
-        #offset_position data is deprecated
-        print(renderer.)
-        renderer.draw_path_collection(gc, 
-        master_transform=mtransforms.IdentityTransform(), 
-        paths=graphic.paths, 
-        all_transforms=graphic.transforms,
-        offsets=graphic.offsets, 
-        offsetTrans=graphic.offsetTrans,
-        facecolors=graphic.facecolors, 
-        edgecolors=graphic.edgecolors, 
-        linewidths=graphic.linewidths, 
-        linestyles=graphic.linestyles,
-        antialiaseds=graphic.antialiaseds,
-        urls=graphic.urls,
-        offset_position=graphic.offset_position
-        )
+
+        for params in zip(visual.values()):
+            vv = dict(zip(visual.keys(), params))
+            position = vv.pop('position')
+            length = vv.pop('length')
+            graphic = self.assemble(position, length, **vv)  
+            gc = renderer.new_gc()
+            gc.set_linewidth(graphic.linewidth)
+            gc.set_dashes(graphic.linestyle)
+            gc.set_foreground(graphic.edgecolor)
+            gc.set_antialiased(graphic.antialiased)
+            gc.set_url(graphic.url)
+            gc.restore()
+            renderer.draw_path(gc, graphic.path, graphic.transform, 
+                                graphic.facecolor)
         #super().draw(renderer,  *args, **kwargs)
 
 

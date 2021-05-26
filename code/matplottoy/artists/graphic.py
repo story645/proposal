@@ -10,14 +10,14 @@ from matplottoy.encoders import mtypes
 class Graphic:
     path: mpath.Path
     transform: mtransforms.Transform
-    offset: Any
-    offsetTrans: mtransforms.Transform
+    offset: Any=None
+    offsetTrans: mtransforms.Transform=None
     facecolor: mtypes.RGBA
     edgecolor: mtypes.RGBA
     linewidth: mtypes.LineWidth
     linestyle: mtypes.LineStyle
     antialiased: bool=True
-    urls: str=None
+    url: str=None
     offset_position: str='screen'
 
 @dataclass
