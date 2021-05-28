@@ -3,55 +3,34 @@ to check against visual channels
 """
 # if validate overwrites is instance, then we can 
 # use float/int/etc...
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List, Tuple, Iterable
 
 import matplotlib.colors as mcolors
-class Nominal: 
-    mtype = 'nominal'
-    shape = 'scaler'
-    def __init__(self, categories):
-        self.categories = categories
-    def validate(self, value):
-        return value in self.categories
 
 @dataclass
 class RGBA:
     r: float
     g: float
     b: float
-    a: float
-class Color:
-    mtype = 'nominal'
-    @staticmethod
-    def validate(value):
-        return mcolors.is_color_like(value)
-
-class Ordinal:
-    mtype = 'ordinal'
-    def __init__(self, categories):
-        self.categories = categories
-        self.min = min(categories)
-        self.max = max(categories)
-
-    def validate(self, value):
-        return value in self.categories
-class PositiveInteger:
-    mtype = 'ordinal'
-    def validate(self, value):
-        return value>=0
-class IntervalRatio:
-    mtype = 'interval'
-    def __init__(self, floor=0):
-        self.floor = floor
-    def validate(self, value):
-        return value>=self.floor
-
-class IntervalClosed:
-    mtype = 'interval'
-    def __init__(self, interval):
-        assert len(interval)==2
-        self.min = min(interval)
-        self.max = max(interval)
+    a: float=1
     
-    def validate(self, value):
-        return (self.min<=value) & (value<=self.max)
+    def __post__init__(self):
+        assert all(0 <= x <= 1 for x in [self.r, self.g, self.b, self.a])
+
+@dataclass
+class LineWidth:
+    linewidth:float=1
+    
+    def __post__init__(self):
+        assert(self.linewidth>0)
+        
+@dataclass
+class LineStyle: #
+    offset: float=0
+    offsetseq: Tuple[float, ...]=field(default_factory=lambda:())
+    
+    def __post__init__(self):
+        assert (self.offset>=0)
+        assert(all(x>=0 for x in self.offsetseq))
+        assert(len(self.offsetseq)% 2==0)

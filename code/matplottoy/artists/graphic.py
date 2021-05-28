@@ -30,7 +30,6 @@ class GraphicCollection:
     edgecolors: List[mtypes.RGBA] 
     linewidths: List[mtypes.LineWidth]
     linestyles: List[mtypes.LineStyle] 
-    antialiaseds: [bool]
+    antialiaseds: [bool]l,.
     urls: List[str]
     offset_position: str='screen'
-    

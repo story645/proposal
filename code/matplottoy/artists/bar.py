@@ -1,8 +1,9 @@
 import copy
 from collections import defaultdict
-from dataclasses import dataclass
-
+from collections.abc import Iterable
+from dataclasses import dataclass, field, asdict
 import itertools
+from typing import Iterable
 
 import numpy as np 
 
@@ -17,14 +18,26 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 
 from matplottoy.artists import utils
+from matplottoy.encoders import mtypes
 
 @dataclass
-class Graphic:
-    paths: list[mpath.Path]
-    edgecolors: list[]
-    facecolors: list[]
+class BarV: #(blow up if not same length)
+    position: [float] #feeds label
+    length: Iterable[float] 
+    floor: Iterable[float] = field(default_factory = lambda: itertools.repeat(0))
+    width: Iterable[float] = field(default_factory = lambda: itertools.repeat(.8))
+    offset: Iterable[float] = field(default_factory = lambda: np.array(0))
+    facecolors: Iterable[mtypes.RGBA] = field(default_factory = 
+                                        lambda: itertools.repeat(mtypes.RGBA( .12, .46, .71, 1)))
+    edgecolors: Iterable[mtypes.RGBA] = field(default_factory = 
+                                        lambda: itertools.repeat(mtypes.RGBA(0, 0, 0, 1)))
+    linewidths: Iterable[mtypes.LineWidth] = field(default_factory = 
+                                        lambda: itertools.repeat(mtypes.LineWidth()))
+    linestyles: Iterable[mtypes.LineStyle] = field(default_factory = 
+                                        lambda: itertools.repeat(mtypes.LineStyle()))
+
 class BarArtist(martist.Artist):
-    def __init__(self, data, transforms, orientation='v', *args, **kwargs):
+    def __init__(self, data, encodings, orientation='v', *args, **kwargs):
         """
         Parameters
         ----------
@@ -45,89 +58,32 @@ class BarArtist(martist.Artist):
      
         super().__init__(*args, **kwargs)
         self.data = data
-        self.transforms = copy.deepcopy(transforms)
+        self.encodings = encodings
     
-<<<<<<< HEAD
-
-    def assemble(self, position, length, floor=0, width=0.8, offset=0, 
-                       facecolor='C0', edgecolor='k', linewidth=1, linestyle=0, 
-                       antialiased=True, url=None):
-
-        position = position + offset
-=======
-    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
-        #set some defaults
-        width = itertools.repeat(width) if np.isscalar(width) else width
-        floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
-        
+    def assemble(self, visual):
+        graphics = []    
         # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
-        position = position + offset
-        
-        def make_bars(xval, xoff, yval, yoff):
-             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
->>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
-        #build bar glyphs based on graphic parameter
-        if self.orientation in {'vertical', 'v'}:
-            path = mpath.Path([(position, floor), (position, floor + length), 
-                                (position + width, floor + length), 
-                                (position + width, floor), 
-                                (position, floor)], closed=True)
-        elif self.orientation in {'horizontal', 'h'}:
-<<<<<<< HEAD
-            path = mpath.Path([(floor, position), (floor, position+width), 
-                              (floor + length, position + width), 
-                              (floor + length, position), 
-                              (floor, position)], closed=True)
+        for (position, length, floor, width, offset, fc, ec, lw, ls) in  asdict(visual).values():
+            xy = [(position + offset, floor), (position + offset + width, floor + length), 
+                  (position + offset + width, floor), (position + offset, floor)]
+            xy = [(y,x) for (x,y) in xy] if self.orientation in {'horizontal','h'} else xy
             
-        transform = mtransforms.IdentityTransform()
-        offset = (0,0)
-        offsetTrans = mtransforms.IdentityTransform() 
-        return graphic.Graphic(path, transform, offset, offsetTrans, 
-                               facecolor, edgecolor, linewidth, linestyle, 
-                               antialiased, url)
-=======
-            verts = make_bars(floor, length, position, width)
-        
-        return Graphic([mpath.Path(xy, closed=True) for xy in verts], 
-                        edgecolors, facecolors)
->>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
+            path = mpath.Path(xy, closed=True)
+            transform = mtransforms.IdentityTransform()
+            graphics.append(path=graphics.Graphic(path), transform=transform, 
+            facecolor=fc, edgecolor=ec,  linewidth=lw, linestyle=lc,)    
 
+    
         
     def draw(self, renderer,  *args, **kwargs):
-        view = self.data.view(self.axes)
-        visual = {}
-        for (p, t) in self.transforms.items():
-            if isinstance(t, dict):
-                if t['name'] in self.data.FB.F and 'encoder' in t:
-                    visual[p] = t['encoder'](view[t['name']])
-                elif 'encoder' in t:
-                    visual[p] = t['encoder'](t['name'])
-                elif t['name'] in self.data.FB.F:
-                    visual[p] = view[t['name']]
-            else:
-                 visual[p] = t
-<<<<<<< HEAD
+        view = self.E.view(self.axes) #k-based indexing on rows
+        # nu needs to be applied at draw time so mu can be dynamically updated on draw
+        encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
+                   for p.name in fields(BarV) if p.name in self.encodings})
 
-        for params in zip(visual.values()):
-            vv = dict(zip(visual.keys(), params))
-            position = vv.pop('position')
-            length = vv.pop('length')
-            graphic = self.assemble(position, length, **vv)  
-            gc = renderer.new_gc()
-            gc.set_linewidth(graphic.linewidth)
-            gc.set_dashes(graphic.linestyle)
-            gc.set_foreground(graphic.edgecolor)
-            gc.set_antialiased(graphic.antialiased)
-            gc.set_url(graphic.url)
-            gc.restore()
-            renderer.draw_path(gc, graphic.path, graphic.transform, 
-                                graphic.facecolor)
-=======
-        graphic = self.assemble(**visual)
+        graphic = self.assemble(encoded_data)
         gc = renderer.new_gc()
         renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), **graphic)
->>>>>>> parent of feac051... data classes as contracts, stuck at draw_path_collection
         #super().draw(renderer,  *args, **kwargs)
 
 
