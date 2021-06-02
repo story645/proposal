@@ -1,7 +1,16 @@
 # Dissertation Proposal
 Problem?
 
-Mislabled and inconsistently encoded marks or out of sync dashboards and streaming visualizations occur when the components out of which the visualization is built do not preserve structure; therefore we propose a functional structure preserving model of the transformations from multidimensional, multivariate, and labeled data space to visual space that developers can use to implement formally verifiable visualization library components.
+
+We propose a functional structure preserving model of the transformations from multidimensional, multivariate, and labeled data space to visual space that developers can use to implement robust formally verifiable visualization library components so that the visualizations...[lossy, lossy]
+
+Mislabled and inconsistently or out of sync dashboards and streaming visualizations occur when the components out of which the visualization is built do not preserve structure; therefore 
+
+fields in data mapped inconsistently to visual elements, include continuity, keep this tweet length. 
+
+
+ when visualizations do not preserve structure, errors such as mislabled and inconsistently  and o
+
 
 
 notes, API sketches, drafts, etc. leading towards dissertation proposal:

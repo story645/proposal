@@ -20,21 +20,7 @@ import matplotlib.transforms as mtransforms
 from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
-@dataclass
-class BarV: #(blow up if not same length)
-    position: [float] #feeds label
-    length: Iterable[float] 
-    floor: Iterable[float] = field(default_factory = lambda: itertools.repeat(0))
-    width: Iterable[float] = field(default_factory = lambda: itertools.repeat(.8))
-    offset: Iterable[float] = field(default_factory = lambda: np.array(0))
-    facecolors: Iterable[mtypes.RGBA] = field(default_factory = 
-                                        lambda: itertools.repeat(mtypes.RGBA( .12, .46, .71, 1)))
-    edgecolors: Iterable[mtypes.RGBA] = field(default_factory = 
-                                        lambda: itertools.repeat(mtypes.RGBA(0, 0, 0, 1)))
-    linewidths: Iterable[mtypes.LineWidth] = field(default_factory = 
-                                        lambda: itertools.repeat(mtypes.LineWidth()))
-    linestyles: Iterable[mtypes.LineStyle] = field(default_factory = 
-                                        lambda: itertools.repeat(mtypes.LineStyle()))
+
 
 class BarArtist(martist.Artist):
     def __init__(self, data, encodings, orientation='v', *args, **kwargs):
@@ -61,17 +47,14 @@ class BarArtist(martist.Artist):
         self.encodings = encodings
     
     def assemble(self, visual):
-        graphics = []    
-        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
-        for (position, length, floor, width, offset, fc, ec, lw, ls) in  asdict(visual).values():
-            xy = [(position + offset, floor), (position + offset + width, floor + length), 
-                  (position + offset + width, floor), (position + offset, floor)]
-            xy = [(y,x) for (x,y) in xy] if self.orientation in {'horizontal','h'} else xy
-            
-            path = mpath.Path(xy, closed=True)
-            transform = mtransforms.IdentityTransform()
-            graphics.append(path=graphics.Graphic(path), transform=transform, 
-            facecolor=fc, edgecolor=ec,  linewidth=lw, linestyle=lc,)    
+        def make_bars(xval, xoff, yval, yoff):
+             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+        #build bar glyphs based on graphic parameter
+        if self.orientation in {'vertical', 'v'}:
+            verts = make_bars(position, width, floor, length)
+        elif self.orientation in {'horizontal', 'h'}:
+            verts = make_bars(floor, length, position, width)
 
     
         
@@ -83,7 +66,9 @@ class BarArtist(martist.Artist):
 
         graphic = self.assemble(encoded_data)
         gc = renderer.new_gc()
-        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), **graphic)
+        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), 
+        
+  )
         #super().draw(renderer,  *args, **kwargs)
 
 
