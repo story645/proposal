@@ -1,15 +1,9 @@
 # Dissertation Proposal
 Problem?
-Solution?
 
-Why? 
+Mislabled and inconsistently encoded marks or out of sync dashboards and streaming visualizations occur when the components out of which the visualization is built do not preserve structure; therefore we propose a functional structure preserving model of the transformations from multidimensional, multivariate, and labeled data space to visual space that developers can use to implement formally verifiable visualization library components.
 
-What? 
 
-data + prior of what's important to preserve, language (model) to express data and what I want it to be preserved -> how do we build a library that allows for specifying constraints, transformation, users/domain developers 
-
-invariance: what transforms on
-focus: constraint preservation...., what are the problems people actually have where the solution would be constraint preservation, maths means its consistent
 
 notes, API sketches, drafts, etc. leading towards dissertation proposal:
 * https://github.com/matplotlib/CZI_2019-07_mpl
