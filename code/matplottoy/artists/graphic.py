@@ -21,7 +21,7 @@ class Graphic:
     offsetTrans: mtransforms.Transform=None
 
 
-@dataclass
+@dataclass # this is kinda mu
 class PatchConfig: #kind of base it on existing mpl mark parameters
     position: [float] #feeds label
     length: Iterable[float] 
@@ -38,7 +38,7 @@ class PatchConfig: #kind of base it on existing mpl mark parameters
                                         lambda: [mtypes.LineStyle()])
     def __post__init__(self):
         assert len(position) == len(floor)
-@dataclass
+@dataclass # this is kinda rho
 class GraphicCollection: #push the draw specific stuff up to v
     paths: List[mpath.Path]
     transforms: List[mtransforms.Transform]
