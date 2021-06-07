@@ -14,3 +14,7 @@
    * maybe something serialized that can be handed off to like datashader, q as collection of patches
    * hurricane spaghetti plot w/ 10,000 trajectories? 
    * how to handle vectorization on functional data? 
+* implementation notes
+    * use lambda/projection/unpack functions to turn chunks into records if needed
+    * move nu call to assembly
+    * bar(data)->returns fully parameterized artist object with draw method, data->data or data.view()?
