@@ -21,42 +21,52 @@ from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
 
+def bar(schema, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):
+
+
 
 class BarArtist(martist.Artist):
-    def __init__(self, data, encodings, orientation='v', *args, **kwargs):
+    def __init__(self, aes, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):   ):
         """
         Parameters
         ----------
-        datasource: matplottoy.datasources.DataSource like
-            data object containing data to be plotted
+        aes: [{'data': data components, 'aes': visual components}]
+            dictionary specifying which columns of the data are bound to which columns?
+                # maybe bake this into the tau instead
+        
         orientation: str, optional
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
         **kwargs:
             kwargs passed through 
         """
-  
-        #assert 'vertex' in data.FB.K['tables']
-        #utils.check_constraints(Bar, transforms)
-        #utils.validate_transforms(data, transforms)
 
         self.orientation = orientation
-     
-        super().__init__(*args, **kwargs)
-        self.data = data
+
+
+        # rename nu targets to match the patch arguments 
+         if self.orientation in {'vertical', 'v'}:
+             {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}
+           
+        elif self.orientation in {'horizontal', 'h'}:
+            {'floor':'x0', 'length':'x1', 'position':'y1', 'width':'y1'}
+
+        super().__init__()
+        self.schema = schema
         self.encodings = encodings
     
-    def assemble(self, visual):
+    def __call__(data):
+        self.data = data
+        return self
+
+    def assemble(self, data):
+
         def make_bars(xval, xoff, yval, yoff):
              return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
                 for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        #build bar glyphs based on graphic parameter
-        if self.orientation in {'vertical', 'v'}:
-            verts = make_bars(position, width, floor, length)
-        elif self.orientation in {'horizontal', 'h'}:
-            verts = make_bars(floor, length, position, width)
 
-    
+
+        return DrawPathCollection()
         
     def draw(self, renderer,  *args, **kwargs):
         view = self.E.view(self.axes) #k-based indexing on rows
