@@ -2,12 +2,12 @@ import matplotlib.table as mtable
 
 import numpy as np
 
-def linked_plot(fig, x,y,c):
+def linked_plot(fig, x,y,c,):
     axd = fig.subplot_mosaic([["histx", "."],["scat", "histy"]], 
                                      gridspec_kw={'width_ratios': [7,2], 'height_ratios':[2,7]})
 
-    im = axd['scat'].scatter(x, y, c=c, cmap='RdBu', picker=True)
-    fig.colorbar(im, ax=axd['scat'], orientation='horizontal')
+    im = axd['scat'].scatter(x, y, c=c, picker=True)
+    #fig.colorbar(im, ax=axd['scat'], orientation='horizontal')
 
     _, _,  patchesx = axd['histx'].hist(x)
     _, _, patchesy = axd['histy'].hist(y, orientation='horizontal')
@@ -29,10 +29,15 @@ def linked_plot(fig, x,y,c):
         _, _, patchesy = axd['histy'].hist(dy, orientation='horizontal')
         axd['histy'].set_ylim([start,end])
         return [patchesy]
+    
+    def on_pick(event):
+        pass
 
     axd['scat'].callbacks.connect('xlim_changed', on_xlims_change)
     axd['scat'].callbacks.connect('ylim_changed', on_ylims_change)
     return axd
+
+
 
 def plot_table(ax, data, columns=None, rows=None, scale=(1,1)):
     tab = mtable.table(ax, cellText=data, cellLoc='center',

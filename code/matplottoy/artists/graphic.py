@@ -21,26 +21,20 @@ class Graphic:
     offsetTrans: mtransforms.Transform=None
 
 
-@dataclass # this is kinda mu
-class PatchConfig: #kind of base it on existing mpl mark parameters
-    position: [float] #feeds label
-    length: Iterable[float] 
-    floor: Iterable[float] = field(default_factory = lambda: [0]) 
-    width: Iterable[float] = field(default_factory = lambda: [.8])
-    offset: Iterable[float] = field(default_factory = lambda: [0])
-    facecolors: Iterable[mtypes.RGBA] = field(default_factory = 
-                                        lambda: [mtypes.RGBA( .12, .46, .71, 1)])
-    edgecolors: Iterable[mtypes.RGBA] = field(default_factory = 
-                                        lambda: [mtypes.RGBA(0, 0, 0, 1)])
-    linewidths: Iterable[mtypes.LineWidth] = field(default_factory = 
-                                        lambda: [mtypes.LineWidth()])
-    linestyles: Iterable[mtypes.LineStyle] = field(default_factory = 
-                                        lambda: [mtypes.LineStyle()])
-    def __post__init__(self):
-        assert len(position) == len(floor)
-@dataclass # this is kinda rho
-class GraphicCollection: #push the draw specific stuff up to v
-    paths: List[mpath.Path]
+@dataclass # this is kinda mu?
+class RectangleCollection: #kind of base it on existing mpl mark parameters
+    x0: [float] #these are not general
+    x1: Iterable[float] 
+    y0: Iterable[float] 
+    y1: Iterable[float] 
+    facecolors: Iterable[mtypes.RGBA]
+    edgecolors: Iterable[mtypes.RGBA] 
+    linewidths: Iterable[mtypes.LineWidth] 
+    linestyles: Iterable[mtypes.LineStyle] 
+
+@dataclass # this is kinda rho?
+class DrawPathCollection: #this is what gets passed off to the renderer Draw
+    paths: List[mpath.Path] # is the path or the position the V? since the path is the glyph?
     transforms: List[mtransforms.Transform]
     offsets: List[Any]
     offsetTrans: List[mtransforms.Transform]
@@ -50,4 +44,4 @@ class GraphicCollection: #push the draw specific stuff up to v
     linestyles: List[mtypes.LineStyle] 
     antialiaseds: [bool]
     urls: List[str]
-    offset_position: str='screen'
+    offset_position: str='screen' #data kwarg is deperecated

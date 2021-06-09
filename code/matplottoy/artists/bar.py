@@ -21,54 +21,84 @@ from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
 
+def bar(schema, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):
+    BarArtist(partial(positionNu, projectionTauC1))
+
+class HorizontalBar:
+    pass
+
+class VerticalBar:
+    pass
 
 class BarArtist(martist.Artist):
-    def __init__(self, data, encodings, orientation='v', *args, **kwargs):
+    def __init__(self, orientation, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):   ):
         """
         Parameters
         ----------
-        datasource: matplottoy.datasources.DataSource like
-            data object containing data to be plotted
+    
+            dictionary specifying which columns of the data are bound to which columns?
+                # maybe bake this into the tau instead
+        position (callable, [component names])
+        # position, length,..... pass in callables
         orientation: str, optional
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
         **kwargs:
             kwargs passed through 
         """
-  
-        #assert 'vertex' in data.FB.K['tables']
-        #utils.check_constraints(Bar, transforms)
-        #utils.validate_transforms(data, transforms)
 
         self.orientation = orientation
-     
-        super().__init__(*args, **kwargs)
-        self.data = data
+
+
+        # rename nu targets to match the patch arguments 
+         if self.orientation in {'vertical', 'v'}:
+             {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}
+           
+        elif self.orientation in {'horizontal', 'h'}:
+            {'floor':'x0', 'length':'x1', 'position':'y1', 'width':'y1'}
+
+        super().__init__()
+        self.schema = schema
         self.encodings = encodings
     
-    def assemble(self, visual):
+    def __call__(data):
+        #BarArtist(data.view())
+        self.data = data.view() #place where data materializes, rename as next
+        #rewrite the view object as a generator? 
+        #pass info about axes -> that's where do subsampling into data
+        #can't be here? needs the axes -> actually can also happen in draw...
+        return self
+
+    #maybe pull this out so it's reusable (make it purely functional)
+    def assemble(self, data):
         def make_bars(xval, xoff, yval, yoff):
              return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
                 for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        #build bar glyphs based on graphic parameter
-        if self.orientation in {'vertical', 'v'}:
-            verts = make_bars(position, width, floor, length)
-        elif self.orientation in {'horizontal', 'h'}:
-            verts = make_bars(floor, length, position, width)
 
-    
+
+        return DrawPathCollection()
         
-    def draw(self, renderer,  *args, **kwargs):
-        view = self.E.view(self.axes) #k-based indexing on rows
+    def draw(self, renderer,  *args, **kwargs): #actually the factory
+        batch = self.data.view(self.axes) #current limits, downsampling, etc ()
+        # calling xi to get range, passing range to them
+        # from limits on axes/scales, resample
+        # how to filter to an xrange is dstructure depenedent
+        # bounds based on inverses of nu....
+        
+        # should maybe return something that isn't executed yet
+        # batch()
+
+        # passing axes back is an optimization
+        # tau is sinx -> in assembly sinx(axes)
+
+        #k-based indexing on rows
         # nu needs to be applied at draw time so mu can be dynamically updated on draw
         encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
                    for p.name in fields(BarV) if p.name in self.encodings})
 
         graphic = self.assemble(encoded_data)
         gc = renderer.new_gc()
-        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(), 
-        
-  )
+        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
         #super().draw(renderer,  *args, **kwargs)
 
 
