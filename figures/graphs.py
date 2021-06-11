@@ -62,9 +62,9 @@ def linked_plot(fig, nydf):
 
 
 
-def plot_table(ax, data, columns=None, rows=None, scale=(1,1)):
+def plot_table(ax, data, columns=None, rows=None, scale=(1,1), loc='center'):
     tab = mtable.table(ax, cellText=data, cellLoc='center',
-                   colLabels=columns, rowLabels=rows, loc='lower center')
+                   colLabels=columns, rowLabels=rows, loc=loc)
     tab.auto_set_font_size(False)
     tab.set_fontsize('medium')
     tab.scale(*scale)
