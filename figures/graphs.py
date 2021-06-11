@@ -13,8 +13,8 @@ def linked_plot(fig, nydf):
     im = axd['scat'].scatter('TAVGF', 'PRCPI', c=nydf['color'], alpha=.5, edgecolor='silver', data=nydf, picker=True)
     labels, handles = zip(*[(n, mpatches.Circle(.2, facecolor=c)) for n, c in ip.cdict.items()])
     axd['scat'].set(xlabel='temperature (°F)', ylabel='precipitation (in.)')
-    axd['scat'].legend(list(handles), list(labels), ncol=2,
-                       bbox_to_anchor=(1.4,-.2))
+    axd['scat'].legend(list(handles), list(labels), ncol=1,
+                       bbox_to_anchor=(1.5, 1))
 
     for l, gdf in nydf.groupby('NAME'):
         try:
@@ -64,7 +64,7 @@ def linked_plot(fig, nydf):
 
 def plot_table(ax, data, columns=None, rows=None, scale=(1,1)):
     tab = mtable.table(ax, cellText=data, cellLoc='center',
-                   colLabels=columns, rowLabels=rows, loc='center')
+                   colLabels=columns, rowLabels=rows, loc='lower center')
     tab.auto_set_font_size(False)
     tab.set_fontsize('medium')
     tab.scale(*scale)
