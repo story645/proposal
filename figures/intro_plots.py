@@ -10,11 +10,11 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 #scatter position: 
 
-cdict = {'GANG MILLS NEW YORK': '#e6194B',
-         'SARA NEW YORK': '#42d4f4',
-         'SCHROON LAKE NEW YORK': '#9A6324',
-         'SHERBURNE NEW YORK': '#4363d8',
-         'STONYKILL NEW YORK': '#fabed4',
+cdict = {#'GANG MILLS NEW YORK': '#e6194B',
+         #'SARA NEW YORK': '#42d4f4',
+         #'SCHROON LAKE NEW YORK': '#9A6324',
+         #'SHERBURNE NEW YORK': '#4363d8',
+        #'STONYKILL NEW YORK': '#fabed4',
          'BINGHAMTON': '#3cb44b',
          'ISLIP LI MACARTHUR AP': '#ffe119',
          'NEW YORK LAGUARDIA AP': '#f58231',
@@ -24,6 +24,17 @@ cdict = {'GANG MILLS NEW YORK': '#e6194B',
          'ROCHESTER GTR INTL AP': '#800000',
          'SYRACUSE HANCOCK INTL AP': '#aaffc3',
          'NEW YORK JFK INTL AP': '#000075'}
+airport_codes = {'ALBANY AP': 'ALB', 
+                 'BINGHAMTON': 'BGM', 
+                 'BUFFALO':'BUF', 
+                 'GLENS FALLS AP':'GFL',
+                 'ISLIP LI MACARTHUR AP':'ISP', 
+                 'NEW YORK JFK INTL AP':'JFK',
+                 'NEW YORK LAGUARDIA AP':'LGA', 
+                 'ROCHESTER GTR INTL AP':'ROC',
+                 'SYRACUSE HANCOCK INTL AP':'SYR',
+                 'SARA NEW YORK':'a',
+                 'STONYKILL NEW YORK':'b'}
 
 ssubset = ['ROCHESTER GTR INTL AP','STONYKILL NEW YORK', 
            'ALBANY AP', 'SCHROON LAKE NEW YORK', 

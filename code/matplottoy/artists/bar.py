@@ -22,6 +22,7 @@ from matplottoy.encoders import mtypes
 
 
 def bar(schema, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):
+<<<<<<< HEAD
     BarArtist(partial(positionNu, projectionTauC1))
 
 class HorizontalBar:
@@ -40,6 +41,20 @@ class BarArtist(martist.Artist):
                 # maybe bake this into the tau instead
         position (callable, [component names])
         # position, length,..... pass in callables
+=======
+
+
+
+class BarArtist(martist.Artist):
+    def __init__(self, aes, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):   ):
+        """
+        Parameters
+        ----------
+        aes: [{'data': data components, 'aes': visual components}]
+            dictionary specifying which columns of the data are bound to which columns?
+                # maybe bake this into the tau instead
+        
+>>>>>>> e70e709b70d2ed5c73bca02ebfaa20ea589a53a6
         orientation: str, optional
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
@@ -62,6 +77,7 @@ class BarArtist(martist.Artist):
         self.encodings = encodings
     
     def __call__(data):
+<<<<<<< HEAD
         #BarArtist(data.view())
         self.data = data.view() #place where data materializes, rename as next
         #rewrite the view object as a generator? 
@@ -71,6 +87,13 @@ class BarArtist(martist.Artist):
 
     #maybe pull this out so it's reusable (make it purely functional)
     def assemble(self, data):
+=======
+        self.data = data
+        return self
+
+    def assemble(self, data):
+
+>>>>>>> e70e709b70d2ed5c73bca02ebfaa20ea589a53a6
         def make_bars(xval, xoff, yval, yoff):
              return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
                 for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]

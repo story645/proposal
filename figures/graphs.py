@@ -1,36 +1,59 @@
+import matplotlib.patches as mpatches
 import matplotlib.table as mtable
 
 import numpy as np
+import pandas as pd
 
-def linked_plot(fig, x,y,c,):
+import intro_plots as ip
+
+def linked_plot(fig, nydf):
     axd = fig.subplot_mosaic([["histx", "."],["scat", "histy"]], 
                                      gridspec_kw={'width_ratios': [7,2], 'height_ratios':[2,7]})
 
-    im = axd['scat'].scatter(x, y, c=c, picker=True)
-    #fig.colorbar(im, ax=axd['scat'], orientation='horizontal')
+    im = axd['scat'].scatter('TAVGF', 'PRCPI', c=nydf['color'], alpha=.5, edgecolor='silver', data=nydf, picker=True)
+    labels, handles = zip(*[(n, mpatches.Circle(.2, facecolor=c)) for n, c in ip.cdict.items()])
+    axd['scat'].set(xlabel='temperature (°F)', ylabel='precipitation (in.)')
+    axd['scat'].legend(list(handles), list(labels), ncol=2,
+                       bbox_to_anchor=(1.4,-.2))
 
-    _, _,  patchesx = axd['histx'].hist(x)
-    _, _, patchesy = axd['histy'].hist(y, orientation='horizontal')
+    for l, gdf in nydf.groupby('NAME'):
+        try:
+            _, _,  patchesx = axd['histx'].hist('TAVGF', data=gdf, 
+                                            color=ip.cdict[l], histtype='step')
+            _, _, patchesy = axd['histy'].hist('PRCPI', data=gdf, 
+                                    color=ip.cdict[l], histtype='step',
+                                    orientation='horizontal')
+        except ValueError as e:
+            print(f'{l}')
 
     axd['histx'].sharex(axd['scat'])
     axd['histy'].sharey(axd['scat'])
 
-
     def on_xlims_change(axes):
         start, end = axes.get_xlim()
-        dx = x[(start<=x) & (x<=end)]
-        _, _, patchesx = axd['histx'].hist(dx)
-        axd['histx'].set_xlim([start,end])
-        return [patchesx]
+        
+        dx = nydf[(startx<=nydf['TAVG']) & (nydf['TAVG']<=endx)]
+        
+        patchesx = []
+        for l, gdf in dx.groupby('NAME'):
+            _, _, px = axd['histx'].hist('TAVG', data=gdf, color=ip.cdict[l])
+            patchesx.append[px]
+            
+        axd['histx'].set_xlim([startx,endx])
+        return patchesx
 
     def on_ylims_change(axes):
-        start, end = axes.get_ylim()
-        dy = y[(start<=y) & (y<=end)]
-        _, _, patchesy = axd['histy'].hist(dy, orientation='horizontal')
-        axd['histy'].set_ylim([start,end])
+        starty, endy = axes.get_ylim()
+        dy = nydf[(starty<=nydf['PRCPI']) & (nydf['PRCPI']<=endy)]
+        patchesy = []
+        for l, gdf in dy.groupby('NAME'):
+            _, _, py = axd['histy'].hist('PRCPI', data=gdf, color=ip.cdict[l])
+            patchesy.append[py]
+            
+        axd['histy'].set_ylim([starty,endy])
         return [patchesy]
     
-    def on_pick(event):
+    def on_pick(event): #write legend selector for the hell of it? https://matplotlib.org/stable/gallery/event_handling/legend_picking.html
         pass
 
     axd['scat'].callbacks.connect('xlim_changed', on_xlims_change)
