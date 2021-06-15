@@ -44,4 +44,4 @@ The paper would benefit from some proofreading. Here are a few examples of sente
 The high-level idea of the paper is interesting and seemingly plausible. However, the paper would need a substantial rewrite for both a visualization audience, as well as an algebraic topology audience. The main issues include:
 + Many mathematical terms are used without definitions. The paper could be improved substantially if first motivations are provided regarding why certain notions are needed for the proposed work.
 + There are a number of conjectures and claims throughout the paper that were made without justification/proofs.
-+ The paper could be greatly improved if it includes a clear high-level picture of how a morphism $A$ between the data bundle and the graphic bundle is translated into programming for Matplotlib.
++ The paper could be greatly improved if it includes a clear high-level picture of how a morphism $A$ between the data bundle and the graphic bundle is translated into programming for Matplotlib.s
