@@ -11,10 +11,11 @@ def linked_plot(fig, nydf):
                                      gridspec_kw={'width_ratios': [7,2], 'height_ratios':[2,7]})
 
     im = axd['scat'].scatter('TAVGF', 'PRCPI', c=nydf['color'], alpha=.5, edgecolor='silver', data=nydf, picker=True)
-    labels, handles = zip(*[(n, mpatches.Circle(.2, facecolor=c)) for n, c in ip.cdict.items()])
+    labels, handles = zip(*[(ip.airport_codes[n], mpatches.Circle(.2, facecolor=c)) for n, c in ip.cdict.items()])
     axd['scat'].set(xlabel='temperature (°F)', ylabel='precipitation (in.)')
-    axd['scat'].legend(list(handles), list(labels), ncol=1,
-                       bbox_to_anchor=(1.5, 1))
+    axd['histy'].legend(list(handles), list(labels), ncol=1,
+                       loc='upper right', 
+                       bbox_transform=axd['histy'].transAxes,    bbox_to_anchor=(1.75, 1))
 
     for l, gdf in nydf.groupby('NAME'):
         try:
@@ -40,6 +41,7 @@ def linked_plot(fig, nydf):
             patchesx.append[px]
             
         axd['histx'].set_xlim([startx,endx])
+        subfig.subplots_asjust(hspace=0, wspace=0)
         return patchesx
 
     def on_ylims_change(axes):
