@@ -32,6 +32,7 @@ class RectangleCollection: #kind of base it on existing mpl mark parameters
     linewidths: Iterable[mtypes.LineWidth] 
     linestyles: Iterable[mtypes.LineStyle] 
 
+
 @dataclass # this is kinda rho?
 class DrawPathCollection: #this is what gets passed off to the renderer Draw
     paths: List[mpath.Path] # is the path or the position the V? since the path is the glyph?

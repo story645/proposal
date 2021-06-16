@@ -21,15 +21,8 @@ from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
 
-def bar(schema, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):
-<<<<<<< HEAD
-    BarArtist(partial(positionNu, projectionTauC1))
-
-
-def horizontal_bar(position, length, floor, width, facecolors, edgecolors, linewidths, linestyles)
-
 class BarArtist(martist.Artist):
-    def __init__(self, orientation, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
+    def __init__(self, orientation, aes, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
         """
         Parameters
         ----------
@@ -49,36 +42,46 @@ class BarArtist(martist.Artist):
         """
 
         self.orientation = orientation
-
-
-        # rename nu targets to match the rectangle patch arguments 
-         if self.orientation in {'vertical', 'v'}:
-             {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}
-           
+        # the nu functions are attributes of a fully specified artist
+        
+        self.aes = aes.copy()
+        # maybe this should just be verical/horizontal wrapper functions/Artists  
+        if self.orientation in {'vertical', 'v'}:
+            self.aes.update({new_key: self.aes.pop(old_key) 
+                        for old_key, new_key in 
+                        {'position':'x0', 'width':'x1', 
+                         'floor':'y0', 'length':'y1'}})
+            self._x0 = position
+            self._x1 = width
+            self._y0 = floor
+            self._y1 = length
         elif self.orientation in {'horizontal', 'h'}:
-            {'floor':'x0', 'length':'x1', 'position':'y1', 'width':'y1'}
+            self.aes.update({new_key: self.aes.pop(old_key) 
+                        for old_key, new_key in 
+                        {'floor':'x0', 'length':'x1',
+                         'position':'y1', 'width':'y1'}})
+            self._x0 = floor
+            self._x1 = length
+            self._y0 = position
+            self._y1 = width
 
+        self._facecolors = facecolors
+        self._edgecolors = edgecolors
+        self._linewidths = linewidths
+        self._linestyles = linestyles
+        
         super().__init__()
-        self.schema = schema
-        self.encodings = encodings
+        
     
     def __call__(data):
         #BarArtist(data.view())
-        self.data = self.schema.view(self.axes) 
-        #place where data materializes, rename as next
+        self.view = data.view(self.axes) 
+        #place where data is subsetted/prepped - this is setting up the sheaf rules, not pulling the data over yet, that's a seperate get? method
         #rewrite the view object as a generator? 
         #pass info about axes -> that's where do subsampling into data
-        #can't be here? needs the axes -> actually can also happen in draw...
-        return self
-
-    #maybe pull this out so it's reusable (make it purely functional):
-    @staticmethod
-    def make_bars(xval, xoff, yval, yoff):
-        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        
-    def draw(self, renderer,  *args, **kwargs): #actually the factory
-      #current limits, downsampling, etc ()
+        #can't be here? needs the axes -> actually can also happen in 
+        # this allows for Artist(Data) where A = q\circ nu & xi
+              #current limits, downsampling, etc ()
         # calling xi to get range, passing range to them
         # from limits on axes/scales, resample
         # how to filter to an xrange is dstructure depenedent
@@ -92,13 +95,43 @@ class BarArtist(martist.Artist):
 
         #k-based indexing on rows
         # nu needs to be applied at draw time so mu can be dynamically updated on draw
-        encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
-                   for p.name in fields(BarV) if p.name in self.encodings})
+        return self
 
-        graphic = 
-
-        gc = renderer.new_gc()
-        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
+    #maybe pull this out so it's reusable (make it purely functional):
+    @staticmethod
+    def make_bars(xval, xoff, yval, yoff):
+        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+        
+    #this is to debug encodings in V seperate from rendering, 
+    # is also what gets realized - this can also be the callable....
+    def assemble(self):
+        paths = [mpath.Path([(x0, y0), (x0, y0+y1), 
+                             (x0+x1, y0+y1), (x0+x1, y0)], closed=True)   
+                 for (x0, x1, y0, y1) 
+                 in zip (self._x0(self.view.get(self.aes['x0'])),
+                         self._x1(self.view.get(self.aes['x1'])), 
+                         self._y0(self.view.get(self.aes['y0'])), 
+                         self._y1(self.view.get(self.aes['y1'])))]
+            
+        facecolors = self._edgecolor(self.view.get(self.aes['facecolor']))
+        edgecolors = self._edgecolor(self.view.get(self.aes['edgecolor']))
+        linewidths = self._linewidth(self.view.get(self.aes['linewidth']))
+        linestyles = self._linestyle(self.view.get(self.aes['linestyle']))
+        
+        transforms = np.repeat(mtransforms.IdentityTransform(),   self.view.N)
+        offsets = np.zeros(self.view.N)
+        offsetTrans = np.repeat(mtransforms.IdentityTransform(), self.view.N)
+        antialiaseds = np.repeat(True, self.view.N)
+        urls = np.repeat(True, self.view.N)
+        offset_position = 'screen'
+        # this validates that nu outputs the correct types
+        return DrawPathCollection(paths, transforms, offsets, facecolors, edgecolors, linewidths, linestyles, antialiaseds, urls, offset_position)
+        
+    def draw(self, renderer,  *args, **kwargs): #actually 
+        spec = self.assemble() # in assemble is where nu \circ tau, and assembled into graphical design
+        #gc = renderer.new_gc()
+        #renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
         #super().draw(renderer,  *args, **kwargs)
 
 
