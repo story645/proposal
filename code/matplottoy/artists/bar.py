@@ -25,37 +25,23 @@ def bar(schema, position, length, orientation, floor, width, facecolors, edgecol
 <<<<<<< HEAD
     BarArtist(partial(positionNu, projectionTauC1))
 
-class HorizontalBar:
-    pass
 
-class VerticalBar:
-    pass
+def horizontal_bar(position, length, floor, width, facecolors, edgecolors, linewidths, linestyles)
 
 class BarArtist(martist.Artist):
-    def __init__(self, orientation, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):   ):
+    def __init__(self, orientation, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
         """
         Parameters
         ----------
-    
-            dictionary specifying which columns of the data are bound to which columns?
-                # maybe bake this into the tau instead
+        dictionary specifying which columns of the data are bound to which columns?
+            # maybe bake this into the tau instead
         position (callable, [component names])
         # position, length,..... pass in callables
-=======
-
-
-
-class BarArtist(martist.Artist):
-    def __init__(self, aes, position, length, orientation, floor, width, facecolors, edgecolors, linewidths, linestyles):   ):
-        """
-        Parameters
-        ----------
         aes: [{'data': data components, 'aes': visual components}]
             dictionary specifying which columns of the data are bound to which columns?
                 # maybe bake this into the tau instead
         
->>>>>>> e70e709b70d2ed5c73bca02ebfaa20ea589a53a6
-        orientation: str, optional
+        orientation: str
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
         **kwargs:
@@ -65,7 +51,7 @@ class BarArtist(martist.Artist):
         self.orientation = orientation
 
 
-        # rename nu targets to match the patch arguments 
+        # rename nu targets to match the rectangle patch arguments 
          if self.orientation in {'vertical', 'v'}:
              {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}
            
@@ -77,32 +63,22 @@ class BarArtist(martist.Artist):
         self.encodings = encodings
     
     def __call__(data):
-<<<<<<< HEAD
         #BarArtist(data.view())
-        self.data = data.view() #place where data materializes, rename as next
+        self.data = self.schema.view(self.axes) 
+        #place where data materializes, rename as next
         #rewrite the view object as a generator? 
         #pass info about axes -> that's where do subsampling into data
         #can't be here? needs the axes -> actually can also happen in draw...
         return self
 
-    #maybe pull this out so it's reusable (make it purely functional)
-    def assemble(self, data):
-=======
-        self.data = data
-        return self
-
-    def assemble(self, data):
-
->>>>>>> e70e709b70d2ed5c73bca02ebfaa20ea589a53a6
-        def make_bars(xval, xoff, yval, yoff):
-             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+    #maybe pull this out so it's reusable (make it purely functional):
+    @staticmethod
+    def make_bars(xval, xoff, yval, yoff):
+        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
                 for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-
-
-        return DrawPathCollection()
         
     def draw(self, renderer,  *args, **kwargs): #actually the factory
-        batch = self.data.view(self.axes) #current limits, downsampling, etc ()
+      #current limits, downsampling, etc ()
         # calling xi to get range, passing range to them
         # from limits on axes/scales, resample
         # how to filter to an xrange is dstructure depenedent
@@ -119,7 +95,8 @@ class BarArtist(martist.Artist):
         encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
                    for p.name in fields(BarV) if p.name in self.encodings})
 
-        graphic = self.assemble(encoded_data)
+        graphic = 
+
         gc = renderer.new_gc()
         renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
         #super().draw(renderer,  *args, **kwargs)
