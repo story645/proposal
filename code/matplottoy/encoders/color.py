@@ -14,7 +14,7 @@ class Identity:
         values = np.atleast_1d(np.array(value, dtype=object))
         return [mtypes.RGBA(*mcolors.to_rgba(v)) for v in values]
 
-class Categorical:
+class Nominal:
     def __init__(self, mapping):
         """goal of init is to store parameters that would otherwise be
         curried higher level function"""

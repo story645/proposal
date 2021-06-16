@@ -22,7 +22,7 @@ from matplottoy.encoders import mtypes
 
 
 class BarArtist(martist.Artist):
-    def __init__(self, orientation, aes, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
+    def __init__(self, orientation, aes, position, length, floor, width, facecolor, edgecolor, linewidth, linestyle):
         """
         Parameters
         ----------
@@ -75,6 +75,7 @@ class BarArtist(martist.Artist):
     
     def __call__(data):
         #BarArtist(data.view())
+        # do we want to freeze the data at call time or draw time? 
         self.view = data.view(self.axes) 
         #place where data is subsetted/prepped - this is setting up the sheaf rules, not pulling the data over yet, that's a seperate get? method
         #rewrite the view object as a generator? 
