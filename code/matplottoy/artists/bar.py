@@ -107,6 +107,7 @@ class BarArtist(martist.Artist):
     #this is to debug encodings in V seperate from rendering, 
     # is also what gets realized - this can also be the callable....
     def assemble(self):
+        #do promotion in the get 
         paths = [mpath.Path([(x0, y0), (x0, y0+y1), 
                              (x0+x1, y0+y1), (x0+x1, y0)], closed=True)   
                  for (x0, x1, y0, y1) 
