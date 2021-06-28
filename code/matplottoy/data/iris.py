@@ -1,17 +1,28 @@
 from matplottoy.data.simplex import FiberBundle
 from matplottoy.encoders import mtypes
 
+
+
+class Projection: #sheaf? stalk? presheaf? 
+    def __init__(self, index, handle, fiber): # should be subset K + tau
+        self.index =  index
+        self.handle = handle
+        self.fiber = fiber
+
+    def __call__(self):
+        if self.fiber is None:
+            return pd.Series(index=self.index, dtype=float)
+        return self.handle[self.fiber]
+
 class DataFrame:
     def __init__(self, dataframe):
         self.FB = FiberBundle(K = {'tables':['vertex']},
                               F = dict(dataframe.dtypes))
         self._tau = dataframe.iloc
-        self._view = dataframe
+        self._view = dataframe #use this for column wise indexing
 
-    def view(self, axes=None):
-        return self._view
-    
-    
+    def view(self, fibers, axes=None):
+        return [Projection(self._view.index, self._view, fiber) for fiber in fibers]
 class Iris:
     FB = FiberBundle({'tables': ['vertex']},
                      {'species': str,
