@@ -11,4 +11,7 @@ Is `float` a unit?
         - float actions: permutation, ordering, translation, scaling
         - meter/inch actions: float actions + actions specific to length (like physical objct)
     - spivaks copies allow for reuse of base type (is C1, C2 map to the same DT)
-        - meter to inch conversion could be sigma or sigma`
+        - meter to inch conversion can be f from C -> C' :
+            C->f->C'
+       sigma \  / sigma '
+              DT

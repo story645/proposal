@@ -27,16 +27,20 @@ class Section:
 
 
 
-def fiberbundle(section): #dataframe is section
+def fiberbundle(section): #dataframe is section, type annotations
     """K and F can be defined here, 
     0or as part of a type defintion for section,  
     if want to check that section is part of the fiber bundle"""
 
-    def subset_k(axes): 
+    #split c in half to keep to preserve data/visual split, 
+    # this is b/c we don't have direct S->K
+    # matplotlib doesn't want to know everyone's indexing method
+    def subset_k({'fibers': boundings}): # inverse nu should happen to the artist - just bounding boxes 
         """axes is a restriction on the index, maybe it's xi
         might be xi, might be the index/axes subsetting
         index comes from the section/is part of the FB definition 
         """
+        #define it as filtering is optional
         index = section.index# in theory can subselect here on info from the axes
         def projection(column_name):
             def values(): #
