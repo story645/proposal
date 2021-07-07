@@ -30,13 +30,13 @@ station_color = {v: ip.cdict.get(k, None) for k, v in ip.airport_codes.items()}
 
 E = ['temp', 'prcp', 'name']
 V = ['x', 'y', 'color']
-mosaic = [['E', 'V', 'V*', 'H'], 
+grid = [['E', 'V', 'V*', 'H'], 
           ['.', 'K', 'S', '.']]
 
 
 def table(axd, data):
     w = h = .25
-    y = 0
+    y = .1
     for record in data:
         x=.25
         for (c, val) in record:
@@ -48,14 +48,21 @@ def table(axd, data):
                        ha='center', va='center')
             axsub.set_title(c, fontsize=10, rotation=0)
             x+=w
-        y+=2.5*w
-    
+        y+=2*w
 
 def make_figure(artist=False, section=False, visual=False, continuity=False, data=False, values=None, plot_type='scatter', label=None, fig=None):
-    if fig is None:
-        fig = plt.figure(figsize=(11,5), facecolor='white')
+    
+    if continuity:
+        figsize = (11,5)
+        mosaic = grid
+    else:
+        figsize = (11, 2.5)
+        mosaic = [grid[0]]
         
-    axd = fig.subplot_mosaic(mosaic, gridspec_kw={'height_ratios':[1,1]})
+    if fig is None:
+        fig = plt.figure(figsize=figsize, facecolor='white')
+        
+    axd = fig.subplot_mosaic(mosaic)
     
     label = [] if label is None else label
     
@@ -65,8 +72,6 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
             axd[n].set_aspect('equal')
             axd[n].set(xlim=(0,1), ylim=(0,1))
             axd[n].axis('off')
-
-
     
         w = h = .25
         x = .5
@@ -107,6 +112,7 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
                         axv[c].set(xticks=[], yticks=[])
                         ym-=hm
                     vval(axv)
+                    
     for (xlab, x), (ylab, y), (_, station) in values:
         c = station_color[station]
         if plot_type=='scatter':
@@ -117,8 +123,8 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
         axd['H'].axvline(49, lw=5, color=posc, alpha=.25)
         axd['H'].axhline(.74, lw=5, color=posc, alpha=.25)
     axd['H'].set(xlim=(25, 100), ylim=(0, 1.25), facecolor='white')
-    axd['H'].set_xlabel(xlab, loc='right')
-    axd['H'].set_ylabel(ylab, loc='top')
+    axd['H'].set_xlabel(f'{xlab} (°F)', loc='right')
+    axd['H'].set_ylabel(f'{ylab} (in)', loc='top')
     
 
     if continuity:
@@ -130,61 +136,62 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
         if ['S'] in label:
             axd['S'].text(.325, .2, r'$S_k$',
                           color=kcolor, fontsize=16, ha='center', va='bottom')
+    for (xlab, xd), (ylab, yd), (_, station) in values:
+        if section:
+            for n,x in [('E', .225), ('V', .425), ('V*', .575), ('H',.8)]:
+                if n in label:
+                    fig.text(x, .875, n,color=ecolor, fontsize=16, ha='center', va='bottom')
 
-    if section:
-        for n,x in [('E', .225), ('V', .425), ('V*', .575), ('H',.8)]:
-            if n in label:
-                fig.text(x, .875, n,color=ecolor, fontsize=16, ha='center', va='bottom')
+        font_kw = {'fontsize':14, 'fontweight':'bold', 'va':'center', 'ha':'center'}
+        bbox = {'facecolor':'white', 'edgecolor':'white','pad':.02}
 
-    font_kw = {'fontsize':14, 'fontweight':'bold', 'va':'center', 'ha':'center'}
-    bbox = {'facecolor':'white', 'edgecolor':'white','pad':.02}
-    if artist:
-        for src, dest in [('temp', 'x'), ('prcp', 'y'), ('name', 'color')]:
-            nu = mpatches.ConnectionPatch(xyA=(1.1, .5), coordsA=axsub[src].transData, 
-                                          xyB=(0, .5), coordsB=axsub[dest].transData, 
-                                           mutation_scale=25, arrowstyle='-|>', lw=4, color=acolor)      
-            fig.add_artist(nu)
-        x = -2.15
-        y = .8
-        fig.text(x, y, r'$\nu_{x}$',  color=acolor, **font_kw, transform=axsub['x'].transData) 
-        fig.text(x, y, r'$\nu_{y}$', color=acolor, **font_kw, transform=axsub['y'].transData)      
-        fig.text(x, y, r'$\nu_{color}$',  color=acolor, **font_kw, transform=axsub['color'].transData)
-        
-
-        if 'V*' in label:
-            q1 = mpatches.ConnectionPatch(xyA=(-.5, .5), coordsA=axd['H'].transAxes, 
-                                              xyB=(42, .74), coordsB=axd['H'].transData, 
-                                              arrowstyle=']-,widthA=2.25,lengthA=.5', 
-                                           mutation_scale=25, lw=5, color=acolor)      
-            fig.add_artist(q1)
-
-            q2 = mpatches.ConnectionPatch(xyA=(-.5, .5), coordsA=axd['H'].transAxes, 
-                                              xyB=(44, .74), coordsB=axd['H'].transData, 
-                                               mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
-            fig.add_artist(q2)
-
-            fig.text(-.35, .6, r'$Q$',color=acolor, **font_kw, transform=axd['H'].transAxes)
+        if artist:
+            for src, dest in [('temp', 'x'), ('prcp', 'y'), ('name', 'color')]:
+                nu = mpatches.ConnectionPatch(xyA=(1.1, .5), coordsA=axsub[src].transData, 
+                                              xyB=(0, .5), coordsB=axsub[dest].transData, 
+                                               mutation_scale=25, arrowstyle='-|>', lw=4, color=acolor)      
+                fig.add_artist(nu)
+            x = -2.15
+            y = .8
+            fig.text(x, y, r'$\nu_{x}$',  color=acolor, **font_kw, transform=axsub['x'].transData) 
+            fig.text(x, y, r'$\nu_{y}$', color=acolor, **font_kw, transform=axsub['y'].transData)      
+            fig.text(x, y, r'$\nu_{color}$',  color=acolor, **font_kw, transform=axsub['color'].transData)
 
 
-            xi1 = mpatches.ConnectionPatch(xyA=(-.15, .5), coordsA=axd['V*'].transAxes, 
-                                              xyB=(.75, .5), coordsB=axd['V'].transAxes, 
-                                               mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
-            fig.add_artist(xi1)
+            if 'V*' in label:
+                q1 = mpatches.ConnectionPatch(xyA=(-.5, .5), coordsA=axd['H'].transAxes, 
+                                                  xyB=(xd-5, yd+.01), coordsB=axd['H'].transData, 
+                                                  arrowstyle=']-,widthA=2.25,lengthA=.5', 
+                                               mutation_scale=25, lw=5, color=acolor)      
+                fig.add_artist(q1)
 
-            fig.text(-.25, .6, r'$\xi^*$', color=acolor, **font_kw, transform=axd['V*'].transAxes)
-        elif 'V' in label:
-            qh1 = mpatches.ConnectionPatch(xyA=(.85, .5), coordsA=axd['V'].transAxes, 
-                                              xyB=(42, .74), coordsB=axd['H'].transData, 
-                                              arrowstyle=']-,widthA=2.25,lengthA=.5', 
-                                           mutation_scale=25, lw=5, color=acolor)      
-            fig.add_artist(qh1)
+                q2 = mpatches.ConnectionPatch(xyA=(-.5, .5), coordsA=axd['H'].transAxes, 
+                                            xyB=(xd, yd), coordsB=axd['H'].transData, 
+                                                   mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
+                fig.add_artist(q2)
 
-            qh2 = mpatches.ConnectionPatch(xyA=(.85, .5), coordsA=axd['V'].transAxes, 
-                                              xyB=(44, .74), coordsB=axd['H'].transData, 
-                                               mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
-            fig.add_artist(qh2)
-    
-            fig.text(1.5, .65, r'$\hat{Q}$', color=acolor, **font_kw, transform=axd['V'].transAxes)
+                fig.text(-.39, .6, r'$Q$',color=acolor, **font_kw, transform=axd['H'].transAxes)
+
+
+                xi1 = mpatches.ConnectionPatch(xyA=(-.15, .5), coordsA=axd['V*'].transAxes, 
+                                                  xyB=(.75, .5), coordsB=axd['V'].transAxes, 
+                                                   mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
+                fig.add_artist(xi1)
+
+                fig.text(-.25, .6, r'$\xi^*$', color=acolor, **font_kw, transform=axd['V*'].transAxes)
+            elif 'V' in label:
+                qh1 = mpatches.ConnectionPatch(xyA=(.85, .5), coordsA=axd['V'].transAxes, 
+                                                  xyB=(xd-5, yd+.01), coordsB=axd['H'].transData, 
+                                                  arrowstyle=']-,widthA=2.25,lengthA=.5', 
+                                               mutation_scale=25, lw=5, color=acolor)      
+                fig.add_artist(qh1)
+
+                qh2 = mpatches.ConnectionPatch(xyA=(.85, .5), coordsA=axd['V'].transAxes,
+                                               xyB=(xd, yd), coordsB=axd['H'].transData, 
+                                        mutation_scale=25, arrowstyle='-|>', lw=5, color=acolor)      
+                fig.add_artist(qh2)
+
+                fig.text(1.5, .6, r'$\hat{Q}$', color=acolor, **font_kw, transform=axd['V'].transAxes)
             
         xi2 = mpatches.ConnectionPatch(xyA=(.15, .5), coordsA=axd['S'].transAxes, 
                                           xyB=(.65, .5), coordsB=axd['K'].transAxes, 
@@ -209,12 +216,13 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
             fig.text(.69, .95, r'$\mu$', color=tcolor, **tfont_kw, transform=axd['K'].transAxes)
 
         if 'H' in label:
-            rho = mpatches.ConnectionPatch(xyA=(.425, .625), coordsA=axd['S'].transAxes, 
-                                              xyB=(46, .68), coordsB=axd['H'].transData, 
-                                              arrowstyle='->', mutation_scale=15, 
-                                               lw=2, linestyle='--', color=tcolor) 
-            fig.add_artist(rho)
-            fig.text(.78, .88, r'$\rho$', color=tcolor, **tfont_kw, transform=axd['S'].transAxes)
+            for (xlab, x), (ylab, y), (_, station) in values:
+                rho = mpatches.ConnectionPatch(xyA=(.425, .625), coordsA=axd['S'].transAxes, 
+                                                  xyB=(x-2.5, y-.04), coordsB=axd['H'].transData, 
+                                                  arrowstyle='->', mutation_scale=15, 
+                                                   lw=2, linestyle='--', color=tcolor) 
+                fig.add_artist(rho)
+            fig.text(.92, .92, r'$\rho$', color=tcolor, **tfont_kw, transform=axd['S'].transAxes)
 
         if 'V*' in label:
             for dest in axsubp:
