@@ -36,7 +36,7 @@ mosaic = [['E', 'V', 'V*', 'H'],
 
 def table(axd, data):
     w = h = .25
-    y = -.05
+    y = 0
     for record in data:
         x=.25
         for (c, val) in record:
@@ -49,7 +49,7 @@ def table(axd, data):
             axsub.set_title(c, fontsize=10, rotation=0)
             x+=w
         y+=2.5*w
-
+    
 
 def make_figure(artist=False, section=False, visual=False, continuity=False, data=False, values=None, plot_type='scatter', label=None, fig=None):
     if fig is None:
