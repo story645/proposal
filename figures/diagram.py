@@ -28,6 +28,7 @@ posc='#4A73A8'
 
 station_color = {v: ip.cdict.get(k, None) for k, v in ip.airport_codes.items()}
 
+
 E = ['temp', 'prcp', 'station']
 V = ['x', 'y', 'color']
 grid = [['E', 'V', 'V*', 'H'], 
@@ -36,20 +37,24 @@ grid = [['E', 'V', 'V*', 'H'],
 
 def table(axd, data):
     w = h = .25
-    y = .1
+    y = 0
     for i, record in enumerate(data):
         x=.25
         for (c, val) in record:
-            axsub = axd['E'].inset_axes([x,y,w,h], 
+            wo = w if c in ['temp', 'prcp'] else w*5.25
+            ha = 'center' if c in ['temp', 'prcp'] else 'left'
+            xt = .5 if c in ['temp', 'prcp'] else .015
+            
+            axsub = axd['E'].inset_axes([x,y,wo,h], 
                                 transform=axd['E'].transData)
-            axsub.set(xticks=[], yticks=[])
-            axsub.text(.5, .5, val, 
+            axsub.text(xt, .5, val, 
                         transform=axsub.transAxes, 
-                       ha='center', va='center')
+                       ha=ha, va='center')
+            axsub.set(xticks=[], yticks=[])
             if i == len(data)-1:
                 axsub.set_title(c, fontsize=10, rotation=0)
             x+=w
-        y+=2*w
+        y+=1.5*w
 
 def make_figure(artist=False, section=False, visual=False, continuity=False, data=False, values=None, plot_type='scatter', label=None, fiber=False, fig=None):
     
@@ -101,7 +106,7 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
                 if visual and n == 'V':
                     axsub['x'].axvline(row['prcp'], color=posc, lw=3)
                     axsub['y'].axhline(row['temp'], color=posc, lw=3)
-                    axsub['color'].set_facecolor(station_color[row['station']])
+                    axsub['color'].set_facecolor(ip.cdict[row['station']])
 
 
                 if visual and 'V*' in label:
@@ -117,20 +122,22 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
                     
                             axv['x'].axvline(row['prcp'], color=posc, lw=3)
                             axv['y'].axhline(row['temp'], color=posc, lw=3)
-                            axv['color'].set_facecolor(station_color[row['station']])
+                            axv['color'].set_facecolor(ip.cdict[row['station']])
                     
     for (xlab, x), (ylab, y), (_, station) in values:
-        c = station_color[station]
+        c = ip.cdict[station]
         if plot_type=='scatter':
             axd['H'].scatter(x, y, c=c,
-                             ec='k', s=250, zorder=5, label=station)
-            axd['H'].legend(facecolor='white', markerscale=.5)
+                             ec='k', s=250, zorder=5, 
+                             label=ip.airport_codes[station])
+            axd['H'].legend(facecolor='white', ncol=1, 
+                            loc='upper left', markerscale=.5)
         if visual:
             axd['H'].axvline(x, lw=5, color=posc, alpha=.25)
             axd['H'].axhline(y, lw=5, color=posc, alpha=.25)
-    axd['H'].set(xlim=(25, 100), ylim=(0, 1.25), facecolor='white')
-    axd['H'].set_xlabel(f'{xlab} (°F)', loc='right')
-    axd['H'].set_ylabel(f'{ylab} (in)', loc='top')
+    axd['H'].set(xlim=(-30, 30), ylim=(-2.5, 50), facecolor='white')
+    axd['H'].set_xlabel(f'{xlab} (°C)', loc='right')
+    axd['H'].set_ylabel(f'{ylab} (mm)', loc='top')
     
 
     if continuity or fiber:
