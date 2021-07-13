@@ -26,6 +26,8 @@ tcolor = 'dimgray'
 acolor = 'C4'
 posc='#4A73A8'
 
+tlim = (-30, 30)
+plim = (-2.5, 35)
 station_color = {v: ip.cdict.get(k, None) for k, v in ip.airport_codes.items()}
 
 
@@ -34,6 +36,27 @@ V = ['x', 'y', 'color']
 grid = [['E', 'V', 'V*', 'H'], 
           ['.', 'K', 'S', '.']]
 
+def fake_legend(ax, stations, xo=0, yo=0, w=.35):
+    n = len(stations)
+    spacing =  (n/10)/(n+1)
+    h = spacing*(n+1)
+    y = .975- h + yo
+    yoff = y + spacing
+    x = .025 + xo
+    w = w
+    frame = mpatches.Rectangle((x,y), w, h, ec='lightgray', fc='white', zorder=5, transform=ax.transAxes)
+
+    ax.add_patch(frame)
+    pos = {}
+    ypp = yoff
+    for s in stations[::-1]:
+        ax.scatter(x+.07, ypp, s=50, ec='k', fc=station_color[s], zorder=10,
+                   transform=ax.transAxes)
+        ax.text(x+.13, ypp, s, transform=ax.transAxes, zorder=10, va='center', ha='left', fontsize=10)
+        pos[s] = (x+.07, ypp)
+        ypp+= spacing
+       
+    return pos
 
 def table(axd, data):
     w = h = .25
@@ -130,12 +153,12 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
             axd['H'].scatter(x, y, c=c,
                              ec='k', s=250, zorder=5, 
                              label=ip.airport_codes[station])
-            axd['H'].legend(facecolor='white', ncol=1, 
-                            loc='upper left', markerscale=.5)
+            #axd['H'].legend(facecolor='white', ncol=1, 
+            #                loc='upper left', markerscale=.5)
         if visual:
             axd['H'].axvline(x, lw=5, color=posc, alpha=.25)
             axd['H'].axhline(y, lw=5, color=posc, alpha=.25)
-    axd['H'].set(xlim=(-30, 30), ylim=(-2.5, 50), facecolor='white')
+    axd['H'].set(xlim=tlim, ylim=plim, facecolor='white')
     axd['H'].set_xlabel(f'{xlab} (°C)', loc='right')
     axd['H'].set_ylabel(f'{ylab} (mm)', loc='top')
     
