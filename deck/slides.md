@@ -40,11 +40,11 @@ UML versus a functional signature
 -->
 <!--maybe take uper half of math diagrams w/ greek letters to show new api-->
 
-----
+---
 
 ![screenshot of matplotlib PathCollection ocs https://matplotlib.org/stable/api/collections_api.html?highlight=pathcollection#matplotlib.collections.PathCollection](https://i.imgur.com/wOCv9m7.png)
 
-----
+---
 
 ### What is the proposed API?
 
@@ -76,7 +76,7 @@ UML versus a functional signature
 
 ![3 station rows, the dots are replaced by lines connecting the dots, forming a triangle. The lines are colored with a gradient, reflected in a colorbar labeled ITO at top, JFK in middle, and BRW at bottom](https://i.imgur.com/LzBUK5t.png)
 
----- 
+----
 
 ![triangle image with arrows going from each corner to a corresponding row](https://i.imgur.com/qUL5rAR.png)
 
@@ -101,9 +101,9 @@ UML versus a functional signature
 
 ![3 tables + arrows from above, plus new line plot of centimeter precip data - is much shorter cause on same scale as mm. Arrow from bottom table to bottom graph, and blue arrow from top graph to bottom graph, matching arrow from top table to bottom table. )](https://i.imgur.com/u0CDReu.png)
 
-----
+---
 
-### Multivariate Data
+### Multivariate Multidimensional Data
 <!--space + label or change to histogram, add in all points but keep 3 points, top and right to precip -->
 ![3 rows of station data. Scatter chart temp vs. precip for all station data from Hanuary to july. on top of chart is  a time series plot of precip, to the right is rotated timeseries plot of temperature.](https://i.imgur.com/7pmNJOf.png)
 
@@ -126,7 +126,7 @@ UML versus a functional signature
 ---
 
 ### Takeaways
-<--reframe goals, + overall status-->
+<!--reframe goals, + overall status-->
 * decoupling the data, visual encoding, and plot assembly steps
 * provides easier to code against interface
 * improves reliability, consistency, maintability
