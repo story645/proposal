@@ -6,12 +6,23 @@ slideOptions:
 description: Scipy2021 Maintainers Track Talk
 ---
 
-### What's new in Matplotlib?
+![Matplotlib logo with matplotlib spelled out](https://i.imgur.com/YozjaNz.png)
+
+---
 
 * slides: https://hackmd.io/@story645/scipy2021mpl
 * tag: @story645, @matplotlib
 * Funding thanks to CZI EOSS 1 & 3, supporting me, Thomas Casawell and Michael Grossberg
 * Much support from the matplotlib dev team
+
+---
+
+## Rearchitecture Goals
+* Identify the different types of transformations
+* Formalize the rules of these transformations
+* Implement in a way that respects seperation
+
+<!--why? makes it easier to code against, implement, maintain, correctly write these abstractions, improves consistency in complex cases-->
 
 ---
 
@@ -21,52 +32,59 @@ description: Scipy2021 Maintainers Track Talk
 ---
 
 ### How does Matplotlib do it? 
-![Same flow chart as above, arrows circled in blue. Circle is labeled Artist in same blue](https://i.imgur.com/7G4eCMU.png)
+![Same flow chart as above, arrows circled in blue. Circle is labeled Artist in same blue](https://i.imgur.com/jXWWOxE.png)
 
----
+<!-- mechanism to drop in a color -> visualization of an artist object, 
+values, something that giving shape--produce output, something UML like, 
+UML versus a functional signature 
+-->
+<!--maybe take uper half of math diagrams w/ greek letters to show new api-->
 
-### What does the new architecture do?
-![Same flow chart, no circle](https://i.imgur.com/o6Kspwe.png)
+----
 
----
+![screenshot of matplotlib PathCollection ocs https://matplotlib.org/stable/api/collections_api.html?highlight=pathcollection#matplotlib.collections.PathCollection](https://i.imgur.com/wOCv9m7.png)
 
-### How?
+----
 
-* Identify the different types of transformations
-* Formalize the rules of these transformations
-* Implement functionally to enforce seperation
+### What is the proposed API?
+
+![three columns: first has a table with a temperature value 17.7, precipitation value 27.9, and station name JFK. The second column has a matching table of a vertical line, vertical horizontal, and the bottom box is purple. There are 3 purple arrows, one going from temp to the vertical line, one from prcp to horizontal line, and one from station to the purple box. The third panel shows a horizontal and vertical line and at the intersection is a purple dot. There is a purple arrow from the 2nd panel to the dot, and from the dot to the table in the first panel](https://i.imgur.com/0a2qonD.png)
 
 ---
 
 ### Topology
+
 ![Same flow chart, no circle, arrows 1 to 2 and 2 to 3 are faded out](https://i.imgur.com/bY4ZmTX.png)
 
 ----
+
 ![scatter plot of 3 dots colored purple, green, and gray, labeled JFK, ITO, and BRW respectively](https://i.imgur.com/PXZJJbB.png)
 
 ----
 
-![above scatter on right, on left is 3 disconnected rows. Each row has a temperature and pressure value and a station name](https://i.imgur.com/X8cjQwZ.png)
+![above scatter on right, on left is 3 disconnected rows. Each row has a temperature and pressure value and a station name](https://i.imgur.com/79YGhol.png)
 
 ----
 
-![above scatter + rows, and arrows going from scatter points to the row with the corresponding data](https://i.imgur.com/5EaH4g4.png)
+![above scatter + rows, and arrows going from scatter points to the row with the corresponding data](https://i.imgur.com/FOaWlf9.png)
 
 ----
 
-![same as above but the rows have been shuffled so the arrows have moved while the dots stay in the same place](https://i.imgur.com/ozA1dUe.png)
+![same as above but the rows have been shuffled so the arrows have moved while the dots stay in the same place](https://i.imgur.com/rTCSzyh.png)
 
----
+----
 
-![3 station rows, the dots are replaced by lines connecting the dots, forming a triangle. The lines are colored with a gradient, reflected in a colorbar labeled ITO at top, JFK in middle, and BRW at bottom](https://i.imgur.com/wBPMV43.png)
+![3 station rows, the dots are replaced by lines connecting the dots, forming a triangle. The lines are colored with a gradient, reflected in a colorbar labeled ITO at top, JFK in middle, and BRW at bottom](https://i.imgur.com/LzBUK5t.png)
 
 ---- 
 
-![triangle image with arrows going from each corner to a corresponding row](https://i.imgur.com/UZdPL9U.png)
+![triangle image with arrows going from each corner to a corresponding row](https://i.imgur.com/qUL5rAR.png)
 
 ----
 
-![triangle with arrows to rows. there is also an arrow from the middle of a triangle leg going to a row where each value is a ?. The ? row is between two rows of station information](https://i.imgur.com/DRoyr2W.png)
+![triangle with arrows to rows. there is also an arrow from the middle of a triangle leg going to a row where each value is a ?. The ? row is between two rows of station information](https://i.imgur.com/i0M0N24.png)
+
+<!--make clearer that is backed by topology-->
 
 ---
 
@@ -76,11 +94,8 @@ description: Scipy2021 Maintainers Track Talk
 
 ----
 
+<!--show that the table is continous, say words about it, have order-->
 ![table of 5 values, line plot of precipitation, purple arrow going from table to values](https://i.imgur.com/1yLZHaG.png)
-
-----
-
-![same as above, plus new table underneath the first. values in second table 10th of first (mm to cm), and blue arrow from top table to bottom table ](https://i.imgur.com/YONsiLr.png)
 
 ----
 
@@ -89,44 +104,48 @@ description: Scipy2021 Maintainers Track Talk
 ----
 
 ### Multivariate Data
-
-![above rows + scatter chart. Scatter also has bar chart of x values on top, horizontal bar chart of y values on right, each scatter point corresponds to one vertical and one horizontal bar chart.](https://i.imgur.com/VOhQF78.png)
-
-----
-![rows, scatter, bars image with arrows going from ITO bars, point and legend element to ITO row](https://i.imgur.com/BPqhnno.png)
+<!--space + label or change to histogram, add in all points but keep 3 points, top and right to precip -->
+![3 rows of station data. Scatter chart temp vs. precip for all station data from Hanuary to july. on top of chart is  a time series plot of precip, to the right is rotated timeseries plot of temperature.](https://i.imgur.com/7pmNJOf.png)
 
 ----
-![rows, scatter, bars image with arrows going from JFK bars, point and legend element to JFK row](https://i.imgur.com/ERXKGy7.png)
+
+![4 arrows going from corresponding point in scatter, legend, and line charts to ITO row](https://i.imgur.com/GeOUzOW.png)
 
 ----
-![rows, scatter, bars image with arrows going from JFK bars, point and legend element to BRW row](https://i.imgur.com/BDCrQNr.png)
+
+![4 arrows going from corresponding point in scatter, legend, and line charts to JFK row](https://i.imgur.com/EQ5UR9F.png)
 
 ----
-![combination of all figures with arrows from all elements in figure to corresponding rows](https://i.imgur.com/r0nUQsw.png)
+
+![4 arrows going from corresponding point in scatter, legend, and line charts to BRW row](https://i.imgur.com/msMF3Wv.png)
+
+----
+
+![combination of all figures with arrows from points, lines, and legend to corresponding rows, 12 in all](https://i.imgur.com/bNLx5jH.png)
 
 ---
 
-### Nested Toplogies
-
-![5 rows with date and precipitation columns. Dates are  at jan 16, feb 1, may 28, may 30, and july 3 2021. Arrows from the five scatter points at date back to the correspondinf rows. Plot is of date on x axis and precipitation on y axis, at JFK airport](https://i.imgur.com/96s2ljI.png)
-
-----
-
-![5 dot image + line plot of precipitation during same time period as the dots, arrows go from parts of the line in between dots to in between rows](https://i.imgur.com/2RkFR2b.png)
+### Takeaways
+<--reframe goals, + overall status-->
+* decoupling the data, visual encoding, and plot assembly steps
+* provides easier to code against interface
+* improves reliability, consistency, maintability
+* conceptual prototype: https://github.com/story645/proposal 
 
 ---
 
 ### Thank you!!
 
 * contact: @story645, haizenman@gmail.com
-* research: https://github.com/story645/proposal 
 * discuss: https://discourse.matplotlib.org/
-
+* gitter: https://gitter.im/matplotlib/matplotlib
 
 ---
+
 ## Appendix
 
 ---
+
 ### Functional API model
 ```python
 def fiberbundle(section): 
@@ -142,6 +161,7 @@ def fiberbundle(section):
 ```
 
 ----
+
 ```python
 @dataclass
 class Section:
@@ -157,6 +177,7 @@ class Section:
         assert self.section.dtypes.to_dict() == self.F
         assert isinstance(self.section.index, self.K)
 ````
+
 ----
 
 ```python
@@ -167,7 +188,9 @@ df = pd.DataFrame(data)
 
 fruit.fiberbundle(fruit.Section(df))(None)('juice')()
 ```
+
 ---
+
 ```python
 nus = {'position': lambda x : x, 
        'length' : position.Nominal({'apple': 0, 'orange': 2, 'lemon': 4, 'lime': 6}),
@@ -180,6 +203,7 @@ nus = {'position': lambda x : x,
 ```
 
 ---
+
 ```python
 class BarArtist(martist.Artist):
     #view is fruit.fiberbundle
@@ -219,23 +243,26 @@ class BarArtist(martist.Artist):
 ![](https://i.imgur.com/5xx5IFu.png)
 
 ----
+
 ![](https://i.imgur.com/R7xTsFA.png)
 
 ----
+
 ![](https://i.imgur.com/aYyAr3t.png)
 
 ----
+
 ![](https://i.imgur.com/w5emg7E.png)
 
 ----
+
 ![](https://i.imgur.com/njNi3OH.png)
 
 ----
+
 ![](https://i.imgur.com/RPtec2k.png)
 
 ----
+
 ![](https://i.imgur.com/FlSNRvg.png)
-
-
-
 
