@@ -3,6 +3,15 @@ set
 - elements are members of a set (grimaldi)
 - order has no significance (wolfram)
 - repetition (multiplicity) may or may not be ignored (wolfram)
+    - sets w/ repetition are bags and/or multisets
+
+poset (Grimaldi)
+- set w/ partial ordering
+- partial ordering defined by relation R that is (D7.6)
+    - reflexive:  x \in A, (x,x) in R (D7.2)
+    - transitive: x,y,z \in A, if (x,y), (y,z) \in R then (x,z) in R (D7.4)
+    - antisymmetric: a,b in A, (a,b), (b,a) \in R iff a=b (D7.5)
+- notation: (a,b) \in R <=> aRb
 
 operator (mif)
 - a function that combines members of a set
@@ -11,24 +20,36 @@ operator (mif)
     - input maps to 1 output
 - * <- generic symbol for operations
 
-group (mif)
+group (mif)(grimaldi: D16.1)
 - set  X + closed operator *
 - identity: e, a \in X s.t. e*a = a
 - inverses: a,b \in X s.t. a*b = e
-- associative: a,b, c \in X s.t. (a*b)*c = a*(b*c) 
+- associative: a,b, c \in X s.t. a*(b*c) = (a*b)*c 
 - closed: a, b, a*b \in X
-- abelian: a*b = b*a (commutativity)
+- abelian: a*b = b*a (commutativity) 
+- theorems: (T16.1)
+    1. identity is unique
+    2. inverse of each element is unique
+    3. left cancellation: a, b, c \in G, ab = ac then b=c
+    4. right cancellation: a, b, c \in G, ba = ca, then b=c
+
+
+category
+- notation
+    - fx <=> f(x)
+
+-
+
 
 monoid
 - group w/o inverses
+- category theory: object M w/ two morphisms:
+    - multiplication: $\mu: M \bigotimes M \rightarrow M$ 
+        - domain: product category
+    - unit: $nu: I \rightarrow M$
 
-
-symmetry
--
     - 
-(2) Category
-(3) Monoid
-
+(2) 
 
 
 (5) Action
