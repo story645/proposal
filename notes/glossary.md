@@ -33,6 +33,27 @@ group (mif)(grimaldi: D16.1)
     3. left cancellation: a, b, c \in G, ab = ac then b=c
     4. right cancellation: a, b, c \in G, ba = ca, then b=c
 
+function types:
+![](figures\function-mapping.png)
+https://www.mathsisfun.com/sets/injective-surjective-bijective.html
+- functions: (grimaldi: D5.3)
+    - $f: A \rightarrow B$ is a relation in which every element of A appears exactly once as the first component -> (function must be deterministic, each input has one output)
+    - image: $(a,b) \in f$, 
+        - b is image under a f
+        - a is preimage of b under f 
+- one-to-one/injective: (grimaldi: D5.5)
+    - b is the image of at most one a, for all $a1, a2 \in A$, f(a1) = f(a2), a1=a2
+- onto/surjective: (grimaldi: D5.9)
+    - f(A) = B, for $b \in B$ at least one $a \in A$ s.t. f(a)=b
+
+- morphisms: (Grimaldi) 
+    - given (G, $\circ$), (H,*), $f: G \rightarrow H$
+    - homomorphism: f is group homomorphism (D16.4)
+        - a,b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
+    - isomorphism: 
+        - f is a a one-to-one (injective) and onto (surjective) homomorphism
+action: 
+
 
 category
 - notation
