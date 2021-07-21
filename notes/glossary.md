@@ -56,14 +56,35 @@ function types:
 ![](figures\function-mapping.png)
 https://www.mathsisfun.com/sets/injective-surjective-bijective.html
 - functions: (grimaldi: D5.3)
-    - $f: A \rightarrow B$ is a relation in which every element of A appears exactly once as the first component -> (function must be deterministic, each input has one output)
-    - image: $(a,b) \in f$, 
-        - b is image under a f
-        - a is preimage of b under f 
+    - $f: X \rightarrow Y$ is a relation in which every element of A appears exactly once as the first component -> (function must be deterministic, each input has one output)
+    - image: $(x,y) \in f$, 
+        - y is image of x under f
+        - x is preimage of y
+* domain - input set X
+* codomain - set of possible outputs Y
+* range - set of elements $y \in Y$ that $f(x), x \in X$ maps to
+* preimage/inverse: $f^{-1}$- set of elements $x \in X$ that are mapped into a given subset of $y in Y$,
+
+* general:  (grimaldi: D5.3)
+    - many to one, range <= codomain
 - one-to-one/injective: (grimaldi: D5.5)
-    - b is the image of at most one a, for all $a1, a2 \in A$, f(a1) = f(a2), a1=a2
+    - range <= codomain
+    - y is the image of at most one x, for all $x1, x2 \in X$, f(x1) = f(x2), x1=x2
 - onto/surjective: (grimaldi: D5.9)
-    - f(A) = B, for $b \in B$ at least one $a \in A$ s.t. f(a)=b
+    - range == codomain
+    - f(X) = Y, for $y \in Y$ at least one $x \in X$ s.t. f(x)=y
+- bijective: 
+    - range == codomain
+    - one-to-one & onto 
+
+ |      | ~one-to-one | one-to-one
+ |-----| ------------|-----------
+ | ~onto | general     | injective
+| onto | surjective  | bijective 
+
+
+- continuous map: functions between topological spaces (wolfram)
+    - $F: X \rightarrow Y$ is continous iff the preimage of any open set is open
 
 
 homomorphism: (Grimaldi) 
@@ -82,6 +103,8 @@ category
     - category of all groups
         - X, Y, Z - groups
         - f, g, h - homomorphisms (homomorphic functions)
+
+
 
 monoid (S+M, pg. 2)
 - group w/o inverses (semi group w/ identity)
