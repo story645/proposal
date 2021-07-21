@@ -5,13 +5,17 @@ set
 - repetition (multiplicity) may or may not be ignored (wolfram)
     - sets w/ repetition are bags and/or multisets
 
-poset (Grimaldi)
-- set w/ partial ordering
-- partial ordering defined by relation R that is (D7.6)
-    - reflexive:  x \in A, (x,x) in R (D7.2)
-    - transitive: x,y,z \in A, if (x,y), (y,z) \in R then (x,z) in R (D7.4)
-    - antisymmetric: a,b in A, (a,b), (b,a) \in R iff a=b (D7.5)
-- notation: (a,b) \in R <=> aRb
+relations
+- 
+- notation: $(a,b) \in \mathscr{R}$ <=> $a\mathscr{R}b$
+- reflexive:  $x \in A, (x,x) \in \mathscr{R}$ (D7.2)
+- symmetric: $x,y \in A, (x,y), (y,x) \in \mathscr{R}$ (D7.3)
+- transitive: $x,y,z \in A, if\; (x,y), (y,z) \in \mathscr{R} \;then\; (x,z) \in \mathscr{R}$ (D7.4)
+- antisymmetric: $a,b \in A, (a,b), (b,a) \in \mathscr{R} \;iff\; a=b$ (D7.5)
+- equivalence relation on A is reflexive, symmetric, transitive
+- poset: set w/ partial ordering 
+    - defined by R that is reflexive, transitive, antisymmetric(D7.6)
+ - equality relation: equivalence + partial order
 
 operator (mif)
 - a function that combines members of a set
@@ -22,16 +26,23 @@ operator (mif)
 
 group (mif)(grimaldi: D16.1)
 - set  X + closed operator *
-- identity: e, a \in X s.t. e*a = a
-- inverses: a,b \in X s.t. a*b = e
-- associative: a,b, c \in X s.t. a*(b*c) = (a*b)*c 
-- closed: a, b, a*b \in X
-- abelian: a*b = b*a (commutativity) 
+- identity: $e, a \in X \;s.t.\; e*a = a$
+- inverses: $a,b \in X \;s.t.\; a*b = e$
+- associative: $a,b, c \in X \;s.t.\; a*(b*c) = (a*b)*c$
+- closed: $a, b, a*b \in X $
+- abelian: $a*b = b*a$ (commutativity) 
 - theorems: (T16.1)
     1. identity is unique
     2. inverse of each element is unique
-    3. left cancellation: a, b, c \in G, ab = ac then b=c
-    4. right cancellation: a, b, c \in G, ba = ca, then b=c
+    3. left cancellation: $a, b, c \in G, ab = ac \;then\; b=c$
+    4. right cancellation: $a, b, c \in G, ba = ca, \;then\; b=c$
+
+group action 
+- $\phi: G \times X \rightarrow X$
+    - identity: $\phi (e, x) = x$, $x \in X, e\in G$
+    - $\phi(g, \phi(h, x)) = \phi(g*h, x)$, $g, h \in G$, $x \in X$
+- Example: (16.10)
+    - $a, b \in S$, $a\mathscr{R}b$ on S exists if there is an action $g \in G$ s.t. $\phi(g, a) = b$
 
 function types:
 ![](figures\function-mapping.png)
@@ -52,7 +63,7 @@ https://www.mathsisfun.com/sets/injective-surjective-bijective.html
         - a,b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
     - isomorphism: 
         - f is a a one-to-one (injective) and onto (surjective) homomorphism
-action: 
+
 
 
 category
