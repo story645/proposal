@@ -1,5 +1,4 @@
 # matplotlib 2021 maintainer talk
-
 * need a real camera/check for camera angles, but microphone was clear
 * intro: losing track of my intro, who I am and what I do
 * thanks: too many uhs
@@ -7,9 +6,12 @@
 * flow chart slides: can't see the slides in my video & in the talk I'm not really referencing the slides for that reason 
     * refer more closesly to the slides
     * add a scatter/plot/image update slide -> this can more naturally feed into a slide on topology [table, function, image slide] -> which can feed into topology slides
+        - instead pass in same array and got line & image <- b/c these plots have different notions of topology 
+        - scatter will explode 
 * 🤦 I introduced that the scatter is an artist after I talked about scatters and line
 * introduced the problem w/ the objects first (data) rather than the transforms 
 * took 5 minutes to get into topology :frown: slides
+    - call it continuity preserving 
 * use these and that -> USE PROPER NOUNS!
 * say topological constraint before saying if something has satisified it
 * equivariants slides needs to be broken out -> data, properties of data, graphic <-slide and me need to lead w/ the properties> 
@@ -39,14 +41,12 @@ time
 - 12:32: can just make sea of arrows slide
 - 12:33: kind of blazed through the takeaways slide
 
-# where I wasn't clear
+### where I wasn't clear
 * livetweet: https://twitter.com/nicholdav/status/1416075373717164032
     * flow chart is idealized viz library, not current mpl
     * graphs vs. graphics -> maybe an informal notation slide
     * need to better delineate equivariance and topology -> property slide will probably help here
     * marked up data wrapper, not 1D structure
-
-
 
 
 
