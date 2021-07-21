@@ -6,7 +6,6 @@ set
     - sets w/ repetition are bags and/or multisets
 
 relations
-- 
 - notation: $(a,b) \in \mathscr{R}$ <=> $a\mathscr{R}b$
 - reflexive:  $x \in A, (x,x) \in \mathscr{R}$ (D7.2)
 - symmetric: $x,y \in A, (x,y), (y,x) \in \mathscr{R}$ (D7.3)
@@ -30,12 +29,21 @@ group (mif)(grimaldi: D16.1)
 - inverses: $a,b \in X \;s.t.\; a*b = e$
 - associative: $a,b, c \in X \;s.t.\; a*(b*c) = (a*b)*c$
 - closed: $a, b, a*b \in X $
-- abelian: $a*b = b*a$ (commutativity) 
+- commutativity: $a*b = b*a$  
 - theorems: (T16.1)
     1. identity is unique
     2. inverse of each element is unique
     3. left cancellation: $a, b, c \in G, ab = ac \;then\; b=c$
     4. right cancellation: $a, b, c \in G, ba = ca, \;then\; b=c$
+
+
+types of groups:
+* group $\subset$ monoid $\subset$ semigroups $\subset$ magma 
+* magma: set + closed operation
+* semigroup: magma + associative operation
+* monoid group: semigroup + identity
+* group: monoid + inverse
+* abelian group: group + commutativity
 
 group action 
 - $\phi: G \times X \rightarrow X$
@@ -57,31 +65,28 @@ https://www.mathsisfun.com/sets/injective-surjective-bijective.html
 - onto/surjective: (grimaldi: D5.9)
     - f(A) = B, for $b \in B$ at least one $a \in A$ s.t. f(a)=b
 
-- morphisms: (Grimaldi) 
-    - given (G, $\circ$), (H,*), $f: G \rightarrow H$
-    - homomorphism: f is group homomorphism (D16.4)
-        - a,b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
-    - isomorphism: 
-        - f is a a one-to-one (injective) and onto (surjective) homomorphism
 
-
+homomorphism: (Grimaldi) 
+- given (G, $\circ$), (H,*), $f: G \rightarrow H$
+- f is a group homomorphism (D16.4)
+    -  a, b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
+- isomorphism: one-to-one (injective) and onto (surjective) homomorphism
 
 category
 - notation
     - fx <=> f(x)
+    - $g \circ f: X\rightarrow Z$, $x \mapsto g(f(x))$
+    - category of all topological spaces:
+        - X, Y,Z - topological spaces
+        - f, g, h - continuous maps
+    - category of all groups
+        - X, Y, Z - groups
+        - f, g, h - homomorphisms (homomorphic functions)
 
+monoid (S+M, pg. 2)
+- group w/o inverses (semi group w/ identity)
+- category theory: 
 -
-
-
-monoid
-- group w/o inverses
-- category theory: object M w/ two morphisms:
-    - multiplication: $\mu: M \bigotimes M \rightarrow M$ 
-        - domain: product category
-    - unit: $nu: I \rightarrow M$
-
-    - 
-(2) 
 
 
 (5) Action
