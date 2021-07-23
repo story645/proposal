@@ -92,7 +92,7 @@ homomorphism: (Grimaldi)
 - f is a group homomorphism (D16.4)
     -  a, b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
 - isomorphism: one-to-one (injective) and onto (surjective) homomorphism
-- category: function preserving composits & units (units:
+- category: function preserving composites & units 
 
 category
 - notation
@@ -104,7 +104,8 @@ category
     - category of all groups
         - X, Y, Z - groups
         - f, g, h - homomorphisms (homomorphic functions)
-
+- units:
+- composites:
 
 
 monoid (S+M, pg. 2)
