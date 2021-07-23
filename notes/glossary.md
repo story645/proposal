@@ -23,13 +23,37 @@ operator (mif)
     - input maps to 1 output
 - * <- generic symbol for operations
 
+rings: 
+- set R + two binary operators $(+, \cdot)$ if for all $a,b, c \in X$ (D14.1)
+    - commutative +: $a + b = b + a$
+    - associative +: $a + (b + c) = (a + b) + c$
+    - identity +: exists $z \in R$ s.t $a + z = a$
+    - inverse +: exists $b \in R$ s.t. $a + b = z$ 
+    - associative .: $a\cdot (b\cdot c) = (a\cdot b)\cdot c$
+    - distributive $\cdot$ over + : 
+        - $a \cdot (b + c) = a\cdot b + a \cdot c$
+        - $(b + c) \cdot a = b\cdot a + c \cdot a$
+- commutative ring: $a\cdot b=b \cdot a$ for $a, b \in R$
+- nonzero ring: (D14.2) (z is the additive identity)
+    - no proper divisors of zero if $a, b \in R, a \cdot b=z$ then $a=z $or b=z$
+- ring w/ unity:(D14.2) 
+    - multiplicative identity: (z is additive identity)
+        - unity $u$: $u \in R$ s.t. $u \neq z$ and $au=ua=a, a \in X$
+    - multiplicative inverse: (D14.3) 
+        - $a, b \in X$ s.t. $a \cdot b = b \cdot a = u$
+        - b is called a multiplicative inverse of a, a & b are units of R
+        - unit is any element w/ a multiplicative inverse in R (wiki: Unit(ring theory))
+- integral domain ring: nonzero commutative ring w/ unit (D14.4)
+- field: commutative ring w/ unity where every nonzero element is a unit (D14.4) 
+
 group (mif)(grimaldi: D16.1)
-- set  X + closed operator *
-- identity: $e, a \in X \;s.t.\; e*a = a$
-- inverses: $a,b \in X \;s.t.\; a*b = e$
-- associative: $a,b, c \in X \;s.t.\; a*(b*c) = (a*b)*c$
-- closed: $a, b, a*b \in X $
-- commutativity: $a*b = b*a$  
+- set  X + closed operator * that satisfies
+    - identity: $e, a \in X \;s.t.\; e*a = a$
+    - inverses: $a,b \in X \;s.t.\; a*b = e$
+    - associative: $a,b, c \in X \;s.t.\; a*(b*c) = (a*b)*c$
+    - closed: $a, b, a*b \in X $
+commutative (abelian): $a*b = b*a$
+
 - theorems: (T16.1)
     1. identity is unique
     2. inverse of each element is unique
