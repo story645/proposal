@@ -60,5 +60,38 @@ p2:
 __revision__  pull this paragraph up to the top of the intro as part of the framing for the problem we're trying to solve, break up heer/core data structure - ggplot, imagej, networkx, into one short paragraph, muller/algorithm & continuity - - d3, matplotlib, vtk, into another  - basically what do these libraries have in common? what are the rules they need to follow? Related work gets strictly focused on continuity+equivariance as the previous work on identifying these constraints 
 
 ### S3: TEAM
+* 96-notion of an artist A as a map 
+* 98-101: more roadmapping
+__revision__ needs context/definition/why we're calling this an artist. This dives straight into math. 
+#### 3.1 Data Bundle
+* 103-107: drop straight from butler (who hasn't really been introduced) to fiber bundles (which also haven't really been introduced)
+* 108-110: locally trivial
+__revision__ introduce concepts of Butler & bundles in related work, leave this just for the mathematical definition, maybe move locally trivial to a footnote w/ a why it's useful to know this
+
+#### 3.1.1
+* 112-114: this gives why, but first needs an explanation of what is a fiber
+* 114-127: soup about U and sigma and T
+* 129-132:  example that misses the why this is helpful
+
+__revision__ most of 114-127 should be an appendix, but that's really just Spivak's paper, so pare down to something like 
+> Spivak provides notation for describing the set of all possible values $U_{\sigma}$ of a single column with name $c$ and type $T$. This set of values is the fiber "F"
+$F = U_{\sigma}(c)$.  When data is multivariate, the fiber F is the cartesian product of each columns fiber space (5)
+
+change to dot, line, image, maybe network figures w/ different fibers, push explanation down 'til is all worked through?
+### 3.1.2
+* 134-139: structures on set into monoids
+* 137-139: kinda clunky why monoids
+* 140-147: textbook def of monoids and groups
+* 149-154: foreshadowing invariance & weak tie to functional
+
+__revision__ switch to categories? use monoids as example of why that flexibility is helpful, keep the math very small (Scheidigger doesn't even formally define & they're basis of his group)
+
+### 3.1.3
+15
+
+
+
+
+
 
 
