@@ -14,6 +14,8 @@
         * $\exists b\ in A \text{ s.t. } \forall a \in A: a*b=b*a=e$ 
     * commutativity:
          $\forall a,b \in A,  (a*b) = (b*a)$
+
+* group $\subset$ monoid $\subset$ semigroups $\subset$ magma 
 * magma
     * set + closed operation
 * semigroup

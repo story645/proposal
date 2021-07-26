@@ -5,6 +5,39 @@ set
 - repetition (multiplicity) may or may not be ignored (wolfram)
     - sets w/ repetition are bags and/or multisets
 
+function types:
+![](figures\function-mapping.png)
+https://www.mathsisfun.com/sets/injective-surjective-bijective.html
+- functions: (grimaldi: D5.3)
+    - $f: X \rightarrow Y$ is a relation in which every element of A appears exactly once as the first component -> (function must be deterministic, each input has one output)
+    - image: $(x,y) \in f$, 
+        - y is image of x under f
+        - x is preimage of y
+* domain - input set X
+* codomain - set of possible outputs Y
+* range - set of elements $y \in Y$ that $f(x), x \in X$ maps to
+* preimage/inverse: $f^{-1}$- set of elements $x \in X$ that are mapped into a given subset of $y in Y$,
+
+* general:  (grimaldi: D5.3)
+    - many to one, range <= codomain
+- one-to-one/injective: (grimaldi: D5.5)
+    - range <= codomain
+    - y is the image of at most one x, for all $x1, x2 \in X$, f(x1) = f(x2), x1=x2
+- onto/surjective: (grimaldi: D5.9)
+    - range == codomain
+    - f(X) = Y, for $y \in Y$ at least one $x \in X$ s.t. f(x)=y
+- bijective: 
+    - range == codomain
+    - one-to-one & onto 
+
+ |      | ~one-to-one | one-to-one
+ |-----| ------------|-----------
+ | ~onto | general     | injective
+| onto | surjective  | bijective 
+
+- continuous map: functions between topological spaces (wolfram)
+    - $F: X \rightarrow Y$ is continous iff the preimage of any open set is open
+
 relations
 - notation: $(a,b) \in \mathscr{R}$ <=> $a\mathscr{R}b$
 - reflexive:  $x \in A, (x,x) \in \mathscr{R}$ (D7.2)
@@ -73,73 +106,10 @@ group action
 - $\phi: G \times X \rightarrow X$
     - identity: $\phi (e, x) = x$, $x \in X, e\in G$
     - $\phi(g, \phi(h, x)) = \phi(g*h, x)$, $g, h \in G$, $x \in X$
-- Example: (16.10)
+- Example: (E16.10)
     - $a, b \in S$, $a\mathscr{R}b$ on S exists if there is an action $g \in G$ s.t. $\phi(g, a) = b$
 
-function types:
-![](figures\function-mapping.png)
-https://www.mathsisfun.com/sets/injective-surjective-bijective.html
-- functions: (grimaldi: D5.3)
-    - $f: X \rightarrow Y$ is a relation in which every element of A appears exactly once as the first component -> (function must be deterministic, each input has one output)
-    - image: $(x,y) \in f$, 
-        - y is image of x under f
-        - x is preimage of y
-* domain - input set X
-* codomain - set of possible outputs Y
-* range - set of elements $y \in Y$ that $f(x), x \in X$ maps to
-* preimage/inverse: $f^{-1}$- set of elements $x \in X$ that are mapped into a given subset of $y in Y$,
 
-* general:  (grimaldi: D5.3)
-    - many to one, range <= codomain
-- one-to-one/injective: (grimaldi: D5.5)
-    - range <= codomain
-    - y is the image of at most one x, for all $x1, x2 \in X$, f(x1) = f(x2), x1=x2
-- onto/surjective: (grimaldi: D5.9)
-    - range == codomain
-    - f(X) = Y, for $y \in Y$ at least one $x \in X$ s.t. f(x)=y
-- bijective: 
-    - range == codomain
-    - one-to-one & onto 
-
- |      | ~one-to-one | one-to-one
- |-----| ------------|-----------
- | ~onto | general     | injective
-| onto | surjective  | bijective 
-
-
-- continuous map: functions between topological spaces (wolfram)
-    - $F: X \rightarrow Y$ is continous iff the preimage of any open set is open
-
-
-homomorphism: (Grimaldi) 
-- given (G, $\circ$), (H,*), $f: G \rightarrow H$
-- f is a group homomorphism (D16.4)
-    -  a, b $\in$ G, f(a $\circ$ b) = f(a) * f(b) 
-- isomorphism: one-to-one (injective) and onto (surjective) homomorphism
-- category: function preserving composites & units 
-
-category
-- notation
-    - fx <=> f(x)
-    - $g \circ f: X\rightarrow Z$, $x \mapsto g(f(x))$
-    - category of all topological spaces:
-        - X, Y,Z - topological spaces
-        - f, g, h - continuous maps
-    - category of all groups
-        - X, Y, Z - groups
-        - f, g, h - homomorphisms (homomorphic functions)
-- units:
-- composites:
-
-
-monoid (S+M, pg. 2)
-- group w/o inverses (semi group w/ identity)
-- category theory: 
--
-
-
-(5) Action
-(6) Functor
 (7) Topology
 (8) Open set
 (9) Open cover
@@ -163,3 +133,64 @@ the formal definition
 (26) CW complex
 (27) contractable (topology)
 (28) presheaf
+
+metagraph
+- objects a, b, c
+- arrows/morphisms: f, g, h
+- operations: assign to each arrow and object
+    - domain: a = dom f
+    - codomain: b = cod f
+    - $f: a \rightarrow b$ (domain to codomain)
+
+metacategory: metagraph + 
+- identity (operation): each object $a$ is assigned an arrow $id_a=1_a:a\rightarrow a$
+- composition (operation): each pair of arrows $<g,f>$ with dom $g$=cod $f$ is assigned an arrow $g\circ f$
+    - $g \circ f$: dom $f \rightarrow$ cod $g$
+    - output of f is input to g
+- associativity (axiom): for $a \xrightarrow{f} b \xrightarrow{g} c \xrightarrow{k}d$
+    - $k\circ(g\circ f) = (k\circ g) \circ f)$ 
+- unit law (axiom): for all arrows $f: a \rightarrow b$ and $g: b\rightarrow c$
+    - $1_b \circ f: f$ and $g \circ 1_b: g$
+    - b\c $\#1 \circ \#2$-output of #2 is input to #1
+
+category
+- notation
+    - fx <=> f(x)
+    - $g \circ f: X\rightarrow Z$, $x \mapsto g(f(x))$
+    - category of all topological spaces:
+        - X, Y,Z - topological spaces
+        - f, g, h - continuous maps
+    - category of all groups
+        - X, Y, Z - groups
+        - f, g, h - homomorphisms (homomorphic functions)
+- units:
+- composites:
+
+
+monoid (S+M, pg. 2)
+- group w/o inverses (semi group w/ identity)
+- category theory: 
+
+
+(5) Action
+(6) Functor
+
+
+homomorphism: (Grimaldi) 
+- f is a ring homomorphism(D14.8)
+    - given $(R, +, \cdot)$ and $(S, \oplus, \odot)$, $f: R \rightarrow S$
+    - for all $a, b \in R$
+        - $f(a + b) = f(a) \oplus f(b)$
+        - $f(a \cdot b) = f(a) \odot (b)$
+    - when f is onto (surjective, S is a homomorphic image of R)
+- f is a group homomorphism (D16.4):
+    - given $(G, \circ)$ and , $(H,*)$, $f: G \rightarrow H$ 
+    - for all $a, b \in G$ , $f(a \circ b) = f(a) * f(b)$ 
+
+- isomorphism: one-to-one (injective) and onto (surjective) homomorphism
+- category: function preserving composites & units 
+
+
+
+
+
