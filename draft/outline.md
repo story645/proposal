@@ -7,7 +7,7 @@ instead structure around benefits or change them:
 4. concurrency
 
 what does this model give in this context?
-
+ - side convo about data visualization is a profunctor
 ### abstract:
 1. what it is: functional model
 2. what it does: language for formalizing constraints
@@ -87,11 +87,21 @@ change to dot, line, image, maybe network figures w/ different fibers, push expl
 __revision__ switch to categories? use monoids as example of why that flexibility is helpful, keep the math very small (Scheidigger doesn't even formally define & they're basis of his group)
 
 ### 3.1.3
-15
+* 156-157: base space defined in terms of Butler, but if you're not firm on him doesn't make any sense
+* 158-166: munzer tie in about keys that goes into a thing about independent & dependent variables
+* 167-168: points back to figure but is a bit "see figure, see"
+* 169-173: math def w/o grounding in why you need to know this
+* 173-175: decomposition doesn't break k - rework as something like 
+    > this allows us to seperate a complex dataset into smaller datasets - for example a time, temp, pres set becomes a time, temp set and a time, pres set - that share continuity. This means that the time, temp in one dataset is at the same point k as the (time, pres) in the other dataset. 
+* 176-181: filler about concrete why K, but can be pulled up into related work
 
+__revision__ pull Munzner up to related work continuity section, maybe omit dependent/independent var discussion, swap out figure to the one w/ all the pieces together, rework this section to just be math now that you know about continuity from related works section
+### 3.1.4
+* 156-195: defines a section
+__revision__ needs a why do you need the math in all the places + maybe some pairing down/move to appendix, might also need a larger rework of 3.1 that goes continuity, fiber, (to match related works), section 
 
-
-
-
-
+### 3.1.5
+* 200-207: mathematical definition of sheafs
+__revision__ move up to continuity section b/c that's where it's most relevant, + animation & stuff bolster the "why do we care?" for continuity, especially if we invert. Sheafs let us do these things, how-b/c they bookkeep 
+## 3.2
 
