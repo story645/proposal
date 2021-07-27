@@ -104,4 +104,19 @@ __revision__ needs a why do you need the math in all the places + maybe some pai
 * 200-207: mathematical definition of sheafs
 __revision__ move up to continuity section b/c that's where it's most relevant, + animation & stuff bolster the "why do we care?" for continuity, especially if we invert. Sheafs let us do these things, how-b/c they bookkeep 
 ## 3.2
+* 209-211: why graphic bundle
+* 211-218: more definition
+* 216-217: is context free unless you already know why triviality means this
+* 219-221: practical benefit but missing the how, so might be worth putting first
+__revision__ pare down to just what they need to know to follow the paper & tell them that's why we're telling them:
+    > Since we propose that the artist (visualization) is a continuity preserving equivariant map from data to graphic, we also model the graphic as the fiber bundle H. 
+        * D for equivariance
+        * S for continuity
+        * rho so there's an actual graphic
+### 3.2
+* 223-224: why
+* 225-226: math def, but homotopy isn't defined so this doesn't mean anything to someone w/o the math background
+* 228 -234: thickening
+* 235-239: querying/interactivity
+__revision__ pull this up into 3.2 instead of seperate subsection, maybe change first figure so it's clearer how the screen fits in/why this is thickened, possibly add a new figure that more fully pulls in the related point on screen (maybe a modified version of my graphics figure?)
 
