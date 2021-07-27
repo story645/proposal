@@ -3,18 +3,6 @@ import pandas as pd
 from matplottoy.data.simplex import FiberBundle
 from matplottoy.encoders import mtypes
 
-class Projection: #sheaf? stalk? presheaf? 
-    def __init__(self, index, handle, fiber): # should be subset K + tau
-        self.index =  index
-        self.handle = handle
-        self.fiber = fiber
-
-    def __call__(self):
-        if self.fiber is None:
-            return pd.Series(index=self.index, dtype=float)
-        return self.handle[self.fiber]
-
-
 # index is like the sheaf, stalk is either the fiber or the values? 
 # check the applied category theory book 
 # index is subset on K
@@ -24,7 +12,8 @@ def fiberbundle(section): #dataframe is section
         might be xi, might be the index/axes subsetting
         index comes from the section/is part of the FB definition 
         """
-        index = section.index# in theory can subselect here on info from the axes
+        index = section.index
+        # in theory can subselect here on info from the axes
         def projection(column_name):
             def values(): #
                 if column_name is None:

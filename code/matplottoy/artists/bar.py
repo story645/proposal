@@ -22,7 +22,7 @@ from matplottoy.encoders import mtypes
 
 
 class BarArtist(martist.Artist):
-    def __init__(self, orientation, aes, position, length, floor, width, facecolor, edgecolor, linewidth, linestyle):
+    def __init__(self, orientation, aes, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
         """
         Parameters
         ----------
@@ -32,34 +32,29 @@ class BarArtist(martist.Artist):
         # position, length,..... pass in callables
         aes: [{'data': data components, 'aes': visual components}]
             dictionary specifying which columns of the data are bound to which columns?
-                # maybe bake this into the tau instead
-        
+                # maybe bake this into the tau instead   
         orientation: str
             vertical: bars aligned along x axis, heights on y
             horizontal: bars aligned along y axis, heights on x
         **kwargs:
             kwargs passed through 
         """
-
         self.orientation = orientation
-        # the nu functions are attributes of a fully specified artist
-        
         self.aes = aes.copy()
-        # maybe this should just be verical/horizontal wrapper functions/Artists  
+        # maybe this should just be wrapper functions 
         if self.orientation in {'vertical', 'v'}:
             self.aes.update({new_key: self.aes.pop(old_key) 
-                        for old_key, new_key in 
-                        {'position':'x0', 'width':'x1', 
-                         'floor':'y0', 'length':'y1'}})
+                            for old_key, new_key in 
+                            {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}})
             self._x0 = position
             self._x1 = width
             self._y0 = floor
             self._y1 = length
-        elif self.orientation in {'horizontal', 'h'}:
+            
+        if self.orientation in {'horizontal', 'h'}:
             self.aes.update({new_key: self.aes.pop(old_key) 
-                        for old_key, new_key in 
-                        {'floor':'x0', 'length':'x1',
-                         'position':'y1', 'width':'y1'}})
+                            for old_key, new_key in 
+                            {'floor':'x0', 'length':'x1', 'position':'y1', 'width':'y1'}})
             self._x0 = floor
             self._x1 = length
             self._y0 = position
@@ -69,20 +64,25 @@ class BarArtist(martist.Artist):
         self._edgecolors = edgecolors
         self._linewidths = linewidths
         self._linestyles = linestyles
-        
         super().__init__()
         
-    
     def __call__(data):
         #BarArtist(data.view())
-        # do we want to freeze the data at call time or draw time? 
-        self.view = data.view(self.axes) 
-        #place where data is subsetted/prepped - this is setting up the sheaf rules, not pulling the data over yet, that's a seperate get? method
+        self.data = self.schema.view(self.axes) 
+        #place where data materializes, rename as next
         #rewrite the view object as a generator? 
         #pass info about axes -> that's where do subsampling into data
-        #can't be here? needs the axes -> actually can also happen in 
-        # this allows for Artist(Data) where A = q\circ nu & xi
-              #current limits, downsampling, etc ()
+        #can't be here? needs the axes -> actually can also happen in draw...
+        return self
+
+    #maybe pull this out so it's reusable (make it purely functional):
+    @staticmethod
+    def make_bars(xval, xoff, yval, yoff):
+        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+        
+    def draw(self, renderer,  *args, **kwargs): #actually the factory
+      #current limits, downsampling, etc ()
         # calling xi to get range, passing range to them
         # from limits on axes/scales, resample
         # how to filter to an xrange is dstructure depenedent
@@ -96,44 +96,14 @@ class BarArtist(martist.Artist):
 
         #k-based indexing on rows
         # nu needs to be applied at draw time so mu can be dynamically updated on draw
-        return self
 
-    #maybe pull this out so it's reusable (make it purely functional):
-    @staticmethod
-    def make_bars(xval, xoff, yval, yoff):
-        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        
-    #this is to debug encodings in V seperate from rendering, 
-    # is also what gets realized - this can also be the callable....
-    def assemble(self):
-        #do promotion in the get 
-        paths = [mpath.Path([(x0, y0), (x0, y0+y1), 
-                             (x0+x1, y0+y1), (x0+x1, y0)], closed=True)   
-                 for (x0, x1, y0, y1) 
-                 in zip (self._x0(self.view.get(self.aes['x0'])),
-                         self._x1(self.view.get(self.aes['x1'])), 
-                         self._y0(self.view.get(self.aes['y0'])), 
-                         self._y1(self.view.get(self.aes['y1'])))]
-            
-        facecolors = self._edgecolor(self.view.get(self.aes['facecolor']))
-        edgecolors = self._edgecolor(self.view.get(self.aes['edgecolor']))
-        linewidths = self._linewidth(self.view.get(self.aes['linewidth']))
-        linestyles = self._linestyle(self.view.get(self.aes['linestyle']))
-        
-        transforms = np.repeat(mtransforms.IdentityTransform(),   self.view.N)
-        offsets = np.zeros(self.view.N)
-        offsetTrans = np.repeat(mtransforms.IdentityTransform(), self.view.N)
-        antialiaseds = np.repeat(True, self.view.N)
-        urls = np.repeat(True, self.view.N)
-        offset_position = 'screen'
-        # this validates that nu outputs the correct types
-        return DrawPathCollection(paths, transforms, offsets, facecolors, edgecolors, linewidths, linestyles, antialiaseds, urls, offset_position)
-        
-    def draw(self, renderer,  *args, **kwargs): #actually 
-        spec = self.assemble() # in assemble is where nu \circ tau, and assembled into graphical design
-        #gc = renderer.new_gc()
-        #renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
+        encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
+                   for p.name in fields(BarV) if p.name in self.encodings})
+
+        graphic = None
+
+        gc = renderer.new_gc()
+        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
         #super().draw(renderer,  *args, **kwargs)
 
 

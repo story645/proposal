@@ -7,8 +7,8 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 from matplotlib import rcParams
 
-import themepy
-theme = themepy.Theme('paper')
+#import themepy
+#theme = themepy.Theme('paper')
 
 import intro_plots as ip
 
@@ -58,9 +58,39 @@ def fake_legend(ax, stations, xo=0, yo=0, w=.35):
        
     return pos
 
-def table(axd, data):
-    w = h = .25
+def table_dataframe(ax, df):
+    h = .15
     y = 0
+    yboxes5 = [y+h/2]
+    for k, (j, row) in enumerate(df.sort_values(by='date', ascending=False).iterrows()):
+        x = 0
+        wo = .3
+        axdate = ax.inset_axes([x,y,wo,h], facecolor='white')
+        axdate.text(0.025, .5, j.date(), 
+                    transform=axdate.transAxes, 
+                   ha='left', va='center')
+        axdate.set(xticks=[], yticks=[])
+
+        axv = ax.inset_axes([x+wo,y,.25,h], facecolor='white')
+        literal = row['PRCP']
+        axv.text(.5, .5, f'{literal:.2f}', 
+                    transform=axv.transAxes, 
+                   ha='center', va='center')
+        axv.set(xticks=[], yticks=[])
+
+        if k == len(df)-1:
+            axdate.set_title('date', fontsize=10, rotation=0)
+            axv.set_title('prcp', fontsize=10, rotation=0)
+
+        y+=1.25*h
+        yboxes5.append(y+h/2)
+    return yboxes5
+
+def table(axd, data, yo = 0, wo = .25, sp=1.5 ):
+    w = wo
+    h = wo
+    y = yo
+    yboxes = [yo+h/2]
     for i, record in enumerate(data):
         x=.25
         for (c, val) in record:
@@ -77,7 +107,9 @@ def table(axd, data):
             if i == len(data)-1:
                 axsub.set_title(c, fontsize=10, rotation=0)
             x+=w
-        y+=1.5*w
+        y+=sp*w
+        yboxes.append(y+h/2)
+    return yboxes
 
 def make_figure(artist=False, section=False, visual=False, continuity=False, data=False, values=None, plot_type='scatter', label=None, fiber=False, fig=None):
     
@@ -119,13 +151,16 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
                     axsub[c].set(xticks=[], yticks=[])
                     y-=w
                     if n == 'E':
-                        axsub[c].text(.5, .5, row[c], transform=axsub[c].transAxes, ha='center', va='center')
+                        val = row[c]
+                        if c == 'station':
+                            val = ip.airport_codes[val]
+                        axsub[c].text(.5, .5, val, transform=axsub[c].transAxes, ha='center', va='center')
                     if i>0:
                         continue
                     axsub[c].set_ylabel(c, fontsize=14, rotation=0, labelpad=15, ha='right', va='center')
                 x+=2*w
                 xt.append(x+w/2)
-
+                
                 if visual and n == 'V':
                     axsub['x'].axvline(row['prcp'], color=posc, lw=3)
                     axsub['y'].axhline(row['temp'], color=posc, lw=3)
@@ -182,12 +217,17 @@ def make_figure(artist=False, section=False, visual=False, continuity=False, dat
     
     if section or fiber:
         for i, ((xlab, xd), (ylab, yd), (_, station)) in enumerate(values):
+            print(i)
             for n,x in [('E', .225), ('V', .425), ('V*', .575), ('H',.8)]:
                 if n in label:
                     fig.text(x, .875, n,color=ecolor, fontsize=16, ha='center', va='bottom')
                     
             for n in ['E', 'V']:
-                if n in label:
+                if n in label: 
+                    xt = [x-w/2]
+                    while len(xt) < len (values):
+                        xt.append(xt[-1]+2*w)
+                    
                     tau = mpatches.ConnectionPatch(xyA=(xk[i], .5), coordsA=axd['K'].transAxes, 
                                                   xyB=(xt[i], .075), coordsB=axd[n].transAxes, 
                                                   arrowstyle='->', mutation_scale=15,
