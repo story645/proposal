@@ -1,3 +1,25 @@
+# top line new outline
+1. intro:
+    - frame problem around libraries/architecture
+    - pull libraries section from related work here
+2. related work
+    - continuity: butler, munzner, introduce fiber bundles, define continuity
+    - equivariance: apt, schidigger, define equivariance
+3. contribution ?
+    - introducing constraint driven model that builds on c+e work to solve architecture problems. 
+    - case study to demonstrate how it works in architecture
+4. Artist 
+    1. framing: libraries implement the artist, which is the function encapsulating the data to visual transforms. first though must introduce the input (domain) and output (codomain) of those functions so we can discuss which/how functions preserve the properties of these objects. 
+    2. modeling data & graphics as fiber bundles (& maybe visual so we can say we model the 3 stages Schedigger introduced as...)
+        1. what is a fiber bundle? 
+            1. continuity: base space k
+            2. equivariance: fiber space f
+            3. encoding data: section tau
+        2. graphic bundle: continuity S, equivariance D, encoding graphic rho
+    3. Artist 
+5. case study: (maybe weave code in w/ math?)
+    - 
+
 big picture takeaway: trying to do way too much w/ every sentence/paragraph/figure, end up w/ too much tell & not enough show
 
 instead structure around benefits or change them:
@@ -22,7 +44,7 @@ what does this model give in this context?
 Revision: flip the script
 1. start w/ 9, build out rest of sentences to show how this model achieves goals stated in 9. 
 
-### S1: Intro:
+## 1: Intro:
 p1:  who, what, why? 
 * 1-2: trying to lay out problem (needs evidence)
 * 3-8: why, what (lead w/ this, then lay out why this is a problem that needs to be solved which is fleshing out 1-2)
@@ -37,17 +59,16 @@ __revision__: give these concepts breathing room by seperating them and pushing 
 * equivariance: ? commutative diagram of equiv (direct reference to schidegger)
 
 p3: roadmap 
-
-27-30: what
-31-36: why
-37-44: roadmap
+* 27-30: what
+* 31-36: why
+* 37-44: roadmap
 
 __revision__ move after related work, concepts should probably be at same levels (3.2, vs. 3.3), 
 
-### S2: related work
+## 2: related work
 p1:
-48-52: situate the related work
-52-68: equivariance (but I haven't realy mentioned topology yet)
+* 48-52: situate the related work
+* 52-68: equivariance (but I haven't realy mentioned topology yet)
 
 __revision__: don't try to situate all at once, instead break down into situate equivariance, add a paragraph for continuity (bring in butler + figures), and what current libraries do
 
@@ -59,16 +80,16 @@ p2:
 
 __revision__  pull this paragraph up to the top of the intro as part of the framing for the problem we're trying to solve, break up heer/core data structure - ggplot, imagej, networkx, into one short paragraph, muller/algorithm & continuity - - d3, matplotlib, vtk, into another  - basically what do these libraries have in common? what are the rules they need to follow? Related work gets strictly focused on continuity+equivariance as the previous work on identifying these constraints 
 
-### S3: TEAM
+## S3: TEAM
 * 96-notion of an artist A as a map 
 * 98-101: more roadmapping
 __revision__ needs context/definition/why we're calling this an artist. This dives straight into math. 
-#### 3.1 Data Bundle
+### 3.1 Data Bundle
 * 103-107: drop straight from butler (who hasn't really been introduced) to fiber bundles (which also haven't really been introduced)
 * 108-110: locally trivial
 __revision__ introduce concepts of Butler & bundles in related work, leave this just for the mathematical definition, maybe move locally trivial to a footnote w/ a why it's useful to know this
 
-#### 3.1.1
+### 3.1.1
 * 112-114: this gives why, but first needs an explanation of what is a fiber
 * 114-127: soup about U and sigma and T
 * 129-132:  example that misses the why this is helpful
@@ -113,10 +134,25 @@ __revision__ pare down to just what they need to know to follow the paper & tell
         * D for equivariance
         * S for continuity
         * rho so there's an actual graphic
-### 3.2
+### 3.2.1
 * 223-224: why
 * 225-226: math def, but homotopy isn't defined so this doesn't mean anything to someone w/o the math background
 * 228 -234: thickening
 * 235-239: querying/interactivity
-__revision__ pull this up into 3.2 instead of seperate subsection, maybe change first figure so it's clearer how the screen fits in/why this is thickened, possibly add a new figure that more fully pulls in the related point on screen (maybe a modified version of my graphics figure?)
+__revision__ pull this up into 3.2 instead of seperate subsection, maybe change first figure so it's clearer how the screen fits in/why this is thickened, possibly add a new figure that more fully pulls in the related point on screen, maybe a modified version of my graphic figure? - maybe graphic figure/illustration of bundle first, then the S to K figure - overview, drill down
 
+## 3.3 artist
+* 241-248: formal definition of artist
+* 249-252: introducing 16 (but needs to unpack)
+* 253-264: explaining V 
+* 264-269: the why
+__revision__ maybe pull up (16) since that's the overview of what we're on about or pull it all the way to the end of the section, or replace 14/15 w/ categorical commutative diagram, - between three spaces so it's basically eq (1) from "Algebraic Process for Visualization Design" (K&S), maybe pull up V discussion to fiber bundles/setting up objects section so it doesn't get muddled w/ function section, instead becomes transition between two sections - V is the object implemented by the library/on library terms while data is defined by provider & graphic by display space, pull "why" up and "artist named for mpl" is really a footnote
+
+### 3.3.1
+* 271-272: definition of $\nu$ w/o explaining what/why
+* 272-293: conjecture of monoid equivariance 
+
+__revision__ explain what nu is and why it matters, either swap out 272-293 w/ category version or rewrite as proper conjecture, one of the reviewers had a suggestion for tightening up figure 7 & it (or something like it-look at draft revision) needs to be incorporated better into the text (there's a lot of text text see figure see text text)
+
+### acknowledgments
+* clean up so it doesn't sound like Eric & Chana are on the mpl dev team 
