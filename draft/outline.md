@@ -24,13 +24,13 @@
             * q & qhat
         4. building out of blocks: composition & equivalence
      
-5. case study: (maybe weave code in w/ math?)
+5. code: (maybe weave code in w/ math?)
     - start at artist
     - pull back to data (xi, continuity)
     - how do we encode? push forward through nu and q
+    - where is this model powerful? step vs. continuous example
 
-
-big picture takeaway: trying to do way too much w/ every sentence/paragraph/figure, end up w/ too much tell & not enough show
+big picture takeaway: trying to do way too much w/ every sentence/paragraph/figure, end up w/ too much tell & not enough show, also look at the proposal revisions & see what/if stuff was addressed in rewrite
 
 instead structure around benefits or change them:
 1. maintainability
@@ -194,7 +194,7 @@ start w/ why & then do why, frame this section better - first sentence should pr
 * 416-432: describing the artistclass code block
 * 433-436: nu
 * 436-444: Q
-__revision__ probably use basically pseudo-code, I think reviewers are right that it's both too much and not enough mpl, would also be easier to make it more functional, break it down line by line as annotated code instead of block of explanation (look at revised proposal) - streamline so that nu isn't explained first as part of object and then again when talking about nu objects
+__revision__ probably use basically pseudo-code, I think reviewers are right that it's both too much and not enough mpl, would also be easier to make it more functional, break it down line by line as annotated code instead of block of explanation (look at revised proposal) - streamline so that nu isn't explained first as part of object and then again when talking about nu objects. Also, framing is "the authors need to make clear the difference between and benefits for an actual programmer following their approach rather than, for example, a grammar-based specification such as Vega-Lite." (review 4)
 ### 4.1
 * 446-451: what is this, what this section is about
 * 452-456: view method, what does it do
@@ -203,7 +203,6 @@ __revision__ probably use basically pseudo-code, I think reviewers are right tha
 * 462-466: qhat
 * 466-468: view and feels incomplete (last is a tell not show)
 __revision__ 4 should probably go away and mostly should jump straight into this discussion, (image artist would be good but probably can't happen in time frame), missing the why again, start w/ "the difference between a scatter and a line is in []" probably need a figure annotated w/ code or step through of what the code is doing to the figure, focus on one thing (xi, nu, q) at a time
-
 ### 4.1.1
 * 470-477: nu dictionary + functions
 * 478-479: testing nu equivariance
@@ -214,18 +213,22 @@ __revision__ streamline - this feels more implementation detail than unpacking o
 * 496-497: tau returns a table
 * 498-508: continuous vs. step
 __revision__ focus should be on continuous vs step, strip out the tau and wrapper stuff that should just be mentioned in xi section, pare down to "where does data model help?"
-
-
-
-
-
-
-
-
-
-
-
-
-
-### acknowledgments
-* clean up so it doesn't sound like Eric & Chana are on the mpl dev team 
+## 5
+510-515: restate of contributions
+515-535: mostly summary of work
+__revision__ rework to focus on the payoffs of this work, how the things discussed yield maintainability, extendability, scaling, & concurrency, as reviewers said the practical payoffs
+### 5.1
+* 537-540: technical unknowns
+* 544-547: effectiveness
+__revision__ reviewer suggestion of move all the math caveats here & frame this section as limitations of the math
+### 5.2
+* 549- better math on A'
+* 550-552: implement more artusts
+* 553-555: papers I like (don't go into why/how the model is good here)
+* 556-559: category theory (which yes have to do)
+__revision__ replace w/ future work plan from my proposal since that's scaffolded how this model can practically do things
+## 6
+* 561-563: takeaway 1: better downstream support b/c of generalized data model
+* 566-569: why good for matplotlib
+* 570-572: tools & ecosystem
+__revision__ center on main themes: continuity, equivariance, maintainablity, extensibility, scaling, concurrency
