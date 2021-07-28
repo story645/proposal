@@ -151,8 +151,38 @@ __revision__ maybe pull up (16) since that's the overview of what we're on about
 ### 3.3.1
 * 271-272: definition of $\nu$ w/o explaining what/why
 * 272-293: conjecture of monoid equivariance 
+* 294-297: steven's
+__revision__ explain what nu is and why it matters, either swap out 272-293 w/ category version or rewrite as proper conjecture, one of the reviewers had a suggestion for tightening up figure 7 & it (or something like it-look at draft revision) needs to be incorporated better into the text (there's a lot of text text see figure see text text). Either frame steven's better as an example or move it to appendix. 
+### 3.3.2
+* 301-302: introduce Q?
+* 302-313: dense introduction of Q notation
+* 316-322: proposition 
+* 323-327: talks about figure (like others lack of figure annotations makes this feel disjointed)
+* 328-338: glyph
+* 339-351: rendering of graphic + pipeline 
+__revision__ don't start w/ figure, start with what we mean by assembly
+> As discussed in sec~nu, nu functions convert data components in visual components, for example category into color. We propose functions Q that compose the visual components in V into a graphical element, for example x and y position and color into a scatter. 
 
-__revision__ explain what nu is and why it matters, either swap out 272-293 w/ category version or rewrite as proper conjecture, one of the reviewers had a suggestion for tightening up figure 7 & it (or something like it-look at draft revision) needs to be incorporated better into the text (there's a lot of text text see figure see text text)
+Figure 8 is the generalized version of this, where...figure 8 should maybe be pulled to the top of the section & here should be the semi concrete version - for example the diagrams from the scipy talk or something stripped down that produces the first annulus in fig 9.  Break out intro of Q notation into bullet points. Maybe break out figure 9-> diff scatter or maybe even box commutative diagram of V -> H, with top & bottom, bottom is thickened annulus/equivalent). Maybe move glyph discussion up since that's a term the viz community understands & it'll maybe help situate what Q produces [or even move glyph definition up to rho introduction]. Rework pipeline discussion section around different case studies (network, image, scatter?) and arrows, push graphics discussion/figures into appendix like reviewer suggested?
+### 3.3.3
+* 353-359: notation and math working through that \hat{Q} can generate Q
+
+__revision__ pull figure & language from proposal rewrite, figure out which bit is actually important for somebody implementing code, maybe push all the math into appendix and then this section is something like
+> The function Q described above takes as input V* which has a base space S. The graphic base space is not accessible in many architectures, so instead we construct a factory function Q hat. Q hat takes as input V over base space K, which as described in sec is... Q hat returns the function Q... This works b/c V-V* figure from proposal redo and shorter explaination of that figure. A mathematica; description can be found in appendix []
+### 3.3.4
+* 392-396: what
+* 397-399: why kinda 
+* 399-403: what/why
+
+__revision__
+start w/ why & then do why, frame this section better - first sentence should probably tie into section header
+
+
+
+
+
+
+
 
 ### acknowledgments
 * clean up so it doesn't sound like Eric & Chana are on the mpl dev team 
