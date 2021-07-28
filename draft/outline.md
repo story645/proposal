@@ -8,7 +8,7 @@
 3. contribution ?
     - introducing constraint driven model that builds on c+e work to solve architecture problems. 
     - case study to demonstrate how it works in architecture
-4. Artist 
+4. TEAM
     1. framing: libraries implement the artist, which is the function encapsulating the data to visual transforms. first though must introduce the input (domain) and output (codomain) of those functions so we can discuss which/how functions preserve the properties of these objects. 
     2. modeling data & graphics as fiber bundles (& maybe visual so we can say we model the 3 stages Schedigger introduced as...)
         1. what is a fiber bundle? 
@@ -17,8 +17,18 @@
             3. encoding data: section tau
         2. graphic bundle: continuity S, equivariance D, encoding graphic rho
     3. Artist 
+        1. what is artist? broad strokes, functor or cofunctor or something
+        2. continuity: xi
+        3. equivarince:
+            * nu
+            * q & qhat
+        4. building out of blocks: composition & equivalence
+     
 5. case study: (maybe weave code in w/ math?)
-    - 
+    - start at artist
+    - pull back to data (xi, continuity)
+    - how do we encode? push forward through nu and q
+
 
 big picture takeaway: trying to do way too much w/ every sentence/paragraph/figure, end up w/ too much tell & not enough show
 
@@ -139,7 +149,7 @@ __revision__ pare down to just what they need to know to follow the paper & tell
 * 225-226: math def, but homotopy isn't defined so this doesn't mean anything to someone w/o the math background
 * 228 -234: thickening
 * 235-239: querying/interactivity
-__revision__ pull this up into 3.2 instead of seperate subsection, maybe change first figure so it's clearer how the screen fits in/why this is thickened, possibly add a new figure that more fully pulls in the related point on screen, maybe a modified version of my graphic figure? - maybe graphic figure/illustration of bundle first, then the S to K figure - overview, drill down
+__revision__ pull this down into the artist section? first figure so it's clearer how the screen fits in/why this is thickened, possibly add a new figure that more fully pulls in the related point on screen, maybe a modified version of my graphic figure? - maybe graphic figure/illustration of bundle first, then the S to K figure - overview, drill down, if this structure
 
 ## 3.3 artist
 * 241-248: formal definition of artist
@@ -176,6 +186,39 @@ __revision__ pull figure & language from proposal rewrite, figure out which bit 
 
 __revision__
 start w/ why & then do why, frame this section better - first sentence should probably tie into section header
+## 4
+* 405-407: jump straight into Matplotlib (not really telling anybody why)
+* 408-413: hedging on why OO
+* 413-414: floating code here
+* 414-415: incomplete sentence
+* 416-432: describing the artistclass code block
+* 433-436: nu
+* 436-444: Q
+__revision__ probably use basically pseudo-code, I think reviewers are right that it's both too much and not enough mpl, would also be easier to make it more functional, break it down line by line as annotated code instead of block of explanation (look at revised proposal) - streamline so that nu isn't explained first as part of object and then again when talking about nu objects
+### 4.1
+* 446-451: what is this, what this section is about
+* 452-456: view method, what does it do
+* 457-459: qhat
+* 460-462: line view
+* 462-466: qhat
+* 466-468: view and feels incomplete (last is a tell not show)
+__revision__ 4 should probably go away and mostly should jump straight into this discussion, (image artist would be good but probably can't happen in time frame), missing the why again, start w/ "the difference between a scatter and a line is in []" probably need a figure annotated w/ code or step through of what the code is doing to the figure, focus on one thing (xi, nu, q) at a time
+
+### 4.1.1
+* 470-477: nu dictionary + functions
+* 478-479: testing nu equivariance
+__revision__ streamline - this feels more implementation detail than unpacking of model, delete the test function especially since that should really work like any composition test, or pull a different example from the table for Stevens
+### 4.1.2
+* 482-485: what is a wrapper (missing why)
+* 487-494: comparing tau
+* 496-497: tau returns a table
+* 498-508: continuous vs. step
+__revision__ focus should be on continuous vs step, strip out the tau and wrapper stuff that should just be mentioned in xi section, pare down to "where does data model help?"
+
+
+
+
+
 
 
 
