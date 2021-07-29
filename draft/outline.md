@@ -8,6 +8,8 @@
 3. contribution ?
     - introducing constraint driven model that builds on c+e work to solve architecture problems. 
     - case study to demonstrate how it works in architecture
+    - caveat: not claiming new way to get parallel, etc, just that this functional approach will get there
+        - confluence between theory & applied w/ category theory
 4. TEAM
     1. framing: libraries implement the artist, which is the function encapsulating the data to visual transforms. first though must introduce the input (domain) and output (codomain) of those functions so we can discuss which/how functions preserve the properties of these objects. 
     2. modeling data & graphics as fiber bundles (& maybe visual so we can say we model the 3 stages Schedigger introduced as...)
