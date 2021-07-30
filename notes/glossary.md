@@ -208,19 +208,24 @@ category
         - X, Y, Z - groups
         - f, g, h - homomorphisms (homomorphic functions)
 - category C consists of data:
-    - class (aggregate) of objects
+    - class/collection (aggregate) of objects
+    - identity morphism: for every object $X$, identity $id_x:X \rightarrow X$ (7S)
     - for every two objects $X,Y$, set $C(X,Y)$ of morphisms $f:X\rightarrow Y$ (also known as $hom_C(X, Y)$)
     - composition rule for morphisms: if $f:X \rightarrow Y$ and $g:Y \rightarrow Z$ then $gf: X\rightarrow Z$
     - composition is associative: 
         - if $h: X\rightarrow Y$, $g:Y\rightarrow Z$, $f:Z\rightarrow W$ then f(gh) = (fg)h 
         - derived from composition rule
-    - identity morphism: for every object $X$,  (wiki)
-        - identity $id_x:X \rightarrow X$
-        - s.t for every $f: X \rightarrow Y$ there exists $f \circ id_x = f = id_y \circ f$
+    - unitality: s.t for every $f: X \rightarrow Y$ there exists $f \circ id_x = f = id_y \circ f$
+
+Free: (???)
+- 
+- group $F_S$, all words on set $S$, where words are products of group elements + inverses
+- category: graph G = (V, A, s, t), objects = V, morphisms = paths from c to d
 
 monoid (S+M, pg. 2)
 - group w/o inverses (semi group w/ identity)
-- category theory: 
+monoidal category (7S)
+- 
 
 
 homomorphism: (arrows that commute)
