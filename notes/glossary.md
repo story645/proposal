@@ -65,7 +65,7 @@ extension: (extend domain)
 - f is extension of $f|A^{\prime}$ applied to A
 
 
-relations
+relations (is one way of expressing constraints)
 - notation: $(a,b) \in \mathscr{R}$ <=> $a\mathscr{R}b$
 - reflexive:  $x \in A, (x,x) \in \mathscr{R}$ (D7.2)
 - symmetric: $x,y \in A, (x,y), (y,x) \in \mathscr{R}$ (D7.3)
@@ -141,7 +141,7 @@ open set
 - given a closed curve, set of points within curve but not on boundary
 
 
-topological space $(X,\mathscr{T})$ (TC)
+topological space $(X,\mathscr{T})$ (Bradley)
 - https://www.youtube.com/watch?v=tdOaMOcxY7U
 - set $X$ and a topology $\mathscr{T}$ 
 - topology $\mathscr{T}$ on $X$ is a collection of open sets of $X$ that satisfy the following properties: 
@@ -209,22 +209,26 @@ category
         - f, g, h - homomorphisms (homomorphic functions)
 - category C consists of data:
     - class/collection (aggregate) of objects
-    - identity morphism: for every object $X$, identity $id_x:X \rightarrow X$ (7S)
+    - identity morphism: for every object $X$, identity $id_x:X \rightarrow X$ (Spivak & Fong)
     - for every two objects $X,Y$, set $C(X,Y)$ of morphisms $f:X\rightarrow Y$ (also known as $hom_C(X, Y)$)
-    - composition rule for morphisms: if $f:X \rightarrow Y$ and $g:Y \rightarrow Z$ then $gf: X\rightarrow Z$
+    - composition rule for morphisms (composite morphism): if $f:X \rightarrow Y$ and $g:Y \rightarrow Z$ then $gf: X\rightarrow Z$
+- data must meet these axioms (conditions):
     - composition is associative: 
         - if $h: X\rightarrow Y$, $g:Y\rightarrow Z$, $f:Z\rightarrow W$ then f(gh) = (fg)h 
         - derived from composition rule
     - unitality: s.t for every $f: X \rightarrow Y$ there exists $f \circ id_x = f = id_y \circ f$
+- tradition/philosophy (Riehl)
+    - traditionally name a category after its objects (top, etc in Bradley)
+    - algebra of morphisms determines the category, morphisms take primacy
 
 Free: (???)
-- 
 - group $F_S$, all words on set $S$, where words are products of group elements + inverses
 - category: graph G = (V, A, s, t), objects = V, morphisms = paths from c to d
 
+
 monoid (S+M, pg. 2)
 - group w/o inverses (semi group w/ identity)
-monoidal category (7S)
+monoidal category (Spivak & Fong)
 - 
 
 
@@ -242,14 +246,21 @@ homomorphism: (arrows that commute)
     - diagram commutes:
         $G_1 \times G_1 \xrightarrow{f} G_2 \times G_2$
 
-- isomorphism: one-to-one (injective) and onto (surjective) homomorphism
+- endomorphism: domain = codomain
+- isomorphism: 
+    - one-to-one (injective) and onto (surjective) homomorphism = bijection
+    - category: (Spivak)
+        - $f: X \rightarrow Y$ s.t. $g: Y \rightarrow X$  satisfying $g\circ f = id_x$ and $f \circ g = id_y$
+        - $f(x) = y, g(y)=x,  g(f(x))= x=id_x, f(g(y)) = y = id_y$, $f = g^{-1}, g = f^{-1}$, 
+        - X & Y are isomorphic objects
+        - automorphism - ismorphic endomorphism (Reihl)
 - category: function preserving composites & units 
 - equivalence: bijection of a group to itself
     - identity is a homomorphism  
 - homeomorphism (wiki)
     - isomorphisms in the category of topological spaces
     - mappings that preserve topological properties of a given space
-- homotopy (1.6 in TC)
+- homotopy (1.6 in Bradley)
     - isomorphisms 
 
    categories:
@@ -263,11 +274,23 @@ homomorphism: (arrows that commute)
    - notion of equivalence:
         - isomorphism: bijection + homomorphism
 
-Functor (covariant): from category C to category D
-- object $FX$ of the category D for each object X in C
-- morphism $Ff:FX \rightarrow FY$ for every morphism $f:X\rightarrow Y$
-- composition: $(Fg)(Ff) = F(gf)$ for any morphism $f: X\rightarrow Y$, $g: Y\rightarrow Z$
-- identity: $F id_x = id_FX$
+Functor (covariant): (Bradley, Spivak)
+- specifying functor from category C to category D $\mathcal{F}: \mathcal{C}\rightarrow \mathcal{D}$
+    - object $F(X)$ of the category D for each object X in C
+        - every object $c \in Ob(\mathcal{C})$ has a corresponding object $F(c) \in Ob(\mathcal{D})$
+    - morphism $Fhf:FX \rightarrow FY$ for every morphism $f:X\rightarrow Y$
+        - for every morphism $f: c_1 \rightarrow c_2$, there's a morphism $F(f): F(c_1) \rightarrow F(c_2)$
+- must satisfy properties:
+    - identity: 
+        - $F id_x = id_{FX}$, for every $c\in Ob(\mathcal{C})$
+        - $F(id_c) = id_{F(c)}$
+    - composition: 
+        - $(Fg)(Ff) = F(gf)$ for any morphism $f: X\rightarrow Y$, $g: Y\rightarrow Z$
+        - given $c_1, c_2, c_3 \in Ob(\mathcal{C})$, morphisms $f \in \mathcal{C}(c_1, c_2), g \in mathcal{C}(c2, c3)$
+            - $F(g\circ f) = F(g) \circ F(f)$ holds in $\mathcal{D}$
+            
+
+  
 
 Contravariant Functor(pull back)
 - reverse arrows: for every $f:X\rightarrow Y$, the contravariant functor $F:C^{op} \rightarrow D$ assigns a morphism $Ff:FY\rightarrow FX$ 
