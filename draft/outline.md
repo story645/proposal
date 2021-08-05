@@ -217,7 +217,7 @@ start w/ why & then do why, frame this section better - first sentence should pr
 * __revision__ reviewer suggestion of move all the math caveats here & frame this section as limitations of the math
 ### 5.2
 * 549- better math on A'
-* 550-552: implement more artusts
+* 550-552: implement more artists
 * 553-555: papers I like (don't go into why/how the model is good here)
 * 556-559: category theory (which yes have to do)
 * __revision__ replace w/ future work plan from my proposal since that's scaffolded how this model can practically do things
@@ -225,4 +225,4 @@ start w/ why & then do why, frame this section better - first sentence should pr
 * 561-563: takeaway 1: better downstream support b/c of generalized data model
 * 566-569: why good for matplotlib
 * 570-572: tools & ecosystem
-* __revision__ center on main themes: continuity, equivariance, maintainablity, extensibility, scaling, concurrency
+* __revision__ center on main themes: continuity, equivariance, maintainability, extensibility, scaling, concurrency
