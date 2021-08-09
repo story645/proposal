@@ -4,7 +4,7 @@
     - pull libraries section from related work here
 2. related work
     - continuity: butler, munzner, introduce fiber bundles, define continuity
-    - equivariance: apt, schidigger, define equivariance
+    - equivariance: apt, schiedigger, define equivariance
 3. contribution ?
     - introducing constraint driven model that builds on c+e work to solve architecture problems. 
     - case study to demonstrate how it works in architecture
