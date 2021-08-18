@@ -11,19 +11,40 @@ import pandas as pd
 # technically this can be wrapped even more 
 
 @dataclass
-class Section:
-    F =  {'fruit': np.dtype('O'), 
+class FruitSection:
+    K = 'integer'
+    F = {'fruit': np.dtype('O'), 
                'calories': np.dtype('int64'), 
                'juice': np.dtype('bool')}
-    K =  pd.core.indexes.range.RangeIndex
-
     section: pd.DataFrame
 
     def __post_init__(self):
-        #check the fiber matches
-        assert self.section.dtypes.to_dict() == self.F
+        #check the fiber is a subset
+        if not (self.section.dtypes.to_dict().items() <= self.F.items()):
+            raise TypeError(f"{self.section.dtypes.to_dict()} not in fiber {self.F}")
         # checking on type since section doesn't have to be global
-        assert isinstance(self.section.index, self.K)
+        if self.section.index.inferred_type != 'integer':
+            raise TypeError(f"{self.section.index.inferred_type} is not type {self.K}")
+
+    def local_section(self, data_bounds=None): #query
+        """
+        # this is BAD!
+        data_bounds: {'fiber_key', (data_min, data_max)}
+        """
+        data_bounds = {} if data_bounds is None else data_bounds
+        mask = '&'.join(f'{k}>={vmin} & {k}<={vmax}' for (k, (vmin, vmax)) in data_bounds.items())
+        return FruitSection(self.section.query(mask))
+    
+    def projection(self, fiber_name=None):
+        return FruitSection(self.section.get(fiber_name).to_frame())
+
+    def values(self): #view
+        """a compute method or something could be stashed here
+        is the resolution stage
+        """
+        return self.section.values
+
+
 
 
 def fiberbundle(section): #dataframe is section, type annotations
@@ -50,12 +71,3 @@ def fiberbundle(section): #dataframe is section, type annotations
             return values 
         return projection
     return view
-
-class DataFrameBundle:
-    def __init__(self, section):
-        self.section = section
-    
-    def sheaf(self, neighborhoods=None):
-        return DataFrameSource()
-        
-class Section(metaclass=FiberBundle)
