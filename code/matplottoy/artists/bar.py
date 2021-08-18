@@ -12,6 +12,7 @@ import matplotlib.transforms as mtransforms
 from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
+
 # mu = \nu \circ \tau 
 Mu = namedtuple('Mu', ['nu', 'F'])
 class QHatData: 
@@ -91,16 +92,47 @@ class Bar(QHatGraphic):
             for (p, fc, ec, lw, ls) in zip(paths, facecolor, edgecolor, linewidth, linestyle):
                 gc = render.new_gc()
                 gc.set_foreground(ec)
-                gc.set_dashes(ls)
+                gc.set_dashes(*ls)
                 gc.set_linewidth(lw)
-                render.draw_path(gc, path, mtransforms.IdentityTransform(), fc)
-
+                render.draw_path(gc, p, mtransforms.IdentityTransform(), fc)
         return fake_draw
 
-class GenericArtist: #goes to add_artist
-    def __init__(self, topArt):
-        self.topArt = topArt
 
+class ShimArtist:
+    zorder = 0
+
+    def __init__(self):
+        self.figure = None
+
+    def set_figure(self, fig):
+        """
+        Set the `.Figure` instance the artist belongs to.
+
+        Parameters
+        ----------
+        fig : `.Figure`
+        """
+        # if this is a no-op just return
+        if self.figure is fig:
+            return
+        # if we currently have a figure (the case of both `self.figure`
+        # and *fig* being none is taken care of above) we then user is
+        # trying to change the figure an artist is associated with which
+        # is not allowed for the same reason as adding the same instance
+        # to more than one Axes
+        if self.figure is not None:
+            raise RuntimeError("Can not put single artist in "
+                               "more than one figure")
+        self.figure = fig
+        if self.figure and self.figure is not self:
+            self.pchanged()
+        self.stale = True
+
+class GenericArtist(ShimArtist): #goes to add_artist
+    def __init__(self, topArt):
+        super().__init__()
+        self.topArt = topArt
+     
     def get_screen_bounds_to_data_bounds(self, renderer):
         """proxy for S->F over K"""
         # actual limits...scale...projections...
@@ -117,7 +149,7 @@ class GenericArtist: #goes to add_artist
         # you write make_mu & qhat so what gets passed into which
         mu = self.topArt.graphic.make_mu(tau_restricted)
         qhat = self.topArt.graphic.qhat(**mu)
-        #rho = qhat(renderer)
+        rho = qhat(renderer)
 
 
 #Q^(hat)(nu \circ (xi(axes_bound)=>tau))
