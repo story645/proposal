@@ -1,5 +1,5 @@
 import copy
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from dataclasses import dataclass, field, asdict
 import itertools
@@ -20,224 +20,108 @@ import matplotlib.transforms as mtransforms
 from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
+class QHatData:
+    def __init__(QHatWrapper, section):
+        self.qhat_visual = QhatWrapper
+        self.global_section = section
+        pass
 
-class BarArtist(martist.Artist):
-    def __init__(self, orientation, aes, position, length, floor, width, facecolors, edgecolors, linewidths, linestyles):
-        """
-        Parameters
-        ----------
-        dictionary specifying which columns of the data are bound to which columns?
-            # maybe bake this into the tau instead
-        position (callable, [component names])
-        # position, length,..... pass in callables
-        aes: [{'data': data components, 'aes': visual components}]
-            dictionary specifying which columns of the data are bound to which columns?
-                # maybe bake this into the tau instead   
-        orientation: str
-            vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x
-        **kwargs:
-            kwargs passed through 
-        """
-        self.orientation = orientation
-        self.aes = aes.copy()
-        # maybe this should just be wrapper functions 
-        if self.orientation in {'vertical', 'v'}:
-            self.aes.update({new_key: self.aes.pop(old_key) 
-                            for old_key, new_key in 
-                            {'position':'x0', 'width':'x1', 'floor':'y0', 'length':'y1'}})
-            self._x0 = position
-            self._x1 = width
-            self._y0 = floor
-            self._y1 = length
-            
-        if self.orientation in {'horizontal', 'h'}:
-            self.aes.update({new_key: self.aes.pop(old_key) 
-                            for old_key, new_key in 
-                            {'floor':'x0', 'length':'x1', 'position':'y1', 'width':'y1'}})
-            self._x0 = floor
-            self._x1 = length
-            self._y0 = position
-            self._y1 = width
+    def compose_with_tau(self, section): #doesn't need to be there
+        # do I care about bounds yet? or only at draw time?
+        new = copy.copy(self)
+        new.section = section
+        return new
 
-        self._facecolors = facecolors
-        self._edgecolors = edgecolors
-        self._linewidths = linewidths
-        self._linestyles = linestyles
-        super().__init__()
+    def query(self, data_bounds):
+        return self.section.view(data_bounds)
+        # section.view, #xi seperates nicely 
+
+
+class QHatWrapper:
+    def make_mu(self, bounds):
+        pass
+    @static
+    def qhat():
+        pass
+
+class Bar(QhatWrapper): 
+    # serializibiluty - you provide the exact same data, we give you the exact same thing
+    # pull the data stuff out into another layer 
+    def __init__(self):
+        ### F->V maps need to be fixed here, but use fiber name instead of function
+        # nu
+        #Pi = Fi, nu_i
+        self.position = None #(string, callable)
+        self.height = None
+        self.floor = None
+        self.width = None
+        self.facecolor = None
+        self.edgecolor = None
+        self.linewidth = None
+        self.linestyle = None
+
+    def compose_with_nu(self, **kwargs):
+        #trying to sort out how to not lose existing specs
+        # also maybe type checking here? (Is this nu valid for this fiber?)
+        new = copy.copy(self) 
+        for k, v in kwargs.items():
+            setattr(new, k, v)    
+        return new
         
-    def __call__(data):
-        #BarArtist(data.view())
-        self.data = self.schema.view(self.axes) 
-        #place where data materializes, rename as next
-        #rewrite the view object as a generator? 
-        #pass info about axes -> that's where do subsampling into data
-        #can't be here? needs the axes -> actually can also happen in draw...
-        return self
+    # curried mu then execute on restricted_tau 
+    def make_mu(self, restricted_tau): #draw
+        # curry all of this so it works w/o section?
+        # projection(section, F1)
+        # restricted_section.get
+        # check if not none! 
+        curred_mu_pos(restricted_tau)
 
-    #maybe pull this out so it's reusable (make it purely functional):
+        color \circ proj('fruit'
+
+        position = nu_position()proj_(position_F, restricted_tau)
+        self.position[1](xi(bounds)(position[0]))
+        return position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
+        
     @staticmethod
-    def make_bars(xval, xoff, yval, yoff):
-        return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        
-    def draw(self, renderer,  *args, **kwargs): #actually the factory
-      #current limits, downsampling, etc ()
-        # calling xi to get range, passing range to them
-        # from limits on axes/scales, resample
-        # how to filter to an xrange is dstructure depenedent
-        # bounds based on inverses of nu....
-        
-        # should maybe return something that isn't executed yet
-        # batch()
-
-        # passing axes back is an optimization
-        # tau is sinx -> in assembly sinx(axes)
-
-        #k-based indexing on rows
-        # nu needs to be applied at draw time so mu can be dynamically updated on draw
-
-        encoded_data = BarV(**{self.encodings[p.name]['encoder'](view[self.encodings['name']]) 
-                   for p.name in fields(BarV) if p.name in self.encodings})
-
-        graphic = None
-
-        gc = renderer.new_gc()
-        renderer.draw_path_collection(gc, master_transform=mtransforms.IdentityTransform(),)
-        #super().draw(renderer,  *args, **kwargs)
-
-
-class Bar(mcollections.Collection):
-    def __init__(self, data, transforms, orientation='v', *args, **kwargs):
-        """
-        Parameters
-        ----------
-        datasource: matplottoy.datasources.DataSource like
-            data object containing data to be plotted
-        orientation: str, optional
-            vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x
-        **kwargs:
-            kwargs passed through 
-        """
-  
-        #assert 'vertex' in data.FB.K['tables']
-        #utils.check_constraints(Bar, transforms)
-        #utils.validate_transforms(data, transforms)
-
-        self.orientation = orientation
-     
-        super().__init__(*args, **kwargs)
-        self.data = data
-        self.transforms = copy.deepcopy(transforms)
-    
-    def assemble(self, position, length, floor=0, width=0.8, facecolors='C0', edgecolors='k', offset=0):
-        #set some defaults
-        width = itertools.repeat(width) if np.isscalar(width) else width
-        floor = itertools.repeat(floor) if np.isscalar(floor) else (floor)
-        
-        # offset is passed through via assemblers such as multigroup, not supposed to be directly tagged to position 
-        position = position + offset
-        
+    def qhat(position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
         def make_bars(xval, xoff, yval, yoff):
-             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
-                for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-        #build bar glyphs based on graphic parameter
-        if self.orientation in {'vertical', 'v'}:
-            verts = make_bars(position, width, floor, length)
-        elif self.orientation in {'horizontal', 'h'}:
-            verts = make_bars(floor, length, position, width)
+            return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
+            for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
+
+        path = make_bars()
         
-        self._paths = [mpath.Path(xy, closed=True) for xy in verts]
-        self.set_edgecolors(edgecolors)
-        self.set_facecolors(facecolors)
-        
-    def draw(self, renderer,  *args, **kwargs):
-        view = self.data.view(self.axes)
-        visual = {}
-        for (p, t) in self.transforms.items():
-            if isinstance(t, dict):
-                if t['name'] in self.data.FB.F and 'encoder' in t:
-                    visual[p] = t['encoder'](view[t['name']])
-                elif 'encoder' in t:
-                    visual[p] = t['encoder'](t['name'])
-                elif t['name'] in self.data.FB.F:
-                    visual[p] = view[t['name']]
-            else:
-                 visual[p] = t
-        self.assemble(**visual)
-        super().draw(renderer,  *args, **kwargs)
+        def fake_draw(render):
+            renderer...
+        return fake_draw()
 
-class StackedBar(martist.Artist):
-    def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
-        """
-        Parameters
-        ----------
-   
-        orientation: str, optional
-            vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x   
-        """
-        super().__init__(*args, **kwargs)
-        self.data = data
-        self.orientation = orientation
-        self.transforms = copy.deepcopy(transforms)
-        self.mtransforms = copy.deepcopy(mtransforms)
+class GenericQHatArtist(): #goes to add_artist)
+    def __init__(self, QhatData):
+        pass
 
-    def assemble(self):
-        view = self.data.view(self.axes)
-        self.children = [] # list of bars to be rendered
-        floor = 0
-  
-        for group in self.mtransforms:
-            # pull out the specific group transforms
-            bar = Bar(self.data, {**group, **self.transforms, 'floor':floor}, self.orientation, transform=self.axes.transData)
-            self.children.append(bar)
-            floor += view[group['length']['name']]
-            
-            
-    def draw(self, renderer, *args, **kwargs):
+    def get_screen_bounds_to_data_bounds(self, renderer):
+        """proxy for S->F over K"""
+        # actual limits...scale...projections...
+        # x1, x1
+        pass
 
-        # all the visual conversion gets pushed to child artists
-        self.assemble()
-        #self._transform = self.children[0].get_transform()
-        for artist in self.children:
-            artist.draw(renderer, *args, **kwargs)
+    def draw(self, renderer):
+        # get bounding ax.get_xlim(), ax.get_ylim()
+        # get bounding box from coordinates on screen to data coordinates
+        # can compute 
+        ### assume we have data bounds
+        bounding_box = self.get_screen_bounds_to_data_bounds(renderer)
+        tau_restricted = self.QhatData.flobal_section.query(bounding_box)
+        # you write make_mu & qhat so what gets passed into which
+        mu = self.QhatData.qhat_visual.make_mu(tau_restricted)
+        qhat = self.QhatData.qhat_visual.qhat(**mu)
+        rho = qhat(renderer)
 
-            
-class GroupedBar(martist.Artist):
-    def __init__(self, data, transforms, mtransforms, orientation='v', *args, **kwargs):
-        """
-        Parameters
-        ----------
-        orientation: str, optional
-            vertical: bars aligned along x axis, heights on y
-            horizontal: bars aligned along y axis, heights on x   
-        """
-        super().__init__(*args, **kwargs)
-        self.data = data
-        self.orientation = orientation
-        self.transforms = copy.deepcopy(transforms)
-        self.mtransforms = copy.deepcopy(mtransforms)
 
-    def assemble(self):
-        self.children = [] # list of bars to be rendered
-        ngroups = len(self.mtransforms)
-        
-        for gid, group in enumerate(self.mtransforms):
-            group.update(self.transforms)
-            width = group.get('width',.8)
-            gwidth = width/ngroups
-            offset = gid/ngroups*width 
-            bar = Bar(self.data, {**group, **self.transforms,'width':gwidth, 'offset':offset},
-                        self.orientation, transform=self.axes.transData)     
-            self.children.append(bar)
-            
-            
-    def draw(self, renderer, *args, **kwargs):
-        view = self.data.view(self.axes)
-        # all the visual conversion gets pushed to child artists
-        self.assemble()
-        #self._transform = self.children[0].get_transform()
-        for artist in self.children:
-            artist.draw(renderer, *args, **kwargs)
+Q^(hat)(nu \circ (xi(axes_bound)=>tau))
+
+#bind global bound, make make mu take in data bounds
+
+# Xi
+* screen to fiber
+* fiber to k
+* k to local sections
