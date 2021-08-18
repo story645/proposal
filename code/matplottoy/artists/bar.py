@@ -1,30 +1,24 @@
+from collections import namedtuple
 import copy
-from collections import defaultdict, namedtuple
-from collections.abc import Iterable
-from dataclasses import dataclass, field, asdict
-import itertools
-from typing import Iterable
 
 import numpy as np 
-
-from cycler import cycler
 
 from matplotlib import rcParams
 
 import matplotlib.artist as martist
-import matplotlib.collections as mcollections
 import matplotlib.path as mpath
-import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 
 from matplottoy.artists import utils
 from matplottoy.encoders import mtypes
 
-class QHatData:
-    def __init__(QHatWrapper, section):
-        self.qhat_visual = QhatWrapper
-        self.global_section = section
-        pass
+# mu = \nu \circ \tau 
+Mu = namedtuple('Mu', ['nu', 'F'])
+class QHatData: 
+#is bad name for this since this is more than just qhat
+    def __init__(self, graphic):
+        self.graphic = graphic
+        self.section = None
 
     def compose_with_tau(self, section): #doesn't need to be there
         # do I care about bounds yet? or only at draw time?
@@ -32,77 +26,86 @@ class QHatData:
         new.section = section
         return new
 
-    def query(self, data_bounds):
-        return self.section.view(data_bounds)
-        # section.view, #xi seperates nicely 
+    def query(self, data_bounds=None):
+        return self.section.local_section(data_bounds)
+        # section.view, #xi seperates nicly 
 
 
-class QHatWrapper:
+class QHatGraphic:
     def make_mu(self, bounds):
         pass
-    @static
+    @staticmethod
     def qhat():
         pass
 
-class Bar(QhatWrapper): 
-    # serializibiluty - you provide the exact same data, we give you the exact same thing
-    # pull the data stuff out into another layer 
-    def __init__(self):
-        ### F->V maps need to be fixed here, but use fiber name instead of function
-        # nu
-        #Pi = Fi, nu_i
-        self.position = None #(string, callable)
-        self.height = None
-        self.floor = None
-        self.width = None
-        self.facecolor = None
-        self.edgecolor = None
-        self.linewidth = None
-        self.linestyle = None
+class Bar(QHatGraphic): 
+    #what are the 
+    P = {'position', 'height', 'floor', 'width', 
+         'facecolor', 'edgecolor', 'linewidth', 'linestyle'}
+    
+    def __init__(self, orientation='v', V=None):
+        # F->V maps need to be fixed here, but use fiber name instead of function
+        self.orientation = orientation
+        self.V = {k:Mu(None,None) for k in self.P}
 
+
+    @property
+    def V(self):
+        return self._V.copy()
+
+    @V.setter
+    def V(self, mus):
+        assert mus.keys() <= self.P
+        self._V = mus
+        
     def compose_with_nu(self, **kwargs):
         #trying to sort out how to not lose existing specs
         # also maybe type checking here? (Is this nu valid for this fiber?)
-        new = copy.copy(self) 
-        for k, v in kwargs.items():
-            setattr(new, k, v)    
+        nus = self.V
+        nus.update(kwargs)
+        new = copy.copy(self)
+        new.V = nus
         return new
-        
-    # curried mu then execute on restricted_tau 
+
     def make_mu(self, restricted_tau): #draw
-        # curry all of this so it works w/o section?
-        # projection(section, F1)
-        # restricted_section.get
-        # check if not none! 
-        curred_mu_pos(restricted_tau)
-
-        color \circ proj('fruit'
-
-        position = nu_position()proj_(position_F, restricted_tau)
-        self.position[1](xi(bounds)(position[0]))
-        return position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
+        assert self.V.keys() == self.P
+        def tau(data_fiber):
+            return restricted_tau.projection(data_fiber).values()
+        mus = {'orientation': self.orientation}
+        for (p, mu) in self.V.items():
+            mus[p] = mu.nu(tau(mu.F))
+        return mus
         
     @staticmethod
-    def qhat(position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
+    def qhat(orientation, position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
         def make_bars(xval, xoff, yval, yoff):
             return [[(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)] 
             for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
 
-        path = make_bars()
-        
-        def fake_draw(render):
-            renderer...
-        return fake_draw()
+        if orientation == 'v':
+            paths = make_bars(position, width, floor, height)
+        else:
+            paths = make_bars(floor, height, position, width)
 
-class GenericQHatArtist(): #goes to add_artist)
-    def __init__(self, QhatData):
-        pass
+        def fake_draw(render):
+            for (p, fc, ec, lw, ls) in zip(paths, facecolor, edgecolor, linewidth, linestyle):
+                gc = render.new_gc()
+                gc.set_foreground(ec)
+                gc.set_dashes(ls)
+                gc.set_linewidth(lw)
+                render.draw_path(gc, path, mtransforms.IdentityTransform(), fc)
+
+        return fake_draw
+
+class GenericArtist: #goes to add_artist
+    def __init__(self, topArt):
+        self.topArt = topArt
 
     def get_screen_bounds_to_data_bounds(self, renderer):
         """proxy for S->F over K"""
         # actual limits...scale...projections...
         # x1, x1
-        pass
+        return None
 
     def draw(self, renderer):
         # get bounding ax.get_xlim(), ax.get_ylim()
@@ -110,18 +113,18 @@ class GenericQHatArtist(): #goes to add_artist)
         # can compute 
         ### assume we have data bounds
         bounding_box = self.get_screen_bounds_to_data_bounds(renderer)
-        tau_restricted = self.QhatData.flobal_section.query(bounding_box)
+        tau_restricted = self.topArt.query(bounding_box)
         # you write make_mu & qhat so what gets passed into which
-        mu = self.QhatData.qhat_visual.make_mu(tau_restricted)
-        qhat = self.QhatData.qhat_visual.qhat(**mu)
-        rho = qhat(renderer)
+        mu = self.topArt.graphic.make_mu(tau_restricted)
+        qhat = self.topArt.graphic.qhat(**mu)
+        #rho = qhat(renderer)
 
 
-Q^(hat)(nu \circ (xi(axes_bound)=>tau))
+#Q^(hat)(nu \circ (xi(axes_bound)=>tau))
 
 #bind global bound, make make mu take in data bounds
 
 # Xi
-* screen to fiber
-* fiber to k
-* k to local sections
+#* screen to fiber
+#* fiber to k
+# k to local sections

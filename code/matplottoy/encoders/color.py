@@ -22,7 +22,7 @@ class Nominal:
         self._mapping = mapping
 
     def __call__(self, value):
-        values = np.atleast_1d(np.array(value, dtype=object))
+        values = np.atleast_1d(value)
         return [mtypes.RGBA(*mcolors.to_rgba(self._mapping[v])) for v in values]
 
 

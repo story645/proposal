@@ -15,7 +15,8 @@ class FruitSection:
     K = 'integer'
     F = {'fruit': np.dtype('O'), 
                'calories': np.dtype('int64'), 
-               'juice': np.dtype('bool')}
+               'juice': np.dtype('bool'), 
+               'None': np.dtype('float')}
     section: pd.DataFrame
 
     def __post_init__(self):
@@ -31,20 +32,25 @@ class FruitSection:
         # this is BAD!
         data_bounds: {'fiber_key', (data_min, data_max)}
         """
+        if data_bounds is None:
+            return FruitSection(self.section)
         data_bounds = {} if data_bounds is None else data_bounds
         mask = '&'.join(f'{k}>={vmin} & {k}<={vmax}' for (k, (vmin, vmax)) in data_bounds.items())
         return FruitSection(self.section.query(mask))
     
     def projection(self, fiber_name=None):
-        return FruitSection(self.section.get(fiber_name).to_frame())
+        if fiber_name is None:
+            section = pd.Series(index=self.section.index, 
+                                name='None', dtype=float)
+        else:
+            section = self.section.get(fiber_name)
+        return FruitSection(section.to_frame())
 
     def values(self): #view
         """a compute method or something could be stashed here
         is the resolution stage
         """
-        return self.section.values
-
-
+        return self.section.values.squeeze()
 
 
 def fiberbundle(section): #dataframe is section, type annotations
