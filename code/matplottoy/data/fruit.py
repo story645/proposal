@@ -3,30 +3,46 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-
-
 # index is like the sheaf, stalk is either the fiber or the values? 
 # check the applied category theory book 
 # index is subset on K
 # technically this can be wrapped even more 
 
+class DataFrameWrapper:
+    def __init__(self, section):
+        self.global_section = section 
+
+    def query(self, data_bounds=None, sampling_rate=None):
+        #can do tests of condition 
+        data_bounds = {} if data_bounds is None else data_bounds
+        mask = '&'.join(f'{k}>={vmin} & {k}<={vmax}' for (k, (vmin, vmax)) in data_bounds.items())
+        local_section = self.global_section.query(mask)
+        return {Fi:local_section[Fi] for Fi in local_section.columns}
+
+        #return [dict{'F_i': f()/np.array/etc}]
+        
+
 @dataclass
 class FruitSection:
     K = 'integer'
     F = {'fruit': np.dtype('O'), 
-               'calories': np.dtype('int64'), 
-               'juice': np.dtype('bool'), 
-               'None': np.dtype('float')}
+         'calories': np.dtype('int64'), 
+         'juice': np.dtype('bool'), 
+         'None': np.dtype('float')}
     section: pd.DataFrame
 
     def __post_init__(self):
         #check the fiber is a subset
+        # section: K \rightarrow F
+        # checks that output is in F
         if not (self.section.dtypes.to_dict().items() <= self.F.items()):
             raise TypeError(f"{self.section.dtypes.to_dict()} not in fiber {self.F}")
         # checking on type since section doesn't have to be global
+        # check that input is on K
         if self.section.index.inferred_type != 'integer':
             raise TypeError(f"{self.section.index.inferred_type} is not type {self.K}")
 
+    #local_section F over K->F over {U}
     def local_section(self, data_bounds=None): #query
         """
         # this is BAD!
@@ -38,14 +54,18 @@ class FruitSection:
         mask = '&'.join(f'{k}>={vmin} & {k}<={vmax}' for (k, (vmin, vmax)) in data_bounds.items())
         return FruitSection(self.section.query(mask))
     
+    #proj: F->F_i
+    #get: r->r_i, post_composing it 
     def projection(self, fiber_name=None):
         if fiber_name is None:
             section = pd.Series(index=self.section.index, 
                                 name='None', dtype=float)
         else:
             section = self.section.get(fiber_name)
-        return FruitSection(section.to_frame())
+        #return FruitSection(section.to_frame())
+        return section.values.squeeze()
 
+    # spits out numpy array
     def values(self): #view
         """a compute method or something could be stashed here
         is the resolution stage
@@ -53,6 +73,7 @@ class FruitSection:
         return self.section.values.squeeze()
 
 
+#this needs to be spekked differently
 def fiberbundle(section): #dataframe is section, type annotations
     """K and F can be defined here, 
     0or as part of a type defintion for section,  
