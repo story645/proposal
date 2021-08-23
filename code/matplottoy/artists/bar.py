@@ -1,6 +1,7 @@
+from __future__ import annotations
 from collections import namedtuple
 import copy
-from typing import Tuple
+from typing import Tuple, Optional
 
 
 import numpy as np 
@@ -20,106 +21,97 @@ from matplottoy.encoders import mtypes
 # mu = \nu \circ \tau 
 #\tau = data.query().projection()
 Mu = namedtuple('Mu', ['nu_i', 'F_i'])
-
-
-class QHatData: 
-# also maybe should be owned by data library? 
-#is bad name for this since this is more than just qhat
-    def __init__(self, graphic):
-        self.graphic = graphic
-        self.section = None
-
-    def compose_with_tau(self, section): #doesn't need to be there
-        # do I care about bounds yet? or only at draw time?
-        new = copy.copy(self)
-        new.section = section
-        return new
-
-    def query(self, data_bounds=None):
-        return self.section.query(data_bounds)
-        # section.view, #xi seperates nicly 
-
-
-class QHatGraphic:
-    def make_mu(self, bounds):
+class Rho: # this is really rho = \qhat \circ \mu
+    def mu(self, tau_restricted:dict):
         pass
     @staticmethod
     def qhat():
         pass
 
-class Bar(QHatGraphic): 
+class TopologicalArtist: 
+# also maybe should be owned by data library? 
+#is bad name for this since this is more than just qhat
+    def __init__(self, graphic:Rho):
+        # is parameterized by the rho
+        # only input is \tau (E)
+        self.graphic = graphic
+        self.data = None
+
+    def compose_with_tau(self, section): #doesn't need to be there
+        # do I care about bounds yet? or only at draw time?
+        new = copy.copy(self)
+        new.data = section
+        return new
+
+    def query(self, data_bounds:Optional[dict]=None, sampling_rate:Optional[int]=None)->dict:
+        return self.data.query(data_bounds, sampling_rate)
+        # section.view, #xi seperates nicely 
+
+class Bar(Rho): 
     #what are the 
     P = {'position', 'height', 'floor', 'width', 
          'facecolor', 'edgecolor', 'linewidth', 'linestyle'}
     
-    def __init__(self, orientation='v', V=None):
+    def __init__(self, orientation='v', V:Optional[dict]=None):
         # F->V maps need to be fixed here, but use fiber name instead of function
         self.orientation = orientation
         self.V = {k:Mu(None,None) for k in self.P} if V is None else V
-\
-        
-    def compose_with_nu(self, pi:str, fi: Tuple[str,...], nu: callable, ):
+
+    # Spivak r: C \rightarrow U_{\sigma}, U_{sigma}=F_{i}=F_{c} 
+    def compose_with_nu(self, pi:str, fi: Tuple[str,...], nu: callable)->Bar:
         #trying to sort out how to not lose existing specs
         # also maybe type checking here? (Is this nu valid for this fiber?)
         new = copy.copy(self)
-        new.V[pi] = Mu(nu=nu, fi=fi)
+        # user needs to do nu_i = nu_i_j \circ nu_i_k composition
+        new.V[pi] = Mu(nu_i=nu, F_i=fi) 
         return new
 
-    def make_mu(self, restricted_tau): #draw
-        assert self.V.keys() == self.P
-
-        mus = {'orientation': self.orientation}
-        tau_restricted = {'fiber', tau_f()}
-        # mu = nu \circ \tau
-        # {P_i: numpy Arry} = nu ({F_i: [numpy_array]_{u_j}?})
-        # fiber_bundle is on matching the {u_j}, condition
-        # nu({F_i: [f1, f2, f3]}) # [{F_i: f1}, {F_i:f2}]
-        # F_i is a tuple 
-        # nu({(F_i, F_2): [f11, f21]} )  
-
-        mus = []
-        for tau in tau_restricted: #pull out to other draw method
-            for (p_i, mu_i) in self.V.items():
-                # this is where we're realizing the data
-                # mus[p_i] = mu_i.nu_i(tau(mu_i.F_i))
-                # loop over tau restricted for each F 
-                mus[p_i] = mu_i.nu_i(*(tau_restricted[f] for f in mu_i.F_i))
-
-        return mus #either returns V or spec of V
-        
+    # yes argument this is a level up/ generates the mu
     @staticmethod
-    def qhat(orientation, position, height, floor, width, facecolor, edgecolor, linewidth, linestyle):
-        def make_bars(xval, xoff, yval, yoff):
-            return [mpath.Path([(x, y), (x, y+yo), (x+xo, y+yo), (x+xo, y), (x, y)]) 
-            for (x, xo, y, yo) in zip(xval, xoff, yval, yoff)]
-
+    def rename_P(V:dict, orientation:str)->dict:
         if orientation == 'v':
-            paths = make_bars(position, width, floor, height)
-        else:
-            paths = make_bars(floor, height, position, width)
+            new_key = {'position': 'x', 'height':'y'}
+        elif orientation == 'h': 
+            # needs to be a different artist 'cause data_bounds won't work here
 
-        def fake_draw(render):
-            for (p, fc, ec, lw, ls) in zip(paths, facecolor, edgecolor, linewidth, linestyle):
+            new_key = {'floor':'x', 'height':'width', 'width':'y', 'position':'floor'}
+        return {(new_key[k] if k in new_key else k):v for (k, v) in V.items()}
+
+    def mu(self, tau_restricted: dict)->dict: #draw
+        return {p_i : mu_i.nu_i(*(tau_restricted[f] for f in mu_i.F_i)) 
+                for (p_i, mu_i) in self.rename_P(self.V, self.orientation).items()} 
+
+    @staticmethod
+    def qhat(x, width, y, floor, facecolor, edgecolor, linewidth, linestyle):
+
+        def fake_draw(render, transform=mtransforms.IdentityTransform()):
+            for (xi, xw, yi, yf, fc, ec, lw, ls) in zip(x, width, y, floor, facecolor, edgecolor, linewidth, linestyle):
                 gc = render.new_gc()
-                gc.set_foreground(ec)
+                gc.set_foreground((ec.r, ec.g, ec.b, ec.a))
                 gc.set_dashes(*ls)
                 gc.set_linewidth(lw)
-                print(p)
-                render.draw_path(gc=gc, path=p, transform=mtransforms.IdentityTransform(), rgbFace=fc)
+
+                path = mpath.Path([(xi, yf), (xi, yf+yi), (xi+xw, yf+yi), 
+                                  (xi+xw, yf),(xi, yf)], closed=True)
+                render.draw_path(gc=gc, path=path, 
+                    transform=transform, 
+                    rgbFace=(fc.r, fc.g, fc.b, fc.a))
         return fake_draw
 
 
 class GenericArtist(martist.Artist):
     # start w/ working w/ an artist object then stripped down artist
-    def __init__(self, topArt):
+    def __init__(self, artist:TopologicalArtist):
         super().__init__()
-        self.topArt = topArt
+        self.artist = artist
   
-    def get_screen_bounds_to_data_bounds(self, renderer):
+    def get_screen_bounds_to_data_bounds(self, renderer)->(dict, int):
         """proxy for S->F over K"""
         # actual limits...scale...projections...
         # x1, x1
-        return None
+        bbox = self.get_window_extent(renderer)
+
+        return None, None
 
     def draw(self, renderer):
         # get bounding ax.get_xlim(), ax.get_ylim()
@@ -132,20 +124,9 @@ class GenericArtist(martist.Artist):
         #topArtist.graphic.V.items()[0]
         
         # maybe do loop over taus here (local section of taus)
-        for tau_restricted in self.topArt.query(bounding_box, sampling_rate):
+        for tau_restricted in self.artist.data.query(bounding_box, sampling_rate):
             # you write make_mu & qhat so what gets passed into which
             # \qhat \circ mu 
-            mus = self.topArt.graphic.make_mu(tau_restricted)
-            for mu in mus: #is a ufunc
-                qhat = self.topArt.graphic.qhat(**mu)
-            rho = qhat(renderer)
-
-
-#Q^(hat)(nu \circ (xi(axes_bound)=>tau))
-
-#bind global bound, make make mu take in data bounds
-
-# Xi
-#* screen to fiber
-#* fiber to k
-# k to local sections
+            mu = self.artist.graphic.mu(tau_restricted)
+            rho = self.artist.graphic.qhat(**mu)
+            H = rho(renderer, transform = self.axes.transData)
