@@ -66,6 +66,22 @@
         - matchsticks: need to build new stacks every time
         - opensource uses the volcano model
 
-        
 
-### simple made easy talk
+# top:down left-right (James Powell)
+- mutable defaults bad, can kinda avoid via wrapping but not decorators
+  - cause interior is executed every time 
+- `locals` to list local values
+- dis disassemble only on pure python
+- when python sees a function or class defintion, is executable code/ run time code to define
+  - is why can define class in python, is a statement
+`LOAD_FAST`-default or local
+`LOAD_DEREF` -closure
+`LOAD_CONST` - literal
+- python defers lots of decision making to run time
+  - top to bottom, left to right to byte code 
+  - python always runs modules once on import
+- - from x pulls out current
+nonlocal to flag that var is in deref scope 
+
+# tutorial 2017 pydata seattle (James Powell)
+- meta-objects are a way to enforce constraints on derived objects 
