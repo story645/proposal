@@ -47,7 +47,8 @@ class TopologicalArtist:
         return self.data.query(data_bounds, sampling_rate)
         # section.view, #xi seperates nicely 
 
-class Bar(Rho): 
+# BarH and BarV are different Q^{hat} so BarFactory returns the right Bar?
+class Bar(RhoFactory): 
     #what are the 
     P = {'position', 'height', 'floor', 'width', 
          'facecolor', 'edgecolor', 'linewidth', 'linestyle'}
@@ -73,17 +74,29 @@ class Bar(Rho):
             new_key = {'position': 'x', 'height':'y'}
         elif orientation == 'h': 
             # needs to be a different artist 'cause data_bounds won't work here
-
-            new_key = {'floor':'x', 'height':'width', 'width':'y', 'position':'floor'}
+            #data bounds need position y, height x
+            new_key = {'floor':'x', 'height':'width', 
+                       'width':'y', 'position':'floor'}
         return {(new_key[k] if k in new_key else k):v for (k, v) in V.items()}
 
     def mu(self, tau_restricted: dict)->dict: #draw
-        return {p_i : mu_i.nu_i(*(tau_restricted[f] for f in mu_i.F_i)) 
-                for (p_i, mu_i) in self.rename_P(self.V, self.orientation).items()} 
+        V = self.rename_P(self.V, self.orientation)
+        mus = {}
+        mus['x'] = V['x'].nu_i(**(tau_restricted[f] for f in V['x'].F_i))
+        mus['y'] = V['y'].nu_i(**(tau_restricted[f] for f in V['y'].F_i))
+        V.pop('x')
+        V.pop('y')
+
+        for (p_i, mu_i) in V.items():
+            if mu_i.F_i is None:
+                pass
+            else:
+                mus[p_i] = mu_i.nu_i(*(tau_restricted[f] for f in mu_i.F_i)) 
+       return mus
+              
 
     @staticmethod
     def qhat(x, width, y, floor, facecolor, edgecolor, linewidth, linestyle):
-
         def fake_draw(render, transform=mtransforms.IdentityTransform()):
             for (xi, xw, yi, yf, fc, ec, lw, ls) in zip(x, width, y, floor, facecolor, edgecolor, linewidth, linestyle):
                 gc = render.new_gc()

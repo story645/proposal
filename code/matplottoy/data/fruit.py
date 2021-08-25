@@ -12,15 +12,8 @@ import pandas as pd
 # maybe make a Record type Record = {Fiber_Name: values} 
 class DataFrameWrapper:
     def __init__(self, section: pd.DataFrame):
-        self.global_section = section 
+        self.global_section = section
 
     def query(self, data_bounds:Optional[dict] = None, sampling_rate:int=None)->List[dict]:
-        if data_bounds is not None:
-        #  in theory this should be smarter to account for categorical...
-            query_str = '&'.join(f'{k}>={vmin} & {k}<={vmax}' for (k, (vmin, vmax)) in data_bounds.items())
-            local_section = self.global_section.query(query_str)
-        else:
-            local_section = self.global_section
-        #theory would return list of local sections
-        local_section = local_section.assign(default=np.nan)
+        local_section = self.global_section
         return [{Fi:local_section[Fi].values.squeeze() for Fi in local_section.columns}]
