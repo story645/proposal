@@ -15,6 +15,7 @@ Notes: probably need to define structure
 
 associated repos
 * math glossary: https://github.com/story645/notes
+* TCVG theory paper: https://github.com/story645/team
 
 notes, API sketches, drafts, etc. leading towards dissertation proposal:
 * https://github.com/matplotlib/CZI_2019-07_mpl
